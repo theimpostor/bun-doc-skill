@@ -16,6 +16,6 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Bundler](../docs/bundler/index.md) - `bundler/index`
 - [Loaders](../docs/bundler/loaders.md) - `bundler/loaders`
 - [Macros](../docs/bundler/macros.md) - `bundler/macros`
-- [null](../docs/bundler/minifier.md) - `bundler/minifier`
+- [Minifier](../docs/bundler/minifier.md) - `bundler/minifier`
 - [Plugins](../docs/bundler/plugins.md) - `bundler/plugins`
 - [Standalone HTML](../docs/bundler/standalone-html.md) - `bundler/standalone-html`

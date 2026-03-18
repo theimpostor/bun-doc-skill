@@ -1,4 +1,4 @@
-# null
+# Minifier
 Source: https://bun.com/docs/bundler/minifier
 
 Reduce bundle sizes with Bun's JavaScript and TypeScript minifier

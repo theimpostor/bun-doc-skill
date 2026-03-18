@@ -469,7 +469,7 @@ YAML files can be dynamically imported, useful for loading configuration on dema
 **File:** `Load`
 ```ts
 const env = process.env.NODE_ENV || "development";
-const config = await import(`./configs/${env}.yaml`);
+const { default: config } = await import(`./configs/${env}.yaml`);
 
 // Load user-specific settings
 async function loadUserSettings(userId: string) {
@@ -477,7 +477,8 @@ async function loadUserSettings(userId: string) {
     const settings = await import(`./users/${userId}/settings.yaml`);
     return settings.default;
   } catch {
-    return await import("./users/default-settings.yaml");
+    const { default: defaults } = await import("./users/default-settings.yaml");
+    return defaults;
   }
 }
 ```

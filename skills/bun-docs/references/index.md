@@ -12,8 +12,8 @@ This reference tree mirrors Bun's official docs and is intended to be read selec
 
 - Requested URL: `https://bun.sh/llms-full.txt`
 - Resolved URL: `https://bun.sh/llms-full.txt`
-- Generated: `2026-03-10T15:02:00.841117+00:00`
-- Page count: `308`
+- Generated: `2026-03-18T22:38:38.067732+00:00`
+- Page count: `311`
 
 ## Sections
 
@@ -37,7 +37,7 @@ This reference tree mirrors Bun's official docs and is intended to be read selec
 - [Package Manager](sections/package-manager.md) - `12` pages. Use for Bun package-manager behavior like workspaces, lockfiles, global cache, npmrc, registries, and overrides.
 - [Package Manager CLI](sections/package-manager-cli.md) - `12` pages. Use for command-specific docs such as `bun add`, `bun install`, `bun update`, `bun audit`, and `bun publish`.
 - [Project](sections/project.md) - `6` pages. Use for Bun project contribution docs, roadmap, benchmarking, bindgen, and building Bun itself.
-- [Runtime](sections/runtime.md) - `44` pages. Use for Bun runtime APIs, `bunfig.toml`, file I/O, globals, compatibility, shell, plugins, workers, and built-in services.
+- [Runtime](sections/runtime.md) - `47` pages. Use for Bun runtime APIs, `bunfig.toml`, file I/O, globals, compatibility, shell, plugins, workers, and built-in services.
 - [Runtime HTTP](sections/runtime-http.md) - `7` pages. Use for `Bun.serve`, HTTP routing, TLS, metrics, error handling, cookies, and WebSockets.
 - [Runtime Networking](sections/runtime-networking.md) - `4` pages. Use for DNS, `fetch`, TCP, and UDP runtime docs.
 - [Runtime Templating](sections/runtime-templating.md) - `2` pages. Use for `bun create` and `bun init` templating docs.

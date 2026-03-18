@@ -16,6 +16,8 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Color](../docs/runtime/color.md) - `runtime/color`
 - [Console](../docs/runtime/console.md) - `runtime/console`
 - [Cookies](../docs/runtime/cookies.md) - `runtime/cookies`
+- [Cron](../docs/runtime/cron.md) - `runtime/cron`
+- [CSRF Protection](../docs/runtime/csrf.md) - `runtime/csrf`
 - [Debugging](../docs/runtime/debugger.md) - `runtime/debugger`
 - [Environment Variables](../docs/runtime/environment-variables.md) - `runtime/environment-variables`
 - [FFI](../docs/runtime/ffi.md) - `runtime/ffi`
@@ -44,6 +46,7 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [SQL](../docs/runtime/sql.md) - `runtime/sql`
 - [SQLite](../docs/runtime/sqlite.md) - `runtime/sqlite`
 - [Streams](../docs/runtime/streams.md) - `runtime/streams`
+- [TOML](../docs/runtime/toml.md) - `runtime/toml`
 - [Transpiler](../docs/runtime/transpiler.md) - `runtime/transpiler`
 - [Utils](../docs/runtime/utils.md) - `runtime/utils`
 - [Watch Mode](../docs/runtime/watch-mode.md) - `runtime/watch-mode`
