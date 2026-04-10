@@ -10,7 +10,7 @@ Render supports Bun natively. You can deploy Bun apps as web services, backgroun
 
 ***
 
-As an example, let's deploy a simple Express HTTP server to Render.
+As an example, let's deploy an Express HTTP server to Render.
 
 ### Step 1
 Create a new GitHub repo named `myapp`. Git clone it locally.
@@ -28,7 +28,7 @@ bun add express
 ```
 
 ### Step 3
-Define a simple server with Express:
+Define a server with Express:
 
 **File:** `app.ts`
 ```ts

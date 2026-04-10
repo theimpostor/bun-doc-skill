@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/test/coverage
 
 
-Bun's test runner supports built-in *code coverage reporting*. This makes it easy to see how much of the codebase is covered by tests and find areas that are not currently well-tested.
+Bun's test runner supports built-in *code coverage reporting*. Use it to see how much of your codebase is covered by tests and find areas that are not currently well-tested.
 
 ***
 

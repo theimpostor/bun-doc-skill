@@ -14,7 +14,7 @@ bun add express
 
 ***
 
-To define a simple HTTP route and start a server with Express:
+To define an HTTP route and start a server with Express:
 
 **File:** `server.ts`
 ```ts

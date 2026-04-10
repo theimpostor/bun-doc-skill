@@ -26,6 +26,7 @@ Bun supports things like top-level await, JSX, and extensioned `.ts` imports, wh
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
+    "types": ["bun"],
 
     // Bundler mode
     "moduleResolution": "bundler",
@@ -53,3 +54,7 @@ If you run `bun init` in a new directory, this `tsconfig.json` will be generated
 ```sh
 bun init
 ```
+
+## TypeScript 6 and 7
+
+If you're using TypeScript 6.0 or later, you'll also need to add `"types": ["bun"]` to your `compilerOptions`. See [TypeScript 6 and 7](/typescript-6) for details.

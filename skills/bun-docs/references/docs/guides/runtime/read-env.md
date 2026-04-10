@@ -11,7 +11,7 @@ process.env.API_TOKEN; // => "secret"
 
 ***
 
-Bun also exposes these variables via `Bun.env`, which is a simple alias of `process.env`.
+Bun also exposes these variables via `Bun.env`, which is an alias of `process.env`.
 
 **File:** `index.ts`
 ```ts

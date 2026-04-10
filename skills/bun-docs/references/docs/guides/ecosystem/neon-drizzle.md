@@ -108,7 +108,7 @@ drizzle
 
 ***
 
-We can execute these migrations with a simple `migrate.ts` script. This script creates a new connection to the Neon database and executes all unexecuted migrations in the `drizzle` directory.
+We can execute these migrations with a `migrate.ts` script. This script creates a new connection to the Neon database and executes all unexecuted migrations in the `drizzle` directory.
 
 **File:** `migrate.ts`
 ```ts

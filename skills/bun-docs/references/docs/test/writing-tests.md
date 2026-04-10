@@ -7,7 +7,7 @@ Define tests with a Jest-like API imported from the built-in `bun:test` module. 
 
 ## Basic Usage
 
-To define a simple test:
+To define a test:
 
 **File:** `math.test.ts`
 ```ts
@@ -372,7 +372,7 @@ test.each([
 
 ### Format Specifiers
 
-There are a number of options available for formatting the test title:
+The following options are available for formatting the test title:
 
 | Specifier | Description             |
 | --------- | ----------------------- |

@@ -12,7 +12,7 @@ bun run dev
 
 ***
 
-To define a simple HTTP route and start a server with Elysia:
+To define an HTTP route and start a server with Elysia:
 
 **File:** `server.ts`
 ```ts

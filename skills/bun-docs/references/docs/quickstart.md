@@ -76,7 +76,7 @@ bun run index.ts
 Listening on http://localhost:3000
 ```
 
-Visit [`http://localhost:3000`](http://localhost:3000) to test the server. You should see a simple page that says `"Bun!"`.
+Visit [`http://localhost:3000`](http://localhost:3000) to test the server. You should see a page that says `"Bun!"`.
 
 ### Seeing TypeScript errors on Bun?
 If you used `bun init`, Bun will have automatically installed Bun's TypeScript declarations and configured your `tsconfig.json`. If you're trying out Bun in an existing project, you may see a type error on the `Bun` global.
@@ -143,7 +143,7 @@ bun run index.ts
 Listening on http://localhost:3000
 ```
 
-Visit [`http://localhost:3000/figlet`](http://localhost:3000/figlet) to test the server. You should see a simple page that says `"Bun!"` in ASCII art.
+Visit [`http://localhost:3000/figlet`](http://localhost:3000/figlet) to test the server. You should see a page that says `"Bun!"` in ASCII art.
 
 ```txt
 ____              _
@@ -204,7 +204,7 @@ Listening on http://localhost:3000
 
 Visit [`http://localhost:3000`](http://localhost:3000) to test the server. You should see the static HTML page.
 
-🎉 Congratulations! You've built a simple HTTP server with Bun and installed a package.
+🎉 Congratulations! You've built an HTTP server with Bun and installed a package.
 
 ***
 

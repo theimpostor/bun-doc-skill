@@ -3,7 +3,7 @@ Source: https://bun.com/docs/runtime/sql
 
 Bun provides native bindings for working with SQL databases through a unified Promise-based API that supports PostgreSQL, MySQL, and SQLite.
 
-The interface is designed to be simple and performant, using tagged template literals for queries and offering features like connection pooling, transactions, and prepared statements.
+The interface is designed to be performant, using tagged template literals for queries and offering features like connection pooling, transactions, and prepared statements.
 
 **File:** `db.ts`
 ```ts

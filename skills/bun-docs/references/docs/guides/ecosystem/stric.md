@@ -21,7 +21,7 @@ bun add @stricjs/router @stricjs/utils
 
 ***
 
-To implement a simple HTTP server with StricJS:
+To implement an HTTP server with StricJS:
 
 **File:** `index.ts`
 ```ts

@@ -68,7 +68,7 @@ To connect to my_gel_app, run `gel`
 
 ***
 
-To see if the database is running, let's open a REPL and run a simple query.
+To see if the database is running, let's open a REPL and run a query.
 
 ```sh
 gel
@@ -214,7 +214,7 @@ the query builder directory? The following line will be added:
 
 ***
 
-In `index.ts`, we can import the generated query builder from `./dbschema/edgeql-js` and write a simple select query.
+In `index.ts`, we can import the generated query builder from `./dbschema/edgeql-js` and write a select query.
 
 **File:** `index.ts`
 ```ts

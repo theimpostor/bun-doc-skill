@@ -30,7 +30,7 @@ const stream = await renderToReadableStream(<Component message="Hello from serve
 
 ***
 
-Combining this with `Bun.serve()`, we get a simple SSR HTTP server:
+Combining this with `Bun.serve()`, we get an SSR HTTP server:
 
 **File:** `server.tsx`
 ```tsx

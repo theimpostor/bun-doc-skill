@@ -8,7 +8,7 @@ This repository contains a single skill package, `skills/bun-docs/`. This is a r
 - `skills/bun-docs/scripts/refresh_references.py`: regenerates the bundled Bun docs snapshot.
 - `skills/bun-docs/references/index.md`: entry point for navigating the local docs mirror.
 - `skills/bun-docs/references/sections/`: 25 section overview files used to pick relevant docs quickly.
-- `skills/bun-docs/references/docs/`: generated per-page Bun documentation files (currently 308 pages).
+- `skills/bun-docs/references/docs/`: generated per-page Bun documentation files.
 
 Do not hand-edit files under `skills/bun-docs/references/docs/` unless you are debugging generation output; regenerate them instead.
 

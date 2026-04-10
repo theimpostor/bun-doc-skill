@@ -31,7 +31,7 @@ We'll use the Prisma CLI with `bunx` to initialize our schema and migration dire
 bunx --bun prisma init --datasource-provider sqlite
 ```
 
-This creates a basic schema. We need to update it to use the new Rust-free client with Bun optimization. Open `prisma/schema.prisma` and modify the generator block, then add a simple `User` model.
+This creates a basic schema. We need to update it to use the new Rust-free client with Bun optimization. Open `prisma/schema.prisma` and modify the generator block, then add a `User` model.
 
 **File:** `prisma/schema.prisma`
 ```prisma
@@ -103,7 +103,7 @@ export const prisma = new PrismaClient({ adapter });
 ```
 
 ### Create a test script
-Let's write a simple script to create a new user, then count the number of users in the database.
+Let's write a script to create a new user, then count the number of users in the database.
 
 **File:** `index.ts`
 ```ts

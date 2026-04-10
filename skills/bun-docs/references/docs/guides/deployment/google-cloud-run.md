@@ -108,7 +108,6 @@ FROM oven/bun:latest
 COPY package.json bun.lock ./
 
 # Install the dependencies
-# Install the dependencies
 RUN bun install --production --frozen-lockfile
 
 # Copy the rest of the application into the container

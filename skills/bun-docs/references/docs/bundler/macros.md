@@ -14,7 +14,7 @@ export function random() {
 }
 ```
 
-This is just a regular function in a regular file, but we can use it as a macro like so:
+This is a regular function in a regular file, but you can use it as a macro like so:
 
 **File:** `cli.tsx`
 ```tsx

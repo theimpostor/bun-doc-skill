@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/ecosystem/react
 
 
-Bun supports `.jsx` and `.tsx` files out of the box. React just works with Bun.
+Bun supports `.jsx` and `.tsx` files out of the box. React works with Bun.
 
-Create a new React app with `bun init --react`. This gives you a template with a simple React app and a simple API server together in one full-stack app.
+Create a new React app with `bun init --react`. This gives you a template with a React app and an API server together in one full-stack app.
 
 ```bash
 # Create a new React app

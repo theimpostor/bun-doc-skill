@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/file-uploads
 
 
-To upload files via HTTP with Bun, use the [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData) API. Let's start with a HTTP server that serves a simple HTML web form.
+To upload files via HTTP with Bun, use the [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData) API. Let's start with an HTTP server that serves an HTML web form.
 
 **File:** `index.ts`
 ```ts

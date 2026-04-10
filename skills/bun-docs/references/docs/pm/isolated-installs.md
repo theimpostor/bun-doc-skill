@@ -188,7 +188,7 @@ bun install --linker isolated
 
 ### From pnpm
 
-Isolated installs are conceptually similar to pnpm, so migration should be straightforward:
+Isolated installs are conceptually similar to pnpm, so migration is direct:
 
 ```bash
 # Remove pnpm files

@@ -12,13 +12,13 @@ This reference tree mirrors Bun's official docs and is intended to be read selec
 
 - Requested URL: `https://bun.sh/llms-full.txt`
 - Resolved URL: `https://bun.sh/llms-full.txt`
-- Generated: `2026-03-18T22:38:38.067732+00:00`
-- Page count: `311`
+- Generated: `2026-04-10T12:27:52.391260+00:00`
+- Page count: `312`
 
 ## Sections
 
 - [Bundler](sections/bundler.md) - `13` pages. Use for `bun build`, executables, CSS bundling, HTML imports, hot reloading, minification, macros, and bundler plugins.
-- [Getting Started](sections/getting-started.md) - `5` pages. Use for installation, quickstart, TypeScript support, the Bun overview pages, and general orientation.
+- [Getting Started](sections/getting-started.md) - `6` pages. Use for installation, quickstart, TypeScript support, the Bun overview pages, and general orientation.
 - [Guides: Binary Data](sections/guides-binary.md) - `22` pages. Use for conversions among `ArrayBuffer`, `Blob`, `Buffer`, `DataView`, strings, and typed arrays.
 - [Guides: Deployment](sections/guides-deployment.md) - `6` pages. Use for deploying Bun apps to AWS Lambda, Cloud Run, Railway, Render, Vercel, and similar targets.
 - [Guides: Ecosystem](sections/guides-ecosystem.md) - `28` pages. Use for framework and library integrations such as React, Next.js, Docker, Prisma, Elysia, Hono, and more.

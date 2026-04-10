@@ -166,7 +166,9 @@ def doc_path_from_source(source: str) -> str:
 
 def section_key_from_doc_path(doc_path: str) -> str:
     parts = doc_path.split("/")
-    if parts[0] in {"index", "installation", "quickstart", "typescript"}:
+    if parts[0] in {"index", "installation", "quickstart"}:
+        return "getting-started"
+    if re.fullmatch(r"typescript(?:-\d+)?", parts[0]):
         return "getting-started"
     if parts[0] == "feedback":
         return "getting-started"

@@ -400,7 +400,7 @@ const server = Bun.serve({
 
 ## Benchmarks
 
-Below are Bun and Node.js implementations of a simple HTTP server that responds `Bun!` to each incoming `Request`.
+Below are Bun and Node.js implementations of an HTTP server that responds `Bun!` to each incoming `Request`.
 
 **File:** `Bun`
 ```ts

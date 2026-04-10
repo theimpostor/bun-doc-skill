@@ -14,7 +14,7 @@ Bun also implements the `node:stream` module, including
 [`Duplex`](https://nodejs.org/api/stream.html#stream_duplex_and_transform_streams). For complete documentation, refer
 to the [Node.js docs](https://nodejs.org/api/stream.html).
 
-To create a simple `ReadableStream`:
+To create a `ReadableStream`:
 
 ```ts
 const stream = new ReadableStream({
@@ -67,13 +67,13 @@ const stream = new ReadableStream({
 });
 ```
 
-When using a direct `ReadableStream`, all chunk queueing is handled by the destination. The consumer of the stream receives exactly what is passed to `controller.write()`, without any encoding or modification.
+When using a direct `ReadableStream`, the destination handles all chunk queueing. The consumer of the stream receives exactly what is passed to `controller.write()`, without any encoding or modification.
 
 ***
 
 ## Async generator streams
 
-Bun also supports async generator functions as a source for `Response` and `Request`. This is an easy way to create a `ReadableStream` that fetches data from an asynchronous source.
+Bun also supports async generator functions as a source for `Response` and `Request`. Use async generators to create a `ReadableStream` that fetches data from an asynchronous source.
 
 ```ts
 const response = new Response(

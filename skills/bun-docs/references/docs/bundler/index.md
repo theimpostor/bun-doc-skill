@@ -46,7 +46,7 @@ Let's jump into the bundler API.
 
 ## Basic example
 
-Let's build our first bundle. You have the following two files, which implement a simple client-side rendered React app.
+Let's build our first bundle. You have the following two files, which implement a client-side rendered React app.
 
 **File:** `index.tsx`
 ```tsx
@@ -1007,7 +1007,7 @@ In many cases, generated bundles will contain no import statements. After all, t
 * **External modules** — Files and modules can be marked as external, in which case they will not be included in the bundle. Instead, the import statement will be left in the final bundle.
 * **Chunking.** When `splitting` is enabled, the bundler may generate separate "chunk" files that represent code that is shared among multiple entrypoints.
 
-In any of these cases, the final bundles may contain paths to other files. By default these imports are relative. Here is an example of a simple asset import:
+In any of these cases, the final bundles may contain paths to other files. By default these imports are relative. Here is an example of an asset import:
 
 **File:** `Input`
 ```ts
@@ -1069,7 +1069,7 @@ bun build ./index.tsx --outdir ./out --define STRING='"value"' --define nested.b
 
 ### loader
 
-A map of file extensions to built-in loader names. This can be used to quickly customize how certain files are loaded.
+A map of file extensions to built-in loader names. Use this to customize how certain files are loaded.
 
 ### JavaScript
 **File:** `build.ts`
@@ -1110,7 +1110,7 @@ bun build ./index.tsx --outdir ./out --banner '"use client";'
 
 ### footer
 
-A footer to be added to the final bundle, this can be something like a comment block for a license or just a fun easter egg.
+A footer to be added to the final bundle. This can be a comment block for a license or a fun easter egg.
 
 ### JavaScript
 **File:** `build.ts`
@@ -1291,7 +1291,7 @@ bun build ./src/index.ts --outdir ./dist --metafile ./dist/meta.json
 
 #### Markdown metafile
 
-Use `--metafile-md` to generate a markdown metafile, which is LLM-friendly and easy to read in the terminal:
+Use `--metafile-md` to generate a markdown metafile, which is LLM-friendly and readable in the terminal:
 
 ```bash
 bun build ./src/index.ts --outdir ./dist --metafile-md ./dist/meta.md
@@ -1537,7 +1537,7 @@ try {
 }
 ```
 
-Most of the time, an explicit try/catch is not needed, as Bun will neatly print uncaught exceptions. It is enough to just use a top-level await on the `Bun.build` call.
+Most of the time, an explicit try/catch is not needed, as Bun will neatly print uncaught exceptions. You can use a top-level await on the `Bun.build` call instead.
 
 Each item in `error.errors` is an instance of `BuildMessage` or `ResolveMessage` (subclasses of `Error`), containing detailed information for each error.
 

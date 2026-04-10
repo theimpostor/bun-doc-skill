@@ -64,7 +64,7 @@ type Loader =
 
 ## Usage
 
-A plugin is defined as simple JavaScript object containing a `name` property and a `setup` function.
+A plugin is defined as a JavaScript object containing a `name` property and a `setup` function.
 
 **File:** `myPlugin.ts`
 ```ts

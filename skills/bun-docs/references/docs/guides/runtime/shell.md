@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/runtime/shell
 
 Bun Shell is a cross-platform bash-like shell built in to Bun.
 
-It provides a simple way to run shell commands in JavaScript and TypeScript. To get started, import the `$` function from the `bun` package and use it to run shell commands.
+It runs shell commands in JavaScript and TypeScript. To get started, import the `$` function from the `bun` package and use it to run shell commands.
 
 **File:** `foo.ts`
 ```ts
