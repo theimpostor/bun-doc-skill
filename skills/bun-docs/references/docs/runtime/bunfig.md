@@ -160,6 +160,20 @@ depth = 3
 
 This controls how deeply nested objects are displayed in console output. Higher values show more nested properties but may produce verbose output for complex objects. This setting can be overridden by the `--console-depth` CLI flag.
 
+## Serve
+
+Options for `Bun.serve` and `bun run` when serving HTTP are configured under the `[serve]` section.
+
+### `serve.port`
+
+The default port for `Bun.serve` to listen on. Default `3000`. Can also be set via the `BUN_PORT` or `PORT` environment variables, or the `--port` flag.
+
+**File:** `bunfig.toml`
+```toml
+[serve]
+port = 3000
+```
+
 ## Test runner
 
 The test runner is configured under the `[test]` section of your bunfig.toml.
@@ -250,6 +264,16 @@ Whether to skip test files when computing coverage statistics. Default `false`.
 ```toml
 [test]
 coverageSkipTestFiles = false
+```
+
+### `test.coverageIgnoreSourcemaps`
+
+Whether to report coverage against transpiled output instead of remapping line numbers through sourcemaps back to the original source. Default `false`. Primarily useful for debugging.
+
+**File:** `bunfig.toml`
+```toml
+[test]
+coverageIgnoreSourcemaps = false
 ```
 
 ### `test.coveragePathIgnorePatterns`
@@ -466,6 +490,28 @@ By default Bun uses caret ranges; if the `latest` version of a package is `2.4.1
 exact = false
 ```
 
+### `install.ignoreScripts`
+
+Whether to skip lifecycle scripts during install. Default `false`. Equivalent to the `--ignore-scripts` flag.
+
+When `true`, Bun will not run any `preinstall` / `install` / `postinstall` / `prepare` scripts — both for your project and for packages in `trustedDependencies`. See [Lifecycle scripts](/pm/lifecycle) for more details.
+
+**File:** `bunfig.toml`
+```toml
+[install]
+ignoreScripts = false
+```
+
+### `install.concurrentScripts`
+
+The maximum number of concurrent lifecycle scripts to run at once. Defaults to two times the number of CPU cores. Equivalent to the `--concurrent-scripts` flag.
+
+**File:** `bunfig.toml`
+```toml
+[install]
+concurrentScripts = 5
+```
+
 ### `install.saveTextLockfile`
 
 If false, generate a binary `bun.lockb` instead of a text-based `bun.lock` file when running `bun install` and no lockfile is present.
@@ -496,6 +542,24 @@ Valid values are:
 | `"force"`    | Always auto-install dependencies, even if `node_modules` exists.                                                                    |
 | `"disable"`  | Never auto-install dependencies.                                                                                                    |
 | `"fallback"` | Check local `node_modules` first, then auto-install any packages that aren't found. You can enable this from the CLI with `bun -i`. |
+
+### `install.prefer`
+
+Configure how Bun resolves package versions against the npm registry when running scripts. Default `"online"`.
+
+**File:** `bunfig.toml`
+```toml
+[install]
+prefer = "online"
+```
+
+Valid values are:
+
+| Value       | Description                                                                                        |
+| ----------- | -------------------------------------------------------------------------------------------------- |
+| `"online"`  | Default. Check the registry for stale packages as needed.                                          |
+| `"offline"` | Skip staleness checks and resolve packages from the local cache. Equivalent to `--prefer-offline`. |
+| `"latest"`  | Always check npm for the latest matching versions. Equivalent to `--prefer-latest`.                |
 
 ### `install.frozenLockfile`
 
@@ -660,24 +724,46 @@ Valid values are:
 | `"hoisted"`  | Link dependencies in a shared `node_modules` directory. |
 | `"isolated"` | Link dependencies inside each package installation.     |
 
+### `install.globalStore`
+
+When using the `"isolated"` linker, share package installations across projects in a global virtual store at `<cache>/links/` and link `node_modules/.bun/<pkg>@<ver>` into it instead of materializing each package into the project. Makes warm installs after `rm -rf node_modules` an order of magnitude faster. Default `true`. Can also be set with the `BUN_INSTALL_GLOBAL_STORE` environment variable.
+
+For complete documentation refer to [Package manager > Global virtual store](/pm/global-store).
+
 **File:** `bunfig.toml`
 ```toml
-[debug]
-# When navigating to a blob: or src: link, open the file in your editor
-# If not, it tries $EDITOR or $VISUAL
-# If that still fails, it will try Visual Studio Code, then Sublime Text, then a few others
-# This is used by Bun.openInEditor()
-editor = "code"
+[install]
+globalStore = false
+```
 
-# List of editors:
-# - "subl", "sublime"
-# - "vscode", "code"
-# - "textmate", "mate"
-# - "idea"
-# - "webstorm"
-# - "nvim", "neovim"
-# - "vim","vi"
-# - "emacs"
+### `install.publicHoistPattern`
+
+When using the `"isolated"` linker, packages matching these glob patterns are hoisted to the root `node_modules` directory so they can be resolved by any package in the project. Default `[]`. Similar to pnpm's `public-hoist-pattern`.
+
+**File:** `bunfig.toml`
+```toml
+[install]
+publicHoistPattern = ["*eslint*", "*prettier*"]
+```
+
+### `install.hoistPattern`
+
+When using the `"isolated"` linker, packages matching these glob patterns are hoisted to the virtual store root (`node_modules/.bun`) so they can be resolved by other packages in the virtual store. Default `[]`. Similar to pnpm's `hoist-pattern`.
+
+**File:** `bunfig.toml`
+```toml
+[install]
+hoistPattern = ["*"]
+```
+
+### `install.logLevel`
+
+Set the log level for `bun install`. This can be one of `"debug"`, `"warn"`, or `"error"`.
+
+**File:** `bunfig.toml`
+```toml
+[install]
+logLevel = "warn"
 ```
 
 ### `install.security.scanner`
@@ -716,11 +802,21 @@ Configure a minimum age (in seconds) for npm package versions. Package versions 
 [install]
 # Only install package versions published at least 3 days ago
 minimumReleaseAge = 259200
-# These packages will bypass the 3-day minimum age requirement
-minimumReleaseAgeExcludes = ["@types/bun", "typescript"]
 ```
 
 For more details see [Minimum release age](/pm/cli/install#minimum-release-age) in the install documentation.
+
+### `install.minimumReleaseAgeExcludes`
+
+An array of package names that are exempt from the `minimumReleaseAge` check. Default `[]`.
+
+**File:** `bunfig.toml`
+```toml
+[install]
+minimumReleaseAge = 259200
+# These packages will bypass the 3-day minimum age requirement
+minimumReleaseAgeExcludes = ["@types/bun", "typescript"]
+```
 
 ## `bun run`
 
@@ -819,4 +915,14 @@ This is equivalent to passing `--silent` to all `bun run` commands:
 bun --silent run dev
 bun --silent dev
 bun run --silent dev
+```
+
+### `run.elide-lines` - truncate filtered output
+
+The number of lines of script output shown per script when using `--filter`. Default `10`. Set to `0` to show all lines. Equivalent to the `--elide-lines` flag.
+
+**File:** `bunfig.toml`
+```toml
+[run]
+elide-lines = 10
 ```

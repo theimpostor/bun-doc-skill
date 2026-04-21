@@ -10,6 +10,7 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Catalogs](../docs/pm/catalogs.md) - `pm/catalogs`
 - [bun --filter](../docs/pm/filter.md) - `pm/filter`
 - [Global cache](../docs/pm/global-cache.md) - `pm/global-cache`
+- [Global virtual store](../docs/pm/global-store.md) - `pm/global-store`
 - [Isolated installs](../docs/pm/isolated-installs.md) - `pm/isolated-installs`
 - [Lifecycle scripts](../docs/pm/lifecycle.md) - `pm/lifecycle`
 - [Lockfile](../docs/pm/lockfile.md) - `pm/lockfile`

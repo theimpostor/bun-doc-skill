@@ -51,5 +51,6 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Utils](../docs/runtime/utils.md) - `runtime/utils`
 - [Watch Mode](../docs/runtime/watch-mode.md) - `runtime/watch-mode`
 - [Web APIs](../docs/runtime/web-apis.md) - `runtime/web-apis`
+- [WebView](../docs/runtime/webview.md) - `runtime/webview`
 - [Workers](../docs/runtime/workers.md) - `runtime/workers`
 - [YAML](../docs/runtime/yaml.md) - `runtime/yaml`

@@ -63,3 +63,18 @@ To disable lifecycle scripts for all packages, use the `--ignore-scripts` flag.
 ```bash
 bun install --ignore-scripts
 ```
+
+To make this the default for a project, set [`install.ignoreScripts`](/runtime/bunfig#install-ignorescripts) in `bunfig.toml`:
+
+**File:** `bunfig.toml`
+```toml
+[install]
+ignoreScripts = true
+```
+
+Or in `.npmrc`:
+
+**File:** `.npmrc`
+```ini
+ignore-scripts=true
+```
