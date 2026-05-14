@@ -480,7 +480,7 @@ You can bundle your entire frontend into a **single self-contained `.html` file*
 bun build --compile --target=browser ./index.html --outdir=dist
 ```
 
-Learn more in the [Standalone HTML docs](/bundler/standalone-html).
+Learn more in the [Standalone HTML docs](/docs/bundler/standalone-html).
 
 ## Adding a backend to your frontend
 

@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/http/server
 
 This starts an HTTP server listening on port `3000`. It demonstrates basic routing with a number of common responses and also handles POST data from standard forms or as JSON.
 
-See [`Bun.serve`](/runtime/http/server) for details.
+See [`Bun.serve`](/docs/runtime/http/server) for details.
 
 **File:** `server.ts`
 ```ts

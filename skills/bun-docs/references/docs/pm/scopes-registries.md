@@ -34,4 +34,4 @@ To configure a private registry scoped to a particular organization:
 
 ### `.npmrc`
 
-Bun also reads `.npmrc` files, [learn more](/pm/npmrc).
+Bun also reads `.npmrc` files, [learn more](/docs/pm/npmrc).

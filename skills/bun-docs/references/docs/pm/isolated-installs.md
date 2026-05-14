@@ -127,11 +127,11 @@ The directory name encodes both the package version and its peer dependency vers
 
 ### Global virtual store
 
-By default, store entries are materialized once into a [global virtual store](/pm/global-store) at `<cache>/links/` and `node_modules/.bun/<pkg>@<ver>` is a symlink into it. Warm installs after `rm -rf node_modules` only create one symlink per package instead of copying every package's files again, which is roughly **7× faster** on a typical mid-size project. See the [global store docs](/pm/global-store) for the full layout, benchmarks, and tradeoffs.
+When [`install.globalStore`](/docs/runtime/bunfig#install-globalstore) is enabled, store entries are materialized once into a [global virtual store](/docs/pm/global-store) at `<cache>/links/` and `node_modules/.bun/<pkg>@<ver>` is a symlink into it. Warm installs after `rm -rf node_modules` only create one symlink per package instead of copying every package's files again, which is roughly **7× faster** on a typical mid-size project. The global store is **off by default**; see the [global store docs](/docs/pm/global-store) for how to enable it, the full layout, benchmarks, and tradeoffs.
 
 ### Backend strategies
 
-When an entry isn't eligible for the global store (or the global store is disabled), Bun materializes it under the project using one of:
+When the global store is disabled (the default) or an entry isn't eligible for it, Bun materializes the entry under the project using one of:
 
 * **Clonefile** (macOS) — Copy-on-write filesystem clones for maximum efficiency
 * **Hardlink** (Linux/Windows) — Hardlinks to save disk space
@@ -222,6 +222,6 @@ The main difference is that Bun uses symlinks in `node_modules` while pnpm uses 
 
 ## Related documentation
 
-* [Package manager > Workspaces](/pm/workspaces) — Monorepo workspace management
-* [Package manager > Lockfile](/pm/lockfile) — Understanding Bun's lockfile format
-* [CLI > install](/pm/cli/install) — Complete `bun install` command reference
+* [Package manager > Workspaces](/docs/pm/workspaces) — Monorepo workspace management
+* [Package manager > Lockfile](/docs/pm/lockfile) — Understanding Bun's lockfile format
+* [CLI > install](/docs/pm/cli/install) — Complete `bun install` command reference

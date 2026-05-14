@@ -22,7 +22,7 @@ issue](https://github.com/oven-sh/bun/issues/1825).
 bun test
 ```
 
-Tests are written in JavaScript or TypeScript with a Jest-like API. Refer to [Writing tests](/test/writing-tests) for full documentation.
+Tests are written in JavaScript or TypeScript with a Jest-like API. Refer to [Writing tests](/docs/test/writing-tests) for full documentation.
 
 **File:** `math.test.ts`
 ```ts
@@ -59,7 +59,7 @@ To run a specific file in the test runner, make sure the path starts with `./` o
 bun test ./test/specific-file.test.ts
 ```
 
-The test runner runs all tests in a single process. It loads all `--preload` scripts (see [Lifecycle](/test/lifecycle) for details), then runs all tests. If a test fails, the test runner will exit with a non-zero exit code.
+The test runner runs all tests in a single process. It loads all `--preload` scripts (see [Lifecycle](/docs/test/lifecycle) for details), then runs all tests. If a test fails, the test runner will exit with a non-zero exit code.
 
 ## CI/CD integration
 
@@ -310,7 +310,7 @@ These hooks can be defined inside test files, or in a separate file that is prel
 bun test --preload ./setup.ts
 ```
 
-See [Test > Lifecycle](/test/lifecycle) for complete documentation.
+See [Test > Lifecycle](/docs/test/lifecycle) for complete documentation.
 
 ## Mocks
 
@@ -340,7 +340,7 @@ const random = mock(() => Math.random());
 const random = jest.fn(() => Math.random());
 ```
 
-See [Test > Mocks](/test/mocks) for complete documentation.
+See [Test > Mocks](/docs/test/mocks) for complete documentation.
 
 ## Snapshot testing
 
@@ -362,7 +362,7 @@ To update snapshots, use the `--update-snapshots` flag.
 bun test --update-snapshots
 ```
 
-See [Test > Snapshots](/test/snapshots) for complete documentation.
+See [Test > Snapshots](/docs/test/snapshots) for complete documentation.
 
 ## UI & DOM testing
 
@@ -372,7 +372,7 @@ Bun is compatible with popular UI testing libraries:
 * [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro/)
 * [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
 
-See [Test > DOM Testing](/test/dom) for complete documentation.
+See [Test > DOM Testing](/docs/test/dom) for complete documentation.
 
 ## Performance
 

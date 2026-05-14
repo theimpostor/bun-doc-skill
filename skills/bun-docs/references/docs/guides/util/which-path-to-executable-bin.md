@@ -13,4 +13,4 @@ Bun.which("bun"); // => "/home/user/.bun/bin/bun"
 
 ***
 
-See [Docs > API > Utils](/runtime/utils#bun-which) for complete documentation.
+See [Docs > API > Utils](/docs/runtime/utils#bun-which) for complete documentation.

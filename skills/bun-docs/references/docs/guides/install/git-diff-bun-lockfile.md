@@ -5,7 +5,7 @@ Source: https://bun.com/docs/guides/install/git-diff-bun-lockfile
 > Note
 Bun v1.1.39 introduced `bun.lock`, a JSONC formatted lockfile. `bun.lock` is human-readable and git-diffable without
 configuration, at no cost to performance. In 1.2.0+ it is the default format used for new projects. [**Learn
-more.**](/pm/lockfile#text-based-lockfile)
+more.**](/docs/pm/lockfile#text-based-lockfile)
 
 ***
 

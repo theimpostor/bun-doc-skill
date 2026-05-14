@@ -289,7 +289,7 @@ const response = await fetch("s3://my-bucket/path/to/object", {
 
 Note: Only PUT and POST methods support request bodies when using S3. For uploads, Bun automatically uses multipart upload for streaming bodies.
 
-You can read more about Bun's S3 support in the [S3](/runtime/s3) documentation.
+You can read more about Bun's S3 support in the [S3](/docs/runtime/s3) documentation.
 
 #### File URLs - `file://`
 
@@ -404,7 +404,7 @@ dns.prefetch("bun.com");
 
 By default, Bun caches and deduplicates DNS queries in-memory for up to 30 seconds. You can see the cache stats by calling `dns.getCacheStats()`:
 
-To learn more about DNS caching in Bun, see the [DNS caching](/runtime/networking/dns) documentation.
+To learn more about DNS caching in Bun, see the [DNS caching](/docs/runtime/networking/dns) documentation.
 
 ### Preconnect to a host
 

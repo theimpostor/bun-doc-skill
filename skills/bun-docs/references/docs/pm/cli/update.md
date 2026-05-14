@@ -3,7 +3,7 @@ Source: https://bun.com/docs/pm/cli/update
 
 Update dependencies to latest versions
 
-> Note: To upgrade your Bun CLI version, see [`bun upgrade`](/installation#upgrading).
+> Note: To upgrade your Bun CLI version, see [`bun upgrade`](/docs/installation#upgrading).
 
 To update all dependencies to the latest version:
 

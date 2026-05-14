@@ -78,7 +78,7 @@ BUN_FEATURE_FLAG_DISABLE_IGNORE_SCRIPTS=1 bun install
 
 ## Workspaces
 
-Bun supports `"workspaces"` in package.json. For complete documentation refer to [Package manager > Workspaces](/pm/workspaces).
+Bun supports `"workspaces"` in package.json. For complete documentation refer to [Package manager > Workspaces](/docs/pm/workspaces).
 
 **File:** `package.json`
 ```json
@@ -106,13 +106,13 @@ bun install --filter '!pkg-c'
 bun install --filter './packages/pkg-a'
 ```
 
-For more information on filtering with `bun install`, refer to [Package Manager > Filtering](/pm/filter#bun-install-and-bun-outdated)
+For more information on filtering with `bun install`, refer to [Package Manager > Filtering](/docs/pm/filter#bun-install-and-bun-outdated)
 
 ***
 
 ## Overrides and resolutions
 
-Bun supports npm's `"overrides"` and Yarn's `"resolutions"` in `package.json`. These are mechanisms for specifying a version range for *metadependencies*—the dependencies of your dependencies. Refer to [Package manager > Overrides and resolutions](/pm/overrides) for complete documentation.
+Bun supports npm's `"overrides"` and Yarn's `"resolutions"` in `package.json`. These are mechanisms for specifying a version range for *metadependencies*—the dependencies of your dependencies. Refer to [Package manager > Overrides and resolutions](/docs/pm/overrides) for complete documentation.
 
 **File:** `package.json`
 ```json
@@ -165,7 +165,7 @@ For reproducible installs, use `--frozen-lockfile`. This will install the exact 
 bun install --frozen-lockfile
 ```
 
-For more information on Bun's lockfile `bun.lock`, refer to [Package manager > Lockfile](/pm/lockfile).
+For more information on Bun's lockfile `bun.lock`, refer to [Package manager > Lockfile](/docs/pm/lockfile).
 
 ***
 
@@ -197,7 +197,7 @@ bun install --dry-run
 
 ## Non-npm dependencies
 
-Bun supports installing dependencies from Git, GitHub, and local or remotely-hosted tarballs. For complete documentation refer to [Package manager > Git, GitHub, and tarball dependencies](/pm/cli/add).
+Bun supports installing dependencies from Git, GitHub, and local or remotely-hosted tarballs. For complete documentation refer to [Package manager > Git, GitHub, and tarball dependencies](/docs/pm/cli/add).
 
 **File:** `package.json`
 ```json
@@ -245,7 +245,7 @@ The default linker strategy depends on whether you're starting fresh or have an 
 * **New single-package projects**: `hoisted` (traditional npm behavior)
 * **Existing projects (made pre-v1.3.2)**: `hoisted` (preserves backward compatibility)
 
-The default is controlled by a `configVersion` field in your lockfile. For a detailed explanation, see [Package manager > Isolated installs](/pm/isolated-installs).
+The default is controlled by a `configVersion` field in your lockfile. For a detailed explanation, see [Package manager > Isolated installs](/docs/pm/isolated-installs).
 
 ***
 
@@ -280,7 +280,7 @@ When the minimum age filter is active:
 * Exact version requests (like `package@1.1.1`) still respect the age gate but bypass the stability check
 * Versions without a `time` field are treated as passing the age check (npm registry should always provide timestamps)
 
-For more advanced security scanning, including integration with services & custom filtering, see [Package manager > Security Scanner API](/pm/security-scanner-api).
+For more advanced security scanning, including integration with services & custom filtering, see [Package manager > Security Scanner API](/docs/pm/security-scanner-api).
 
 ***
 

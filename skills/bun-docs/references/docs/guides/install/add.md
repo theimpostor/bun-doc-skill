@@ -40,4 +40,4 @@ bun add zod@next
 
 ***
 
-See [Docs > Package manager](/pm/cli/install) for complete documentation of Bun's package manager.
+See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.

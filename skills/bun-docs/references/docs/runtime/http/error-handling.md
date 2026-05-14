@@ -38,4 +38,4 @@ Bun.serve({
 });
 ```
 
-> Info: [Learn more about debugging in Bun](/runtime/debugger)
+> Info: [Learn more about debugging in Bun](/docs/runtime/debugger)

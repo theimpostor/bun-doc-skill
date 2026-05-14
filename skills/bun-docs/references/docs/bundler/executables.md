@@ -257,7 +257,7 @@ These constants are embedded directly into your compiled binary at build time, p
 
 > Note
 For comprehensive examples and advanced patterns, see the [Build-time constants
-guide](/guides/runtime/build-time-constants).
+guide](/docs/guides/runtime/build-time-constants).
 
 ***
 
@@ -563,7 +563,7 @@ The result is a single file that can be deployed anywhere without needing Node.j
 
 Bun automatically handles serving the frontend assets with proper MIME types and cache headers. The HTML import is replaced with a manifest object that `Bun.serve` uses to efficiently serve pre-bundled assets.
 
-For more details on building full-stack applications with Bun, see the [full-stack guide](/bundler/fullstack).
+For more details on building full-stack applications with Bun, see the [full-stack guide](/docs/bundler/fullstack).
 
 ***
 
@@ -1160,7 +1160,7 @@ console.log(`Running in ${config.environment} mode`);
 console.log(`API endpoint: ${config.apiUrl}`);
 ```
 
-Plugins can perform any transformation: compile YAML/TOML configs, inline SQL queries, generate type-safe API clients, or preprocess templates. Refer to the [plugin documentation](/bundler/plugins) for more details.
+Plugins can perform any transformation: compile YAML/TOML configs, inline SQL queries, generate type-safe API clients, or preprocess templates. Refer to the [plugin documentation](/docs/bundler/plugins) for more details.
 
 ***
 
@@ -1171,7 +1171,7 @@ Currently, the `--compile` flag can only accept a single entrypoint at a time an
 * `--outdir` — use `outfile` instead (except when using with `--splitting`).
 * `--public-path`
 * `--target=node`
-* `--target=browser` (without HTML entrypoints — see [Standalone HTML](/bundler/standalone-html) for `--compile --target=browser` with `.html` files)
+* `--target=browser` (without HTML entrypoints — see [Standalone HTML](/docs/bundler/standalone-html) for `--compile --target=browser` with `.html` files)
 * `--no-bundle` - we always bundle everything into the executable.
 
 ***

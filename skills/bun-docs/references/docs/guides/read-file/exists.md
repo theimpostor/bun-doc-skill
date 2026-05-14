@@ -14,4 +14,4 @@ await file.exists(); // boolean;
 
 ***
 
-Refer to [API > File I/O](/runtime/file-io) for more information on working with `BunFile`.
+Refer to [API > File I/O](/docs/runtime/file-io) for more information on working with `BunFile`.

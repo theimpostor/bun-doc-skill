@@ -3,7 +3,7 @@ Source: https://bun.com/docs/guides/runtime/vscode-debugger
 
 
 > Note
-VSCode extension support is currently buggy. We recommend the [Web Debugger](/guides/runtime/web-debugger) for now.
+VSCode extension support is currently buggy. We recommend the [Web Debugger](/docs/guides/runtime/web-debugger) for now.
 
 Bun speaks the [WebKit Inspector Protocol](https://github.com/oven-sh/bun/blob/main/packages/bun-inspector-protocol/src/protocol/jsc/index.d.ts) so you can debug your code with an interactive debugger.
 

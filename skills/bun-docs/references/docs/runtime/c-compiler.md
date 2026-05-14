@@ -53,7 +53,7 @@ Under the hood, `cc` uses [TinyCC](https://bellard.org/tcc/) to compile the C co
 
 ### Primitive types
 
-The same `FFIType` values in [`dlopen`](/runtime/ffi) are supported in `cc`.
+The same `FFIType` values in [`dlopen`](/docs/runtime/ffi) are supported in `cc`.
 
 | `FFIType`   | C Type         | Aliases                     |
 | ----------- | -------------- | --------------------------- |

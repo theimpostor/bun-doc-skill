@@ -5,7 +5,7 @@ Source: https://bun.com/docs/pm/npmrc
 Bun supports loading configuration options from [`.npmrc`](https://docs.npmjs.com/cli/v10/configuring-npm/npmrc) files, allowing you to reuse existing registry/scope configurations.
 
 > Note
-We recommend migrating your `.npmrc` file to Bun's [`bunfig.toml`](/runtime/bunfig) format, as it provides more
+We recommend migrating your `.npmrc` file to Bun's [`bunfig.toml`](/docs/runtime/bunfig) format, as it provides more
 flexible options and can let you configure Bun-specific options.
 
 ***
@@ -23,7 +23,7 @@ To change it, you can set the `registry` option in `.npmrc`:
 registry=http://localhost:4873/
 ```
 
-The equivalent `bunfig.toml` option is [`install.registry`](/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is [`install.registry`](/docs/runtime/bunfig#install-registry):
 
 **File:** `bunfig.toml`
 ```toml
@@ -39,7 +39,7 @@ install.registry = "http://localhost:4873/"
 @myorg:registry=http://localhost:4873/
 ```
 
-The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-registry):
 
 **File:** `bunfig.toml`
 ```toml
@@ -77,7 +77,7 @@ The following options are supported:
 * `_auth` (base64 encoded username:password, e.g. `btoa(username + ":" + password)`)
 * `email`
 
-The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-registry):
 
 **File:** `bunfig.toml`
 ```toml
@@ -94,7 +94,7 @@ Controls how workspace packages are installed when available locally:
 link-workspace-packages=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.linkWorkspacePackages`](/runtime/bunfig#install-linkworkspacepackages):
+The equivalent `bunfig.toml` option is [`install.linkWorkspacePackages`](/docs/runtime/bunfig#install-linkworkspacepackages):
 
 **File:** `bunfig.toml`
 ```toml
@@ -111,7 +111,7 @@ Always saves exact versions without the `^` prefix:
 save-exact=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.exact`](/runtime/bunfig#install-exact):
+The equivalent `bunfig.toml` option is [`install.exact`](/docs/runtime/bunfig#install-exact):
 
 **File:** `bunfig.toml`
 ```toml
@@ -139,7 +139,7 @@ Shows what would be installed without actually installing:
 dry-run=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.dryRun`](/runtime/bunfig#install-dryrun):
+The equivalent `bunfig.toml` option is [`install.dryRun`](/docs/runtime/bunfig#install-dryrun):
 
 **File:** `bunfig.toml`
 ```toml
@@ -160,7 +160,7 @@ cache=/path/to/cache
 cache=false
 ```
 
-The equivalent `bunfig.toml` option is [`install.cache`](/runtime/bunfig#install-cache):
+The equivalent `bunfig.toml` option is [`install.cache`](/docs/runtime/bunfig#install-cache):
 
 **File:** `bunfig.toml`
 ```toml

@@ -4,7 +4,7 @@ Source: https://bun.com/docs/runtime/file-io
 Bun provides a set of optimized APIs for reading and writing files.
 
 > Note
-The `Bun.file` and `Bun.write` APIs documented on this page are heavily optimized and represent the recommended way to perform file-system tasks using Bun. For operations that are not yet available with `Bun.file`, such as `mkdir` or `readdir`, you can use Bun's [nearly complete](/runtime/nodejs-compat#node-fs) implementation of the [`node:fs`](https://nodejs.org/api/fs.html) module.
+The `Bun.file` and `Bun.write` APIs documented on this page are heavily optimized and represent the recommended way to perform file-system tasks using Bun. For operations that are not yet available with `Bun.file`, such as `mkdir` or `readdir`, you can use Bun's [nearly complete](/docs/runtime/nodejs-compat#node-fs) implementation of the [`node:fs`](https://nodejs.org/api/fs.html) module.
 
 ***
 

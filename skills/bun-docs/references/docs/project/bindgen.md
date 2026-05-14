@@ -20,7 +20,7 @@ this one:
 
 Given a file implementing a simple function, such as `add`
 
-**File:** `src/bun.js/math.zig`
+**File:** `src/jsc/math.zig`
 ```zig
 pub fn add(global: *jsc.JSGlobalObject, a: i32, b: i32) !i32 {
     return std.math.add(i32, a, b) catch {
@@ -40,7 +40,7 @@ const jsc = bun.jsc;
 
 Then describe the API schema using a `.bind.ts` function. The binding file goes next to the Zig file.
 
-**File:** `src/bun.js/math.bind.ts`
+**File:** `src/jsc/math.bind.ts`
 ```ts
 import { t, fn } from "bindgen";
 
@@ -87,7 +87,7 @@ TLDRs from WebIDL spec:
 
 A `variants` can specify multiple variants (also known as overloads).
 
-**File:** `src/bun.js/math.bind.ts`
+**File:** `src/jsc/math.bind.ts`
 ```ts
 import { t, fn } from "bindgen";
 

@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/test/svelte-test
 
 
-Bun's [Plugin API](/runtime/plugins) lets you add custom loaders to your project. The `test.preload` option in `bunfig.toml` lets you configure your loader to start before your tests run.
+Bun's [Plugin API](/docs/runtime/plugins) lets you add custom loaders to your project. The `test.preload` option in `bunfig.toml` lets you configure your loader to start before your tests run.
 
 Firstly, install `@testing-library/svelte`, `svelte`, and `@happy-dom/global-registrator`.
 

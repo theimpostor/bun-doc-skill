@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/stream-file
 
 
-This snippet reads a file from disk using [`Bun.file()`](/runtime/file-io#reading-files-bun-file). This returns a `BunFile` instance, which can be passed directly into the `new Response` constructor.
+This snippet reads a file from disk using [`Bun.file()`](/docs/runtime/file-io#reading-files-bun-file). This returns a `BunFile` instance, which can be passed directly into the `new Response` constructor.
 
 **File:** `server.ts`
 ```ts
@@ -32,7 +32,7 @@ new Response(Bun.file("./img.png")).headers.get("Content-Type");
 
 ***
 
-Putting it all together with [`Bun.serve()`](/runtime/http/server).
+Putting it all together with [`Bun.serve()`](/docs/runtime/http/server).
 
 **File:** `server.ts`
 ```ts
@@ -48,4 +48,4 @@ Bun.serve({
 
 ***
 
-See [Docs > API > File I/O](/runtime/file-io#writing-files-bun-write) for complete documentation of `Bun.write()`.
+See [Docs > API > File I/O](/docs/runtime/file-io#writing-files-bun-write) for complete documentation of `Bun.write()`.

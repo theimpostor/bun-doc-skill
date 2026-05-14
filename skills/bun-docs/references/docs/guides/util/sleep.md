@@ -19,4 +19,4 @@ await new Promise(resolve => setTimeout(resolve, ms));
 
 ***
 
-See [Docs > API > Utils](/runtime/utils) for more useful utilities.
+See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.

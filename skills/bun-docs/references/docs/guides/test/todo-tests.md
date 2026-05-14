@@ -69,5 +69,5 @@ $ echo $?
 
 See also:
 
-* [Skip a test](/guides/test/skip-tests)
-* [Docs > Test runner > Writing tests](/test/writing-tests)
+* [Skip a test](/docs/guides/test/skip-tests)
+* [Docs > Test runner > Writing tests](/docs/test/writing-tests)

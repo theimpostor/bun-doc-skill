@@ -104,7 +104,7 @@ controls](https://github-production-user-asset-6210df.s3.amazonaws.com/3084745/2
 
 ### Visual Studio Code Debugger
 
-Experimental support for debugging Bun scripts is available in Visual Studio Code. To use it, you'll need to install the [Bun VSCode extension](/guides/runtime/vscode-debugger).
+Experimental support for debugging Bun scripts is available in Visual Studio Code. To use it, you'll need to install the [Bun VSCode extension](/docs/guides/runtime/vscode-debugger).
 
 ***
 

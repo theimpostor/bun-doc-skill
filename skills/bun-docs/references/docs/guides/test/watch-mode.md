@@ -17,4 +17,4 @@ Bun](https://github.com/oven-sh/bun/assets/3084745/dc49a36e-ba82-416f-b960-1c883
 
 ***
 
-See [Docs > Test Runner](/test) for complete documentation on the test runner.
+See [Docs > Test Runner](/docs/test) for complete documentation on the test runner.
