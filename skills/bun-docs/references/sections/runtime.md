@@ -28,6 +28,7 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Globals](../docs/runtime/globals.md) - `runtime/globals`
 - [Hashing](../docs/runtime/hashing.md) - `runtime/hashing`
 - [HTMLRewriter](../docs/runtime/html-rewriter.md) - `runtime/html-rewriter`
+- [Image](../docs/runtime/image.md) - `runtime/image`
 - [Bun Runtime](../docs/runtime/index.md) - `runtime/index`
 - [JSON5](../docs/runtime/json5.md) - `runtime/json5`
 - [JSONL](../docs/runtime/jsonl.md) - `runtime/jsonl`

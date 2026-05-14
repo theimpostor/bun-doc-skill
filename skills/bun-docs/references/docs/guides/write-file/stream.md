@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/write-file/stream
 
 
-To write a `ReadableStream` to disk, first create a `Response` instance from the stream. This `Response` can then be written to disk using [`Bun.write()`](/runtime/file-io#writing-files-bun-write).
+To write a `ReadableStream` to disk, first create a `Response` instance from the stream. This `Response` can then be written to disk using [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
 
 ```ts
 const stream: ReadableStream = ...;
@@ -14,4 +14,4 @@ await Bun.write(path, response);
 
 ***
 
-See [Docs > API > File I/O](/runtime/file-io#writing-files-bun-write) for complete documentation of `Bun.write()`.
+See [Docs > API > File I/O](/docs/runtime/file-io#writing-files-bun-write) for complete documentation of `Bun.write()`.

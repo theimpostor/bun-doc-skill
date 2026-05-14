@@ -40,4 +40,4 @@ for await (const line of $`ls -l`.lines()) {
 
 ***
 
-See [Docs > API > Shell](/runtime/shell) for complete documentation.
+See [Docs > API > Shell](/docs/runtime/shell) for complete documentation.

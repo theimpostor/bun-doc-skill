@@ -26,4 +26,4 @@ process.on("exit", code => {
 
 ***
 
-See [Docs > API > Utils](/runtime/utils) for more useful utilities.
+See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.

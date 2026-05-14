@@ -5,7 +5,7 @@ Source: https://bun.com/docs/guides/ecosystem/express
 Express and other major Node.js HTTP libraries should work out of the box. Bun implements the [`node:http`](https://nodejs.org/api/http.html) and [`node:https`](https://nodejs.org/api/https.html) modules that these libraries rely on.
 
 > Note
-Refer to the [Runtime > Node.js APIs](/runtime/nodejs-compat#node-http) page for more detailed compatibility
+Refer to the [Runtime > Node.js APIs](/docs/runtime/nodejs-compat#node-http) page for more detailed compatibility
 information.
 
 ```sh

@@ -376,7 +376,7 @@ for await (const chunk of stream) {
 // => "world"
 ```
 
-For a more complete discussion of streams in Bun, see [API > Streams](/runtime/streams).
+For a more complete discussion of streams in Bun, see [API > Streams](/docs/runtime/streams).
 
 ***
 

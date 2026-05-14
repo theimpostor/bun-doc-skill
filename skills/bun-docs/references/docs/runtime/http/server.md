@@ -67,9 +67,9 @@ Bun.serve({
 });
 ```
 
-HTML imports don't just serve HTML — it's a full-featured frontend bundler, transpiler, and toolkit built using Bun's [bundler](/bundler), JavaScript transpiler and CSS parser. You can use this to build full-featured frontends with React, TypeScript, Tailwind CSS, and more.
+HTML imports don't just serve HTML — it's a full-featured frontend bundler, transpiler, and toolkit built using Bun's [bundler](/docs/bundler), JavaScript transpiler and CSS parser. You can use this to build full-featured frontends with React, TypeScript, Tailwind CSS, and more.
 
-For a complete guide on building full-stack applications with HTML imports, including detailed examples and best practices, see [/docs/bundler/fullstack](/bundler/fullstack).
+For a complete guide on building full-stack applications with HTML imports, including detailed examples and best practices, see [/docs/bundler/fullstack](/docs/bundler/fullstack).
 
 ***
 
@@ -167,6 +167,48 @@ Bun.serve({
 ```
 
 Unlike unix domain sockets, abstract namespace sockets are not bound to the filesystem and are automatically removed when the last reference to the socket is closed.
+
+***
+
+## HTTP/3 (QUIC)
+
+> Note: HTTP/3 support in `Bun.serve` is **experimental** and may change in future releases.
+
+`Bun.serve` can also listen for HTTP/3 over QUIC. Set `http3: true` together with [`tls`](./tls) — HTTP/3 always requires TLS.
+
+```ts
+Bun.serve({
+  tls: {
+    key: Bun.file("./key.pem"),
+    cert: Bun.file("./cert.pem"),
+  },
+  http3: true,
+  fetch(req) {
+    return new Response("Hello over HTTP/3!");
+  },
+});
+```
+
+When `http3` is enabled, the server listens on the same port over both TCP (HTTP/1.1) and UDP (HTTP/3). HTTP/1.1 responses include an `Alt-Svc` header advertising the HTTP/3 endpoint so capable clients can upgrade automatically.
+
+To serve HTTP/3 only — no TCP listener at all — set `http1: false`:
+
+```ts
+Bun.serve({
+  tls: {
+    key: Bun.file("./key.pem"),
+    cert: Bun.file("./cert.pem"),
+  },
+  http3: true,
+  http1: false,
+  fetch(req) {
+    return new Response("HTTP/3 only");
+  },
+});
+```
+
+> Note
+`http3` is not supported with unix domain sockets — QUIC requires a UDP port. `http1: false` requires `http3: true`.
 
 ***
 

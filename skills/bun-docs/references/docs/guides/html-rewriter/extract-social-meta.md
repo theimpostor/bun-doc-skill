@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/html-rewriter/extract-social-meta
 
 ## Extract social share images and Open Graph tags
 
-Bun's [HTMLRewriter](/runtime/html-rewriter) API can be used to efficiently extract social share images and Open Graph metadata from HTML content. This is particularly useful for building link preview features, social media cards, or web scrapers. We can use HTMLRewriter to match CSS selectors to HTML elements, text, and attributes we want to process.
+Bun's [HTMLRewriter](/docs/runtime/html-rewriter) API can be used to efficiently extract social share images and Open Graph metadata from HTML content. This is particularly useful for building link preview features, social media cards, or web scrapers. We can use HTMLRewriter to match CSS selectors to HTML elements, text, and attributes we want to process.
 
 **File:** `extract-social-meta.ts`
 ```ts

@@ -142,7 +142,7 @@ bun build ./index.tsx --outdir ./out --watch
 
 ## Content types
 
-Like the Bun runtime, the bundler supports an array of file types out of the box. The following table breaks down the bundler's set of standard "loaders". Refer to [Bundler > File types](/bundler/loaders) for full documentation.
+Like the Bun runtime, the bundler supports an array of file types out of the box. The following table breaks down the bundler's set of standard "loaders". Refer to [Bundler > File types](/docs/bundler/loaders) for full documentation.
 
 | Extensions                                            | Details                                                                                                                                                                                                                                                                                                                                                      |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -176,11 +176,11 @@ console.log(logo);
 
 The exact behavior of the file loader is also impacted by [`naming`](#naming) and [`publicPath`](#publicpath).
 
-> Info: Refer to the [Bundler > Loaders](/bundler/loaders) page for more complete documentation on the file loader.
+> Info: Refer to the [Bundler > Loaders](/docs/bundler/loaders) page for more complete documentation on the file loader.
 
 ### Plugins
 
-The behavior described in this table can be overridden or extended with plugins. Refer to the [Bundler > Loaders](/bundler/loaders) page for complete documentation.
+The behavior described in this table can be overridden or extended with plugins. Refer to the [Bundler > Loaders](/docs/bundler/loaders) page for complete documentation.
 
 ## API
 
@@ -537,7 +537,7 @@ await Bun.build({
 });
 ```
 
-Bun implements a universal plugin system for both Bun's runtime and bundler. Refer to the [plugin documentation](/bundler/plugins) for complete documentation.
+Bun implements a universal plugin system for both Bun's runtime and bundler. Refer to the [plugin documentation](/docs/bundler/plugins) for complete documentation.
 
 ### env
 
@@ -1408,7 +1408,7 @@ Each artifact also contains the following properties:
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `kind`      | What kind of build output this file is. A build generates bundled entrypoints, code-split "chunks", sourcemaps, bytecode, and copied assets (like images).   |
 | `path`      | Absolute path to the file on disk                                                                                                                            |
-| `loader`    | The loader was used to interpret the file. See [Bundler > Loaders](/bundler/loaders) to see how Bun maps file extensions to the appropriate built-in loader. |
+| `loader`    | The loader was used to interpret the file. See [Bundler > Loaders](/docs/bundler/loaders) to see how Bun maps file extensions to the appropriate built-in loader. |
 | `hash`      | The hash of the file contents. Always defined for assets.                                                                                                    |
 | `sourcemap` | The sourcemap file corresponding to this file, if generated. Only defined for entrypoints and chunks.                                                        |
 
@@ -1511,7 +1511,7 @@ bun build ./cli.tsx --outfile mycli --compile
 ./mycli
 ```
 
-Refer to [Bundler > Executables](/bundler/executables) for complete documentation.
+Refer to [Bundler > Executables](/docs/bundler/executables) for complete documentation.
 
 ## Logs and errors
 

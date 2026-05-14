@@ -61,4 +61,4 @@ process.on("SIGINT", () => {
 
 ***
 
-Refer to [API > Binary data > Typed arrays](/runtime/binary-data#typedarray) for more information on working with `Uint8Array` and other binary data formats in Bun.
+Refer to [API > Binary data > Typed arrays](/docs/runtime/binary-data#typedarray) for more information on working with `Uint8Array` and other binary data formats in Bun.

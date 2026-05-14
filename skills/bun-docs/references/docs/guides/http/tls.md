@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/tls
 
 
-Set the `tls` key to configure TLS. Both `key` and `cert` are required. The `key` should be the contents of your private key; `cert` should be the contents of your issued certificate. Use [`Bun.file()`](/runtime/file-io#reading-files-bun-file) to read the contents.
+Set the `tls` key to configure TLS. Both `key` and `cert` are required. The `key` should be the contents of your private key; `cert` should be the contents of your issued certificate. Use [`Bun.file()`](/docs/runtime/file-io#reading-files-bun-file) to read the contents.
 
 **File:** `server.ts`
 ```ts

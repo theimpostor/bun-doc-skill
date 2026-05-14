@@ -38,5 +38,5 @@ Ran 3 tests across 1 files. [74.00ms]
 
 See also:
 
-* [Mark a test as a todo](/guides/test/todo-tests)
-* [Docs > Test runner > Writing tests](/test/writing-tests)
+* [Mark a test as a todo](/docs/guides/test/todo-tests)
+* [Docs > Test runner > Writing tests](/docs/test/writing-tests)

@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/test/run-tests
 
 
-Bun has a built-in [test runner](/test) with a Jest-like `expect` API.
+Bun has a built-in [test runner](/docs/test) with a Jest-like `expect` API.
 
 ***
 
@@ -112,4 +112,4 @@ Ran 6 tests across 3 files. [59.00ms]
 
 ***
 
-See [Docs > Test Runner](/test) for complete documentation on the test runner.
+See [Docs > Test Runner](/docs/test) for complete documentation on the test runner.

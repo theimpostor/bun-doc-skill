@@ -6,7 +6,7 @@ You can use [Testing Library](https://testing-library.com/) with Bun's test runn
 
 ***
 
-As a prerequisite to using Testing Library you will need to install [Happy Dom](https://github.com/capricorn86/happy-dom). ([see Bun's Happy DOM guide for more information](/guides/test/happy-dom)).
+As a prerequisite to using Testing Library you will need to install [Happy Dom](https://github.com/capricorn86/happy-dom). ([see Bun's Happy DOM guide for more information](/docs/guides/test/happy-dom)).
 
 ```sh
 bun add -D @happy-dom/global-registrator
@@ -22,7 +22,7 @@ bun add -D @testing-library/react @testing-library/dom @testing-library/jest-dom
 
 ***
 
-Next you will need to create a preload script for Happy DOM and for Testing Library. For more details about the Happy DOM setup script see [Bun's Happy DOM guide](/guides/test/happy-dom).
+Next you will need to create a preload script for Happy DOM and for Testing Library. For more details about the Happy DOM setup script see [Bun's Happy DOM guide](/docs/guides/test/happy-dom).
 
 **File:** `happydom.ts`
 ```ts
@@ -93,4 +93,4 @@ test("Can use Testing Library", () => {
 
 ***
 
-Refer to the [Testing Library docs](https://testing-library.com/), [Happy DOM repo](https://github.com/capricorn86/happy-dom) and [Docs > Test runner > DOM](/test/dom) for complete documentation on writing browser tests with Bun.
+Refer to the [Testing Library docs](https://testing-library.com/), [Happy DOM repo](https://github.com/capricorn86/happy-dom) and [Docs > Test runner > DOM](/docs/test/dom) for complete documentation on writing browser tests with Bun.

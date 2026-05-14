@@ -172,7 +172,7 @@ Once imported, you should see something like this:
 
 <img alt="Viewing heap snapshot in Safari" />
 
-> The [web debugger](/runtime/debugger#inspect) also offers the timeline feature which allows you to track and examine the memory usage of the running debug session.
+> The [web debugger](/docs/runtime/debugger#inspect) also offers the timeline feature which allows you to track and examine the memory usage of the running debug session.
 
 ### Native heap stats
 

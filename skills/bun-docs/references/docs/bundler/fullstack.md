@@ -528,7 +528,7 @@ process.env; env.FOO`.
 If an environment variable is not set, you may see runtime errors like `ReferenceError: process
 is not defined` in the browser.
 
-See the [HTML & static sites documentation](/bundler/html-static#inline-environment-variables) for more details on build-time configuration and examples.
+See the [HTML & static sites documentation](/docs/bundler/html-static#inline-environment-variables) for more details on build-time configuration and examples.
 
 ## How It Works
 

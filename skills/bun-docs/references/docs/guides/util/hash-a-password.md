@@ -51,4 +51,4 @@ const isMatch = await Bun.password.verify(password, hash);
 
 ***
 
-See [Docs > API > Hashing](/runtime/hashing#bun-password) for complete documentation.
+See [Docs > API > Hashing](/docs/runtime/hashing#bun-password) for complete documentation.

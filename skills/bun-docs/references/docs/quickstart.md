@@ -7,7 +7,7 @@ Build your first app with Bun
 
 Build a minimal HTTP server with `Bun.serve`, run it locally, then evolve it by installing a package.
 
-> Info: Prerequisites: Bun installed and available on your `PATH`. See [installation](/installation) for setup.
+> Info: Prerequisites: Bun installed and available on your `PATH`. See [installation](/docs/installation) for setup.
 
 ***
 

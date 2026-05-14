@@ -36,4 +36,4 @@ try {
 
 ***
 
-See [Docs > API > FileSystem](/runtime/file-io) for more filesystem operations.
+See [Docs > API > FileSystem](/docs/runtime/file-io) for more filesystem operations.

@@ -105,4 +105,4 @@ export = contents;
 
 ***
 
-See [Docs > API > YAML](/runtime/yaml) for complete documentation on YAML support in Bun.
+See [Docs > API > YAML](/docs/runtime/yaml) for complete documentation on YAML support in Bun.

@@ -7,7 +7,7 @@ The Bun bundler implements a set of default loaders out of the box. As a rule of
 
 `.js` `.cjs` `.mjs` `.mts` `.cts` `.ts` `.tsx` `.jsx` `.css` `.json` `.jsonc` `.json5` `.toml` `.yaml` `.yml` `.txt` `.wasm` `.node` `.html` `.sh`
 
-Bun uses the file extension to determine which built-in *loader* should be used to parse the file. Every loader has a name, such as `js`, `tsx`, or `json`. These names are used when building [plugins](/bundler/plugins) that extend Bun with custom loaders.
+Bun uses the file extension to determine which built-in *loader* should be used to parse the file. Every loader has a name, such as `js`, `tsx`, or `json`. These names are used when building [plugins](/docs/bundler/plugins) that extend Bun with custom loaders.
 
 You can explicitly specify which loader to use using the `'type'` import attribute.
 
@@ -287,7 +287,7 @@ In the bundler, `.node` files are handled using the [`file`](#file) loader.
 
 **SQLite loader**. `with { "type": "sqlite" }` import attribute
 
-In the runtime and bundler, SQLite databases can be directly imported. This will load the database using [`bun:sqlite`](/runtime/sqlite).
+In the runtime and bundler, SQLite databases can be directly imported. This will load the database using [`bun:sqlite`](/docs/runtime/sqlite).
 
 ```ts
 import db from "./my.db" with { type: "sqlite" };
@@ -304,7 +304,7 @@ You can change this behavior with the `"embed"` attribute:
 import db from "./my.db" with { type: "sqlite", embed: "true" };
 ```
 
-When using a [standalone executable](/bundler/executables), the database is embedded into the single-file executable.
+When using a [standalone executable](/docs/bundler/executables), the database is embedded into the single-file executable.
 
 Otherwise, the database to embed is copied into the `outdir` with a hashed filename.
 
@@ -383,7 +383,7 @@ The `html` loader behaves differently depending on how it's used:
 
 **CSS loader**. Default for `.css`.
 
-CSS files can be directly imported. This is primarily useful for [full-stack applications](/bundler/html-static) where CSS is bundled alongside HTML.
+CSS files can be directly imported. This is primarily useful for [full-stack applications](/docs/bundler/html-static) where CSS is bundled alongside HTML.
 
 ```ts
 import "./styles.css";
@@ -395,7 +395,7 @@ There isn't any value returned from the import, it's only used for side effects.
 
 **Bun Shell loader**. Default for `.sh` files
 
-This loader is used to parse [Bun Shell](/runtime/shell) scripts. It's only supported when starting Bun itself, so it's not available in the bundler or in the runtime.
+This loader is used to parse [Bun Shell](/docs/runtime/shell) scripts. It's only supported when starting Bun itself, so it's not available in the bundler or in the runtime.
 
 ```sh
 bun run ./script.sh
@@ -437,7 +437,7 @@ If a value is specified for `publicPath`, the import will use value as a prefix 
 | `"https://cdn.example.com/"` | `https://cdn.example.com/logo.svg` |
 
 > Note
-The location and file name of the copied file is determined by the value of [`naming.asset`](/bundler#naming).
+The location and file name of the copied file is determined by the value of [`naming.asset`](/docs/bundler#naming).
 
 This loader is copied into the `outdir` as-is. The name of the copied file is determined using the value of
 `naming.asset`.

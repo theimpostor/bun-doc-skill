@@ -45,7 +45,7 @@ In the root `package.json`, the `"workspaces"` key is used to indicate which sub
 
 > Note
 **Glob support** — Bun supports full glob syntax in `"workspaces"`, including negative patterns (e.g.
-`!**/excluded/**`). See [here](/runtime/glob#supported-glob-patterns) for a comprehensive list of supported syntax.
+`!**/excluded/**`). See [here](/docs/runtime/glob#supported-glob-patterns) for a comprehensive list of supported syntax.
 
 **File:** `package.json`
 ```json
@@ -97,7 +97,7 @@ Workspaces have a couple major benefits.
 
 * **Code can be split into logical parts.** If one package relies on another, add it as a dependency in `package.json`. If package `b` depends on `a`, `bun install` will install your local `packages/a` directory into `node_modules` instead of downloading it from the npm registry.
 * **Dependencies can be de-duplicated.** If `a` and `b` share a common dependency, it will be *hoisted* to the root `node_modules` directory. This reduces redundant disk usage and minimizes "dependency hell" issues associated with having multiple versions of a package installed simultaneously.
-* **Run scripts in multiple packages.** You can use the [`--filter` flag](/pm/filter) to run `package.json` scripts in multiple packages in your workspace, or `--workspaces` to run scripts across all workspaces.
+* **Run scripts in multiple packages.** You can use the [`--filter` flag](/docs/pm/filter) to run `package.json` scripts in multiple packages in your workspace, or `--workspaces` to run scripts across all workspaces.
 
 ## Share versions with Catalogs
 
@@ -105,7 +105,7 @@ When many packages need the same dependency versions, catalogs let you define
 those versions once in the root `package.json` and reference them from your
 workspaces using the `catalog:` protocol. Updating the catalog automatically
 updates every package that references it. See
-[Catalogs](/pm/catalogs) for details.
+[Catalogs](/docs/pm/catalogs) for details.
 
 > Note
 ⚡️ **Speed** — Installs are fast, even for big monorepos. Bun installs the [Remix](https://github.com/remix-run/remix) monorepo in about `500ms` on Linux.

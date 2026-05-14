@@ -12,4 +12,4 @@ const nodeBuf = Buffer.from(arrBuf);
 
 ***
 
-See [Docs > API > Utils](/runtime/utils#bun-readablestreamto) for documentation on Bun's other `ReadableStream` conversion functions.
+See [Docs > API > Utils](/docs/runtime/utils#bun-readablestreamto) for documentation on Bun's other `ReadableStream` conversion functions.

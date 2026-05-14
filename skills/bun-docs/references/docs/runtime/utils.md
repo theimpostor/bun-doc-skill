@@ -234,7 +234,7 @@ const currentFile = import.meta.url;
 Bun.openInEditor(currentFile);
 ```
 
-You can override this via the `debug.editor` setting in your [`bunfig.toml`](/runtime/bunfig).
+You can override this via the `debug.editor` setting in your [`bunfig.toml`](/docs/runtime/bunfig).
 
 **File:** `bunfig.toml`
 ```toml

@@ -46,4 +46,4 @@ bun install
 
 ***
 
-See [Docs > Package manager > Trusted dependencies](/pm/lifecycle) for complete documentation of trusted dependencies.
+See [Docs > Package manager > Trusted dependencies](/docs/pm/lifecycle) for complete documentation of trusted dependencies.

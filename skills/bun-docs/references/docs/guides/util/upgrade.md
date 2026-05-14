@@ -83,5 +83,5 @@ To avoid conflicts with Scoop, use `scoop update bun` instead.
 
 ## See also
 
-* [Installation](/installation) — Install Bun for the first time
-* [Update packages](/pm/cli/update) — Update dependencies to latest versions
+* [Installation](/docs/installation) — Install Bun for the first time
+* [Update packages](/docs/pm/cli/update) — Update dependencies to latest versions

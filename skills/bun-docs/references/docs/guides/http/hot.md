@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/hot
 
 
-Bun supports the [`--hot`](/runtime/watch-mode#hot-mode) flag to run a file with hot reloading enabled. When any module or file changes, Bun re-runs the file.
+Bun supports the [`--hot`](/docs/runtime/watch-mode#hot-mode) flag to run a file with hot reloading enabled. When any module or file changes, Bun re-runs the file.
 
 ```sh
 bun --hot run index.ts

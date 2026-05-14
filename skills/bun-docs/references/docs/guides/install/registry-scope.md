@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/install/registry-scope
 
 
-Private registries can be configured using either [`.npmrc`](/pm/npmrc) or [`bunfig.toml`](/runtime/bunfig#install-registry). While both are supported, we recommend using **bunfig.toml** for enhanced flexibility and Bun-specific options.
+Private registries can be configured using either [`.npmrc`](/docs/pm/npmrc) or [`bunfig.toml`](/docs/runtime/bunfig#install-registry). While both are supported, we recommend using **bunfig.toml** for enhanced flexibility and Bun-specific options.
 
 To configure a registry for a particular npm scope:
 
@@ -27,7 +27,7 @@ To configure a registry for a particular npm scope:
 
 ***
 
-Your `bunfig.toml` can reference environment variables. Bun automatically loads environment variables from `.env.local`, `.env.[NODE_ENV]`, and `.env`. See [Docs > Environment variables](/runtime/environment-variables) for more information.
+Your `bunfig.toml` can reference environment variables. Bun automatically loads environment variables from `.env.local`, `.env.[NODE_ENV]`, and `.env`. See [Docs > Environment variables](/docs/runtime/environment-variables) for more information.
 
 **File:** `bunfig.toml`
 ```toml
@@ -37,4 +37,4 @@ Your `bunfig.toml` can reference environment variables. Bun automatically loads 
 
 ***
 
-See [Docs > Package manager](/pm/cli/install) for complete documentation of Bun's package manager.
+See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.

@@ -49,4 +49,4 @@ writer.end();
 
 ***
 
-Full documentation: [FileSink](/runtime/file-io#incremental-writing-with-filesink).
+Full documentation: [FileSink](/docs/runtime/file-io#incremental-writing-with-filesink).

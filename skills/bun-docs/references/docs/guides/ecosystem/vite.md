@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/ecosystem/vite
 
 > Note
 You can use Vite with Bun, but many projects get faster builds & drop hundreds of dependencies by switching to [HTML
-imports](/bundler/html-static).
+imports](/docs/bundler/html-static).
 
 ***
 

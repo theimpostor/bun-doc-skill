@@ -392,7 +392,7 @@ coveragePathIgnorePatterns = [
 ]
 ```
 
-Files matching any of these patterns will be excluded from coverage calculation and reporting. See the [coverage documentation](/test/code-coverage) for more details and examples.
+Files matching any of these patterns will be excluded from coverage calculation and reporting. See the [coverage documentation](/docs/test/code-coverage) for more details and examples.
 
 #### Common Ignore Patterns
 

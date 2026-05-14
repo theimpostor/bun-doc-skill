@@ -11,4 +11,4 @@ bun test --rerun-each 10
 
 ***
 
-See [Docs > Test runner](/test) for complete documentation of `bun test`.
+See [Docs > Test runner](/docs/test) for complete documentation of `bun test`.

@@ -46,4 +46,4 @@ $env:FOO="helloworld"; bun run dev
 
 ***
 
-See [Docs > Runtime > Environment variables](/runtime/environment-variables) for more information on using environment variables with Bun.
+See [Docs > Runtime > Environment variables](/docs/runtime/environment-variables) for more information on using environment variables with Bun.
