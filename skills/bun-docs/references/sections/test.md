@@ -1,6 +1,6 @@
 # Test Runner
 
-Use for core `bun test` documentation: writing tests, lifecycle hooks, mocks, snapshots, config, coverage, and reporters.
+Use for core `bun test` documentation: writing tests, parallel and isolated runs, lifecycle hooks, mocks, snapshots, config, coverage, and reporters.
 
 Use this file to pick the most relevant Bun doc page before opening the page itself.
 
@@ -14,6 +14,7 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Test runner](../docs/test/index.md) - `test/index`
 - [Lifecycle hooks](../docs/test/lifecycle.md) - `test/lifecycle`
 - [Mocks](../docs/test/mocks.md) - `test/mocks`
+- [Parallel & isolated test runs](../docs/test/parallel.md) - `test/parallel`
 - [Test Reporters](../docs/test/reporters.md) - `test/reporters`
 - [Runtime behavior](../docs/test/runtime-behavior.md) - `test/runtime-behavior`
 - [Snapshots](../docs/test/snapshots.md) - `test/snapshots`

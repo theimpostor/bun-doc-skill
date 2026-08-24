@@ -10,20 +10,20 @@ bun add zod
 
 ***
 
-This will add the package to `dependencies` in `package.json`. By default, the `^` range specifier will be used, to indicate that any future minor or patch versions are acceptable.
+This adds the package to `dependencies` in `package.json`. By default, Bun uses the `^` range specifier, which accepts future minor and patch versions.
 
 **File:** `package.json`
 ```json
 {
   "dependencies": {
-    "zod": "^3.0.0"
+    "zod": "^4.0.0"
   }
 }
 ```
 
 ***
 
-To "pin" to an exact version of the package, use `--exact`. This will add the package to `dependencies` without the `^`, pinning your project to the exact version you installed.
+To pin your project to the exact version you installed, use `--exact`. This adds the package to `dependencies` without the `^`.
 
 ```sh
 bun add zod --exact
@@ -40,4 +40,4 @@ bun add zod@next
 
 ***
 
-See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.
+See [`bun install`](/docs/pm/cli/install).

@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/test/coverage-threshold
 
 
-Bun's test runner supports built-in code coverage reporting via the `--coverage` flag.
+Bun's test runner has built-in code coverage reporting. Enable it with the `--coverage` flag.
 
 ```sh
 bun test --coverage
@@ -16,7 +16,7 @@ test.test.ts:
 -------------|---------|---------|-------------------
 File         | % Funcs | % Lines | Uncovered Line #s
 -------------|---------|---------|-------------------
-All files    |   66.67 |   77.78 |
+All files    |   50.00 |   66.67 |
  math.ts     |   50.00 |   66.67 |
  random.ts   |   50.00 |   66.67 |
 -------------|---------|---------|-------------------
@@ -28,7 +28,7 @@ All files    |   66.67 |   77.78 |
 
 ***
 
-To set a minimum coverage threshold, add the following line to your `bunfig.toml`. This requires that 90% of your codebase is covered by tests.
+To set a minimum coverage threshold, add the following to your `bunfig.toml`. A threshold of `0.9` requires that tests cover 90% of the lines and 90% of the functions of every file in the coverage report. Bun checks the threshold against each file, not against the `All files` average.
 
 **File:** `bunfig.toml`
 ```toml
@@ -39,7 +39,7 @@ coverageThreshold = 0.9
 
 ***
 
-If your test suite does not meet this threshold, `bun test` will exit with a non-zero exit code to signal a failure.
+If your test suite does not meet this threshold, `bun test` exits with a non-zero exit code to signal a failure.
 
 ```sh
 bun test --coverage
@@ -53,7 +53,7 @@ $ echo $?
 
 ***
 
-Different thresholds can be set for line-level and function-level coverage.
+You can set different thresholds for line-level and function-level coverage.
 
 **File:** `bunfig.toml`
 ```toml
@@ -64,4 +64,4 @@ coverageThreshold = { lines = 0.5, functions = 0.7 }
 
 ***
 
-See [Docs > Test runner > Coverage](/docs/test/code-coverage) for complete documentation on code coverage reporting in Bun.
+See [Code coverage](/docs/test/code-coverage).

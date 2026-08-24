@@ -22,14 +22,14 @@ Or add it in dependencies in your package.json file:
   "cool-pkg": "link:cool-pkg"
 ```
 
-This package can now be "linked" into other projects using `bun link cool-pkg`. This will create a symlink in the `node_modules` directory of the target project, pointing to the local directory.
+You can now "link" this package into other projects using `bun link cool-pkg`. This command creates a symlink in the target project's `node_modules` directory pointing to the local directory.
 
 ```bash
 cd /path/to/my-app
 bun link cool-pkg
 ```
 
-In addition, the `--save` flag can be used to add `cool-pkg` to the `dependencies` field of your app's package.json with a special version specifier that tells Bun to load from the registered local directory instead of installing from `npm`:
+The `--save` flag also adds `cool-pkg` to the `dependencies` field of your app's package.json, with a version specifier that tells Bun to load from the registered local directory instead of installing from `npm`:
 
 **File:** `package.json`
 ```json
@@ -53,6 +53,7 @@ bun unlink
 
 ```txt
 bun unlink v1.3.3 (7416672e)
+success: unlinked package "cool-pkg"
 ```
 
 ***
@@ -85,7 +86,7 @@ bun link <packages>
 
 - (boolean) Don't update `package.json` or save a lockfile
 
-- (boolean) Save to `package.json` (true by default)
+- (boolean) Save to `package.json`
 
 - (boolean) Add to `trustedDependencies` in the project's `package.json` and install the package(s)
 
@@ -95,13 +96,13 @@ bun link <packages>
 
 - (boolean) Skip verifying integrity of newly downloaded packages
 
-- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default), `hardlink`, `symlink`, `copyfile`
+- (string) Platform-specific optimizations for installing dependencies. One of `clonefile`, `hardlink`, `symlink`, or `copyfile`
 
 - (string) Linker strategy (one of `isolated` or `hoisted`)
 
-- (boolean) Don't install anything
+- (boolean) Perform a dry run without making changes
 
-- (boolean) Skip lifecycle scripts in the project's `package.json` (dependency scripts are never run)
+- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
 
 ### Network & Registry
 
@@ -111,11 +112,11 @@ bun link <packages>
 
 - (string) Use a specific registry by default, overriding `.npmrc`, `bunfig.toml`, and environment variables
 
-- (number) Maximum number of concurrent network requests (default 48)
+- (number) Maximum number of concurrent network requests
 
 ### Performance & Resource
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default 5)
+- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
 
 ### Caching
 
@@ -127,7 +128,7 @@ bun link <packages>
 
 - (boolean) Don't log anything
 
-- (boolean) Only show tarball name when packing
+- (boolean) Disable the progress bar
 
 - (boolean) Excessively verbose logging
 

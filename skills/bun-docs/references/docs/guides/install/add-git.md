@@ -10,7 +10,7 @@ bun add github:lodash/lodash
 
 ***
 
-This will add the following line to your `package.json`:
+This adds the following line to your `package.json`:
 
 **File:** `package.json`
 ```json
@@ -23,17 +23,17 @@ This will add the following line to your `package.json`:
 
 ***
 
-Bun supports a number of protocols for specifying Git dependencies.
+Bun supports several protocols for specifying Git dependencies.
 
 ```sh
 bun add git+https://github.com/lodash/lodash.git
 bun add git+ssh://github.com/lodash/lodash.git#4.17.21
 bun add git@github.com:lodash/lodash.git
-bun add github:colinhacks/zod
+bun add github:lodash/lodash#4.17.21
 ```
 
-**Note:** GitHub dependencies download via HTTP tarball when possible for faster installation.
+When possible, Bun downloads GitHub dependencies as HTTP tarballs, which is faster.
 
 ***
 
-See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.
+See [`bun install`](/docs/pm/cli/install).

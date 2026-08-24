@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/websocket/compression
 
 
-Per-message compression can be enabled with the `perMessageDeflate` parameter. When set, all messages will be compressed using the [permessage-deflate](https://tools.ietf.org/html/rfc7692) WebSocket extension.
+Set the `perMessageDeflate` parameter to enable the [permessage-deflate](https://tools.ietf.org/html/rfc7692) WebSocket extension. Bun then negotiates compression with clients that support it. Messages sent with `ws.send()` are still uncompressed unless you opt in per message (see below).
 
 **File:** `server.ts`
 ```ts
@@ -17,13 +17,14 @@ Bun.serve({
 
 ***
 
-To enable compression for individual messages, pass `true` as the second parameter to `ws.send()`.
+To enable compression for individual messages, pass `true` as the second parameter to `ws.send()`. This requires `perMessageDeflate` to be enabled; otherwise Bun sends the message uncompressed.
 
 **File:** `server.ts`
 ```ts
 Bun.serve({
   // ...
   websocket: {
+    perMessageDeflate: true,
     async message(ws, message) {
       // send a compressed message
       ws.send(message, true);

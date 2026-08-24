@@ -18,14 +18,12 @@ bun run cli.ts --flag1 --flag2 value
 ```
 
 ```txt
-[ '/path/to/bun', '/path/to/cli.ts', '--flag1', '--flag2', 'value' ]
+[ "/path/to/bun", "/path/to/cli.ts", "--flag1", "--flag2", "value" ]
 ```
 
 ***
 
-To parse `argv` into a more useful format, `util.parseArgs` would be helpful.
-
-Example:
+To parse `argv` into a more useful format, use `util.parseArgs`.
 
 **File:** `cli.ts`
 ```ts
@@ -51,14 +49,14 @@ console.log(positionals);
 
 ***
 
-then it outputs
+Running `cli.ts` with the same arguments prints the parsed values.
 
 ```sh
 bun run cli.ts --flag1 --flag2 value
 ```
 
 ```txt
-{
+[Object: null prototype] {
   flag1: true,
   flag2: "value",
 }

@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/write-file/cat
 
 
-Bun exposes `stdout` as a `BunFile` with the `Bun.stdout` property. This can be used as a destination for [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
+Bun exposes `stdout` as a `BunFile` with the `Bun.stdout` property. Pass it as the destination to [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
 
-This code writes a file to `stdout` similar to the `cat` command in Unix.
+The following code writes a file to `stdout`, like the Unix `cat` command.
 
 **File:** `cat.ts`
 ```ts
@@ -15,4 +15,4 @@ await Bun.write(Bun.stdout, file);
 
 ***
 
-See [Docs > API > File I/O](/docs/runtime/file-io#writing-files-bun-write) for complete documentation of `Bun.write()`.
+See [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).

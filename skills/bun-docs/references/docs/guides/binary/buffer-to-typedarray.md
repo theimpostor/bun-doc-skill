@@ -11,4 +11,4 @@ buf instanceof Uint8Array; // => true
 
 ***
 
-See [Docs > API > Binary Data](/docs/runtime/binary-data#conversion) for complete documentation on manipulating binary data with Bun.
+See [Binary Data](/docs/runtime/binary-data#conversion).

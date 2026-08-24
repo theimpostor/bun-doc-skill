@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/streams/to-arraybuffer
 
 
-Bun provides several convenience functions for reading the contents of a [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) into different formats.
+`Bun.readableStreamToArrayBuffer` reads the contents of a [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) into an `ArrayBuffer`.
 
 ```ts
 const stream = new ReadableStream();
@@ -11,4 +11,4 @@ const buf = await Bun.readableStreamToArrayBuffer(stream);
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils#bun-readablestreamto) for documentation on Bun's other `ReadableStream` conversion functions.
+See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).

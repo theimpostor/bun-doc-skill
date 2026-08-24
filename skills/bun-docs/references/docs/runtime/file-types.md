@@ -3,13 +3,13 @@ Source: https://bun.com/docs/runtime/file-types
 
 File types and loaders supported by Bun's bundler and runtime
 
-The Bun bundler implements a set of default loaders out of the box. As a rule of thumb, the bundler and the runtime both support the same set of file types out of the box.
+The Bun bundler implements a set of default loaders. As a rule of thumb, the bundler and the runtime support the same set of file types.
 
-`.js` `.cjs` `.mjs` `.mts` `.cts` `.ts` `.tsx` `.jsx` `.css` `.json` `.jsonc` `.json5` `.toml` `.yaml` `.yml` `.txt` `.wasm` `.node` `.html` `.sh`
+`.js` `.cjs` `.mjs` `.mts` `.cts` `.ts` `.tsx` `.jsx` `.css` `.json` `.jsonc` `.json5` `.toml` `.yaml` `.yml` `.xml` `.txt` `.text` `.md` `.markdown` `.wasm` `.node` `.html` `.sh`
 
-Bun uses the file extension to determine which built-in *loader* should be used to parse the file. Every loader has a name, such as `js`, `tsx`, or `json`. These names are used when building [plugins](/docs/bundler/plugins) that extend Bun with custom loaders.
+Bun uses the file extension to pick the built-in *loader* that parses the file. Every loader has a name, such as `js`, `tsx`, or `json`. These names are used when building [plugins](/docs/bundler/plugins) that extend Bun with custom loaders.
 
-You can explicitly specify which loader to use using the `'type'` import attribute.
+To specify a loader explicitly, use the `type` import attribute.
 
 ```ts
 import my_toml from "./my_file" with { type: "toml" };
@@ -25,13 +25,13 @@ const { default: my_toml } = await import("./my_file", { with: { type: "toml" } 
 
 **JavaScript**. Default for `.cjs` and `.mjs`.
 
-Parses the code and applies a set of default transforms like dead-code elimination and tree shaking. Note that Bun does not attempt to down-convert syntax at the moment.
+Parses the code and applies a set of default transforms like dead-code elimination and tree shaking. Bun does not down-convert syntax.
 
 ### `jsx`
 
-**JavaScript + JSX.**. Default for `.js` and `.jsx`.
+**JavaScript + JSX**. Default for `.js` and `.jsx`.
 
-Same as the `js` loader, but JSX syntax is supported. By default, JSX is down-converted to plain JavaScript; the details of how this is done depends on the `jsx*` compiler options in your `tsconfig.json`. Refer to the TypeScript documentation [on JSX](https://www.typescriptlang.org/docs/handbook/jsx.html) for more information.
+Same as the `js` loader, but JSX syntax is supported. By default, Bun down-converts JSX to plain JavaScript; the details depend on the `jsx*` compiler options in your `tsconfig.json`. Refer to the TypeScript documentation [on JSX](https://www.typescriptlang.org/docs/handbook/jsx.html).
 
 ### `ts`
 
@@ -54,7 +54,7 @@ import pkg from "./package.json";
 pkg.name; // => "my-package"
 ```
 
-During bundling, the parsed JSON is inlined into the bundle as a JavaScript object.
+During bundling, Bun inlines the parsed JSON into the bundle as a JavaScript object.
 
 ```ts
 var pkg = {
@@ -64,7 +64,7 @@ var pkg = {
 pkg.name;
 ```
 
-If a `.json` file is passed as an entrypoint to the bundler, it will be converted to a `.js` module that `export default`s the parsed object.
+If you pass a `.json` file as an entrypoint to the bundler, Bun converts it to a `.js` module that `export default`s the parsed object.
 
 **File:** `Input`
 ```json
@@ -88,14 +88,14 @@ export default {
 
 **JSON with Comments loader**. Default for `.jsonc`.
 
-JSONC (JSON with Comments) files can be directly imported. Bun will parse them, stripping out comments and trailing commas.
+JSONC (JSON with Comments) files can be directly imported. Bun parses them, stripping out comments and trailing commas.
 
 ```ts
 import config from "./config.jsonc";
 console.log(config);
 ```
 
-During bundling, the parsed JSONC is inlined into the bundle as a JavaScript object, identical to the `json` loader.
+During bundling, Bun inlines the parsed JSONC into the bundle as a JavaScript object, identical to the `json` loader.
 
 ```ts
 var config = {
@@ -110,7 +110,7 @@ Bun automatically uses the `jsonc` loader for `tsconfig.json`, `jsconfig.json`, 
 
 **TOML loader**. Default for `.toml`.
 
-TOML files can be directly imported. Bun will parse them with its fast native TOML parser.
+TOML files can be directly imported. Bun parses them with its fast native TOML parser.
 
 ```ts
 import config from "./bunfig.toml";
@@ -120,7 +120,7 @@ config.logLevel; // => "debug"
 // import myCustomTOML from './my.config' with {type: "toml"};
 ```
 
-During bundling, the parsed TOML is inlined into the bundle as a JavaScript object.
+During bundling, Bun inlines the parsed TOML into the bundle as a JavaScript object.
 
 ```ts
 var config = {
@@ -130,7 +130,7 @@ var config = {
 config.logLevel;
 ```
 
-If a `.toml` file is passed as an entrypoint, it will be converted to a `.js` module that `export default`s the parsed object.
+If you pass a `.toml` file as an entrypoint, Bun converts it to a `.js` module that `export default`s the parsed object.
 
 **File:** `Input`
 ```toml
@@ -152,7 +152,7 @@ export default {
 
 **YAML loader**. Default for `.yaml` and `.yml`.
 
-YAML files can be directly imported. Bun will parse them with its fast native YAML parser.
+YAML files can be directly imported. Bun parses them with its fast native YAML parser.
 
 ```ts
 import config from "./config.yaml";
@@ -162,7 +162,7 @@ console.log(config);
 import data from "./data.txt" with { type: "yaml" };
 ```
 
-During bundling, the parsed YAML is inlined into the bundle as a JavaScript object.
+During bundling, Bun inlines the parsed YAML into the bundle as a JavaScript object.
 
 ```ts
 var config = {
@@ -172,7 +172,7 @@ var config = {
 };
 ```
 
-If a `.yaml` or `.yml` file is passed as an entrypoint, it will be converted to a `.js` module that `export default`s the parsed object.
+If you pass a `.yaml` or `.yml` file as an entrypoint, Bun converts it to a `.js` module that `export default`s the parsed object.
 
 **File:** `Input`
 ```yaml
@@ -194,7 +194,7 @@ export default {
 
 **JSON5 loader**. Default for `.json5`.
 
-JSON5 files can be directly imported. Bun will parse them with its fast native JSON5 parser. JSON5 is a superset of JSON that supports comments, trailing commas, unquoted keys, single-quoted strings, and more.
+JSON5 files can be directly imported. Bun parses them with its fast native JSON5 parser. JSON5 is a superset of JSON that adds comments, trailing commas, unquoted keys, single-quoted strings, and more.
 
 ```ts
 import config from "./config.json5";
@@ -204,7 +204,7 @@ console.log(config);
 import data from "./data.txt" with { type: "json5" };
 ```
 
-During bundling, the parsed JSON5 is inlined into the bundle as a JavaScript object.
+During bundling, Bun inlines the parsed JSON5 into the bundle as a JavaScript object.
 
 ```ts
 var config = {
@@ -214,7 +214,7 @@ var config = {
 };
 ```
 
-If a `.json5` file is passed as an entrypoint, it will be converted to a `.js` module that `export default`s the parsed object.
+If you pass a `.json5` file as an entrypoint, Bun converts it to a `.js` module that `export default`s the parsed object.
 
 **File:** `Input`
 ```json5
@@ -235,12 +235,66 @@ export default {
 };
 ```
 
+### `xml`
+
+**XML loader**. Default for `.xml`.
+
+XML files can be directly imported. Bun parses them with its native XML 1.0 parser into the compact object shape of [`Bun.XML.parse`](/docs/runtime/xml):
+
+* One key for the root element
+* `"@name"` keys for attributes
+* Arrays for repeated child elements
+* `"#text"` for text next to attributes or children
+* Every value is a string
+
+```ts
+import doc from "./config.xml";
+console.log(doc.config["@version"]);
+
+// via import attribute:
+import feed from "./export.rss" with { type: "xml" };
+```
+
+During bundling, Bun inlines the parsed XML into the bundle as a JavaScript object.
+
+```ts
+var doc = {
+  config: {
+    "@version": "2",
+    // ...other fields
+  },
+};
+```
+
+If you pass a `.xml` file as an entrypoint, Bun converts it to a `.js` module that `export default`s the parsed object.
+
+**File:** `Input`
+```xml
+<user id="1">
+  <name>John Doe</name>
+  <email>johndoe@example.com</email>
+  <role>admin</role>
+  <role>editor</role>
+</user>
+```
+
+**File:** `Output`
+```ts
+export default {
+  user: {
+    "@id": "1",
+    name: "John Doe",
+    email: "johndoe@example.com",
+    role: ["admin", "editor"],
+  },
+};
+```
+
 ### `text`
 
-**Text loader**. Default for `.txt`.
+**Text loader**. Default for `.txt` and `.text`.
 
-The contents of the text file are read and inlined into the bundle as a string.
-Text files can be directly imported. The file is read and returned as a string.
+Text files can be directly imported. Bun reads the file and returns it as a string.
 
 ```ts
 import contents from "./file.txt";
@@ -251,14 +305,14 @@ console.log(contents); // => "Hello, world!"
 import html from "./index.html" with { type: "text" };
 ```
 
-When referenced during a build, the contents are inlined into the bundle as a string.
+When the file is referenced during a build, Bun inlines the contents into the bundle as a string.
 
 ```ts
 var contents = `Hello, world!`;
 console.log(contents);
 ```
 
-If a `.txt` file is passed as an entrypoint, it will be converted to a `.js` module that `export default`s the file contents.
+If you pass a `.txt` file as an entrypoint, Bun converts it to a `.js` module that `export default`s the file contents.
 
 **File:** `Input`
 ```txt
@@ -281,21 +335,21 @@ import addon from "./addon.node";
 console.log(addon);
 ```
 
-In the bundler, `.node` files are handled using the [`file`](#file) loader.
+In the bundler, Bun handles `.node` files using the [`file`](#file) loader.
 
 ### `sqlite`
 
 **SQLite loader**. `with { "type": "sqlite" }` import attribute
 
-In the runtime and bundler, SQLite databases can be directly imported. This will load the database using [`bun:sqlite`](/docs/runtime/sqlite).
+In the runtime and bundler, SQLite databases can be directly imported. Bun loads the database with [`bun:sqlite`](/docs/runtime/sqlite).
 
 ```ts
 import db from "./my.db" with { type: "sqlite" };
 ```
 
-This is only supported when the `target` is `bun`.
+The `sqlite` loader is only supported when the `target` is `bun`.
 
-By default, the database is external to the bundle (so that you can potentially use a database loaded elsewhere), so the database file on-disk won't be bundled into the final output.
+By default, the database is external to the bundle: Bun doesn't bundle the on-disk database file into the final output, so you can use a database loaded elsewhere.
 
 You can change this behavior with the `"embed"` attribute:
 
@@ -304,18 +358,18 @@ You can change this behavior with the `"embed"` attribute:
 import db from "./my.db" with { type: "sqlite", embed: "true" };
 ```
 
-When using a [standalone executable](/docs/bundler/executables), the database is embedded into the single-file executable.
+With a [standalone executable](/docs/bundler/executables), Bun embeds the database into the single-file executable.
 
 Otherwise, the database to embed is copied into the `outdir` with a hashed filename.
 
 ### `html`
 
-The html loader processes HTML files and bundles any referenced assets. It will:
+The `html` loader processes HTML files and bundles any referenced assets. It:
 
-* Bundle and hash referenced JavaScript files (`<script src="...">`)
-* Bundle and hash referenced CSS files (`<link rel="stylesheet" href="...">`)
-* Hash referenced images (`<img src="...">`)
-* Preserve external URLs (by default, anything starting with `http://` or `https://`)
+* Bundles and hashes referenced JavaScript files (`<script src="...">`)
+* Bundles and hashes referenced CSS files (`<link rel="stylesheet" href="...">`)
+* Hashes referenced images (`<img src="...">`)
+* Preserves external URLs (by default, anything starting with `http://` or `https://`)
 
 For example, given this HTML file:
 
@@ -331,7 +385,7 @@ For example, given this HTML file:
 </html>
 ```
 
-It will output a new HTML file with the bundled assets:
+Bun outputs a new HTML file with the bundled assets:
 
 **File:** `dist/output.html`
 ```html
@@ -345,15 +399,13 @@ It will output a new HTML file with the bundled assets:
 </html>
 ```
 
-Under the hood, it uses [`lol-html`](https://github.com/cloudflare/lol-html) to extract script and link tags as entrypoints, and other assets as external.
+The loader uses [`lol-html`](https://github.com/cloudflare/lol-html) to extract script and link tags as entrypoints, and other assets as external.
 
-Currently, the list of selectors is:
+The list of selectors is:
 
 * `audio[src]`
-* `iframe[src]`
 * `img[src]`
 * `img[srcset]`
-* `link:not([rel~='stylesheet']):not([rel~='modulepreload']):not([rel~='manifest']):not([rel~='icon']):not([rel~='apple-touch-icon'])[href]`
 * `link[as='font'][href], link[type^='font/'][href]`
 * `link[as='image'][href]`
 * `link[as='style'][href]`
@@ -383,19 +435,19 @@ The `html` loader behaves differently depending on how it's used:
 
 **CSS loader**. Default for `.css`.
 
-CSS files can be directly imported. This is primarily useful for [full-stack applications](/docs/bundler/html-static) where CSS is bundled alongside HTML.
+CSS files can be directly imported. This is primarily useful for [full-stack applications](/docs/bundler/fullstack) where CSS is bundled alongside HTML.
 
 ```ts
 import "./styles.css";
 ```
 
-There isn't any value returned from the import, it's only used for side effects.
+The import returns no value; it's only used for its side effects.
 
 ### `sh` loader
 
 **Bun Shell loader**. Default for `.sh` files
 
-This loader is used to parse [Bun Shell](/docs/runtime/shell) scripts. It's only supported when starting Bun itself, so it's not available in the bundler or in the runtime.
+This loader parses [Bun Shell](/docs/runtime/shell) scripts. It's only supported when starting Bun itself, so it's not available in the bundler or in the runtime.
 
 ```sh
 bun run ./script.sh
@@ -413,14 +465,14 @@ import logo from "./logo.svg";
 console.log(logo);
 ```
 
-*In the runtime*, Bun checks that the `logo.svg` file exists and converts it to an absolute path to the location of `logo.svg` on disk.
+*In the runtime*, Bun checks that the `logo.svg` file exists and resolves the import to its absolute path on disk.
 
 ```bash
 bun run logo.ts
 /path/to/project/logo.svg
 ```
 
-*In the bundler*, things are slightly different. The file is copied into `outdir` as-is, and the import is resolved as a relative path pointing to the copied file.
+*In the bundler*, Bun copies the file into `outdir` as-is, and the import resolves to a relative path pointing to the copied file.
 
 **File:** `Output`
 ```ts
@@ -428,19 +480,15 @@ var logo = "./logo.svg";
 console.log(logo);
 ```
 
-If a value is specified for `publicPath`, the import will use value as a prefix to construct an absolute path/URL.
+If `publicPath` is set, the import uses its value as a prefix to construct an absolute path/URL.
 
 | Public path                  | Resolved import                    |
 | ---------------------------- | ---------------------------------- |
-| `""` (default)               | `/logo.svg`                        |
-| `"/assets"`                  | `/assets/logo.svg`                 |
+| `""` (default)               | `./logo.svg`                       |
+| `"/assets/"`                 | `/assets/logo.svg`                 |
 | `"https://cdn.example.com/"` | `https://cdn.example.com/logo.svg` |
 
-> Note
-The location and file name of the copied file is determined by the value of [`naming.asset`](/docs/bundler#naming).
-
-This loader is copied into the `outdir` as-is. The name of the copied file is determined using the value of
-`naming.asset`.
+> Note: The value of [`naming.asset`](/docs/bundler#naming) determines the location and file name of the copied file.
 
 ### Fixing TypeScript import errors
 If you're using TypeScript, you may get an error like this:
@@ -450,7 +498,7 @@ If you're using TypeScript, you may get an error like this:
 // Cannot find module './logo.svg' or its corresponding type declarations.
 ```
 
-This can be fixed by creating `*.d.ts` file anywhere in your project (any name will work) with the following contents:
+To fix this, create a `*.d.ts` file anywhere in your project (any name works) with the following contents:
 
 ```ts
 declare module "*.svg" {
@@ -459,4 +507,4 @@ declare module "*.svg" {
 }
 ```
 
-This tells TypeScript that any default imports from `.svg` should be treated as a string.
+This tells TypeScript to treat any default import from `.svg` as a string.

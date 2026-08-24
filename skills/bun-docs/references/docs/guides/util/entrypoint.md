@@ -15,4 +15,4 @@ if (import.meta.main) {
 
 ***
 
-See [Docs > API > import.meta](/docs/runtime/module-resolution#import-meta) for complete documentation.
+See [`import.meta`](/docs/runtime/module-resolution#import-meta).

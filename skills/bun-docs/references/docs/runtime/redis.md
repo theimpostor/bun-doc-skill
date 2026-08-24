@@ -5,7 +5,7 @@ Use Bun's native Redis client with a Promise-based API
 
 > Note: Bun's Redis client supports Redis server versions 7.2 and up.
 
-Bun provides native bindings for working with Redis databases with a modern, Promise-based API. The interface is designed to be performant, with built-in connection management, fully typed responses, and TLS support.
+Bun's native Redis client has a Promise-based API with built-in connection management, fully typed responses, and TLS support.
 
 **File:** `redis.ts`
 ```ts
@@ -185,24 +185,21 @@ const poppedTag = await redis.spop("tags");
 
 ## Pub/Sub
 
-Bun provides native bindings for the [Redis
-Pub/Sub](https://redis.io/docs/latest/develop/pubsub/) protocol. **New in Bun
-1.2.23**
+Bun provides native bindings for the [Redis Pub/Sub](https://redis.io/docs/latest/develop/pubsub/) protocol, added in Bun 1.2.23.
 
 > Warning
-The Redis Pub/Sub feature is experimental. Although we expect it to be stable, we're currently actively looking for
-feedback and areas for improvement.
+Redis Pub/Sub is experimental. We expect it to be stable, but we're still looking for feedback and areas for
+improvement.
 
 ### Basic Usage
 
-To get started publishing messages, you can set up a publisher in
-`publisher.ts`:
+Create a publisher in `publisher.ts`:
 
 **File:** `publisher.ts`
 ```typescript
 import { RedisClient } from "bun";
 
-const writer = new RedisClient("redis://localhost:6739");
+const writer = new RedisClient("redis://localhost:6379");
 await writer.connect();
 
 writer.publish("general", "Hello everyone!");
@@ -216,7 +213,7 @@ In another file, create the subscriber in `subscriber.ts`:
 ```typescript
 import { RedisClient } from "bun";
 
-const listener = new RedisClient("redis://localhost:6739");
+const listener = new RedisClient("redis://localhost:6379");
 await listener.connect();
 
 await listener.subscribe("general", (message, channel) => {
@@ -237,10 +234,10 @@ bun run publisher.ts
 ```
 
 > Note
-The subscription mode takes over the `RedisClient` connection. A
-client with subscriptions can only call `RedisClient.prototype.subscribe()`. In
-other words, applications which need to message Redis need a separate
-connection, acquirable through `.duplicate()`:
+Subscribing takes over the `RedisClient` connection: a client with
+subscriptions can only call the subscription methods (`subscribe()`,
+`psubscribe()`, `unsubscribe()`, `punsubscribe()`), `pubsub()`, and `ping()`. To
+send other commands to Redis, create a separate connection with `.duplicate()`:
 
 **File:** `redis.ts`
 ```ts
@@ -256,7 +253,7 @@ await redis.set("bar", "baz");
 
 ### Publishing
 
-Publishing messages is done through the `publish()` method:
+Publish messages with the `publish()` method:
 
 **File:** `redis.ts`
 ```typescript
@@ -265,15 +262,14 @@ await client.publish(channelName, message);
 
 ### Subscriptions
 
-The Bun `RedisClient` allows you to subscribe to channels through the
-`.subscribe()` method:
+Subscribe to channels with the `.subscribe()` method:
 
 **File:** `redis.ts`
 ```typescript
 await client.subscribe(channel, (message, channel) => {});
 ```
 
-You can unsubscribe through the `.unsubscribe()` method:
+Unsubscribe with the `.unsubscribe()` method:
 
 **File:** `redis.ts`
 ```typescript
@@ -294,7 +290,7 @@ The client automatically pipelines commands, improving performance by sending mu
 const [infoResult, listResult] = await Promise.all([redis.get("user:1:name"), redis.get("user:2:email")]);
 ```
 
-To disable automatic pipelining, you can set the `enableAutoPipelining` option to `false`:
+To disable automatic pipelining, set the `enableAutoPipelining` option to `false`:
 
 **File:** `redis.ts`
 ```ts
@@ -305,7 +301,7 @@ const client = new RedisClient("redis://localhost:6379", {
 
 ### Raw Commands
 
-When you need to use commands that don't have convenience methods, you can use the `send` method:
+Use the `send` method to run any Redis command, including ones without a dedicated method. The first argument is the command name, and the second is an array of string arguments.
 
 **File:** `redis.ts`
 ```ts
@@ -318,8 +314,6 @@ await redis.send("LPUSH", ["mylist", "value1", "value2"]);
 // Get list range
 const list = await redis.send("LRANGE", ["mylist", "0", "-1"]);
 ```
-
-The `send` method allows you to use any Redis command, even ones that don't have dedicated methods in the client. The first argument is the command name, and the second argument is an array of string arguments.
 
 ### Connection Events
 
@@ -357,7 +351,7 @@ console.log(client.bufferedAmount);
 
 ### Type Conversion
 
-The Redis client handles automatic type conversion for Redis responses:
+The client automatically converts Redis responses to JavaScript values:
 
 * Integer responses are returned as JavaScript numbers
 * Bulk strings are returned as JavaScript strings
@@ -389,6 +383,7 @@ The following commands disable automatic pipelining:
 * `UNWATCH`
 * `PIPELINE`
 * `SUBSCRIBE`
+* `PSUBSCRIBE`
 * `UNSUBSCRIBE`
 * `UNPSUBSCRIBE`
 
@@ -396,7 +391,7 @@ The following commands disable automatic pipelining:
 
 ## Connection Options
 
-When creating a client, you can pass various options to configure the connection:
+When creating a client, you can pass options to configure the connection:
 
 **File:** `redis.ts`
 ```ts
@@ -410,7 +405,7 @@ const client = new RedisClient("redis://localhost:6379", {
   // Whether to automatically reconnect on disconnection (default: true)
   autoReconnect: true,
 
-  // Maximum number of reconnection attempts (default: 10)
+  // Maximum number of reconnection attempts (default: 20)
   maxRetries: 10,
 
   // Whether to queue commands when disconnected (default: true)
@@ -436,11 +431,11 @@ const client = new RedisClient("redis://localhost:6379", {
 When a connection is lost, the client automatically attempts to reconnect with exponential backoff:
 
 1. The client starts with a small delay (50ms) and doubles it with each attempt
-2. Reconnection delay is capped at 2000ms (2 seconds)
-3. The client attempts to reconnect up to `maxRetries` times (default: 10)
-4. Commands executed during disconnection are:
-* Queued if `enableOfflineQueue` is true (default)
-* Rejected immediately if `enableOfflineQueue` is false
+2. The client caps the reconnection delay at 2000ms (2 seconds)
+3. The client attempts to reconnect up to `maxRetries` times (default: 20)
+4. While disconnected, the client:
+* Queues commands if `enableOfflineQueue` is true (default)
+* Rejects commands immediately if `enableOfflineQueue` is false
 
 ***
 
@@ -589,15 +584,13 @@ async function getSession(sessionId) {
 
 ## Implementation Notes
 
-Bun's Redis client is implemented in Zig and uses the Redis Serialization Protocol (RESP3). It manages connections efficiently and provides automatic reconnection with exponential backoff.
-
-The client supports pipelining commands, meaning multiple commands can be sent without waiting for the replies to previous commands. This significantly improves performance when sending multiple commands in succession.
+Bun's Redis client is implemented in Rust and uses the Redis Serialization Protocol (RESP3). It reconnects automatically with exponential backoff. It also pipelines commands, so it can send multiple commands without waiting for replies to previous ones.
 
 ## Limitations and Future Plans
 
-Current limitations of the Redis client we are planning to address in future versions:
+Limitations we plan to address in future versions:
 
-* Transactions (MULTI/EXEC) must be done through raw commands for now
+* Transactions (MULTI/EXEC) require raw commands
 
 Unsupported features:
 

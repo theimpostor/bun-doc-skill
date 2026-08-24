@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/util/escape-html
 
 
-The `Bun.escapeHTML()` utility can be used to escape HTML characters in a string. The following replacements are made.
+`Bun.escapeHTML()` escapes HTML characters in a string. It makes the following replacements.
 
 * `"` becomes `"""`
 * `&` becomes `"&"`
@@ -10,13 +10,13 @@ The `Bun.escapeHTML()` utility can be used to escape HTML characters in a string
 * `<` becomes `"<"`
 * `>` becomes `">"`
 
-This function is optimized for large input. Non-string types will be converted to a string before escaping.
+This function is optimized for large input. It converts non-string values to a string before escaping them.
 
 ```ts
 Bun.escapeHTML("<script>alert('Hello World!')</script>");
-// &lt;script&gt;alert(&#x27;Hello World!&#x27;)&lt;&#x2F;script&gt;
+// &lt;script&gt;alert(&#x27;Hello World!&#x27;)&lt;/script&gt;
 ```
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.
+See [Utils](/docs/runtime/utils).

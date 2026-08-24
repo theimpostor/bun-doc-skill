@@ -2,15 +2,15 @@
 Source: https://bun.com/docs/guides/deployment/render
 
 
-[Render](https://render.com/) is a cloud platform that lets you flexibly build, deploy, and scale your apps.
+[Render](https://render.com/) is a cloud platform for building, deploying, and scaling apps.
 
-It offers features like auto deploys from GitHub, a global CDN, private networks, automatic HTTPS setup, and managed PostgreSQL and Redis.
+It provides auto deploys from GitHub, a global CDN, private networks, automatic HTTPS setup, and managed PostgreSQL and Redis-compatible Key Value stores.
 
 Render supports Bun natively. You can deploy Bun apps as web services, background workers, cron jobs, and more.
 
 ***
 
-As an example, let's deploy an Express HTTP server to Render.
+As an example, this guide deploys an Express HTTP server to Render.
 
 ### Step 1
 Create a new GitHub repo named `myapp`. Git clone it locally.
@@ -67,6 +67,6 @@ In the Render UI, provide the following values during web service creation:
 | **Build Command** | `bun install` |
 | **Start Command** | `bun app.ts`  |
 
-That's it! Your web service will be live at its assigned `onrender.com` URL as soon as the build finishes.
+Once the build finishes, your web service is live at its assigned `onrender.com` URL.
 
-You can view the [deploy logs](https://docs.render.com/logging#logs-for-an-individual-deploy-or-job) for details. Refer to [Render's documentation](https://docs.render.com/deploys) for a complete overview of deploying on Render.
+View the [deploy logs](https://docs.render.com/logging#logs-for-an-individual-deploy-or-job) for details. See [Render's documentation](https://docs.render.com/deploys) for more on deploys.

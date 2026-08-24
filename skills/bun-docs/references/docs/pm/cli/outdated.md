@@ -3,7 +3,7 @@ Source: https://bun.com/docs/pm/cli/outdated
 
 Check for outdated dependencies
 
-Use `bun outdated` to check for outdated dependencies in your project. This command displays a table of dependencies that have newer versions available.
+`bun outdated` displays a table of the dependencies in your project that have newer versions available.
 
 ```sh
 bun outdated
@@ -34,23 +34,20 @@ The output table shows three version columns:
 
 ### Dependency Filters
 
-`bun outdated` supports searching for outdated dependencies by package names and glob patterns.
-
-To check if specific dependencies are outdated, pass the package names as positional arguments:
+To check a specific dependency, pass its name as a positional argument:
 
 ```sh
-bun outdated eslint-plugin-security eslint-plugin-sonarjs
+bun outdated eslint-plugin-security
 ```
 
 ```txt
 | Package                        | Current | Update | Latest    |
 | ------------------------------ | ------- | ------ | --------- |
 | eslint-plugin-security (dev)   | 2.1.1   | 2.1.1  | 3.0.1     |
-| eslint-plugin-sonarjs (dev)    | 0.23.0  | 0.23.0 | 3.0.1     |
 
 ```
 
-You can also pass glob patterns to check for outdated packages:
+Glob patterns work too:
 
 ```sh
 bun outdated 'eslint*'
@@ -110,24 +107,7 @@ bun outdated --filter='@monorepo/types'
 | typescript (dev)   | 5.7.2   | 5.7.3  | 5.7.3  |
 ```
 
-You can pass multiple `--filter` flags to check multiple workspaces:
-
-```sh
-bun outdated --filter @monorepo/types --filter @monorepo/cli
-```
-
-```txt
-| Package                        | Current | Update | Latest     |
-| ------------------------------ | ------- | ------ | ---------- |
-| eslint (dev)                 	 | 8.57.1  | 8.57.1 | 9.20.0     |
-| eslint-plugin-security (dev)   | 2.1.1   | 2.1.1  | 3.0.1      |
-| eslint-plugin-sonarjs (dev)    | 0.23.0  | 0.23.0 | 3.0.1      |
-| expect-type (dev)              | 0.16.0  | 0.16.0 | 1.1.0      |
-| tsup (dev)                     | 8.3.5   | 8.3.6  | 8.3.6      |
-| typescript (dev)               | 5.7.2   | 5.7.3  | 5.7.3      |
-```
-
-You can also pass glob patterns to filter by workspace names:
+`--filter` accepts glob patterns to match multiple workspaces:
 
 ```sh
 bun outdated --filter='@monorepo/{types,cli}'
@@ -146,7 +126,7 @@ bun outdated --filter='@monorepo/{types,cli}'
 
 ### Catalog Dependencies
 
-`bun outdated` supports checking catalog dependencies defined in`package.json`:
+`bun outdated` also checks [catalog](/docs/pm/catalogs) dependencies defined in `package.json`:
 
 ```sh
 bun outdated -r
@@ -166,7 +146,7 @@ bun outdated -r
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
 │ axios              │ 0.21.0  │ 0.21.0  │ 1.12.2  │ catalog (@test/app)            │
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
-│ lodash             │ 4.17.15 │ 4.17.15 │ 4.17.21 │ catalog (@test/app, @test/app) │
+│ lodash             │ 4.17.15 │ 4.17.15 │ 4.17.21 │ catalog (@test/app)            │
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
 │ react              │ 17.0.0  │ 17.0.0  │ 19.1.1  │ catalog (@test/app)            │
 ├────────────────────┼─────────┼─────────┼─────────┼────────────────────────────────┤
@@ -207,6 +187,8 @@ bun outdated <filter>
 - (boolean) Print this help menu
 
 - (string) Display outdated dependencies for each matching workspace
+
+- (boolean) Check outdated packages in all workspaces
 
 ### Output & Logging
 
@@ -260,14 +242,14 @@ bun outdated <filter>
 
 ### Execution Behavior
 
-- (boolean) Don't install anything
+- (boolean) Perform a dry run without making changes
 
 - (boolean) Always request the latest versions from the registry & reinstall all dependencies
 
 - (boolean) Skip verifying integrity of newly downloaded packages
 
-- (boolean) Skip lifecycle scripts in the project's `package.json` (dependency scripts are never run)
+- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
 
-- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default), `hardlink`, `symlink`, `copyfile`
+- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default 5)
+- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)

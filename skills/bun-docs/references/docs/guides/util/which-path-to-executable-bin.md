@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/util/which-path-to-executable-bin
 
 
-`Bun.which` is a utility function to find the absolute path of an executable file. It is similar to the `which` command in Unix-like systems.
+`Bun.which` finds the absolute path of an executable file, like the `which` command on Unix-like systems.
 
 **File:** `foo.ts`
 ```ts
@@ -13,4 +13,4 @@ Bun.which("bun"); // => "/home/user/.bun/bin/bun"
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils#bun-which) for complete documentation.
+See [`Bun.which`](/docs/runtime/utils#bun-which).

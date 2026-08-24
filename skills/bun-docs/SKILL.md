@@ -26,9 +26,11 @@ Use this skill to answer Bun-specific questions from the bundled Bun documentati
 - Start narrow. If the user asks about `bun test --coverage`, open the test runner section and then the coverage or configuration page, not the whole runtime.
 - If the request mixes Bun with a framework, use the Bun docs for the Bun-specific part and the local repository for project-specific code.
 - If the question is about installation, onboarding, or "what is Bun?", start with `references/sections/getting-started.md`.
-- If the request is about commands like `bun add`, `bun install`, `bun publish`, or registries, start with the package-manager section.
+- If the request is about commands like `bun add`, `bun install`, `bun dedupe`, `bun prune`, `bun publish`, or registries, start with the package-manager section.
 - If the request is about `Bun.serve`, routing, TLS, cookies, or WebSockets, start with the runtime HTTP section.
 - If the request is about `bun build`, executables, CSS, HTML imports, minification, macros, or plugins, start with the bundler section.
+- If the request is about parallel or isolated tests, lifecycle hooks, mocks, snapshots, coverage, or reporters, start with the test runner section.
+- If the request is about Bun's built-in support for XML, YAML, JSON5, JSONL, TOML, or Markdown, start with the runtime section.
 - If the request is a recipe-style question like deployment, framework setup, file conversion, or HTTP examples, start with the relevant guides section.
 
 ## Answering guidance

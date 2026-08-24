@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/binary/arraybuffer-to-blob
 
 
-A [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) can be constructed from an array of "chunks", where each chunk is a string, binary data structure, or another `Blob`.
+You can construct a [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) from an array of "chunks", where each chunk is a string, binary data structure, or another `Blob`.
 
 ```ts
 const buf = new ArrayBuffer(64);
@@ -11,7 +11,7 @@ const blob = new Blob([buf]);
 
 ***
 
-By default the `type` of the resulting `Blob` will be unset. This can be set manually.
+By default the `type` of the resulting `Blob` is unset. Set it with the `type` option.
 
 ```ts
 const buf = new ArrayBuffer(64);
@@ -21,4 +21,4 @@ blob.type; // => "application/octet-stream"
 
 ***
 
-See [Docs > API > Binary Data](/docs/runtime/binary-data#conversion) for complete documentation on manipulating binary data with Bun.
+See [Binary Data](/docs/runtime/binary-data#conversion).

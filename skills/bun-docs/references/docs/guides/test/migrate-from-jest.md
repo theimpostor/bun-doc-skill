@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/test/migrate-from-jest
 
 
-In many cases, Bun's test runner can run Jest test suites with no code changes. Just run `bun test` instead of `npx jest`, `yarn test`, etc.
+In many cases, Bun's test runner can run Jest test suites with no code changes. Run `bun test` instead of `npx jest` or `yarn test`.
 
 ```sh
 npx jest
@@ -12,12 +12,12 @@ bun test
 
 ***
 
-There's often no need for code changes.
+Your test files usually work as-is.
 
-* Bun internally re-writes imports from `@jest/globals` to use the `bun:test` equivalents.
-* If you're relying on Jest to inject `test`, `expect`, etc. as globals, Bun does that too.
+* Bun internally rewrites imports from `@jest/globals` to their `bun:test` equivalents.
+* If you rely on Jest to inject globals like `test` and `expect`, Bun does that too.
 
-But if you'd rather switch to the `bun:test` imports, you can do that too.
+If you'd rather import from `bun:test` directly, update the imports.
 
 **File:** `test.ts`
 ```ts
@@ -27,9 +27,7 @@ import { test, expect } from "bun:test";
 
 ***
 
-Since Bun v1.2.19, you can enable **TypeScript support** for global test functions with a single triple-slash directive. This makes migrating from Jest even easier since you only need to add the directive once in your entire project:
-
-Add this directive to *just one file* in your project, such as:
+Since Bun v1.2.19, a triple-slash directive enables **TypeScript support** for global test functions. Add it to *one file* in your project, such as:
 
 * A `global.d.ts` file in your project root
 * Your test `preload.ts` setup file (if using `preload` in bunfig.toml)
@@ -42,7 +40,7 @@ Add this directive to *just one file* in your project, such as:
 
 ***
 
-Once added, all test files in your project automatically get TypeScript support for Jest globals:
+Once added, every test file in your project gets TypeScript support for the Jest globals:
 
 **File:** `math.test.ts`
 ```ts
@@ -63,22 +61,16 @@ describe("my test suite", () => {
 
 ***
 
-Bun implements the vast majority of Jest's matchers, but compatibility isn't 100% yet. Refer to the full compatibility table at [Docs > Test runner > Writing tests](/docs/test/writing-tests#matchers).
-
-Some notable missing features:
-
-* `expect().toHaveReturned()`
+Bun implements most of Jest's matchers, but compatibility isn't 100%. See the compatibility table in [Writing tests](/docs/test/writing-tests#matchers).
 
 ***
 
-If you're using `testEnvironment: "jsdom"` to run your tests in a browser-like environment, you should follow the [DOM testing with Bun and happy-dom](/docs/guides/test/happy-dom) guide to inject browser APIs into the global scope. This guide relies on [`happy-dom`](https://github.com/capricorn86/happy-dom), which is a leaner and faster alternative to [`jsdom`](https://github.com/jsdom/jsdom).
-
-At the moment jsdom does not work in Bun due to its internal use of V8 APIs. Track support for it [here](https://github.com/oven-sh/bun/issues/3554).
+If you use `testEnvironment: "jsdom"` to run your tests in a browser-like environment, follow the [DOM testing with Bun and happy-dom](/docs/guides/test/happy-dom) guide to inject browser APIs into the global scope. That guide uses [`happy-dom`](https://github.com/capricorn86/happy-dom), a leaner and faster alternative to [`jsdom`](https://github.com/jsdom/jsdom).
 
 **File:** `bunfig.toml`
 ```toml
 [test]
-preload = ["./happy-dom.ts"]
+preload = ["./happydom.ts"]
 ```
 
 ***
@@ -99,7 +91,7 @@ bun test --coverage
 
 ***
 
-Replace `testTimeout` with the `--test-timeout` CLI flag.
+Replace `testTimeout` with the `--timeout` CLI flag.
 
 ```sh
 bun test --timeout 10000
@@ -107,21 +99,30 @@ bun test --timeout 10000
 
 ***
 
-Many other flags become irrelevant or obsolete when using `bun test`.
+Many other Jest settings are irrelevant in `bun test`.
 
-* `transform` — Bun supports TypeScript & JSX. Other file types can be configured with [Plugins](/docs/runtime/plugins).
+* `transform` — Bun supports TypeScript & JSX. Configure other file types with [plugins](/docs/runtime/plugins).
 * `extensionsToTreatAsEsm`
-* `haste` — Bun uses it's own internal source maps
+* `haste` — Bun uses its own [module resolver](/docs/runtime/module-resolution)
 * `watchman`, `watchPlugins`, `watchPathIgnorePatterns` — use `--watch` to run tests in watch mode
-* `verbose` — set `logLevel: "debug"` in [`bunfig.toml`](/docs/runtime/bunfig#loglevel)
+* `verbose` — `bun test` reports each test by default. Use `--only-failures` or `--dots` for less output (see [Test reporters](/docs/test/reporters)).
 
 ***
 
-Settings that aren't mentioned here are not supported or have no equivalent. Please [file a feature request](https://github.com/oven-sh/bun) if something important is missing.
+Many other settings have an equivalent in the `[test]` section of `bunfig.toml`. For example:
+
+* `setupFiles`/`setupFilesAfterEnv` → `preload`
+* `testPathIgnorePatterns` → `pathIgnorePatterns`
+* `rootDir` → `root`
+* `coverageDirectory` → `coverageDir`
+* `coverageReporters` → `coverageReporter`
+* `coverageThreshold` → `coverageThreshold` (as a fraction like `0.9`, not a percentage)
+
+See [Test configuration](/docs/test/configuration). Settings without an equivalent are not supported. [File a feature request](https://github.com/oven-sh/bun/issues/new?template=4-feature-request.yml) if something you need is missing.
 
 ***
 
 See also:
 
 * [Mark a test as a todo](/docs/guides/test/todo-tests)
-* [Docs > Test runner > Writing tests](/docs/test/writing-tests)
+* [Writing tests](/docs/test/writing-tests)

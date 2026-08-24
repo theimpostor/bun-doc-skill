@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/read-file/buffer
 
 
-The `Bun.file()` function accepts a path and returns a `BunFile` instance. The `BunFile` class extends `Blob` and allows you to lazily read the file in a variety of formats.
+The `Bun.file()` function accepts a path and returns a `BunFile` instance. `BunFile` extends `Blob`, so you can read the file lazily in a variety of formats.
 
-To read the file into a `Buffer` instance, first use `.arrayBuffer()` to consume the file as an `ArrayBuffer`, then use `Buffer.from()` to create a `Buffer` from the `ArrayBuffer`.
+To read the file into a `Buffer`, read it as an `ArrayBuffer` with `.arrayBuffer()`, then pass the result to `Buffer.from()`.
 
 **File:** `index.ts`
 ```ts
@@ -17,4 +17,4 @@ const buffer = Buffer.from(arrbuf);
 
 ***
 
-Refer to [Binary data > Buffer](/docs/runtime/binary-data#buffer) for more information on working with `Buffer` and other binary data formats in Bun.
+See [Buffer](/docs/runtime/binary-data#buffer) for more on working with `Buffer` and other binary data formats in Bun.

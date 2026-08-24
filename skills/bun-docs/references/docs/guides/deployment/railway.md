@@ -1,11 +1,11 @@
 # Deploy a Bun application on Railway
 Source: https://bun.com/docs/guides/deployment/railway
 
-Deploy Bun applications to Railway with this step-by-step guide covering CLI and dashboard methods, optional PostgreSQL setup, and automatic SSL configuration.
+Deploy a Bun application to Railway from the CLI or dashboard, with optional PostgreSQL setup and automatic SSL
 
-Railway is an infrastructure platform where you can provision infrastructure, develop with that infrastructure locally, and then deploy to the cloud. It enables instant deployments from GitHub with zero configuration, automatic SSL, and built-in database provisioning.
+Railway is an infrastructure platform: you provision infrastructure, develop against it locally, then deploy to the cloud. Railway deploys from GitHub with zero configuration, handles SSL automatically, and provisions databases.
 
-This guide walks through deploying a Bun application with a PostgreSQL database (optional), which is exactly what the template below provides.
+This guide deploys a Bun application with an optional PostgreSQL database, the same setup the following template provides.
 
 You can either follow this guide step-by-step or deploy the pre-configured template with one click:
 
@@ -18,7 +18,7 @@ You can either follow this guide step-by-step or deploy the pre-configured templ
 **Prerequisites**:
 
 * A Bun application ready for deployment
-* A [Railway account](https://railway.app/)
+* A [Railway account](https://railway.com/)
 * Railway CLI (for CLI deployment method)
 * A GitHub account (for Dashboard deployment method)
 
@@ -27,7 +27,7 @@ You can either follow this guide step-by-step or deploy the pre-configured templ
 ## Method 1: Deploy via CLI
 
 ### Step 1
-Ensure sure you have the Railway CLI installed.
+Install the Railway CLI.
 
 ```bash
 bun install -g @railway/cli
@@ -41,7 +41,7 @@ railway login
 ```
 
 ### Step 3
-After successfully authenticating, initialize a new project.
+After authenticating, initialize a new project.
 
 ```bash
 railway init
@@ -61,7 +61,7 @@ railway add --service bun-react-db --variables DATABASE_URL=\${{Postgres.DATABAS
 ```
 
 ### Step 5
-After the services have been created and connected, deploy the application to Railway. By default, services are only accessible within Railway's private network. To make your app publicly accessible, you need to generate a public domain.
+After creating and connecting the services, deploy the application to Railway. By default, services are only accessible within Railway's private network, so generate a public domain to make your app publicly accessible.
 
 ```bash
 # Deploy your application
@@ -71,7 +71,7 @@ railway up
 railway domain
 ```
 
-Your app is now live! Railway auto-deploys on every GitHub push.
+Your app is now live. `railway up` deploys your local directory rather than a GitHub repository. To have Railway auto-deploy on every GitHub push, connect the service to your repository with `railway service source connect --repo <owner>/<repo> --branch <branch>`.
 
 ***
 
@@ -80,7 +80,7 @@ Your app is now live! Railway auto-deploys on every GitHub push.
 ### Step 1
 Create a new project
 
-1. Go to [Railway Dashboard](http://railway.com/dashboard?utm_medium=integration\&utm_source=docs\&utm_campaign=bun)
+1. Go to [Railway Dashboard](https://railway.com/dashboard?utm_medium=integration\&utm_source=docs\&utm_campaign=bun)
 2. Click **"+ New"** → **"GitHub repo"**
 3. Choose your repository
 
@@ -90,7 +90,7 @@ Add a PostgreSQL database, and connect this database to the service
 > Note: Step 2 is only necessary if your application uses a database. If you don't need PostgreSQL, skip to Step 3.
 
 1. Click **"+ New"** → **"Database"** → **"Add PostgreSQL"**
-2. After the database has been created, select your service (not the database)
+2. After Railway creates the database, select your service (not the database)
 3. Go to **"Variables"** tab
 4. Click **"+ New Variable"** → **"Add Reference"**
 5. Select `DATABASE_URL` from postgres
@@ -102,17 +102,17 @@ Generate a public domain
 2. Go to **"Settings"** tab
 3. Under **"Networking"**, click **"Generate Domain"**
 
-Your app is now live! Railway auto-deploys on every GitHub push.
+Your app is now live. Railway auto-deploys on every GitHub push.
 
 ***
 
 ## Configuration (Optional)
 
-By default, Railway uses [Nixpacks](https://docs.railway.com/guides/build-configuration#nixpacks-options) to automatically detect and build your Bun application with zero configuration.
+By default, Railway uses [Railpack](https://docs.railway.com/builds/railpack) to automatically detect and build your Bun application with zero configuration.
 
-However, using the [Railpack](https://docs.railway.com/guides/build-configuration#railpack) application builder provides better Bun support, and will always support the latest version of Bun. The pre-configured templates use Railpack by default.
+Railpack detects Bun from your `bun.lock` and installs the latest version of Bun unless you pin one with the `engines.bun` or `packageManager` field in `package.json`. Railway's previous builder, [Nixpacks](https://github.com/railwayapp/nixpacks), is in maintenance mode.
 
-To enable Railpack in a custom project, add the following to your `railway.json`:
+If your service still builds with Nixpacks, switch it to Railpack by adding the following to your `railway.json`:
 
 **File:** `railway.json`
 ```json
@@ -124,4 +124,4 @@ To enable Railpack in a custom project, add the following to your `railway.json`
 }
 ```
 
-For more build configuration settings, check out the [Railway documentation](https://docs.railway.com/guides/build-configuration).
+For more build configuration settings, see the [Railway documentation](https://docs.railway.com/builds/build-configuration).

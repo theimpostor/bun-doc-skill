@@ -19,7 +19,7 @@ const spy = spyOn(leo, "sayHi");
 
 ***
 
-Once the spy is created, it can be used to write `expect` assertions relating to method calls.
+Once you've created the spy, use it in `expect` assertions about method calls.
 
 ```ts
 import { test, expect, spyOn } from "bun:test";
@@ -43,4 +43,4 @@ test("turtles", () => {
 
 ***
 
-See [Docs > Test Runner > Mocks](/docs/test/mocks) for complete documentation on mocking with the Bun test runner.
+See [Mocks](/docs/test/mocks).

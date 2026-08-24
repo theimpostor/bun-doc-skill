@@ -5,7 +5,7 @@ Install Bun with npm, Homebrew, Docker, or the official script.
 
 ## Overview
 
-Bun ships as a single, dependency-free executable. You can install it via script, package manager, or Docker across macOS, Linux, and Windows.
+Bun ships as a single, dependency-free executable. Install it with the install script, a package manager, or Docker on macOS, Linux, and Windows.
 
 > Tip: After installation, verify with `bun --version` and `bun --revision`.
 
@@ -18,7 +18,7 @@ curl -fsSL https://bun.com/install | bash
 ```
 
 > Note
-**Linux users**  The `unzip` package is required to install Bun. Use `sudo apt install unzip` to install the unzip package. Kernel version 5.6 or higher is recommended; Bun runs on kernels as old as 3.10 (RHEL 7) with graceful degradation of newer syscalls. Use `uname -r` to check your kernel version.
+**Linux users:** You need the `unzip` package to install Bun (`sudo apt install unzip`). We recommend kernel version 5.6 or higher. Bun runs on kernels as old as 3.10 (RHEL 7) with graceful degradation of newer syscalls. Use `uname -r` to check your kernel version.
 
 ### Windows
 **File:** `PowerShell`
@@ -29,7 +29,7 @@ powershell -c "irm bun.sh/install.ps1|iex"
 > Warning
 Bun requires Windows 10 version 1809 or later.
 
-For support and discussion, please join the **#windows** channel on our [Discord](https://bun.com/discord).
+For support and discussion, join the **#windows** channel on the [Discord](https://bun.com/discord).
 
 ### Package Managers
 **File:** `npm`
@@ -58,7 +58,7 @@ docker run --rm --init --ulimit memlock=-1:-1 oven/bun
 
 ### Image Variants
 
-There are also image variants for different operating systems:
+Bun also publishes image variants for different operating systems:
 
 **File:** `Docker`
 ```bash
@@ -97,7 +97,7 @@ echo $SHELL
 * For fish: `~/.config/fish/config.fish`
 
 ### Add the Bun directory to PATH
-Add this line to your configuration file:
+Add these lines to your configuration file:
 
 ```bash
 export BUN_INSTALL="$HOME/.bun"
@@ -115,7 +115,7 @@ source ~/.bashrc  # or ~/.zshrc
 & "$env:USERPROFILE\.bun\bin\bun" --version
 ```
 
-If the command runs successfully but `bun --version` is not recognized, it means that bun is not in your system's PATH. To fix this, open a Powershell terminal and run the following command:
+If the command runs successfully but `bun --version` is not recognized, bun is not in your system's PATH. To fix this, open a PowerShell terminal and run the following command:
 
 ```bash
 [System.Environment]::SetEnvironmentVariable(
@@ -126,7 +126,7 @@ If the command runs successfully but `bun --version` is not recognized, it means
 ```
 
 ### Restart your terminal
-After running the command, restart your terminal and test with `bun --version`
+Restart your terminal and test with `bun --version`.
 
 ```bash
 bun --version
@@ -165,7 +165,7 @@ bun upgrade --canary
 bun upgrade --stable
 ```
 
-The canary build is useful for testing new features and bug fixes before they're released in a stable build. To help the Bun team fix bugs faster, canary builds automatically upload crash reports to Bun's team.
+Use a canary build to test new features and bug fixes before they reach a stable release. To help the Bun team fix bugs faster, canary builds automatically upload crash reports.
 
 ***
 
@@ -245,7 +245,7 @@ automatically chooses the correct binary for your system.
 
 ## CPU Requirements
 
-Bun has specific CPU requirements based on the binary you're using:
+CPU requirements depend on which binary you're using:
 
 ### Standard Builds
 **x64 binaries** target the Haswell CPU architecture (AVX and AVX2 instructions required)
@@ -266,8 +266,8 @@ Baseline builds are slower than regular builds. Use them only if you encounter a
 Instruction" error.
 
 > Note
-Bun does not support CPUs older than the baseline target, which mandates the SSE4.2 extension. macOS requires version
-13.0 or later.
+Bun does not support CPUs older than the baseline target, which requires the SSE4.2 extension. Bun requires macOS 13.0
+or later.
 
 ***
 

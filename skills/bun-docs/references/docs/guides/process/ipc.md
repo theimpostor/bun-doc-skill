@@ -5,8 +5,8 @@ Source: https://bun.com/docs/guides/process/ipc
 Use [`Bun.spawn()`](/docs/runtime/child-process) to spawn a child process. When spawning a second `bun` process, you can open a direct inter-process communication (IPC) channel between the two processes.
 
 > Note
-This API is only compatible with other `bun` processes. Use `process.execPath` to get a path to the currently running
-`bun` executable.
+To communicate with a Node.js process, set `serialization: "json"` in `Bun.spawn`. Use `process.execPath` to get a
+path to the currently running `bun` executable.
 
 **File:** `parent.ts`
 ```ts
@@ -21,7 +21,7 @@ const child = Bun.spawn(["bun", "child.ts"], {
 
 ***
 
-The parent process can send messages to the subprocess using the `.send()` method on the returned `Subprocess` instance. A reference to the sending subprocess is also available as the second argument in the `ipc` handler.
+The parent process sends messages to the subprocess with the `.send()` method on the returned `Subprocess` instance. The `ipc` handler also receives the subprocess as its second argument.
 
 **File:** `parent.ts`
 ```ts
@@ -39,7 +39,7 @@ childProc.send("I am your father"); // The parent can send messages to the child
 
 ***
 
-Meanwhile the child process can send messages to its parent using with `process.send()` and receive messages with `process.on("message")`. This is the same API used for `child_process.fork()` in Node.js.
+The child process sends messages to its parent with `process.send()` and receives messages with `process.on("message")`. This is the same API used for `child_process.fork()` in Node.js.
 
 **File:** `child.ts`
 ```ts
@@ -54,7 +54,7 @@ process.on("message", message => {
 
 ***
 
-All messages are serialized using the JSC `serialize` API, which allows for the same set of [transferrable types](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects) supported by `postMessage` and `structuredClone`, including strings, typed arrays, streams, and objects.
+By default, Bun serializes messages with the JSC `serialize` API. This API supports everything [`structuredClone` supports](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm), including strings, typed arrays, and objects. The API does not support transferring ownership of objects.
 
 **File:** `child.ts`
 ```ts
@@ -67,4 +67,4 @@ process.send({ message: "Hello from child as object" });
 
 ***
 
-See [Docs > API > Child processes](/docs/runtime/child-process) for complete documentation.
+See [Child processes](/docs/runtime/child-process).

@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/install/custom-registry
 
 
-The default registry is `registry.npmjs.org`. This can be globally configured in `bunfig.toml`.
+The default registry is `registry.npmjs.org`. Override it globally in `bunfig.toml`.
 
 **File:** `bunfig.toml`
 ```toml
@@ -11,15 +11,15 @@ The default registry is `registry.npmjs.org`. This can be globally configured in
 registry = "https://registry.npmjs.org"
 
 # if needed, set a token
-registry = { url = "https://registry.npmjs.org", token = "123456" }
+# registry = { url = "https://registry.npmjs.org", token = "123456" }
 
 # if needed, set a username/password
-registry = "https://usertitle:password@registry.npmjs.org"
+# registry = "https://username:password@registry.npmjs.org"
 ```
 
 ***
 
-Your `bunfig.toml` can reference environment variables. Bun automatically loads environment variables from `.env.local`, `.env.[NODE_ENV]`, and `.env`. See [Docs > Environment variables](/docs/runtime/environment-variables) for more information.
+Your `bunfig.toml` can reference environment variables. `bun install` automatically loads environment variables from `.env.production.local`, `.env.local`, `.env.production`, and `.env`, regardless of `NODE_ENV`. It does not read `.env.development` or `.env.test`. See [Environment variables](/docs/runtime/environment-variables).
 
 **File:** `bunfig.toml`
 ```toml
@@ -29,4 +29,4 @@ registry = { url = "https://registry.npmjs.org", token = "$npm_token" }
 
 ***
 
-See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.
+See [`bun install`](/docs/pm/cli/install).

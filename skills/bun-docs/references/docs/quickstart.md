@@ -18,7 +18,7 @@ Initialize a new project with `bun init`.
 bun init my-app
 ```
 
-It'll prompt you to pick a template, either `Blank`, `React`, or `Library`. For this guide, we'll pick `Blank`.
+`bun init` prompts you to pick a template: `Blank`, `React`, or `Library`. For this guide, pick `Blank`.
 
 ```bash
 bun init my-app
@@ -27,18 +27,18 @@ bun init my-app
 ```txt
 ✓ Select a project template: Blank
 
-- .gitignore
-- CLAUDE.md
-- .cursor/rules/use-bun-instead-of-node-vite-npm-pnpm.mdc -> CLAUDE.md
-- index.ts
-- tsconfig.json (for editor autocomplete)
-- README.md
++ .gitignore
++ CLAUDE.md
++ .cursor/rules/use-bun-instead-of-node-vite-npm-pnpm.mdc -> CLAUDE.md
++ index.ts
++ tsconfig.json (for editor autocomplete)
++ README.md
 ```
 
-This automatically creates a `my-app` directory with a basic Bun app.
+The new `my-app` directory contains a basic Bun app.
 
 ### Step 2
-Run the `index.ts` file using `bun run index.ts`.
+Run `index.ts` with `bun run`.
 
 ```bash
 cd my-app
@@ -48,8 +48,6 @@ bun run index.ts
 ```txt
 Hello via Bun!
 ```
-
-You should see a console output saying `"Hello via Bun!"`.
 
 ### Step 3
 Replace the contents of `index.ts` with the following code:
@@ -66,20 +64,20 @@ const server = Bun.serve({
 console.log(`Listening on ${server.url}`);
 ```
 
-Run the `index.ts` file again using `bun run index.ts`.
+Run `index.ts` again.
 
 ```bash
 bun run index.ts
 ```
 
 ```txt
-Listening on http://localhost:3000
+Listening on http://localhost:3000/
 ```
 
 Visit [`http://localhost:3000`](http://localhost:3000) to test the server. You should see a page that says `"Bun!"`.
 
 ### Seeing TypeScript errors on Bun?
-If you used `bun init`, Bun will have automatically installed Bun's TypeScript declarations and configured your `tsconfig.json`. If you're trying out Bun in an existing project, you may see a type error on the `Bun` global.
+`bun init` installs Bun's TypeScript declarations and configures your `tsconfig.json`. If you're trying out Bun in an existing project, you may see a type error on the `Bun` global.
 
 To fix this, first install `@types/bun` as a dev dependency.
 
@@ -133,14 +131,14 @@ const server = Bun.serve({
 console.log(`Listening on ${server.url}`);
 ```
 
-Run the `index.ts` file again using `bun run index.ts`.
+Run `index.ts` again.
 
 ```bash
 bun run index.ts
 ```
 
 ```txt
-Listening on http://localhost:3000
+Listening on http://localhost:3000/
 ```
 
 Visit [`http://localhost:3000/figlet`](http://localhost:3000/figlet) to test the server. You should see a page that says `"Bun!"` in ASCII art.
@@ -154,7 +152,7 @@ ____              _
 ```
 
 ### Step 5
-Let's add some HTML. Create a new file called `index.html` and add the following code:
+Now add some HTML. Create a new file called `index.html`:
 
 **File:** `index.html`
 ```html
@@ -192,19 +190,19 @@ const server = Bun.serve({
 console.log(`Listening on ${server.url}`);
 ```
 
-Run the `index.ts` file again using `bun run index.ts`.
+Run `index.ts` again.
 
 ```bash
 bun run index.ts
 ```
 
 ```txt
-Listening on http://localhost:3000
+Listening on http://localhost:3000/
 ```
 
 Visit [`http://localhost:3000`](http://localhost:3000) to test the server. You should see the static HTML page.
 
-🎉 Congratulations! You've built an HTTP server with Bun and installed a package.
+You've built an HTTP server with Bun and installed a package.
 
 ***
 
@@ -215,7 +213,7 @@ Bun can also execute `"scripts"` from your `package.json`. Add the following scr
 **File:** `package.json`
 ```json
 {
-  "name": "quickstart",
+  "name": "my-app",
   "module": "index.ts",
   "type": "module",
   "private": true,
@@ -226,7 +224,7 @@ Bun can also execute `"scripts"` from your `package.json`. Add the following scr
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^6"
   }
 }
 ```
@@ -238,7 +236,7 @@ bun run start
 ```
 
 ```txt
-Listening on http://localhost:3000
+Listening on http://localhost:3000/
 ```
 
 > Note: ⚡️ **Performance** — `bun run` is roughly 28x faster than `npm run` (6ms vs 170ms of overhead).

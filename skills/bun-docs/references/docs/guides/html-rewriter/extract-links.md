@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/html-rewriter/extract-links
 
 ## Extract links from a webpage
 
-Bun's [HTMLRewriter](/docs/runtime/html-rewriter) API can be used to efficiently extract links from HTML content. It works by chaining together CSS selectors to match the elements, text, and attributes you want to process. Here is an example of how to extract links from a webpage. You can pass `.transform` a `Response`, `Blob`, or `string`.
+Bun's [HTMLRewriter](/docs/runtime/html-rewriter) API extracts links from HTML. Chain CSS selectors to match the elements, text, and attributes you want to process. Then pass `.transform` a `Response`, `ArrayBuffer`, or `string`.
 
 **File:** `extract-links.ts`
 ```ts
@@ -34,7 +34,7 @@ await extractLinks("https://bun.com");
 
 ## Convert relative URLs to absolute
 
-When scraping websites, you often want to convert relative URLs (like `/docs`) to absolute URLs. Here's how to handle URL resolution:
+When scraping websites, you often want to convert relative URLs (like `/docs`) to absolute URLs:
 
 **File:** `extract-links.ts`
 ```ts
@@ -67,4 +67,4 @@ const websiteLinks = await extractLinksFromURL("https://example.com");
 
 ***
 
-See [Docs > API > HTMLRewriter](/docs/runtime/html-rewriter) for complete documentation on HTML transformation with Bun.
+See [`HTMLRewriter`](/docs/runtime/html-rewriter).

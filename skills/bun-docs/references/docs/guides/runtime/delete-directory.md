@@ -19,7 +19,7 @@ These options configure the deletion behavior:
 * `recursive: true` - Delete subdirectories and their contents
 * `force: true` - Don't throw errors if the directory doesn't exist
 
-You can also use it without `force` to ensure the directory exists:
+Omit `force` to get an error if the directory doesn't exist:
 
 **File:** `delete-directory.ts`
 ```ts
@@ -36,4 +36,4 @@ try {
 
 ***
 
-See [Docs > API > FileSystem](/docs/runtime/file-io) for more filesystem operations.
+See [File I/O](/docs/runtime/file-io) for more filesystem operations.

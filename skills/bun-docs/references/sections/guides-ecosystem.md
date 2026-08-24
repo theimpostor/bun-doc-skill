@@ -28,7 +28,6 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Add Sentry to a Bun app](../docs/guides/ecosystem/sentry.md) - `guides/ecosystem/sentry`
 - [Build an app with SolidStart and Bun](../docs/guides/ecosystem/solidstart.md) - `guides/ecosystem/solidstart`
 - [Server-side render (SSR) a React component](../docs/guides/ecosystem/ssr-react.md) - `guides/ecosystem/ssr-react`
-- [Build an HTTP server using StricJS and Bun](../docs/guides/ecosystem/stric.md) - `guides/ecosystem/stric`
 - [Build an app with SvelteKit and Bun](../docs/guides/ecosystem/sveltekit.md) - `guides/ecosystem/sveltekit`
 - [Run Bun as a daemon with systemd](../docs/guides/ecosystem/systemd.md) - `guides/ecosystem/systemd`
 - [Use TanStack Start with Bun](../docs/guides/ecosystem/tanstack-start.md) - `guides/ecosystem/tanstack-start`

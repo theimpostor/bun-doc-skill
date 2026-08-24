@@ -2,11 +2,23 @@
 Source: https://bun.com/docs/pm/npmrc
 
 
-Bun supports loading configuration options from [`.npmrc`](https://docs.npmjs.com/cli/v10/configuring-npm/npmrc) files, allowing you to reuse existing registry/scope configurations.
+Bun loads configuration options from [`.npmrc`](https://docs.npmjs.com/cli/v10/configuring-npm/npmrc) files, so you can reuse your existing registry and scope configuration.
+
+Configuration is loaded in this order, with later sources overriding earlier ones:
+
+1. `~/.npmrc` (or `$XDG_CONFIG_HOME/.npmrc`)
+2. `./.npmrc`
+3. `bunfig.toml` (global, then project)
+4. `BUN_CONFIG_REGISTRY` / `NPM_CONFIG_REGISTRY` and `BUN_CONFIG_TOKEN` / `NPM_CONFIG_TOKEN` environment variables
+5. Command-line flags such as `--registry`
+
+Bun matches credentials in `.npmrc` (`//<registry>/:_authToken`, etc.) to registries by host and path, even if you set the registry URL itself in `bunfig.toml`.
+
+Values may reference environment variables. Bun replaces `${NAME}` with the variable's value, or leaves it as-is if the variable is unset. `${NAME?}` becomes an empty string if unset.
 
 > Note
-We recommend migrating your `.npmrc` file to Bun's [`bunfig.toml`](/docs/runtime/bunfig) format, as it provides more
-flexible options and can let you configure Bun-specific options.
+We recommend migrating your `.npmrc` file to Bun's [`bunfig.toml`](/docs/runtime/bunfig) format, which supports more
+options, including Bun-specific ones.
 
 ***
 
@@ -14,9 +26,9 @@ flexible options and can let you configure Bun-specific options.
 
 ### Set the default registry
 
-The default registry is used to resolve packages, its default value is `npm`'s official registry (`https://registry.npmjs.org/`).
+Bun resolves packages from the default registry, which is `npm`'s official registry (`https://registry.npmjs.org/`).
 
-To change it, you can set the `registry` option in `.npmrc`:
+To change it, set the `registry` option in `.npmrc`:
 
 **File:** `.npmrc`
 ```ini
@@ -32,14 +44,14 @@ install.registry = "http://localhost:4873/"
 
 ### Set the registry for a specific scope
 
-`@<scope>:registry` allows you to set the registry for a specific scope:
+`@<scope>:registry` sets the registry for a specific scope:
 
 **File:** `.npmrc`
 ```ini
 @myorg:registry=http://localhost:4873/
 ```
 
-The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-scopes):
 
 **File:** `bunfig.toml`
 ```toml
@@ -49,7 +61,7 @@ myorg = "http://localhost:4873/"
 
 ### Configure options for a specific registry
 
-`//<registry_url>/:<key>=<value>` allows you to set options for a specific registry:
+`//<registry_url>/:<key>=<value>` sets options for a specific registry:
 
 **File:** `.npmrc`
 ```ini
@@ -69,25 +81,26 @@ myorg = "http://localhost:4873/"
 //http://localhost:4873/:_auth=${NPM_AUTH}
 ```
 
-The following options are supported:
+Bun supports the following options:
 
 * `_authToken`
 * `username`
 * `_password` (base64 encoded password)
-* `_auth` (base64 encoded username:password, e.g. `btoa(username + ":" + password)`)
+* `_auth` (base64 encoded username:password, for example `btoa(username + ":" + password)`)
 * `email`
 
-The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-scopes):
 
 **File:** `bunfig.toml`
 ```toml
 [install.scopes]
+# unlike _password in .npmrc, password is not base64 encoded; Bun encodes it for you
 myorg = { url = "http://localhost:4873/", username = "myusername", password = "$NPM_PASSWORD" }
 ```
 
 ### `link-workspace-packages`: Control workspace package installation
 
-Controls how workspace packages are installed when available locally:
+Controls how Bun installs workspace packages when they are available locally:
 
 **File:** `.npmrc`
 ```ini
@@ -132,7 +145,7 @@ This is equivalent to using the `--ignore-scripts` flag with `bun install`.
 
 ### `dry-run`: Preview changes without installing
 
-Shows what would be installed without actually installing:
+Shows what Bun would install without installing anything:
 
 **File:** `.npmrc`
 ```ini
@@ -191,7 +204,7 @@ cafile=/path/to/ca-bundle.crt
 
 ### `omit` and `include`: Control dependency types
 
-Control which dependency types are installed:
+Control which dependency types Bun installs:
 
 **File:** `.npmrc`
 ```ini
@@ -210,7 +223,7 @@ Valid values: `dev`, `peer`, `optional`
 
 ### `install-strategy` and `node-linker`: Installation strategy
 
-Control how packages are installed in `node_modules`. Bun supports two different configuration options for compatibility with different package managers.
+Control how Bun lays out packages in `node_modules`. For compatibility with other package managers, Bun accepts both npm's `install-strategy` and pnpm/yarn's `node-linker`. See [isolated installs](/docs/pm/isolated-installs) for how the hoisted and isolated layouts differ.
 
 **npm's `install-strategy`:**
 
@@ -225,7 +238,7 @@ install-strategy=linked
 
 **pnpm/yarn's `node-linker`:**
 
-The `node-linker` option controls the installation mode. Bun supports values from both pnpm and yarn:
+`node-linker` controls the installation mode. Bun accepts values from both pnpm and yarn:
 
 | Value          | Description                                      | Accepted by |
 | -------------- | ------------------------------------------------ | ----------- |
@@ -247,7 +260,7 @@ node-linker=node-modules
 
 ### `public-hoist-pattern` and `hoist-pattern`: Control hoisting
 
-Control which packages are hoisted to the root `node_modules`:
+Control which packages Bun hoists to the root `node_modules`:
 
 **File:** `.npmrc`
 ```ini
@@ -260,4 +273,9 @@ public-hoist-pattern[]=*prettier*
 
 # control general hoisting behavior
 hoist-pattern=*
+
+# isolated linker only: disable the node_modules/.bun/node_modules fallback,
+# so store packages only resolve declared deps (plus the root node_modules).
+# Hoisted installs ignore this setting.
+hoist=false
 ```

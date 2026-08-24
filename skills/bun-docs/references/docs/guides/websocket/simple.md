@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/websocket/simple
 
 
-Start a simple WebSocket server using [`Bun.serve`](/docs/runtime/http/server).
+Start a WebSocket server with [`Bun.serve`](/docs/runtime/http/server).
 
-Inside `fetch`, we attempt to upgrade incoming `ws:` or `wss:` requests to WebSocket connections.
+Inside `fetch`, `server.upgrade()` attempts to upgrade incoming `ws:` or `wss:` requests to WebSocket connections.
 
 **File:** `server.ts`
 ```ts

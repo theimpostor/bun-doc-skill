@@ -58,7 +58,7 @@ For parsing JSON5 strings at runtime, use `Bun.JSON5.parse()`:
 
 **File:** `config.ts`
 ```ts
-const data = JSON5.parse(`{
+const data = Bun.JSON5.parse(`{
   name: 'John Doe',
   age: 30,
   hobbies: [
@@ -73,4 +73,4 @@ console.log(data.hobbies); // => ["reading", "coding"]
 
 ***
 
-See [Docs > API > JSON5](/docs/runtime/json5) for complete documentation on JSON5 support in Bun.
+See [JSON5](/docs/runtime/json5) for the rest of Bun's JSON5 support.

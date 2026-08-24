@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/ecosystem/ssr-react
 
 
-To get started, install `react` & `react-dom`:
+Install `react` and `react-dom`:
 
 ```sh
 # Any package manager can be used
@@ -30,7 +30,7 @@ const stream = await renderToReadableStream(<Component message="Hello from serve
 
 ***
 
-Combining this with `Bun.serve()`, we get an SSR HTTP server:
+Combine this with `Bun.serve()` to get an SSR HTTP server:
 
 **File:** `server.tsx`
 ```tsx
@@ -46,4 +46,4 @@ Bun.serve({
 
 ***
 
-React `19` and later includes an [SSR optimization](https://github.com/facebook/react/pull/25597) that takes advantage of Bun's "direct" `ReadableStream` implementation. If you run into an error like `export named 'renderToReadableStream' not found`, please make sure to install version `19` of `react` & `react-dom`, or import from `react-dom/server.browser` instead of `react-dom/server`. See [facebook/react#28941](https://github.com/facebook/react/issues/28941) for more information.
+React `19` and later include an [SSR optimization](https://github.com/react/react/pull/25597) that takes advantage of Bun's "direct" `ReadableStream` implementation. If you run into an error like `export named 'renderToReadableStream' not found`, install version `19` of `react` and `react-dom`, or import from `react-dom/server.browser` instead of `react-dom/server`. See [react/react#28941](https://github.com/react/react/issues/28941) for details.

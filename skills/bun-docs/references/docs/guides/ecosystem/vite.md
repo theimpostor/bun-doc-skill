@@ -4,20 +4,30 @@ Source: https://bun.com/docs/guides/ecosystem/vite
 
 > Note
 You can use Vite with Bun, but many projects get faster builds & drop hundreds of dependencies by switching to [HTML
-imports](/docs/bundler/html-static).
+imports](/docs/bundler/fullstack).
 
 ***
 
-Vite works out of the box with Bun. Get started with one of Vite's templates.
+Vite works with Bun with no extra configuration. Get started with one of Vite's templates.
 
 ```bash
 bun create vite my-app
 ```
 
 ```txt
-✔ Select a framework: › React
-✔ Select a variant: › TypeScript + SWC
-Scaffolding project in /path/to/my-app...
+◇  Select a framework:
+│  React
+│
+◇  Select a variant:
+│  TypeScript
+│
+◇  Which linter to use?
+│  Oxlint
+│
+◇  Install with bun and start now?
+│  No
+│
+◇  Scaffolding project in /path/to/my-app...
 ```
 
 ***
@@ -33,7 +43,7 @@ bun install
 
 Start the development server with the `vite` CLI using `bunx`.
 
-The `--bun` flag tells Bun to run Vite's CLI using `bun` instead of `node`; by default Bun respects Vite's `#!/usr/bin/env node` [shebang line](https://en.wikipedia.org/wiki/Shebang_(Unix)).
+The `--bun` flag tells Bun to run Vite's CLI using `bun` instead of `node`. By default, Bun respects Vite's `#!/usr/bin/env node` [shebang line](https://en.wikipedia.org/wiki/Shebang_(Unix)).
 
 ```bash
 bunx --bun vite
@@ -48,8 +58,9 @@ To simplify this command, update the `"dev"` script in `package.json` to the fol
   "scripts": {
     "dev": "vite",
     "dev": "bunx --bun vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
   },
   // ...
 ```
@@ -64,7 +75,7 @@ bun run dev
 
 ***
 
-The following command will build your app for production.
+Build your app for production.
 
 ```sh
 bunx --bun vite build
@@ -72,4 +83,4 @@ bunx --bun vite build
 
 ***
 
-This is a stripped down guide to get you started with Vite + Bun. For more information, see the [Vite documentation](https://vite.dev/guide/).
+For more information, see the [Vite documentation](https://vite.dev/guide/).

@@ -2,13 +2,12 @@
 Source: https://bun.com/docs/guides/write-file/blob
 
 
-This code snippet writes a `Blob` to disk at a particular path.
-
-It uses the fast [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write) API to efficiently write data to disk. The first argument is a *destination*, like an absolute path or `BunFile` instance. The second argument is the *data* to write.
+Use [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write) to write a `Blob` to disk. The first argument is a *destination*, like an absolute path or `BunFile` instance. The second argument is the *data* to write.
 
 ```ts
 const path = "/path/to/file.txt";
-await Bun.write(path, "Lorem ipsum");
+const data = new Blob(["Lorem ipsum"]);
+await Bun.write(path, data);
 ```
 
 ***
@@ -25,4 +24,4 @@ await Bun.write(path, data);
 
 ***
 
-See [Docs > API > File I/O](/docs/runtime/file-io#writing-files-bun-write) for complete documentation of `Bun.write()`.
+See [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).

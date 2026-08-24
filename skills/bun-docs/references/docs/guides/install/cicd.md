@@ -6,10 +6,10 @@ Use the official [`setup-bun`](https://github.com/oven-sh/setup-bun) GitHub Acti
 
 **File:** `workflow.yml`
 ```yaml
-title: my-workflow
+name: my-workflow
 jobs:
   my-job:
-    title: my-job
+    name: my-job
     runs-on: ubuntu-latest
     steps:
       # ...
@@ -26,18 +26,18 @@ To specify a version of Bun to install:
 
 **File:** `workflow.yml`
 ```yaml
-title: my-workflow
+name: my-workflow
 jobs:
   my-job:
-    title: my-job
+    name: my-job
     runs-on: ubuntu-latest
     steps:
       # ...
       - uses: oven-sh/setup-bun@v2
-         with:
-          version: "latest" # or "canary"
+        with:
+          bun-version: "latest" # or "canary"
 ```
 
 ***
 
-Refer to the [README.md](https://github.com/oven-sh/setup-bun) for complete documentation of the `setup-bun` GitHub Action.
+See the [`setup-bun` README](https://github.com/oven-sh/setup-bun).

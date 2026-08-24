@@ -5,8 +5,23 @@ Remove dependencies from your project
 
 ## Basic Usage
 
+> Note: **Alias** — `bun rm`, `bun uninstall`, `bun r`
+
 ```bash
 bun remove ts-node
+```
+
+Bun removes the package from every dependency group in `package.json` that lists it and updates `bun.lock`. Once nothing else depends on the package, Bun deletes it from `node_modules`.
+
+## `--filter`
+
+> Note: **Alias** — `-F`
+
+In a monorepo, remove the package from the matching workspace(s) instead of the current directory's package, using the same patterns as [`bun add --filter`](/docs/pm/cli/add#--filter). Use `--filter '*'` to remove it from every workspace package. Workspaces that don't list the package are left untouched.
+
+```bash
+bun remove zod --filter api
+bun remove zod --filter '*'
 ```
 
 ***
@@ -32,6 +47,8 @@ bun remove <package>
 - (boolean) Save to `package.json` (true by default)
 
 - (boolean) Add to `trustedDependencies` in the project's `package.json` and install the package(s)
+
+- (string) Remove the package(s) from the matching workspaces instead of the current package. Alias: `-F`
 
 ### Lockfile Behavior
 
@@ -59,7 +76,7 @@ bun remove <package>
 
 ### Execution Control & Validation
 
-- (boolean) Don't install anything
+- (boolean) Perform a dry run without making changes
 
 - (boolean) Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
 
@@ -83,9 +100,9 @@ bun remove <package>
 
 ### Script Execution
 
-- (boolean) Skip lifecycle scripts in the project's `package.json` (dependency scripts are never run)
+- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default 5)
+- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
 
 ### Scope & Path
 
@@ -95,6 +112,6 @@ bun remove <package>
 
 ### Advanced & Performance
 
-- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default), `hardlink`, `symlink`, `copyfile`
+- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
 
 - (number) Maximum number of concurrent network requests (default 48)

@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/server
 
 
-This starts an HTTP server listening on port `3000`. It demonstrates basic routing with a number of common responses and also handles POST data from standard forms or as JSON.
+This code starts an HTTP server listening on port `3000`. It demonstrates basic routing with common responses and handles POST data from standard forms or as JSON.
 
 See [`Bun.serve`](/docs/runtime/http/server) for details.
 
@@ -12,7 +12,7 @@ const server = Bun.serve({
   async fetch(req) {
     const path = new URL(req.url).pathname;
 
-    // respond with text/html
+    // respond with text/plain
     if (path === "/") return new Response("Welcome to Bun!");
 
     // redirect

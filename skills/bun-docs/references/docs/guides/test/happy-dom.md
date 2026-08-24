@@ -2,11 +2,11 @@
 Source: https://bun.com/docs/guides/test/happy-dom
 
 
-You can write and run browser tests with Bun's test runner in conjunction with [Happy DOM](https://github.com/capricorn86/happy-dom). Happy DOM implements mocked versions of browser APIs like `document` and `location`.
+Use [Happy DOM](https://github.com/capricorn86/happy-dom) to write browser tests with Bun's test runner. Happy DOM implements mocked versions of browser APIs like `document` and `location`.
 
 ***
 
-To get started, install `happy-dom`.
+Install `@happy-dom/global-registrator`.
 
 ```sh
 bun add -d @happy-dom/global-registrator
@@ -14,7 +14,7 @@ bun add -d @happy-dom/global-registrator
 
 ***
 
-This module exports a "registrator" that injects the mocked browser APIs to the global scope.
+This module exports a "registrator" that injects the mocked browser APIs into the global scope.
 
 **File:** `happydom.ts`
 ```ts
@@ -25,9 +25,9 @@ GlobalRegistrator.register();
 
 ***
 
-We need to make sure this file is executed before any of our test files. That's a job for Bun's built-in [*preload*]() functionality. Create a `bunfig.toml` file in the root of your project (if it doesn't already exist) and add the following lines.
+This file needs to run before any of your test files. That's a job for Bun's built-in [*preload*](/docs/runtime/bunfig#test-preload) option. Create a `bunfig.toml` file in the root of your project (if it doesn't already exist) and add the following lines.
 
-The `./happydom.ts` file should contain the registration code above.
+The `./happydom.ts` file should contain the registration code from the previous step.
 
 **File:** `bunfig.toml`
 ```toml
@@ -37,7 +37,7 @@ preload = "./happydom.ts"
 
 ***
 
-Now running `bun test` inside our project will automatically execute `happydom.ts` first. We can start writing tests that use browser APIs.
+Now `bun test` executes `happydom.ts` before your test files, so you can write tests that use browser APIs.
 
 **File:** `dom.test.ts`
 ```ts
@@ -52,7 +52,7 @@ test("set button text", () => {
 
 ***
 
-With Happy DOM properly configured, this test runs as expected.
+With Happy DOM registered, the test passes.
 
 ```sh
 bun test
@@ -66,9 +66,9 @@ dom.test.ts:
  1 pass
  0 fail
  1 expect() calls
-Ran 1 tests across 1 files. 1 total [125.00ms]
+Ran 1 test across 1 file. [125.00ms]
 ```
 
 ***
 
-Refer to the [Happy DOM repo](https://github.com/capricorn86/happy-dom) and [Docs > Test runner > DOM](/docs/test/dom) for complete documentation on writing browser tests with Bun.
+See the [Happy DOM repo](https://github.com/capricorn86/happy-dom) and [DOM testing](/docs/test/dom).

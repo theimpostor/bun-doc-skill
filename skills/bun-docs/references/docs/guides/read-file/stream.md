@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/read-file/stream
 
 
-The `Bun.file()` function accepts a path and returns a `BunFile` instance. The `BunFile` class extends `Blob` and allows you to lazily read the file in a variety of formats. Use `.stream()` to consume the file incrementally as a `ReadableStream`.
+The `Bun.file()` function accepts a path and returns a `BunFile` instance. `BunFile` extends `Blob`, so you can read the file lazily in a variety of formats. Use `.stream()` to consume the file incrementally as a `ReadableStream`.
 
 ```ts
 const path = "/path/to/package.json";
@@ -13,7 +13,7 @@ const stream = file.stream();
 
 ***
 
-The chunks of the stream can be consumed as an [async iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols) using `for await`.
+The stream is an [async iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols), so you can read its chunks with `for await`.
 
 ```ts
 for await (const chunk of stream) {
@@ -23,4 +23,4 @@ for await (const chunk of stream) {
 
 ***
 
-Refer to the [Streams](/docs/runtime/streams) documentation for more information on working with streams in Bun.
+See [Streams](/docs/runtime/streams) for more on working with streams in Bun.

@@ -10,17 +10,17 @@ bun add zod --optional
 
 ***
 
-This will add the package to `optionalDependencies` in `package.json`.
+This adds the package to `optionalDependencies` in `package.json`.
 
 **File:** `package.json`
 ```json
 {
   "optionalDependencies": {
-    "zod": "^3.0.0"
+    "zod": "^4.0.0"
   }
 }
 ```
 
 ***
 
-See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.
+See [`bun install`](/docs/pm/cli/install).

@@ -10,4 +10,4 @@ Bun.nanoseconds();
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.
+See [Utils](/docs/runtime/utils) for more utilities.

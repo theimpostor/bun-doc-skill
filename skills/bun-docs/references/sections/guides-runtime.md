@@ -1,6 +1,6 @@
 # Guides: Runtime
 
-Use for runtime-specific recipes such as `--define`, `bun upgrade`, GitHub Actions, and Bun runtime flags.
+Use for runtime-specific recipes such as `--define`, `bun upgrade`, data-file imports, GitHub Actions, and Bun runtime flags.
 
 Use this file to pick the most relevant Bun doc page before opening the page itself.
 
@@ -17,6 +17,7 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Import a JSON file](../docs/guides/runtime/import-json.md) - `guides/runtime/import-json`
 - [Import a JSON5 file](../docs/guides/runtime/import-json5.md) - `guides/runtime/import-json5`
 - [Import a TOML file](../docs/guides/runtime/import-toml.md) - `guides/runtime/import-toml`
+- [Import an XML file](../docs/guides/runtime/import-xml.md) - `guides/runtime/import-xml`
 - [Import a YAML file](../docs/guides/runtime/import-yaml.md) - `guides/runtime/import-yaml`
 - [Read environment variables](../docs/guides/runtime/read-env.md) - `guides/runtime/read-env`
 - [Set environment variables](../docs/guides/runtime/set-env.md) - `guides/runtime/set-env`

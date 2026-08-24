@@ -10,7 +10,7 @@ bun add @types/bun --peer
 
 ***
 
-This will add the package to `peerDependencies` in `package.json`.
+This adds the package to `peerDependencies` in `package.json`.
 
 **File:** `package.json`
 ```json
@@ -23,7 +23,7 @@ This will add the package to `peerDependencies` in `package.json`.
 
 ***
 
-Running `bun install` will install peer dependencies by default, unless marked optional in `peerDependenciesMeta`.
+`bun install` installs peer dependencies by default, unless they are marked optional in `peerDependenciesMeta`.
 
 **File:** `package.json`
 ```json
@@ -41,4 +41,4 @@ Running `bun install` will install peer dependencies by default, unless marked o
 
 ***
 
-See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.
+See [`bun install`](/docs/pm/cli/install).
