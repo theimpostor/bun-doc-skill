@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/streams/node-readable-to-arraybuffer
 
 
-To convert a Node.js `Readable` stream to an `ArrayBuffer` in Bun, you can create a new `Response` object with the stream as the body, then use `arrayBuffer()` to read the stream into an `ArrayBuffer`.
+To convert a Node.js `Readable` stream to an `ArrayBuffer` in Bun, create a `Response` with the stream as the body, then call `arrayBuffer()`.
 
 ```ts
 import { Readable } from "stream";

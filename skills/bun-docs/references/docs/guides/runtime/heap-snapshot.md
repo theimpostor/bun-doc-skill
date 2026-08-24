@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/runtime/heap-snapshot
 
 
-Bun implements V8's heap snapshot API, which allows you to create snapshots of the heap at runtime. This helps debug memory leaks in your JavaScript/TypeScript application.
+Bun implements V8's heap snapshot API. Use it to capture the heap at runtime and debug memory leaks in your JavaScript/TypeScript application.
 
 **File:** `snapshot.ts`
 ```ts

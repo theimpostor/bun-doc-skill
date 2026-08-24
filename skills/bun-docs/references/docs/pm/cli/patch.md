@@ -3,22 +3,22 @@ Source: https://bun.com/docs/pm/cli/patch
 
 Persistently patch node_modules packages in a git-friendly way
 
-`bun patch` lets you persistently patch node_modules in a maintainable, git-friendly way.
+`bun patch` persistently patches packages in `node_modules` in a maintainable, git-friendly way.
 
-Sometimes, you need to make a small change to a package in `node_modules/` to fix a bug or add a feature. `bun patch` lets you do this without vendoring the entire package and reuse the patch across multiple installs, multiple projects, and multiple machines.
+Sometimes you need a small change to a package in `node_modules/` to fix a bug or add a feature. `bun patch` lets you do this without vendoring the entire package.
 
 Features:
 
-* Generates `.patch` files applied to dependencies in `node_modules` on install
-* `.patch` files can be committed to your repository, reused across multiple installs, projects, and machines
+* Generates `.patch` files that Bun applies to dependencies in `node_modules` on install
+* You can commit `.patch` files to your repository and reuse them across installs, projects, and machines
 * `"patchedDependencies"` in `package.json` keeps track of patched packages
-* `bun patch` lets you patch packages in `node_modules/` while preserving the integrity of Bun's [Global Cache](/docs/pm/global-cache)
+* Patches packages in `node_modules/` while preserving the integrity of Bun's [Global Cache](/docs/pm/global-cache)
 * Test your changes locally before committing them with `bun patch --commit <pkg>`
-* To preserve disk space and keep `bun install` fast, patched packages are committed to the Global Cache and shared across projects where possible
+* To preserve disk space and keep `bun install` fast, Bun commits patched packages to the Global Cache and shares them across projects where possible
 
 #### Step 1. Prepare the package for patching
 
-To get started, use `bun patch <pkg>` to prepare the package for patching:
+Use `bun patch <pkg>` to prepare the package for patching:
 
 ```bash
 # you can supply the package name
@@ -32,19 +32,19 @@ bun patch node_modules/react
 ```
 
 > Note
-Don't forget to call `bun patch <pkg>`! This ensures the package folder in `node_modules/` contains a fresh copy of the package with no symlinks/hardlinks to Bun's cache.
+Always run `bun patch <pkg>` first. It ensures the package folder in `node_modules/` contains a fresh copy of the package with no symlinks or hardlinks to Bun's cache.
 
-If you forget to do this, you might end up editing the package globally in the cache!
+If you skip it, you might end up editing the package globally in the cache.
 
 #### Step 2. Test your changes locally
 
-`bun patch <pkg>` makes it safe to edit the `<pkg>` in `node_modules/` directly, while preserving the integrity of Bun's [Global Cache](/docs/pm/global-cache). This works by re-creating an unlinked clone of the package in `node_modules/` and diffing it against the original package in the Global Cache.
+`bun patch <pkg>` makes it safe to edit `<pkg>` in `node_modules/` directly, while preserving the integrity of Bun's [Global Cache](/docs/pm/global-cache). It works by re-creating an unlinked clone of the package in `node_modules/`. `bun patch --commit <pkg>` then diffs that clone against the original package in the Global Cache.
 
 #### Step 3. Commit your changes
 
 Once you're happy with your changes, run `bun patch --commit <path or pkg>`.
 
-Bun will generate a patch file in `patches/`, update your `package.json` and lockfile, and Bun will start using the patched package:
+Bun generates a patch file in `patches/`, updates your `package.json` and lockfile, and starts using the patched package:
 
 ```bash
 # you can supply the path to the patched package
@@ -78,7 +78,7 @@ bun patch <package>@<version>
 
 - (boolean) Don't install devDependencies. Alias: `-p`
 
-- (boolean) Skip lifecycle scripts in the project's `package.json` (dependency scripts are never run)
+- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
 
 - (boolean) Add to `trustedDependencies` in the project's `package.json` and install the package(s)
 
@@ -102,11 +102,13 @@ bun patch <package>@<version>
 
 ### Installation Control
 
-- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default), `hardlink`, `symlink`, `copyfile`
+- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
 
 - (string) Linker strategy (one of `isolated` or `hoisted`)
 
-- (boolean) Don't install anything
+- (number) Only install packages published at least N seconds ago (security feature)
+
+- (boolean) Perform a dry run without making changes
 
 - (boolean) Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
 
@@ -124,7 +126,7 @@ bun patch <package>@<version>
 
 ### Performance & Resource
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default 5)
+- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
 
 ### Caching
 
@@ -136,7 +138,7 @@ bun patch <package>@<version>
 
 - (boolean) Don't log anything
 
-- (boolean) Only show tarball name when packing
+- (boolean) Disable the progress bar
 
 - (boolean) Excessively verbose logging
 

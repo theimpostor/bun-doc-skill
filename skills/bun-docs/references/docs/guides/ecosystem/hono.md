@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/ecosystem/hono
 
 
-[Hono](https://github.com/honojs/hono) is a lightweight ultrafast web framework designed for the edge.
+[Hono](https://github.com/honojs/hono) is a lightweight web framework designed for the edge.
 
 **File:** `server.ts`
 ```ts
@@ -23,9 +23,15 @@ bun create hono myapp
 ```
 
 ```txt
-✔ Which template do you want to use? › bun
-cloned honojs/starter#main to /path/to/myapp
-✔ Copied project files
+create-hono version 0.19.4
+✔ Using target directory … myapp
+✔ Which template do you want to use? bun
+✔ Do you want to install project dependencies? Yes
+✔ Which package manager do you want to use? bun
+✔ Cloning the template
+✔ Installing project dependencies
+🎉 Copied project files
+Get started with: cd myapp
 ```
 
 ```sh
@@ -43,4 +49,4 @@ bun run dev
 
 ***
 
-Refer to Hono's guide on [getting started with Bun](https://hono.dev/getting-started/bun) for more information.
+Refer to Hono's [getting started with Bun](https://hono.dev/docs/getting-started/bun) guide.

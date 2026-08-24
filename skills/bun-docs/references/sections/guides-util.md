@@ -6,7 +6,7 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 
 ## Pages
 
-- [Encode and decode base64 strings](../docs/guides/util/base64.md) - `guides/util/base64`
+- [Encode and decode base64 data](../docs/guides/util/base64.md) - `guides/util/base64`
 - [Check if two objects are deeply equal](../docs/guides/util/deep-equals.md) - `guides/util/deep-equals`
 - [Compress and decompress data with DEFLATE](../docs/guides/util/deflate.md) - `guides/util/deflate`
 - [Detect when code is executed with Bun](../docs/guides/util/detect-bun.md) - `guides/util/detect-bun`

@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/test/todo-tests
 
 
-To remind yourself to write a test later, use the `test.todo` function. There's no need to provide a test implementation.
+To remind yourself to write a test later, use the `test.todo` function. An implementation isn't required.
 
-**File:** `test.ts`
+**File:** `test.test.ts`
 ```ts
 import { test, expect } from "bun:test";
 
@@ -14,7 +14,7 @@ test.todo("unimplemented feature");
 
 ***
 
-The output of `bun test` indicates how many `todo` tests were encountered.
+The `bun test` output reports the number of `todo` tests.
 
 ```sh
 bun test
@@ -22,20 +22,17 @@ bun test
 
 ```txt
 test.test.ts:
-✓ add [0.03ms]
-✓ multiply [0.02ms]
 ✎ unimplemented feature
 
- 2 pass
+ 0 pass
  1 todo
  0 fail
- 2 expect() calls
-Ran 3 tests across 1 files. [74.00ms]
+Ran 1 test across 1 file. [74.00ms]
 ```
 
 ***
 
-Optionally, you can provide a test implementation.
+You can provide a test implementation.
 
 ```ts
 import { test, expect } from "bun:test";
@@ -47,16 +44,16 @@ test.todo("unimplemented feature", () => {
 
 ***
 
-If an implementation is provided, it will not be run unless the `--todo` flag is passed. If the `--todo` flag is passed, the test will be executed and *expected to fail* by test runner! If a todo test passes, the `bun test` run will return a non-zero exit code to signal the failure.
+Bun doesn't run the implementation unless you pass the `--todo` flag. With `--todo`, the test runs and is *expected to fail*. If a todo test passes, `bun test` returns a non-zero exit code.
 
 ```sh
 bun test --todo
 ```
 
 ```txt
-my.test.ts:
+test.test.ts:
 ✗ unimplemented feature
-  ^ this test is marked as todo but passes. Remove `.todo` or check that test is correct.
+  ^ this test is marked as todo but passes. Remove `.todo` if tested behavior now works
 
  0 pass
  1 fail
@@ -70,4 +67,4 @@ $ echo $?
 See also:
 
 * [Skip a test](/docs/guides/test/skip-tests)
-* [Docs > Test runner > Writing tests](/docs/test/writing-tests)
+* [Writing tests](/docs/test/writing-tests)

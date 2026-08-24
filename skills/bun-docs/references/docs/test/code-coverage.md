@@ -1,13 +1,13 @@
 # Code coverage
 Source: https://bun.com/docs/test/code-coverage
 
-Learn how to use Bun's built-in code coverage reporting to track test coverage and find untested areas in your codebase
+Use Bun's built-in code coverage reporting to track test coverage and find untested code
 
-Bun's test runner supports built-in code coverage reporting. Use it to see how much of your codebase is covered by tests and find areas that are not currently well-tested.
+Bun's test runner has built-in code coverage reporting. Use it to see how much of your codebase your tests cover and to find untested code.
 
 ## Enabling Coverage
 
-`bun:test` supports seeing which lines of code are covered by tests. To use this feature, pass `--coverage` to the CLI. It will print out a coverage report to the console:
+`bun:test` can report which lines of code your tests cover. Pass `--coverage` to print a coverage report to the console:
 
 ```bash
 bun test --coverage
@@ -33,7 +33,7 @@ All files    |   38.89 |   42.11 |
 
 ### Enable by Default
 
-To always enable coverage reporting by default, add the following line to your `bunfig.toml`:
+To enable coverage reporting by default, add this to your `bunfig.toml`:
 
 **File:** `bunfig.toml`
 ```toml
@@ -42,17 +42,17 @@ To always enable coverage reporting by default, add the following line to your `
 coverage = true
 ```
 
-By default coverage reports will include test files and exclude sourcemaps. This is usually what you want, but it can be configured otherwise in `bunfig.toml`.
+By default, coverage reports exclude test files and use sourcemaps. Both are configurable in `bunfig.toml`.
 
 **File:** `bunfig.toml`
 ```toml
 [test]
-coverageSkipTestFiles = true  # default false
+coverageSkipTestFiles = false  # default true
 ```
 
 ## Coverage Thresholds
 
-It is possible to specify a coverage threshold in `bunfig.toml`. If your test suite does not meet or exceed this threshold, `bun test` will exit with a non-zero exit code to indicate the failure.
+Set a coverage threshold in `bunfig.toml`. If your test suite does not meet or exceed it, `bun test` exits with a non-zero exit code.
 
 ### Simple Threshold
 
@@ -72,13 +72,13 @@ coverageThreshold = 0.9
 coverageThreshold = { lines = 0.9, functions = 0.9, statements = 0.9 }
 ```
 
-Setting any of these thresholds enables `fail_on_low_coverage`, causing the test run to fail if coverage is below the threshold.
+Setting any of these thresholds causes the test run to fail if coverage is below the threshold.
 
 ## Coverage Reporters
 
-By default, coverage reports will be printed to the console.
+By default, Bun prints coverage reports to the console.
 
-For persistent code coverage reports in CI environments and for other tools, you can pass a `--coverage-reporter=lcov` CLI option or `coverageReporter` option in `bunfig.toml`.
+To save a report for CI or other tools, pass `--coverage-reporter=lcov` on the command line or set `coverageReporter` in `bunfig.toml`.
 
 **File:** `bunfig.toml`
 ```toml
@@ -96,7 +96,7 @@ coverageDir = "path/to/somewhere"    # default "coverage"
 
 ### LCOV Coverage Reporter
 
-To generate an lcov report, you can use the lcov reporter. This will generate an `lcov.info` file in the coverage directory.
+The lcov reporter writes an `lcov.info` file to the coverage directory.
 
 **File:** `bunfig.toml`
 ```toml
@@ -109,7 +109,7 @@ coverageReporter = "lcov"
 bun test --coverage --coverage-reporter=lcov
 ```
 
-The LCOV format is widely supported by various tools and services:
+Tools and services that read the LCOV format include:
 
 * **Code editors**: VS Code extensions can show coverage inline
 * **CI/CD services**: GitHub Actions, GitLab CI, CircleCI
@@ -141,19 +141,19 @@ jobs:
 
 ### Skip Test Files
 
-By default, test files themselves are included in coverage reports. You can exclude them with:
+Coverage reports exclude test files by default. To include them:
 
 **File:** `bunfig.toml`
 ```toml
 [test]
-coverageSkipTestFiles = true  # default false
+coverageSkipTestFiles = false  # default true
 ```
 
-This will exclude files matching test patterns (e.g., `*.test.ts`, `*.spec.js`) from the coverage report.
+When `coverageSkipTestFiles` is `true` (the default), the coverage report excludes files matching test patterns (for example `*.test.ts`, `*.spec.js`).
 
 ### Ignore Specific Paths and Patterns
 
-You can exclude specific files or file patterns from coverage reports using `coveragePathIgnorePatterns`:
+`coveragePathIgnorePatterns` excludes specific files or file patterns from coverage reports:
 
 **File:** `bunfig.toml`
 ```toml
@@ -170,7 +170,7 @@ coveragePathIgnorePatterns = [
 ]
 ```
 
-This option accepts glob patterns and works similarly to Jest's `collectCoverageFrom` ignore patterns. Files matching any of these patterns will be excluded from coverage calculation and reporting in both text and LCOV outputs.
+The option accepts glob patterns and works like Jest's `collectCoverageFrom` ignore patterns. Bun excludes files matching any of the patterns from coverage calculation and reporting in both text and LCOV output.
 
 #### Common Use Cases
 
@@ -206,7 +206,7 @@ coveragePathIgnorePatterns = [
 
 ## Sourcemaps
 
-Internally, Bun transpiles all files by default, so Bun automatically generates an internal source map that maps lines of your original source code onto Bun's internal representation. If for any reason you want to disable this, set `test.coverageIgnoreSourcemaps` to `true`; this will rarely be desirable outside of advanced use cases.
+Bun transpiles all files by default, generating an internal source map that maps lines of your original source code onto Bun's internal representation. To make coverage reports ignore this source map, set `test.coverageIgnoreSourcemaps` to `true`. You rarely want this outside of advanced use cases.
 
 **File:** `bunfig.toml`
 ```toml
@@ -223,8 +223,8 @@ transpilation process.
 By default, coverage reports:
 
 * **Exclude** `node_modules` directories
-* **Exclude** files loaded via non-JS/TS loaders (e.g., `.css`, `.txt`) unless a custom JS loader is specified
-* **Include** test files themselves (can be disabled with `coverageSkipTestFiles = true`)
+* **Exclude** files loaded with non-JS/TS loaders (for example `.css`, `.txt`) unless you specify a custom JS loader
+* **Exclude** test files themselves (include them with `coverageSkipTestFiles = false`)
 * Can exclude additional files with `coveragePathIgnorePatterns`
 
 ## Advanced Configuration
@@ -295,13 +295,11 @@ test:coverage:
   stage: test
   script:
     - bun install
-    - bun test --coverage --coverage-reporter=lcov
-  coverage: '/Lines\s*:\s*(\d+.\d+)%/'
+    - bun test --coverage --coverage-reporter=text --coverage-reporter=lcov
+  coverage: '/All files\s*\|\s*[\d.]+\s*\|\s*(\d+\.\d+)/'
   artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: coverage/lcov.info
+    paths:
+      - coverage/lcov.info
 ```
 
 ## Interpreting Coverage Reports
@@ -320,15 +318,15 @@ All files    |   85.71 |   90.48 |
 -------------|---------|---------|-------------------
 ```
 
-* **% Funcs**: Percentage of functions that were called during tests
-* **% Lines**: Percentage of executable lines that were run during tests
-* **Uncovered Line #s**: Specific line numbers that were not executed
+* **% Funcs**: Percentage of functions called during tests
+* **% Lines**: Percentage of executable lines run during tests
+* **Uncovered Line #s**: Line numbers that were never executed
 
 ### What to Aim For
 
 * **80%+ overall coverage**: Generally considered good
 * **90%+ critical paths**: Important business logic should be well-tested
-* **100% utility functions**: Pure functions and utilities are easy to test completely
+* **100% utility functions**: Pure functions and utilities can be tested completely
 * **Lower coverage for UI components**: Often acceptable as they may require integration tests
 
 ## Best Practices
@@ -377,7 +375,7 @@ bun test --coverage src/critical-module.ts
 
 ### Combine with Other Quality Metrics
 
-Coverage is just one metric. Also consider:
+Coverage is only one metric. Also consider:
 
 * **Code review quality**
 * **Integration test coverage**
@@ -389,7 +387,7 @@ Coverage is just one metric. Also consider:
 
 ### Coverage Not Showing for Some Files
 
-If files aren't appearing in coverage reports, they might not be imported by your tests. Coverage only tracks files that are actually loaded.
+If files aren't appearing in coverage reports, your tests might not import them. Coverage only tracks files that are loaded.
 
 **File:** `test.ts`
 ```ts
@@ -407,7 +405,7 @@ If you see coverage reports that don't match your expectations:
 
 1. Check if source maps are working correctly
 2. Verify file patterns in `coveragePathIgnorePatterns`
-3. Ensure test files are actually importing the code to test
+3. Ensure test files import the code to test
 
 ### Performance Issues with Large Codebases
 
@@ -418,7 +416,6 @@ For large projects, coverage collection can slow down tests:
 [test]
 # Exclude large directories you don't need coverage for
 coveragePathIgnorePatterns = [
-  "node_modules/**",
   "vendor/**",
   "generated/**"
 ]

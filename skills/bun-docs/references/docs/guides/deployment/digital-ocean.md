@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/deployment/digital-ocean
 
 [DigitalOcean](https://www.digitalocean.com/) is a cloud platform that provides a range of services for building and deploying applications.
 
-In this guide, we will deploy a Bun HTTP server to DigitalOcean using a `Dockerfile`.
+This guide deploys a Bun HTTP server to DigitalOcean using a `Dockerfile`.
 
 > Note
 Before continuing, make sure you have:
@@ -41,7 +41,7 @@ You should see the new registry in the [**DigitalOcean registry dashboard**](htt
 <img alt="DigitalOcean registry dashboard" />
 
 ### Create a new Dockerfile
-Make sure you're in the directory containing your project, then create a new `Dockerfile` in the root of your project. This file contains the instructions to initialize the container, copy your local project files into it, install dependencies, and start the application.
+Create a new `Dockerfile` in the root of your project. This file contains the instructions to initialize the container, copy your local project files into it, install dependencies, and start the application.
 
 **File:** `Dockerfile`
 ```docker
@@ -68,11 +68,11 @@ CMD ["bun", "index.ts"]
 ```
 
 > Note
-Make sure that the start command corresponds to your application's entry point. This can also be `CMD ["bun", "run", "start"]` if you have a start script in your `package.json`.
+Make sure that the start command corresponds to your application's entry point. The start command can also be `CMD ["bun", "run", "start"]` if you have a start script in your `package.json`.
 
-This image installs dependencies and runs your app with Bun inside a container. If your app doesn't have dependencies, you can omit the `RUN bun install --production --frozen-lockfile` line.
+If your app doesn't have dependencies, you can omit the `COPY package.json bun.lock ./` and `RUN bun install --production --frozen-lockfile` lines. Bun doesn't write a `bun.lock` for a project with no dependencies.
 
-Create a new `.dockerignore` file in the root of your project. This file contains the files and directories that should be *excluded* from the container image, such as `node_modules`. This makes your builds faster and smaller:
+Create a new `.dockerignore` file in the root of your project. It lists the files and directories to *exclude* from the container image, such as `node_modules`. Excluding them keeps builds faster and smaller:
 
 **File:** `.dockerignore`
 ```docker
@@ -96,11 +96,12 @@ doctl registry login
 ```
 
 ```txt
-Successfully authenticated with registry.digitalocean.com
+Logging Docker in to registry.digitalocean.com
+Notice: Login valid for 30 days. Use the --expiry-seconds flag to set a shorter expiration or --never-expire for no expiration.
 ```
 
 > Note
-This command authenticates Docker with DigitalOcean's registry using your DigitalOcean credentials. Without this step, the build and push command will fail with a 401 authentication error.
+This command authenticates Docker with DigitalOcean's registry using your DigitalOcean credentials. Without this step, the build and push command fails with a 401 authentication error.
 
 ### Build and push the Docker image to the DigitalOcean registry
 Make sure you're in the directory containing your `Dockerfile`, then build and push the Docker image to the DigitalOcean registry in one command:
@@ -110,14 +111,14 @@ docker buildx build --platform=linux/amd64 -t registry.digitalocean.com/bun-digi
 ```
 
 > Note
-If you're building on an ARM Mac (M1/M2), you must use `docker buildx` with `--platform=linux/amd64` to ensure compatibility with DigitalOcean's infrastructure. Using `docker build` without the platform flag will create an ARM64 image that won't run on DigitalOcean.
+If you're building on an ARM Mac (M1/M2), you must use `docker buildx` with `--platform=linux/amd64` for compatibility with DigitalOcean's infrastructure. Using `docker build` without the platform flag creates an ARM64 image that won't run on DigitalOcean.
 
 Once the image is pushed, you should see it in the [**DigitalOcean registry dashboard**](https://cloud.digitalocean.com/registry):
 
 <img alt="DigitalOcean registry dashboard" />
 
 ### Create a new DigitalOcean App Platform project
-In the DigitalOcean dashboard, go to [**App Platform**](https://cloud.digitalocean.com/apps) > **Create App**. We can create a project directly from the container image.
+In the DigitalOcean dashboard, go to [**App Platform**](https://cloud.digitalocean.com/apps) > **Create App**. You can create a project directly from the container image.
 
 <img alt="DigitalOcean App Platform project dashboard" />
 
@@ -130,6 +131,6 @@ Review and configure resource settings, then click **Create app**.
 <img alt="DigitalOcean App Platform service dashboard" />
 
 ### Visit your live application
-🥳 Your app is now live! Once the app is created, you should see it in the App Platform dashboard with the public URL.
+Your app is now live. Once the app is created, you should see it in the App Platform dashboard with its public URL.
 
 <img alt="DigitalOcean App Platform app dashboard" />

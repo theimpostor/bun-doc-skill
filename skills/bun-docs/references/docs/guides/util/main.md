@@ -16,7 +16,7 @@ import "./foo.ts";
 
 ***
 
-The printed path corresponds to the file that is executed with `bun run`.
+The printed path is the file executed with `bun run`.
 
 ```sh
 bun run index.ts
@@ -36,4 +36,4 @@ bun run foo.ts
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.
+See [Utils](/docs/runtime/utils).

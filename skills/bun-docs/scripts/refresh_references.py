@@ -71,7 +71,7 @@ SECTION_INFO = {
     },
     "guides-runtime": {
         "title": "Guides: Runtime",
-        "summary": "Use for runtime-specific recipes such as `--define`, `bun upgrade`, GitHub Actions, and Bun runtime flags.",
+        "summary": "Use for runtime-specific recipes such as `--define`, `bun upgrade`, data-file imports, GitHub Actions, and Bun runtime flags.",
     },
     "guides-streams": {
         "title": "Guides: Streams",
@@ -99,7 +99,7 @@ SECTION_INFO = {
     },
     "package-manager-cli": {
         "title": "Package Manager CLI",
-        "summary": "Use for command-specific docs such as `bun add`, `bun install`, `bun update`, `bun audit`, and `bun publish`.",
+        "summary": "Use for command-specific docs such as `bun add`, `bun install`, `bun update`, `bun dedupe`, `bun prune`, `bun audit`, and `bun publish`.",
     },
     "project": {
         "title": "Project",
@@ -107,7 +107,7 @@ SECTION_INFO = {
     },
     "runtime": {
         "title": "Runtime",
-        "summary": "Use for Bun runtime APIs, `bunfig.toml`, file I/O, globals, compatibility, shell, plugins, workers, and built-in services.",
+        "summary": "Use for Bun runtime APIs, `bunfig.toml`, file I/O, data formats such as XML and YAML, globals, compatibility, shell, plugins, workers, and built-in services.",
     },
     "runtime-http": {
         "title": "Runtime HTTP",
@@ -123,7 +123,7 @@ SECTION_INFO = {
     },
     "test": {
         "title": "Test Runner",
-        "summary": "Use for core `bun test` documentation: writing tests, lifecycle hooks, mocks, snapshots, config, coverage, and reporters.",
+        "summary": "Use for core `bun test` documentation: writing tests, parallel and isolated runs, lifecycle hooks, mocks, snapshots, config, coverage, and reporters.",
     },
 }
 

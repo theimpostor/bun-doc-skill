@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/process/stdin
 
 
-For CLI tools, it's often useful to read from `stdin`. In Bun, the `console` object is an `AsyncIterable` that yields lines from `stdin`.
+In Bun, the `console` object is an `AsyncIterable` that yields lines from `stdin`.
 
 **File:** `index.ts`
 ```ts
@@ -16,7 +16,7 @@ for await (const line of console) {
 
 ***
 
-Running this file results in a never-ending interactive prompt that echoes whatever the user types.
+Running this file starts a never-ending interactive prompt that echoes whatever you type.
 
 ```sh
 bun run index.ts
@@ -31,15 +31,15 @@ You typed: hello again
 
 ***
 
-Bun also exposes stdin as a `BunFile` via `Bun.stdin`. This is useful for incrementally reading large inputs that are piped into the `bun` process.
+Bun also exposes `stdin` as a `BunFile`, `Bun.stdin`. Use it to incrementally read large inputs piped into the `bun` process.
 
-There is no guarantee that the chunks will be split line-by-line.
+Chunks aren't guaranteed to be split line-by-line.
 
 **File:** `stdin.ts`
 ```ts
 for await (const chunk of Bun.stdin.stream()) {
   // chunk is Uint8Array
-  // this converts it to text (assumes ASCII encoding)
+  // this converts it to text (assumes UTF-8 encoding)
   const chunkText = Buffer.from(chunk).toString();
   console.log(`Chunk: ${chunkText}`);
 }
@@ -47,7 +47,7 @@ for await (const chunk of Bun.stdin.stream()) {
 
 ***
 
-This will print the input that is piped into the `bun` process.
+Running `stdin.ts` prints whatever is piped into it.
 
 ```sh
 echo "hello" | bun run stdin.ts
@@ -59,4 +59,4 @@ Chunk: hello
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.
+See [Utils](/docs/runtime/utils) for more utilities.

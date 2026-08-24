@@ -11,16 +11,16 @@ bun add zod -d # shorthand
 
 ***
 
-This will add the package to `devDependencies` in `package.json`.
+This adds the package to `devDependencies` in `package.json`.
 
 ```json
 {
   "devDependencies": {
-    "zod": "^3.0.0"
+    "zod": "^4.0.0"
   }
 }
 ```
 
 ***
 
-See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.
+See [`bun install`](/docs/pm/cli/install).

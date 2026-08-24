@@ -3,11 +3,11 @@ Source: https://bun.com/docs/test/snapshots
 
 Learn how to use snapshot testing in Bun to save and compare output between test runs
 
-Snapshot testing saves the output of a value and compares it against future test runs. This is particularly useful for UI components, complex objects, or any output that needs to remain consistent.
+Snapshot testing saves the output of a value and compares it against future test runs. Use it for UI components, complex objects, or any output that needs to remain consistent.
 
 ## Basic Snapshots
 
-Snapshot tests are written using the `.toMatchSnapshot()` matcher:
+Write snapshot tests with the `.toMatchSnapshot()` matcher:
 
 **File:** `test.ts`
 ```ts
@@ -18,11 +18,11 @@ test("snap", () => {
 });
 ```
 
-The first time this test is run, the argument to `expect` will be serialized and written to a special snapshot file in a `__snapshots__` directory alongside the test file.
+The first time this test runs, Bun serializes the argument to `expect` and writes it to a snapshot file in a `__snapshots__` directory alongside the test file.
 
 ### Snapshot Files
 
-After running the test above, Bun will create:
+After the first run, Bun creates:
 
 **File:** `directory structure`
 ```text
@@ -36,30 +36,26 @@ The snapshot file contains:
 
 **File:** `__snapshots__/snap.test.ts.snap`
 ```ts
-// Bun Snapshot v1, https://bun.com/docs/test/snapshots
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`snap 1`] = `"foo"`;
 ```
 
-On future runs, the argument is compared against the snapshot on disk.
+On future runs, Bun compares the argument against the snapshot on disk.
 
 ## Updating Snapshots
 
-Snapshots can be re-generated with the following command:
+Regenerate snapshots with:
 
 ```bash
 bun test --update-snapshots
 ```
 
-This is useful when:
-
-* You've intentionally changed the output
-* You're adding new snapshot tests
-* The expected output has legitimately changed
+Do this when you've intentionally changed the output. In CI environments, Bun does not write new snapshots unless you pass this flag.
 
 ## Inline Snapshots
 
-For smaller values, you can use inline snapshots with `.toMatchInlineSnapshot()`. These snapshots are stored directly in your test file:
+For smaller values, use `.toMatchInlineSnapshot()`. Bun stores inline snapshots directly in your test file:
 
 **File:** `test.ts`
 ```ts
@@ -91,13 +87,11 @@ test("inline snapshot", () => {
 1. Write your test with `.toMatchInlineSnapshot()`
 2. Run the test once
 3. Bun automatically updates your test file with the snapshot
-4. On subsequent runs, the value will be compared against the inline snapshot
-
-Inline snapshots are particularly useful for small, simple values where it's helpful to see the expected output right in the test file.
+4. On subsequent runs, Bun compares the value against the inline snapshot
 
 ## Error Snapshots
 
-You can also snapshot error messages using `.toThrowErrorMatchingSnapshot()` and `.toThrowErrorMatchingInlineSnapshot()`:
+You can also snapshot error messages with `.toThrowErrorMatchingSnapshot()` and `.toThrowErrorMatchingInlineSnapshot()`:
 
 **File:** `test.ts`
 ```ts
@@ -200,7 +194,7 @@ test("report generation", () => {
 
 ## React Component Snapshots
 
-Snapshots are particularly useful for React components:
+Snapshots work well for React components:
 
 **File:** `test.ts`
 ```tsx
@@ -242,7 +236,7 @@ test("snapshot with dynamic values", () => {
 });
 ```
 
-The snapshot will store:
+The snapshot file stores:
 
 **File:** `snapshot file`
 ```txt
@@ -253,30 +247,6 @@ exports[`snapshot with dynamic values 1`] = `
   "name": "John",
 }
 `;
-```
-
-## Custom Serializers
-
-You can customize how objects are serialized in snapshots:
-
-**File:** `test.ts`
-```ts
-import { test, expect } from "bun:test";
-
-// Custom serializer for Date objects
-expect.addSnapshotSerializer({
-  test: val => val instanceof Date,
-  serialize: val => `"${val.toISOString()}"`,
-});
-
-test("custom serializer", () => {
-  const event = {
-    name: "Meeting",
-    date: new Date("2024-01-01T10:00:00Z"),
-  };
-
-  expect(event).toMatchSnapshot();
-});
 ```
 
 ## Best Practices
@@ -385,18 +355,6 @@ git add __snapshots__/
 git commit -m "Update snapshots after UI changes"
 ```
 
-### Cleaning Up Unused Snapshots
-
-Bun will warn about unused snapshots:
-
-**File:** `warning`
-```txt
-Warning: 1 unused snapshot found:
-  my-test.test.ts.snap: "old test that no longer exists 1"
-```
-
-Remove unused snapshots by deleting them from the snapshot files or by running tests with cleanup flags if available.
-
 ### Organizing Large Snapshot Files
 
 For large projects, consider organizing tests to keep snapshot files manageable:
@@ -418,17 +376,17 @@ tests/
 
 ### Snapshot Failures
 
-When snapshots fail, you'll see a diff:
+When snapshots fail, Bun shows a diff:
 
 **File:** `diff`
 ```diff
-- Expected
-+ Received
-
-  Object {
+  {
 -   "name": "John",
 +   "name": "Jane",
   }
+
+- Expected  - 1
++ Received  + 1
 ```
 
 Common causes:

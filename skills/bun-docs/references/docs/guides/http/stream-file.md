@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/stream-file
 
 
-This snippet reads a file from disk using [`Bun.file()`](/docs/runtime/file-io#reading-files-bun-file). This returns a `BunFile` instance, which can be passed directly into the `new Response` constructor.
+[`Bun.file()`](/docs/runtime/file-io#reading-files-bun-file) accepts a path and returns a lazily-loaded `BunFile` instance, which you can pass directly to the `new Response` constructor.
 
 **File:** `server.ts`
 ```ts
@@ -13,7 +13,7 @@ const resp = new Response(file);
 
 ***
 
-The `Content-Type` is read from the file and automatically set on the `Response`.
+Bun determines the `Content-Type` from the file extension and sets it on the `Response`.
 
 **File:** `server.ts`
 ```ts
@@ -48,4 +48,4 @@ Bun.serve({
 
 ***
 
-See [Docs > API > File I/O](/docs/runtime/file-io#writing-files-bun-write) for complete documentation of `Bun.write()`.
+See [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).

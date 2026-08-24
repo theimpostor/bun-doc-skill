@@ -3,7 +3,7 @@ Source: https://bun.com/docs/typescript-6
 
 How to configure Bun's type definitions for TypeScript 6.0 and 7.0, which no longer auto-discover @types packages. Fix 'Cannot find name Bun' and other missing type errors after upgrading TypeScript.
 
-TypeScript 6.0 changed how type definitions are discovered. If you've upgraded TypeScript and your editor no longer recognizes `Bun`, `Request`, or other globals from `@types/bun`, here's how to fix it.
+TypeScript 6.0 changed how it discovers type definitions. If you've upgraded TypeScript and your editor no longer recognizes `Bun`, `Request`, or other globals from `@types/bun`, here's how to fix it.
 
 ## What changed
 
@@ -22,7 +22,7 @@ In your `tsconfig.json`, add `"types": ["bun"]` to `compilerOptions`:
 }
 ```
 
-This tells TypeScript to load type definitions from `@types/bun`. If you use other `@types/*` packages, include them too:
+The `types` array tells TypeScript to load type definitions from `@types/bun`. If you use other `@types/*` packages, include them too:
 
 **File:** `tsconfig.json`
 ```jsonc
@@ -33,7 +33,7 @@ This tells TypeScript to load type definitions from `@types/bun`. If you use oth
 }
 ```
 
-You still need `@types/bun` installed — the `types` option tells TypeScript *which* packages to include, but the package itself must exist in `node_modules`:
+You still need `@types/bun` installed. The `types` option tells TypeScript *which* packages to include, but the package itself must exist in `node_modules`:
 
 ```sh
 bun add -d @types/bun

@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/runtime/build-time-constants
 
 
-The `--define` flag can be used with `bun build` and `bun build --compile` to inject build-time constants into your application. This is especially useful for embedding metadata like build versions, timestamps, or configuration flags directly into your compiled executables.
+Pass `--define` to `bun build` or `bun build --compile` to inject build-time constants into your application. Use it to embed metadata like build versions, timestamps, or configuration flags directly into your compiled executables.
 
 ```sh
 bun build --compile --define BUILD_VERSION='"1.2.3"' --define BUILD_TIME='"2024-01-15T10:30:00Z"' src/index.ts --outfile myapp
@@ -12,14 +12,14 @@ bun build --compile --define BUILD_VERSION='"1.2.3"' --define BUILD_TIME='"2024-
 
 ## Why use build-time constants?
 
-Build-time constants are embedded directly into your compiled code, making them:
+Bun embeds build-time constants directly into your compiled code, making them:
 
 * **Zero runtime overhead** - No environment variable lookups or file reads
 * **Immutable** - Values are baked into the binary at compile time
 * **Optimizable** - Dead code elimination can remove unused branches
 * **Secure** - No external dependencies or configuration files to manage
 
-This is similar to `gcc -D` or `#define` in C/C++, but for JavaScript/TypeScript.
+Build-time constants are similar to `gcc -D` or `#define` in C/C++, but for JavaScript/TypeScript.
 
 ***
 
@@ -91,7 +91,7 @@ bun build --compile \
 
 Use build-time constants to enable/disable features:
 
-**File:** `src/version.ts`
+**File:** `src/app.ts`
 ```ts
 // Replaced at build time
 declare const ENABLE_ANALYTICS: boolean;
@@ -113,7 +113,7 @@ if (ENABLE_DEBUG) {
 # Production build - analytics enabled, debug disabled
 bun build --compile --define ENABLE_ANALYTICS=true --define ENABLE_DEBUG=false src/app.ts --outfile app-prod
 
-# Development build - both enabled
+# Development build - analytics disabled, debug enabled
 bun build --compile --define ENABLE_ANALYTICS=false --define ENABLE_DEBUG=true src/app.ts --outfile app-dev
 ```
 
@@ -121,7 +121,7 @@ bun build --compile --define ENABLE_ANALYTICS=false --define ENABLE_DEBUG=true s
 
 Replace configuration objects at build time:
 
-**File:** `src/version.ts`
+**File:** `src/app.ts`
 ```ts
 declare const CONFIG: {
   apiUrl: string;
@@ -172,7 +172,7 @@ bun build --compile \
 
 ### Build automation script
 
-Create a build script that automatically injects build metadata:
+Create a build script that injects build metadata:
 
 ```ts
 // build.ts
@@ -201,7 +201,7 @@ console.log(`Built with version ${version.trim()}`);
 
 ### Value format
 
-Values must be valid JSON that will be parsed and inlined as JavaScript expressions:
+Values can be JSON, identifiers, or property paths such as `globalThis` or `console.log`. Bun parses each value and inlines it as a JavaScript expression:
 
 ```sh
 # ✅ Strings must be JSON-quoted
@@ -225,7 +225,7 @@ Values must be valid JSON that will be parsed and inlined as JavaScript expressi
 
 ### Property keys
 
-You can use property access patterns as keys, not just simple identifiers:
+Keys can be property access patterns as well as plain identifiers:
 
 ```sh
 # ✅ Replace process.env.NODE_ENV with "production"
@@ -236,12 +236,9 @@ You can use property access patterns as keys, not just simple identifiers:
 
 # ✅ Replace nested properties
 --define 'window.myApp.version="1.0.0"'
-
-# ✅ Replace array access
---define 'process.argv[2]="--production"'
 ```
 
-This is particularly useful for environment variables:
+Use this to inline environment variables at build time:
 
 ```ts
 // Before compilation

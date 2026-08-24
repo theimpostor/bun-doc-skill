@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/fetch
 
 
-Bun implements the Web-standard [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) API for sending HTTP requests. To send a simple `GET` request to a URL:
+Bun implements the Web-standard [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) API for sending HTTP requests. To send a `GET` request to a URL:
 
 **File:** `fetch.ts`
 ```ts
@@ -12,7 +12,7 @@ const html = await response.text(); // HTML string
 
 ***
 
-To send a `POST` request to an API endpoint.
+To send a `POST` request to an API endpoint:
 
 **File:** `fetch.ts`
 ```ts

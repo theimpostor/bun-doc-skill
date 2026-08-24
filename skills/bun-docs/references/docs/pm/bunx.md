@@ -3,7 +3,7 @@ Source: https://bun.com/docs/pm/bunx
 
 Run packages from npm
 
-> Note: `bunx` is an alias for `bun x`. The `bunx` CLI will be auto-installed when you install `bun`.
+> Note: `bunx` is an alias for `bun x`. The `bunx` CLI is auto-installed when you install `bun`.
 
 Use `bunx` to auto-install and run packages from `npm`. It's Bun's equivalent of `npx` or `yarn dlx`.
 
@@ -28,7 +28,7 @@ Packages can declare executables in the `"bin"` field of their `package.json`. T
 }
 ```
 
-These executables are commonly plain JavaScript files marked with a [shebang line](https://en.wikipedia.org/wiki/Shebang_(Unix)) to indicate which program should be used to execute them. The following file indicates that it should be executed with `node`.
+These executables are commonly plain JavaScript files marked with a [shebang line](https://en.wikipedia.org/wiki/Shebang_(Unix)) naming the program that should run them. The following file runs with `node`.
 
 **File:** `dist/index.js`
 ```js
@@ -37,13 +37,13 @@ These executables are commonly plain JavaScript files marked with a [shebang lin
 console.log("Hello world!");
 ```
 
-These executables can be run with `bunx`,
+Run these executables with `bunx`:
 
 ```bash
 bunx my-cli
 ```
 
-As with `npx`, `bunx` will check for a locally installed package first, then fall back to auto-installing the package from `npm`. Installed packages will be stored in Bun's global cache for future use.
+As with `npx`, `bunx` checks for a locally installed package first, then falls back to auto-installing it from `npm`. `bunx` stores installed packages in Bun's [global cache](/docs/pm/global-cache) for future use.
 
 ## Arguments and flags
 
@@ -57,13 +57,13 @@ bunx my-cli --foo bar
 
 ## Shebangs
 
-By default, Bun respects shebangs. If an executable is marked with `#!/usr/bin/env node`, Bun will spin up a `node` process to execute the file. However, in some cases it may be desirable to run executables using Bun's runtime, even if the executable indicates otherwise. To do so, include the `--bun` flag.
+By default, Bun respects shebangs. If an executable is marked with `#!/usr/bin/env node`, Bun spins up a `node` process to execute the file. To run the executable with Bun's runtime instead, pass the `--bun` flag.
 
 ```bash
 bunx --bun my-cli
 ```
 
-The `--bun` flag must occur *before* the executable name. Flags that appear *after* the name are passed through to the executable.
+The `--bun` flag must occur *before* the executable name. `bunx` passes flags that appear *after* the name through to the executable.
 
 ```bash
 bunx --bun my-cli # good
@@ -72,14 +72,14 @@ bunx my-cli --bun # bad
 
 ## Package flag
 
-**`--package <pkg>` or `-p <pkg>`** - Run binary from specific package. Useful when binary name differs from package name:
+**`--package <pkg>` or `-p <pkg>`** - Run a binary from a specific package. Useful when the binary name differs from the package name:
 
 ```bash
 bunx -p renovate renovate-config-validator
 bunx --package @angular/cli ng
 ```
 
-To force bun to always be used with a script, use a shebang.
+To force a script to always run with Bun, give it a `bun` shebang.
 
 **File:** `dist/index.js`
 ```js
@@ -94,7 +94,7 @@ To force bun to always be used with a script, use a shebang.
 bunx [flags] <package>[@version] [flags and arguments for the package]
 ```
 
-Execute an npm package executable (CLI), automatically installing into a global shared cache if not installed in `node_modules`.
+Execute an npm package executable (CLI). If the package isn't installed in `node_modules`, Bun installs it into a global shared cache.
 
 ### Flags
 

@@ -10,7 +10,7 @@ bun add my-custom-name@npm:zod
 
 ***
 
-The `zod` package can now be imported as `my-custom-name`.
+You can now import the `zod` package as `my-custom-name`.
 
 **File:** `index.ts`
 ```ts
@@ -21,4 +21,4 @@ z.string();
 
 ***
 
-See [Docs > Package manager](/docs/pm/cli/install) for complete documentation of Bun's package manager.
+See [`bun install`](/docs/pm/cli/install).

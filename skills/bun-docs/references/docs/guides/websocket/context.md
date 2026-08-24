@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/websocket/context
 
 
-When building a WebSocket server, it's typically necessary to store some identifying information or context associated with each connected client.
+A WebSocket server typically needs to store some identifying information or context for each connected client.
 
-With [Bun.serve()](/docs/runtime/http/websockets#contextual-data), this "contextual data" is set when the connection is initially upgraded by passing a `data` parameter in the `server.upgrade()` call.
+With [Bun.serve()](/docs/runtime/http/websockets#contextual-data), set this "contextual data" by passing a `data` parameter to `server.upgrade()` when upgrading the connection.
 
 **File:** `server.ts`
 ```ts
@@ -28,7 +28,7 @@ Bun.serve({
     async message(ws, message) {
       // the contextual data is available as the `data` property
       // on the WebSocket instance
-      console.log(`Received ${message} from ${ws.data.socketId}}`);
+      console.log(`Received ${message} from ${ws.data.socketId}`);
     },
   },
 });

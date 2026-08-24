@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/stream-iterator
 
 
-In Bun, [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects can accept an async generator function as their body. This allows you to stream data to the client as it becomes available, rather than waiting for the entire response to be ready.
+In Bun, a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) accepts an async generator function as its body, so you can stream data to the client as it becomes available rather than waiting for the entire response to be ready.
 
 **File:** `stream-iterator.ts`
 ```ts

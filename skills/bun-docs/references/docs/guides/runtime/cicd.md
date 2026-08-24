@@ -37,9 +37,9 @@ jobs:
       # ...
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.3.3 # or "latest", "canary", <sha>
+          bun-version: 1.3.3 # or "latest", "canary", "1.3.x"
 ```
 
 ***
 
-Refer to the [README.md](https://github.com/oven-sh/setup-bun) for complete documentation of the `setup-bun` GitHub Action.
+See the [`setup-bun` README](https://github.com/oven-sh/setup-bun) for all options.

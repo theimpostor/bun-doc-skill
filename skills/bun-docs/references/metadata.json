@@ -1,8 +1,8 @@
 {
   "requested_url": "https://bun.sh/llms-full.txt",
   "resolved_url": "https://bun.sh/llms-full.txt",
-  "generated_at": "2026-05-14T04:08:55.139538+00:00",
-  "page_count": 315,
+  "generated_at": "2026-08-24T21:40:38.805444+00:00",
+  "page_count": 319,
   "sections": [
     "bundler",
     "getting-started",

@@ -3,7 +3,7 @@ Source: https://bun.com/docs/test/lifecycle
 
 Learn how to use beforeAll, beforeEach, afterEach, and afterAll lifecycle hooks in Bun tests
 
-The test runner supports the following lifecycle hooks. This is useful for loading test fixtures, mocking data, and configuring the test environment.
+The test runner supports the following lifecycle hooks. Use them to load test fixtures, mock data, and configure the test environment.
 
 | Hook             | Description                                                |
 | ---------------- | ---------------------------------------------------------- |
@@ -38,7 +38,7 @@ test("example test", () => {
 
 ## Per-Scope Setup and Teardown
 
-Perform per-scope setup and teardown logic with `beforeAll` and `afterAll`. The scope is determined by where the hook is defined.
+Perform per-scope setup and teardown logic with `beforeAll` and `afterAll`. Where you define the hook determines its scope.
 
 ### Scoped to a Describe Block
 
@@ -96,7 +96,7 @@ describe("test group", () => {
 
 ### `onTestFinished`
 
-Use `onTestFinished` to run a callback after a single test completes. It runs after all `afterEach` hooks.
+Use `onTestFinished` to run a callback after a single test completes. The callback runs after all `afterEach` hooks.
 
 **File:** `test.ts`
 ```ts
@@ -139,7 +139,7 @@ Then use `--preload` to run the setup script before any test files.
 bun test --preload ./setup.ts
 ```
 
-To avoid typing `--preload` every time you run tests, it can be added to your `bunfig.toml`:
+To avoid typing `--preload` every time you run tests, add it to your `bunfig.toml`:
 
 **File:** `bunfig.toml`
 ```toml
@@ -217,7 +217,7 @@ beforeEach(() => {
 
 afterEach(() => {
   // Clear all mocks after each test
-  mock.restore();
+  mock.clearAllMocks();
 });
 ```
 
@@ -227,7 +227,7 @@ All lifecycle hooks support async functions:
 
 **File:** `test.ts`
 ```ts
-import { beforeAll, afterAll, test } from "bun:test";
+import { beforeAll, afterAll, test, expect } from "bun:test";
 
 beforeAll(async () => {
   // Async setup
@@ -249,7 +249,7 @@ test("async test", async () => {
 
 ## Nested Hooks
 
-Hooks can be nested and will run in the appropriate order:
+You can nest hooks. They run in the following order:
 
 **File:** `test.ts`
 ```ts
@@ -294,7 +294,7 @@ describe("outer describe", () => {
 
 ## Error Handling
 
-If a lifecycle hook throws an error, it will affect test execution:
+If a `beforeAll` hook throws, the test runner skips every test in the hook's scope:
 
 **File:** `test.ts`
 ```ts
@@ -310,7 +310,7 @@ test("this test will be skipped", () => {
 });
 ```
 
-For better error handling:
+To log a setup failure and still fail the suite:
 
 **File:** `test.ts`
 ```ts

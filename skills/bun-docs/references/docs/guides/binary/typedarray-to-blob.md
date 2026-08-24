@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/binary/typedarray-to-blob
 
 
-A [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) can be constructed from an array of "chunks", where each chunk is a string, binary data structure (including `Uint8Array`), or another `Blob`.
+You can construct a [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) from an array of "chunks", where each chunk is a string, binary data structure (including `Uint8Array`), or another `Blob`.
 
 ```ts
 const arr = new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0x6f]);
@@ -13,4 +13,4 @@ console.log(await blob.text());
 
 ***
 
-See [Docs > API > Binary Data](/docs/runtime/binary-data#conversion) for complete documentation on manipulating binary data with Bun.
+See [Binary Data](/docs/runtime/binary-data#conversion).

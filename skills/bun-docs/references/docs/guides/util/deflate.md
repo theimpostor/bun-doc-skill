@@ -6,7 +6,7 @@ Use `Bun.deflateSync()` to compress a `Uint8Array` with DEFLATE.
 
 ```ts
 const data = Buffer.from("Hello, world!");
-const compressed = Bun.deflateSync("Hello, world!");
+const compressed = Bun.deflateSync(data);
 // => Uint8Array
 
 const decompressed = Bun.inflateSync(compressed);
@@ -15,4 +15,4 @@ const decompressed = Bun.inflateSync(compressed);
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.
+See [Utils](/docs/runtime/utils).

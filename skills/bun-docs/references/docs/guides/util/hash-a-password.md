@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/util/hash-a-password
 
 
-The `Bun.password.hash()` function provides a fast, built-in mechanism for securely hashing passwords in Bun. No third-party dependencies are required.
+Use `Bun.password.hash()` to securely hash passwords. It's built into Bun, with no third-party dependencies.
 
 ```ts
 const password = "super-secure-pa$$word";
@@ -13,14 +13,15 @@ const hash = await Bun.password.hash(password);
 
 ***
 
-By default, this uses the [Argon2id](https://en.wikipedia.org/wiki/Argon2) algorithm. Pass a second argument to `Bun.password.hash()` to use a different algorithm or configure the hashing parameters.
+By default, `Bun.password.hash()` uses the [Argon2id](https://en.wikipedia.org/wiki/Argon2) algorithm. Pass a second argument to use a different algorithm or configure the hashing parameters.
 
 ```ts
 const password = "super-secure-pa$$word";
 
 // use argon2 (default)
 const argonHash = await Bun.password.hash(password, {
-  memoryCost: 4, // memory usage in kibibytes
+  algorithm: "argon2id",
+  memoryCost: 8, // memory usage in kibibytes (minimum 8)
   timeCost: 3, // the number of iterations
 });
 ```
@@ -39,7 +40,7 @@ const bcryptHash = await Bun.password.hash(password, {
 
 ***
 
-Use `Bun.password.verify()` to verify a password. The algorithm and its parameters are stored in the hash itself, so re-specifying configuration is unnecessary.
+Use `Bun.password.verify()` to verify a password. The hash stores the algorithm and its parameters, so you don't need to specify them again.
 
 ```ts
 const password = "super-secure-pa$$word";
@@ -51,4 +52,4 @@ const isMatch = await Bun.password.verify(password, hash);
 
 ***
 
-See [Docs > API > Hashing](/docs/runtime/hashing#bun-password) for complete documentation.
+See [`Bun.password`](/docs/runtime/hashing#bun-password).

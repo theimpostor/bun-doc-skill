@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/util/javascript-uuid
 
 
-Use `crypto.randomUUID()` to generate a UUID v4. This API works in Bun, Node.js, and browsers. It requires no dependencies.
+Use `crypto.randomUUID()` to generate a UUID v4. It works in Bun, Node.js, and browsers, with no dependencies.
 
 ```ts
 crypto.randomUUID();
@@ -11,7 +11,7 @@ crypto.randomUUID();
 
 ***
 
-In Bun, you can also use `Bun.randomUUIDv7()` to generate a [UUID v7](https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-01.html).
+Bun also provides `Bun.randomUUIDv7()`, which generates a [UUID v7](https://www.rfc-editor.org/rfc/rfc9562.html#name-uuid-version-7).
 
 ```ts
 Bun.randomUUIDv7();
@@ -20,4 +20,4 @@ Bun.randomUUIDv7();
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.
+See [Utils](/docs/runtime/utils).

@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/runtime/shell
 
 
-Bun Shell is a cross-platform bash-like shell built in to Bun.
+Bun Shell is a cross-platform bash-like shell built into Bun.
 
-It runs shell commands in JavaScript and TypeScript. To get started, import the `$` function from the `bun` package and use it to run shell commands.
+It runs shell commands from JavaScript and TypeScript. To get started, import the `$` function from the `bun` package.
 
 **File:** `foo.ts`
 ```ts
@@ -27,7 +27,7 @@ console.log(output);
 
 ***
 
-To get each line of the output as an array, use the `lines` method.
+To iterate over each line of the output, use the `lines` method.
 
 **File:** `foo.ts`
 ```ts
@@ -40,4 +40,4 @@ for await (const line of $`ls -l`.lines()) {
 
 ***
 
-See [Docs > API > Shell](/docs/runtime/shell) for complete documentation.
+See [Bun Shell](/docs/runtime/shell).

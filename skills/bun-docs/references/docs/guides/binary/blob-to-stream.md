@@ -2,13 +2,13 @@
 Source: https://bun.com/docs/guides/binary/blob-to-stream
 
 
-The [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) class provides a number of methods for consuming its contents in different formats, including `.stream()`. This returns `Promise<ReadableStream>`.
+The [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) class provides several methods for consuming its contents in different formats, including `.stream()`, which returns a `ReadableStream`.
 
 ```ts
 const blob = new Blob(["hello world"]);
-const stream = await blob.stream();
+const stream = blob.stream();
 ```
 
 ***
 
-See [Docs > API > Binary Data](/docs/runtime/binary-data#conversion) for complete documentation on manipulating binary data with Bun.
+See [Binary Data](/docs/runtime/binary-data#conversion).

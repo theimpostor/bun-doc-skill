@@ -7,15 +7,15 @@ Bun's test runner plays well with existing component and DOM testing libraries, 
 
 ## happy-dom
 
-For writing headless tests for your frontend code and components, we recommend happy-dom. Happy DOM implements a complete set of HTML and DOM APIs in plain JavaScript, making it possible to simulate a browser environment with high fidelity.
+For headless tests of your frontend code and components, we recommend happy-dom. It implements a complete set of HTML and DOM APIs in plain JavaScript, so it can simulate a browser environment with high fidelity.
 
-To get started install the `@happy-dom/global-registrator` package as a dev dependency.
+Install the `@happy-dom/global-registrator` package as a dev dependency.
 
 ```bash
 bun add -d @happy-dom/global-registrator
 ```
 
-We'll be using Bun's preload functionality to register the happy-dom globals before running our tests. This step will make browser APIs like `document` available in the global scope. Create a file called `happydom.ts` in the root of your project and add the following code:
+Use Bun's preload feature to register the happy-dom globals before your tests run, which makes browser APIs like `document` available in the global scope. Create a file called `happydom.ts` in the root of your project with the following code:
 
 **File:** `happydom.ts`
 ```ts
@@ -32,7 +32,7 @@ To preload this file before `bun test`, open or create a `bunfig.toml` file and 
 preload = ["./happydom.ts"]
 ```
 
-This will execute `happydom.ts` when you run `bun test`. Now you can write tests that use browser APIs like `document` and `window`.
+`bun test` now executes `happydom.ts` before your tests, so they can use browser APIs like `document` and `window`.
 
 **File:** `dom.test.ts`
 ```ts
@@ -47,7 +47,7 @@ test("dom test", () => {
 
 ### TypeScript Support
 
-Depending on your `tsconfig.json` setup, you may see a "Cannot find name 'document'" type error in the code above. To "inject" the types for `document` and other browser APIs, add the following triple-slash directive to the top of any test file.
+Depending on your `tsconfig.json` setup, you may see a "Cannot find name 'document'" type error in the earlier code. To load the types for `document` and other browser APIs, add the following triple-slash directive to the top of any test file.
 
 **File:** `dom.test.ts`
 ```ts
@@ -62,7 +62,7 @@ test("dom test", () => {
 });
 ```
 
-Let's run this test with `bun test`:
+Run the test with `bun test`:
 
 ```bash
 bun test
@@ -77,12 +77,12 @@ dom.test.ts:
  1 pass
  0 fail
  1 expect() calls
-Ran 1 tests across 1 files. 1 total [125.00ms]
+Ran 1 test across 1 file. [125.00ms]
 ```
 
 ## React Testing Library
 
-Bun works seamlessly with React Testing Library for testing React components. After setting up happy-dom as shown above, you can install and use React Testing Library normally.
+Bun works with React Testing Library for testing React components. After setting up happy-dom as described earlier, install and use React Testing Library normally.
 
 ```bash
 bun add -d @testing-library/react @testing-library/jest-dom
@@ -110,7 +110,7 @@ test('renders button', () => {
 
 ### Custom Elements
 
-You can test custom elements and web components using the same setup:
+Test custom elements and web components with the same setup:
 
 **File:** `custom-element.test.ts`
 ```ts
@@ -165,7 +165,7 @@ test("button click event", () => {
 
 ### Global Setup
 
-For more complex DOM testing setups, you can create a more comprehensive preload file:
+For more involved setups, create a preload file that also registers global mocks:
 
 **File:** `test-setup.ts`
 ```ts
@@ -210,19 +210,19 @@ preload = ["./test-setup.ts"]
 
 ### Common Issues
 
-**TypeScript errors for DOM APIs**: Make sure to include the `/// <reference lib="dom" />` directive at the top of your test files.
+**TypeScript errors for DOM APIs**: Include the `/// <reference lib="dom" />` directive at the top of your test files.
 
-**Missing globals**: Ensure that `@happy-dom/global-registrator` is properly imported and registered in your preload file.
+**Missing globals**: Check that your preload file imports and registers `@happy-dom/global-registrator`.
 
-**React component rendering issues**: Make sure you've installed both `@testing-library/react` and have happy-dom set up correctly.
+**React component rendering issues**: Check that `@testing-library/react` is installed and happy-dom is set up.
 
 ### Performance Considerations
 
-Happy-dom is fast, but for very large test suites, you might want to:
+happy-dom is fast, but for very large test suites you may want to:
 
 * Use `beforeEach` to reset the DOM state between tests
 * Avoid creating too many DOM elements in a single test
-* Consider using `cleanup` functions from testing libraries
+* Use `cleanup` functions from testing libraries
 
 **File:** `test-setup.ts`
 ```ts

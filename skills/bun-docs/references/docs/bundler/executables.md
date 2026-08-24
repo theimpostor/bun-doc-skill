@@ -26,7 +26,7 @@ await Bun.build({
 console.log("Hello world!");
 ```
 
-This bundles `cli.ts` into an executable that can be executed directly:
+Bun bundles `cli.ts` into an executable you can run directly:
 
 ```bash
 ./mycli
@@ -36,13 +36,13 @@ This bundles `cli.ts` into an executable that can be executed directly:
 Hello world!
 ```
 
-All imported files and packages are bundled into the executable, along with a copy of the Bun runtime. All built-in Bun and Node.js APIs are supported.
+Bun bundles all imported files and packages into the executable, along with a copy of the Bun runtime. All built-in Bun and Node.js APIs are supported.
 
 ***
 
 ## Cross-compile to other platforms
 
-The `--target` flag lets you compile your standalone executable for a different operating system, architecture, or version of Bun than the machine you're running `bun build` on.
+Use the `--target` flag to compile your standalone executable for a different operating system, architecture, or version of Bun than the machine you're running `bun build` on.
 
 To build for Linux x64 (most servers):
 
@@ -89,7 +89,7 @@ await Bun.build({
 });
 ```
 
-To build for Linux ARM64 (e.g. Graviton or Raspberry Pi):
+To build for Linux ARM64 (for example, Graviton or Raspberry Pi):
 
 ### CLI
 ```bash
@@ -121,7 +121,7 @@ bun build --compile --target=bun-windows-x64-baseline ./path/to/my/app.ts --outf
 # To explicitly only support CPUs from 2013 and later, use the modern version (haswell)
 bun build --compile --target=bun-windows-x64-modern ./path/to/my/app.ts --outfile myapp
 
-# note: if no .exe extension is provided, Bun will automatically add it for Windows executables
+# note: if no .exe extension is provided, Bun adds it automatically for Windows executables
 ```
 
 ### JavaScript
@@ -152,7 +152,7 @@ To build for Windows arm64:
 ```bash
 bun build --compile --target=bun-windows-arm64 ./path/to/my/app.ts --outfile myapp
 
-# note: if no .exe extension is provided, Bun will automatically add it for Windows executables
+# note: if no .exe extension is provided, Bun adds it automatically for Windows executables
 ```
 
 ### JavaScript
@@ -207,7 +207,7 @@ await Bun.build({
 
 ### Supported targets
 
-The order of the `--target` flag does not matter, as long as they're delimited by a `-`.
+The segments of the `--target` value can appear in any order, as long as they're delimited by `-`.
 
 | --target             | Operating System | Architecture | Modern | Baseline | Libc  |
 | -------------------- | ---------------- | ------------ | ------ | -------- | ----- |
@@ -221,11 +221,10 @@ The order of the `--target` flag does not matter, as long as they're delimited b
 | bun-linux-arm64-musl | Linux            | arm64        | ✅      | N/A      | musl  |
 
 > Warning
-On x64 platforms, Bun uses SIMD optimizations which require a modern CPU supporting AVX2 instructions. The `-baseline`
-build of Bun is for older CPUs that don't support these optimizations. Normally, when you install Bun we automatically
-detect which version to use but this can be harder to do when cross-compiling since you might not know the target CPU.
-You usually don't need to worry about it on Darwin x64, but it is relevant for Windows x64 and Linux x64. If you or
-your users see `"Illegal instruction"` errors, you might need to use the baseline version.
+On x64 platforms, Bun uses SIMD optimizations that require a CPU with AVX2 instructions. The `-baseline` build of Bun
+is for older CPUs without them. The Bun installer detects which version to use, but when cross-compiling you might not
+know the target CPU. This mostly matters on Windows x64 and Linux x64, rarely on Darwin x64. If you or your users see
+`"Illegal instruction"` errors, you might need to use the baseline version.
 
 ***
 
@@ -253,11 +252,9 @@ await Bun.build({
 });
 ```
 
-These constants are embedded directly into your compiled binary at build time, providing zero runtime overhead and enabling dead code elimination optimizations.
+Bun inlines these constants into the binary at build time, so they cost nothing at runtime and enable dead code elimination.
 
-> Note
-For comprehensive examples and advanced patterns, see the [Build-time constants
-guide](/docs/guides/runtime/build-time-constants).
+> Note: For more examples and patterns, see the [Build-time constants guide](/docs/guides/runtime/build-time-constants).
 
 ***
 
@@ -265,9 +262,9 @@ guide](/docs/guides/runtime/build-time-constants).
 
 Compiled executables reduce memory usage and improve Bun's start time.
 
-Normally, Bun reads and transpiles JavaScript and TypeScript files on `import` and `require`. This is part of what makes so much of Bun "just work", but it's not free. It costs time and memory to read files from disk, resolve file paths, parse, transpile, and print source code.
+Normally, Bun reads and transpiles JavaScript and TypeScript files on `import` and `require`. This is part of what makes so much of Bun "just work", but it's not free: reading files from disk, resolving paths, parsing, transpiling, and printing source code costs time and memory.
 
-With compiled executables, you can move that cost from runtime to build-time.
+Compiled executables move that cost from runtime to build time.
 
 When deploying to production, we recommend the following:
 
@@ -316,23 +313,23 @@ Using bytecode compilation, `tsc` starts 2x faster:
 
 ![Bytecode performance comparison](https://github.com/user-attachments/assets/dc8913db-01d2-48f8-a8ef-ac4e984f9763)
 
-Bytecode compilation moves parsing overhead for large input files from runtime to bundle time. Your app starts faster, in exchange for making the `bun build` command a little slower. It doesn't obscure source code.
+Bytecode compilation moves parsing overhead for large input files from runtime to bundle time. Your app starts faster, in exchange for making the `bun build` command a little slower. Bytecode compilation doesn't obscure source code.
 
 > Note: Bytecode compilation supports both `cjs` and `esm` formats when used with `--compile`.
 
 ### What do these flags do?
 
-The `--minify` argument optimizes the size of the transpiled output code. If you have a large application, this can save megabytes of space. For smaller applications, it might still improve start time a little.
+The `--minify` argument reduces the size of the transpiled output code. For a large application, this can save megabytes of space. For smaller applications, it might still improve start time a little.
 
-The `--sourcemap` argument embeds a sourcemap compressed with zstd, so that errors & stacktraces point to their original locations instead of the transpiled location. Bun will automatically decompress & resolve the sourcemap when an error occurs.
+The `--sourcemap` argument embeds a sourcemap compressed with zstd, so that errors & stacktraces point to their original locations instead of the transpiled location. Bun decompresses & resolves the sourcemap automatically when an error occurs.
 
-The `--bytecode` argument enables bytecode compilation. Every time you run JavaScript code in Bun, JavaScriptCore (the engine) will compile your source code into bytecode. We can move this parsing work from runtime to bundle time, saving you startup time.
+The `--bytecode` argument enables bytecode compilation. Every time you run JavaScript code in Bun, JavaScriptCore (the engine) compiles your source code into bytecode. `--bytecode` moves that parsing work from runtime to bundle time, which shortens startup.
 
 ***
 
 ## Embedding runtime arguments
 
-**`--compile-exec-argv="args"`** - Embed runtime arguments that are available via `process.execArgv`:
+**`--compile-exec-argv="args"`** - Embed runtime arguments, available at runtime in `process.execArgv`:
 
 ### CLI
 ```bash
@@ -359,7 +356,7 @@ console.log(process.execArgv); // ["--smol", "--user-agent=MyBot"]
 
 ### Runtime arguments via `BUN_OPTIONS`
 
-The `BUN_OPTIONS` environment variable is applied to standalone executables, allowing you to pass runtime flags without recompiling:
+Standalone executables read the `BUN_OPTIONS` environment variable, so you can pass runtime flags without recompiling:
 
 ```bash
 # Enable CPU profiling on a compiled executable
@@ -371,8 +368,6 @@ BUN_OPTIONS="--heap-prof-md" ./myapp
 # Combine multiple flags
 BUN_OPTIONS="--smol --cpu-prof-md" ./myapp
 ```
-
-This is useful for debugging or profiling production executables without rebuilding them.
 
 ***
 
@@ -388,7 +383,7 @@ In a future version of Bun, `.env` and `bunfig.toml` may also be disabled by def
 
 ### Enabling config loading at runtime
 
-If your executable needs to read `tsconfig.json` or `package.json` at runtime, you can opt in with the new CLI flags:
+If your executable needs to read `tsconfig.json` or `package.json` at runtime, opt in with these flags:
 
 ```bash
 # Enable runtime loading of tsconfig.json
@@ -441,7 +436,7 @@ await Bun.build({
 
 > Note: New in Bun v1.2.16
 
-You can run a standalone executable as if it were the `bun` CLI itself by setting the `BUN_BE_BUN=1` environment variable. When this variable is set, the executable will ignore its bundled entrypoint and instead expose all the features of Bun's CLI.
+Set the `BUN_BE_BUN=1` environment variable to run a standalone executable as if it were the `bun` CLI itself. The executable ignores its bundled entrypoint and exposes the full `bun` CLI instead.
 
 For example, consider an executable compiled from this script:
 
@@ -455,7 +450,7 @@ bun build --compile ./such-bun.js
 [89ms] compile such-bun
 ```
 
-Normally, running `./such-bun` with arguments would execute the script.
+Normally, running `./such-bun` with arguments executes the script.
 
 ```bash
 # Executable runs its own entrypoint by default
@@ -466,7 +461,7 @@ Normally, running `./such-bun` with arguments would execute the script.
 you shouldn't see this
 ```
 
-However, with the `BUN_BE_BUN=1` environment variable, it acts just like the `bun` binary:
+However, with the `BUN_BE_BUN=1` environment variable, the executable acts like the `bun` binary:
 
 ```bash
 # With the env var, the executable acts like the `bun` CLI
@@ -478,7 +473,7 @@ bun install v1.2.16-canary.1 (1d1db811)
 Checked 63 installs across 64 packages (no changes) [5.00ms]
 ```
 
-This is useful for building CLI tools on top of Bun that may need to install packages, bundle dependencies, run different or local files and more without needing to download a separate binary or install bun.
+CLI tools built on top of Bun can use this to install packages, bundle dependencies, or run other files without downloading a separate binary or installing Bun.
 
 ***
 
@@ -486,7 +481,7 @@ This is useful for building CLI tools on top of Bun that may need to install pac
 
 > Note: New in Bun v1.2.17
 
-Bun's `--compile` flag can create standalone executables that contain both server and client code, making it ideal for full-stack applications. When you import an HTML file in your server code, Bun automatically bundles all frontend assets (JavaScript, CSS, etc.) and embeds them into the executable. When Bun sees the HTML import on the server, it kicks off a frontend build process to bundle JavaScript, CSS, and other assets.
+The `--compile` flag can create a standalone executable that contains both server and client code, which suits full-stack applications. When you import an HTML file in your server code, Bun bundles the frontend assets (JavaScript, CSS, and so on) and embeds them into the executable.
 
 **File:** `server.ts`
 ```ts
@@ -555,15 +550,15 @@ This creates a self-contained binary that includes:
 * All frontend assets (HTML, CSS, JavaScript)
 * Any npm packages used by your server
 
-The result is a single file that can be deployed anywhere without needing Node.js, Bun, or any dependencies installed. Just run:
+The result is a single file you can deploy anywhere without installing Node.js, Bun, or any dependencies:
 
 ```bash
 ./myapp
 ```
 
-Bun automatically handles serving the frontend assets with proper MIME types and cache headers. The HTML import is replaced with a manifest object that `Bun.serve` uses to efficiently serve pre-bundled assets.
+Bun serves the frontend assets with the correct MIME types and cache headers. Bun replaces the HTML import with a manifest object that `Bun.serve` uses to serve the pre-bundled assets.
 
-For more details on building full-stack applications with Bun, see the [full-stack guide](/docs/bundler/fullstack).
+For more on building full-stack applications, see the [full-stack guide](/docs/bundler/fullstack).
 
 ***
 
@@ -599,11 +594,11 @@ new Worker(new URL("./my-worker.ts", import.meta.url));
 new Worker(new URL("./my-worker.ts", import.meta.url).href);
 ```
 
-When you add multiple entrypoints to a standalone executable, they will be bundled separately into the executable.
+When you add multiple entrypoints to a standalone executable, Bun bundles each one separately into the executable.
 
-In the future, we may automatically detect usages of statically-known paths in `new Worker(path)` and then bundle those into the executable, but for now, you'll need to add it to the shell command manually like the above example.
+We may eventually detect statically-known paths in `new Worker(path)` and bundle them automatically. For now, you need to list the worker file as an entrypoint, as in the earlier example.
 
-If you use a relative path to a file not included in the standalone executable, it will attempt to load that path from disk relative to the current working directory of the process (and then error if it doesn't exist).
+If you use a relative path to a file not included in the standalone executable, Bun loads that path from disk relative to the process's current working directory, and errors if it doesn't exist.
 
 ***
 
@@ -611,7 +606,7 @@ If you use a relative path to a file not included in the standalone executable, 
 
 You can use `bun:sqlite` imports with `bun build --compile`.
 
-By default, the database is resolved relative to the current working directory of the process.
+By default, Bun resolves the database relative to the current working directory of the process.
 
 **File:** `index.ts`
 ```ts
@@ -620,7 +615,7 @@ import db from "./my.db" with { type: "sqlite" };
 console.log(db.query("select * from users LIMIT 1").get());
 ```
 
-That means if the executable is located at `/usr/bin/hello`, the user's terminal is located at `/home/me/Desktop`, it will look for `/home/me/Desktop/my.db`.
+That means if the executable is at `/usr/bin/hello` and the user's terminal is in `/home/me/Desktop`, Bun looks for `/home/me/Desktop/my.db`.
 
 ```bash
 cd /home/me/Desktop
@@ -631,7 +626,7 @@ cd /home/me/Desktop
 
 ## Embed assets & files
 
-Standalone executables support embedding files directly into the binary. This lets you ship a single executable that contains images, JSON configs, templates, or any other assets your application needs.
+Standalone executables can embed files directly into the binary, so a single executable can ship images, JSON configs, templates, or any other assets your application needs.
 
 ### How it works
 
@@ -643,14 +638,14 @@ import icon from "./icon.png" with { type: "file" };
 
 console.log(icon);
 // During development: "./icon.png"
-// After compilation: "$bunfs/icon-a1b2c3d4.png" (internal path)
+// After compilation: "/$bunfs/root/icon-a1b2c3d4.png" (internal path)
 ```
 
 The import returns a **path string** that points to the embedded file. At build time, Bun:
 
 1. Reads the file contents
 2. Embeds the data into the executable
-3. Replaces the import with an internal path (prefixed with `$bunfs/`)
+3. Replaces the import with an internal path (prefixed with `/$bunfs/`)
 
 You can then read this embedded file using `Bun.file()` or Node.js `fs` APIs.
 
@@ -680,7 +675,7 @@ export default {
 
 ### Reading embedded files with Node.js fs
 
-Embedded files work seamlessly with Node.js file system APIs:
+Embedded files work with the Node.js file system APIs:
 
 **File:** `index.ts`
 ```ts
@@ -721,7 +716,7 @@ const config = { ...defaultConfig, ...userConfig };
 
 #### Serving static assets in an HTTP server
 
-Use `static` routes in `Bun.serve()` for efficient static file serving:
+Use static routes in `Bun.serve()` for efficient static file serving:
 
 **File:** `server.ts`
 ```ts
@@ -731,7 +726,7 @@ import styles from "./styles.css" with { type: "file" };
 import { file, serve } from "bun";
 
 serve({
-  static: {
+  routes: {
     "/favicon.ico": file(favicon),
     "/logo.png": file(logo),
     "/styles.css": file(styles),
@@ -777,7 +772,7 @@ const fontData = await file(fontPath).bytes();
 
 ### Embed SQLite databases
 
-If your application wants to embed a SQLite database into the compiled executable, set `type: "sqlite"` in the import attribute and the `embed` attribute to `"true"`.
+To embed a SQLite database into the compiled executable, set `type: "sqlite"` in the import attribute and the `embed` attribute to `"true"`.
 
 The database file must already exist on disk. Then, import it in your code:
 
@@ -796,10 +791,10 @@ bun build --compile ./index.ts --outfile mycli
 
 > Note
 The database file must exist on disk when you run `bun build --compile`. The `embed: "true"` attribute tells the
-bundler to include the database contents inside the compiled executable. When running normally with `bun run`, the
-database file is loaded from disk just like a regular SQLite import.
+bundler to include the database contents inside the compiled executable. When running normally with `bun run`, Bun
+loads the database file from disk like a regular SQLite import.
 
-In the compiled executable, the embedded database is read-write, but all changes are lost when the executable exits (since it's stored in memory).
+In the compiled executable, the embedded database is read-write. Because the database is stored in memory, all changes are lost when the executable exits.
 
 ### Embed N-API Addons
 
@@ -812,54 +807,69 @@ const addon = require("./addon.node");
 console.log(addon.hello());
 ```
 
-Unfortunately, if you're using `@mapbox/node-pre-gyp` or other similar tools, you'll need to make sure the `.node` file is directly required or it won't bundle correctly.
+If you're using `@mapbox/node-pre-gyp` or similar tools, require the `.node` file directly, or it won't bundle correctly.
 
 ### Embed directories
 
-To embed a directory with `bun build --compile`, include file patterns in your build:
+Use `--asset` (or `compile.assets` in the JavaScript API) to embed a file or directory tree into the executable under its original relative path. The embedded files live under `import.meta.dir` at runtime and are reachable via `node:fs` (`existsSync`, `statSync`, `readdirSync`, `readFileSync`) and `Bun.file()`.
 
 ### CLI
 ```bash
-bun build --compile ./index.ts ./public/**/*.png
+bun build --compile ./index.ts --asset ./public --outfile myapp
 ```
 
 ### JavaScript
 **File:** `build.ts`
 ```ts
-import { Glob } from "bun";
-
-// Expand glob pattern to file list
-const glob = new Glob("./public/**/*.png");
-const pngFiles = Array.from(glob.scanSync("."));
-
 await Bun.build({
-  entrypoints: ["./index.ts", ...pngFiles],
+  entrypoints: ["./index.ts"],
   compile: {
     outfile: "./myapp",
+    assets: ["./public"],
   },
 });
 ```
 
-Then, you can reference the files in your code:
+**File:** `index.ts`
+```ts
+import fs from "node:fs";
+import path from "node:path";
+
+const publicDir = path.join(import.meta.dir, "public");
+
+for (const entry of fs.readdirSync(publicDir, { withFileTypes: true })) {
+  console.log(entry.name, entry.isDirectory() ? "(dir)" : fs.statSync(path.join(publicDir, entry.name)).size);
+}
+
+const html = await Bun.file(path.join(publicDir, "index.html")).text();
+```
+
+Pass `--asset` multiple times to embed several directories (for example `--asset ./client --asset ./prerendered` for a SvelteKit build). Bun embeds only regular files; it skips symlinks and empty subdirectories inside the tree.
+
+You can also embed individual files via the `with { type: "file" }` import attribute or by adding them as extra entry points. Bun renames imported assets according to `--asset-naming` (default `[name]-[hash].[ext]`):
+
+```ts
+import icon from "./public/assets/icon.png" with { type: "file" };
+```
+
+### Detecting standalone mode at runtime
+
+Use `Bun.isStandaloneExecutable` to check whether the current process is running from a compiled binary:
 
 **File:** `index.ts`
 ```ts
-import icon from "./public/assets/icon.png" with { type: "file" };
-import { file } from "bun";
-
-export default {
-  fetch(req) {
-    // Embedded files can be streamed from Response objects
-    return new Response(file(icon));
-  },
-};
+if (Bun.isStandaloneExecutable) {
+  // Running from `bun build --compile` output
+} else {
+  // Running via `bun <file>` or as a library
+}
 ```
 
-This is honestly a workaround, and we expect to improve this in the future with a more direct API.
+Unlike `Bun.embeddedFiles.length > 0`, this check does not allocate `Blob` objects for each embedded file, so it is safe to call at startup in binaries that embed large assets.
 
 ### Listing embedded files
 
-`Bun.embeddedFiles` gives you access to all embedded files as `Blob` objects:
+`Bun.embeddedFiles` exposes all embedded files as `Blob` objects:
 
 **File:** `index.ts`
 ```ts
@@ -884,7 +894,7 @@ Each item in `Bun.embeddedFiles` is a `Blob` with a `name` property:
 embeddedFiles: ReadonlyArray<Blob>;
 ```
 
-This is useful for dynamically serving all embedded assets using `static` routes:
+Use it to serve every embedded asset through static routes:
 
 **File:** `server.ts`
 ```ts
@@ -894,15 +904,16 @@ import "./public/styles.css" with { type: "file" };
 import { embeddedFiles, serve } from "bun";
 
 // Build static routes from all embedded files
-const staticRoutes: Record<string, Blob> = {};
+const staticRoutes: Record<string, Response> = {};
 for (const blob of embeddedFiles) {
   // Remove hash from filename: "icon-a1b2c3d4.png" -> "icon.png"
-  const name = blob.name.replace(/-[a-f0-9]+\./, ".");
-  staticRoutes[`/${name}`] = blob;
+  const name = blob.name.replace(/-[a-z0-9]+\./, ".");
+  // embeddedFiles are plain Blobs, which routes does not accept directly
+  staticRoutes[`/${name}`] = new Response(blob);
 }
 
 serve({
-  static: staticRoutes,
+  routes: staticRoutes,
   fetch(req) {
     return new Response("Not found", { status: 404 });
   },
@@ -914,9 +925,7 @@ serve({
 
 #### Content hash
 
-By default, embedded files have a content hash appended to their name. This is useful for situations where you want to serve the file from a URL or CDN and have fewer cache invalidation issues. But sometimes, this is unexpected and you might want the original name instead:
-
-To disable the content hash, configure asset naming:
+By default, Bun appends a content hash to the name of each embedded file, which helps with cache invalidation when you serve the files from a URL or CDN. To keep the original name instead, configure asset naming:
 
 ### CLI
 ```bash
@@ -979,7 +988,7 @@ This uses Bun's minifier to reduce the code size. Overall though, Bun's binary i
 
 ## Windows-specific flags
 
-When compiling a standalone executable on Windows, there are platform-specific options to customize metadata on the generated `.exe` file:
+When compiling a standalone executable on Windows, platform-specific options customize metadata on the generated `.exe` file:
 
 ### CLI
 ```bash
@@ -1021,7 +1030,8 @@ Available Windows options:
 * `description` - Description in file properties
 * `copyright` - Copyright notice in file properties
 
-> Warning: These flags currently cannot be used when cross-compiling because they depend on Windows APIs.
+> Warning
+Except for `hideConsole`, you can't use these flags when cross-compiling because they depend on Windows APIs.
 
 ***
 
@@ -1035,7 +1045,7 @@ codesign --deep --force -vvvv --sign "XXXXXXXXXX" ./myapp
 
 We recommend including an `entitlements.plist` file with JIT permissions.
 
-**File:** `info.plist`
+**File:** `entitlements.plist`
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -1079,7 +1089,7 @@ Standalone executables support code splitting. Use `--compile` with `--splitting
 
 ### CLI
 ```bash
-bun build --compile --splitting ./src/entry.ts --outdir ./build
+bun build --compile --splitting ./src/entry.ts --outfile ./build/entry
 ```
 
 ### JavaScript
@@ -1120,7 +1130,7 @@ Lazy module loaded
 
 ## Using plugins
 
-Plugins work with standalone executables, allowing you to transform files during the build process:
+Plugins work with standalone executables; use them to transform files during the build:
 
 **File:** `build.ts`
 ```ts
@@ -1160,19 +1170,19 @@ console.log(`Running in ${config.environment} mode`);
 console.log(`API endpoint: ${config.apiUrl}`);
 ```
 
-Plugins can perform any transformation: compile YAML/TOML configs, inline SQL queries, generate type-safe API clients, or preprocess templates. Refer to the [plugin documentation](/docs/bundler/plugins) for more details.
+Plugins can perform any transformation: compile YAML/TOML configs, inline SQL queries, generate type-safe API clients, or preprocess templates. See the [plugin documentation](/docs/bundler/plugins).
 
 ***
 
 ## Unsupported CLI arguments
 
-Currently, the `--compile` flag can only accept a single entrypoint at a time and does not support the following flags:
+The `--compile` flag does not support the following flags:
 
-* `--outdir` — use `outfile` instead (except when using with `--splitting`).
+* `--outdir` — use `outfile` instead.
 * `--public-path`
 * `--target=node`
 * `--target=browser` (without HTML entrypoints — see [Standalone HTML](/docs/bundler/standalone-html) for `--compile --target=browser` with `.html` files)
-* `--no-bundle` - we always bundle everything into the executable.
+* `--no-bundle` - Bun always bundles everything into the executable.
 
 ***
 
@@ -1184,14 +1194,16 @@ The `compile` option in `Bun.build()` accepts three forms:
 ```ts
 interface BuildConfig {
   entrypoints: string[];
-  compile: boolean | Bun.Build.Target | CompileBuildOptions;
+  compile: boolean | Bun.Build.CompileTarget | CompileBuildOptions;
   // ... other BuildConfig options (minify, sourcemap, define, plugins, etc.)
 }
 
 interface CompileBuildOptions {
-  target?: Bun.Build.Target; // Cross-compilation target
+  target?: Bun.Build.CompileTarget; // Cross-compilation target
   outfile?: string; // Output executable path
+  assets?: string[]; // Files/directories to embed under import.meta.dir
   execArgv?: string[]; // Runtime arguments (process.execArgv)
+  executablePath?: string; // Bun executable to use instead of downloading one for target
   autoloadTsconfig?: boolean; // Load tsconfig.json (default: false)
   autoloadPackageJson?: boolean; // Load package.json (default: false)
   autoloadDotenv?: boolean; // Load .env files (default: true)
@@ -1226,9 +1238,9 @@ compile: {
 
 ### Supported targets
 
-**File:** `Bun.Build.Target`
+**File:** `Bun.Build.CompileTarget`
 ```ts
-type Target =
+type CompileTarget =
   | "bun-darwin-x64"
   | "bun-darwin-x64-baseline"
   | "bun-darwin-arm64"
@@ -1237,6 +1249,7 @@ type Target =
   | "bun-linux-x64-modern"
   | "bun-linux-arm64"
   | "bun-linux-x64-musl"
+  | "bun-linux-x64-baseline-musl"
   | "bun-linux-arm64-musl"
   | "bun-windows-x64"
   | "bun-windows-x64-baseline"

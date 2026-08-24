@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/write-file/stdout
 
 
-The `console.log` function writes to `stdout`. It will automatically append a line break at the end of the printed data.
+The `console.log` function writes to `stdout` and appends a line break to the printed data.
 
 ```ts
 console.log("Lorem ipsum");
@@ -10,7 +10,7 @@ console.log("Lorem ipsum");
 
 ***
 
-For more advanced use cases, Bun exposes `stdout` as a `BunFile` via the `Bun.stdout` property. This can be used as a destination for [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
+Bun also exposes `stdout` as a `BunFile` with the `Bun.stdout` property. Pass it as the destination to [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
 
 ```ts
 await Bun.write(Bun.stdout, "Lorem ipsum");
@@ -18,4 +18,4 @@ await Bun.write(Bun.stdout, "Lorem ipsum");
 
 ***
 
-See [Docs > API > File I/O](/docs/runtime/file-io#writing-files-bun-write) for complete documentation of `Bun.write()`.
+See [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).

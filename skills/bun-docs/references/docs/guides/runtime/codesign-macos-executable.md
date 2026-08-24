@@ -11,7 +11,7 @@ bun build --compile ./path/to/entry.ts --outfile myapp
 
 ***
 
-List your available signing identities. One of these will be your signing identity that you pass to the `codesign` command. This command requires macOS.
+List your available signing identities. You'll pass one of these to `codesign` in a later step. This command requires macOS.
 
 ```sh
 security find-identity -v -p codesigning

@@ -9,7 +9,7 @@ Learn about Bun test's runtime integration, environment variables, timeouts, and
 
 ### NODE_ENV
 
-`bun test` automatically sets `$NODE_ENV` to `"test"` unless it's already set in the environment or via `.env` files. This is standard behavior for most test runners and helps ensure consistent test behavior.
+`bun test` sets `$NODE_ENV` to `"test"` unless it's already set in the environment or in `.env` files. Most test runners do the same.
 
 **File:** `test.ts`
 ```ts
@@ -28,7 +28,7 @@ NODE_ENV=development bun test
 
 ### TZ (Timezone)
 
-By default, all `bun test` runs use UTC (`Etc/UTC`) as the time zone unless overridden by the `TZ` environment variable. This ensures consistent date and time behavior across different development environments.
+`bun test` uses UTC (`Etc/UTC`) as the time zone unless the `TZ` environment variable overrides it. This keeps date and time behavior consistent across machines.
 
 **File:** `test.ts`
 ```ts
@@ -40,7 +40,7 @@ test("timezone is UTC by default", () => {
 });
 ```
 
-To test with a specific timezone:
+To test with a specific time zone:
 
 ```bash
 TZ=America/New_York bun test
@@ -48,7 +48,7 @@ TZ=America/New_York bun test
 
 ## Test Timeouts
 
-Each test has a default timeout of 5000ms (5 seconds) if not explicitly overridden. Tests that exceed this timeout will fail.
+Each test has a default timeout of 5000ms (5 seconds). Tests that exceed it fail.
 
 ### Global Timeout
 
@@ -60,7 +60,7 @@ bun test --timeout 10000  # 10 seconds
 
 ### Per-Test Timeout
 
-Set timeout per test as the third parameter to the test function:
+Set a per-test timeout as the third argument to the test function:
 
 **File:** `test.ts`
 ```ts
@@ -77,7 +77,7 @@ test("slow test", async () => {
 
 ### Infinite Timeout
 
-Use `0` or `Infinity` to disable timeout:
+Use `0` or `Infinity` to disable the timeout:
 
 **File:** `test.ts`
 ```ts
@@ -91,13 +91,13 @@ test("test without timeout", async () => {
 
 ### Unhandled Errors
 
-`bun test` tracks unhandled promise rejections and errors that occur between tests. If such errors occur, the final exit code will be non-zero (specifically, the count of such errors), even if all tests pass.
+`bun test` tracks unhandled promise rejections and errors that occur between tests. If any occur, the final exit code is non-zero, even if all tests pass.
 
 This helps catch errors in asynchronous code that might otherwise go unnoticed:
 
 **File:** `test.ts`
 ```ts
-import { test } from "bun:test";
+import { test, expect } from "bun:test";
 
 test("test 1", () => {
   // This test passes
@@ -120,11 +120,11 @@ test("test 2", () => {
 
 ### Promise Rejections
 
-Unhandled promise rejections are also caught:
+The test runner also catches unhandled promise rejections:
 
 **File:** `test.ts`
 ```ts
-import { test } from "bun:test";
+import { test, expect } from "bun:test";
 
 test("passing test", () => {
   expect(1).toBe(1);
@@ -153,7 +153,7 @@ process.on("unhandledRejection", (reason, promise) => {
 
 ## CLI Flags Integration
 
-Several Bun CLI flags can be used with `bun test` to modify its behavior:
+Several Bun CLI flags also work with `bun test`:
 
 ### Memory Usage
 
@@ -179,8 +179,8 @@ bun test --preload ./setup.ts
 # Sets compile-time constants
 bun test --define "process.env.API_URL='http://localhost:3000'"
 
-# Configures custom loaders
-bun test --loader .special:special-loader
+# Maps file extensions to built-in loaders
+bun test --loader .svg:text
 
 # Uses a different tsconfig
 bun test --tsconfig-override ./test-tsconfig.json
@@ -204,39 +204,25 @@ bun test --frozen-lockfile
 
 ### Watch Mode
 
-When running `bun test` with the `--watch` flag, the test runner will watch for file changes and re-run affected tests.
+With the `--watch` flag, the test runner watches for file changes and re-runs tests.
 
 ```bash
 bun test --watch
 ```
 
-The test runner is smart about which tests to re-run:
-
-**File:** `math.test.ts`
-```ts
-import { add } from "./math.js";
-import { test, expect } from "bun:test";
-
-test("addition", () => {
-  expect(add(2, 3)).toBe(5);
-});
-```
-
-If you modify `math.js`, only `math.test.ts` will re-run, not all tests.
-
 ### Hot Reloading
 
-The `--hot` flag provides similar functionality but is more aggressive about trying to preserve state between runs:
+The `--hot` flag is similar, but more aggressive about preserving state between runs:
 
 ```bash
 bun test --hot
 ```
 
-For most test scenarios, `--watch` is the recommended option as it provides better isolation between test runs.
+For most tests, use `--watch`: it gives better isolation between runs.
 
 ## Global Variables
 
-The following globals are automatically available in test files without importing (though they can be imported from `bun:test` if preferred):
+The following globals are available in test files without importing:
 
 **File:** `test.ts`
 ```ts
@@ -262,7 +248,7 @@ jest.fn();
 vi.fn();
 ```
 
-You can also import them explicitly if you prefer:
+You can also import them explicitly:
 
 **File:** `test.ts`
 ```ts
@@ -276,12 +262,11 @@ import { test, it, describe, expect, beforeAll, beforeEach, afterAll, afterEach,
 `bun test` uses standard exit codes:
 
 * `0`: All tests passed, no unhandled errors
-* `1`: Test failures occurred
-* `>1`: Number of unhandled errors (even if tests passed)
+* `1`: Test failures or unhandled errors occurred
 
 ### Signal Handling
 
-The test runner properly handles common signals:
+The test runner handles common signals:
 
 ```bash
 # Gracefully stops test execution
@@ -316,7 +301,7 @@ The test runner runs all tests in a single process by default. This provides:
 
 * **Faster startup** - No need to spawn multiple processes
 * **Shared memory** - Efficient resource usage
-* **Simple debugging** - All tests in one process
+* **Simpler debugging** - All tests in one process
 
 However, this means:
 
@@ -341,14 +326,14 @@ Since tests run in the same process, ensure proper cleanup:
 
 **File:** `test.ts`
 ```ts
-import { afterEach } from "bun:test";
+import { afterEach, jest } from "bun:test";
 
 afterEach(() => {
   // Clean up global state
   global.myGlobalVar = undefined;
   delete process.env.TEST_VAR;
 
-  // Reset modules if needed
-  jest.resetModules();
+  // Restore mocked functions if needed
+  jest.restoreAllMocks();
 });
 ```

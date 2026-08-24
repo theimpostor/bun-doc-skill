@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/http/stream-node-streams-in-bun
 
 
-In Bun, [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects can accept a Node.js [`Readable`](https://nodejs.org/api/stream.html#stream_readable_streams).
+In Bun, a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) accepts a Node.js [`Readable`](https://nodejs.org/api/stream.html#stream_readable_streams) as its body.
 
-This works because Bun's `Response` object allows any async iterable as its body. Node.js streams are async iterables, so you can pass them directly to `Response`.
+This works because Bun's `Response` accepts any async iterable as its body, and Node.js streams are async iterables.
 
 **File:** `server.ts`
 ```ts

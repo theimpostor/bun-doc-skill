@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/util/sleep
 
 
-The `Bun.sleep` method provides a convenient way to create a void `Promise` that resolves in a fixed number of milliseconds.
+`Bun.sleep()` returns a void `Promise` that resolves after a given number of milliseconds.
 
 ```ts
 // sleep for 1 second
@@ -11,7 +11,7 @@ await Bun.sleep(1000);
 
 ***
 
-Internally, this is equivalent to the following snippet that uses [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout).
+Internally, `Bun.sleep()` is equivalent to the following [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout) snippet.
 
 ```ts
 await new Promise(resolve => setTimeout(resolve, ms));
@@ -19,4 +19,4 @@ await new Promise(resolve => setTimeout(resolve, ms));
 
 ***
 
-See [Docs > API > Utils](/docs/runtime/utils) for more useful utilities.
+See [Utils](/docs/runtime/utils).

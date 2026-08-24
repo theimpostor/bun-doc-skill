@@ -1,6 +1,6 @@
 # Runtime
 
-Use for Bun runtime APIs, `bunfig.toml`, file I/O, globals, compatibility, shell, plugins, workers, and built-in services.
+Use for Bun runtime APIs, `bunfig.toml`, file I/O, data formats such as XML and YAML, globals, compatibility, shell, plugins, workers, and built-in services.
 
 Use this file to pick the most relevant Bun doc page before opening the page itself.
 
@@ -54,4 +54,5 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Web APIs](../docs/runtime/web-apis.md) - `runtime/web-apis`
 - [WebView](../docs/runtime/webview.md) - `runtime/webview`
 - [Workers](../docs/runtime/workers.md) - `runtime/workers`
+- [XML](../docs/runtime/xml.md) - `runtime/xml`
 - [YAML](../docs/runtime/yaml.md) - `runtime/yaml`

@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/runtime/set-env
 
 
-The current environment variables can be accessed via `process.env` or `Bun.env`.
+Access the current environment variables with `process.env` or `Bun.env`.
 
 **File:** `index.ts`
 ```ts
@@ -19,6 +19,7 @@ Bun reads the following files automatically (listed in order of increasing prece
 * `.env`
 * `.env.production`, `.env.development`, `.env.test` (depending on value of `NODE_ENV`)
 * `.env.local` (not loaded when `NODE_ENV=test`)
+* `.env.production.local`, `.env.development.local`, `.env.test.local` (depending on value of `NODE_ENV`)
 
 **File:** `.env`
 ```ini
@@ -28,7 +29,7 @@ BAR=world
 
 ***
 
-Variables can also be set via the command line.
+You can also set variables on the command line.
 
 **File:** `Linux/macOS`
 ```sh
@@ -46,4 +47,4 @@ $env:FOO="helloworld"; bun run dev
 
 ***
 
-See [Docs > Runtime > Environment variables](/docs/runtime/environment-variables) for more information on using environment variables with Bun.
+See [Environment variables](/docs/runtime/environment-variables).

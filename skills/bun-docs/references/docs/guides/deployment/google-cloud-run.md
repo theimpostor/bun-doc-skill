@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/deployment/google-cloud-run
 
 [Google Cloud Run](https://cloud.google.com/run) is a managed platform for deploying and scaling serverless applications. Google handles the infrastructure for you.
 
-In this guide, we will deploy a Bun HTTP server to Google Cloud Run using a `Dockerfile`.
+This guide deploys a Bun HTTP server to Google Cloud Run using a `Dockerfile`.
 
 > Note
 Before continuing, make sure you have:
@@ -15,8 +15,8 @@ Before continuing, make sure you have:
 
 ***
 
-### Initialize `gcloud` by select/creating a project
-Make sure that you've initialized the Google Cloud CLI. This command logs you in, and prompts you to either select an existing project or create a new one.
+### Initialize `gcloud` by selecting or creating a project
+Make sure that you've initialized the Google Cloud CLI. `gcloud init` logs you in and prompts you to either select an existing project or create a new one.
 
 For more help with the Google Cloud CLI, see the [official documentation](https://docs.cloud.google.com/sdk/gcloud/reference/init).
 
@@ -43,17 +43,17 @@ The Google Cloud CLI is configured and ready to use!
 ```
 
 ### (Optional) Store your project info in environment variables
-Set variables for your project ID and number so they're easier to reuse in the following steps.
+Set variables for your project ID and number so you can reuse them in the following steps.
 
 ```bash
-PROJECT_ID=$(gcloud projects list --format='value(projectId)' --filter='name="my bun app"')
-PROJECT_NUMBER=$(gcloud projects list --format='value(projectNumber)' --filter='name="my bun app"')
+PROJECT_ID=$(gcloud projects list --format='value(projectId)' --filter='projectId=my-bun-app')
+PROJECT_NUMBER=$(gcloud projects list --format='value(projectNumber)' --filter='projectId=my-bun-app')
 
 echo $PROJECT_ID $PROJECT_NUMBER
 ```
 
 ```txt
-my-bun-app-... [PROJECT_NUMBER]
+my-bun-app [PROJECT_NUMBER]
 ```
 
 ### Link a billing account
@@ -77,8 +77,8 @@ gcloud billing projects link $PROJECT_ID --billing-account=[BILLING_ACCOUNT_ID]
 ```txt
 billingAccountName: billingAccounts/[BILLING_ACCOUNT_ID]
 billingEnabled: true
-name: projects/my-bun-app-.../billingInfo
-projectId: my-bun-app-...
+name: projects/my-bun-app/billingInfo
+projectId: my-bun-app
 ```
 
 ### Enable APIs and configure IAM roles
@@ -92,7 +92,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 ```
 
 > Note
-These commands enable Cloud Run (`run.googleapis.com`) and Cloud Build (`cloudbuild.googleapis.com`), which are required for deploying from source. Cloud Run runs your containerized app, while Cloud Build handles building and packaging it.
+These commands enable Cloud Run (`run.googleapis.com`) and Cloud Build (`cloudbuild.googleapis.com`). Deploying from source requires both. Cloud Run runs your containerized app, while Cloud Build builds and packages it.
 
 The IAM binding grants the Compute Engine service account (`$PROJECT_NUMBER-compute@developer.gserviceaccount.com`) permission to build and deploy images on your behalf.
 
@@ -118,11 +118,11 @@ CMD ["bun", "index.ts"]
 ```
 
 > Note
-Make sure that the start command corresponds to your application's entry point. This can also be `CMD ["bun", "run", "start"]` if you have a start script in your `package.json`.
+Make sure that the start command corresponds to your application's entry point. The start command can also be `CMD ["bun", "run", "start"]` if you have a start script in your `package.json`.
 
-This image installs dependencies and runs your app with Bun inside a container. If your app doesn't have dependencies, you can omit the `RUN bun install --production --frozen-lockfile` line.
+If your app doesn't have dependencies, you can omit the `COPY package.json bun.lock ./` and `RUN bun install --production --frozen-lockfile` lines. Bun doesn't write a `bun.lock` for a project with no dependencies.
 
-Create a new `.dockerignore` file in the root of your project. This file contains the files and directories that should be *excluded* from the container image, such as `node_modules`. This makes your builds faster and smaller:
+Create a new `.dockerignore` file in the root of your project. It lists the files and directories to *exclude* from the container image, such as `node_modules`. Excluding them keeps builds faster and smaller:
 
 **File:** `.dockerignore`
 ```docker
@@ -141,9 +141,7 @@ LICENSE
 ### Deploy your service
 Make sure you're in the directory containing your `Dockerfile`, then deploy directly from your local source:
 
-> Note
-Update the `--region` flag to your preferred region. You can also omit this flag to get an interactive prompt to
-select a region.
+> Note: Update the `--region` flag to your preferred region, or omit it to select a region interactively.
 
 ```bash
 gcloud run deploy my-bun-app --source . --region=us-west1 --allow-unauthenticated
@@ -155,9 +153,9 @@ Deploying from source requires an Artifact Registry Docker repository to store b
 
 Do you want to continue (Y/n)? Y
 
-Building using Dockerfile and deploying container to Cloud Run service [my-bun-app] in project [my-bun-app-...] region [us-west1]
+Building using Dockerfile and deploying container to Cloud Run service [my-bun-app] in project [my-bun-app] region [us-west1]
 ✓ Building and deploying... Done.
-  ✓ Validating Service...
+  ✓ Validating configuration...
   ✓ Uploading sources...
   ✓ Building Container... Logs are available at [https://console.cloud.google.com/cloud-build/builds...].
   ✓ Creating Revision...
@@ -169,6 +167,6 @@ Service URL: https://my-bun-app-....us-west1.run.app
 ```
 
 ### Visit your live application
-🎉 Your Bun application is now live!
+Your Bun application is now live.
 
 Visit the Service URL (`https://my-bun-app-....us-west1.run.app`) to confirm everything works as expected.

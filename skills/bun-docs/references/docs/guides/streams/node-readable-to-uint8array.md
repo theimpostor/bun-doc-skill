@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/streams/node-readable-to-uint8array
 
 
-To convert a Node.js `Readable` stream to an `Uint8Array` in Bun, you can create a new `Response` object with the stream as the body, then use `bytes()` to read the stream into an `Uint8Array`.
+To convert a Node.js `Readable` stream to a `Uint8Array` in Bun, create a `Response` with the stream as the body, then call `bytes()`.
 
 ```ts
 import { Readable } from "stream";

@@ -2,29 +2,30 @@
 Source: https://bun.com/docs/guides/ecosystem/systemd
 
 
-[systemd](https://systemd.io) is an init system and service manager for Linux operating systems that manages the startup and control of system processes and services.
+[systemd](https://systemd.io) is an init system and service manager for Linux. It manages the startup and control of system processes and services.
 
 ***
 
-To run a Bun application as a daemon using **systemd** you'll need to create a *service file* in `/lib/systemd/system/`.
+To run a Bun application as a daemon with **systemd**, create a *service file* in `/etc/systemd/system/`.
 
 ```sh
-cd /lib/systemd/system
+cd /etc/systemd/system
 touch my-app.service
 ```
 
 ***
 
-Here is a typical service file that runs an application on system start. You can use this as a template for your own service. Replace `YOUR_USER` with the name of the user you want to run the application as. To run as `root`, replace `YOUR_USER` with `root`, though this is generally not recommended for security reasons.
+Here is a typical service file that runs an application on system start. Use it as a template for your own service. Replace `YOUR_USER` with the name of the user to run the application as. To run as `root`, replace `YOUR_USER` with `root` and `/home/YOUR_USER` with `/root` (root's home directory). For security reasons, we don't recommend running as `root`.
 
-Refer to the [systemd documentation](https://www.freedesktop.org/software/systemd/man/systemd.service.html) for more information on each setting.
+Refer to the [systemd documentation](https://www.freedesktop.org/software/systemd/man/systemd.service.html) for details on each setting.
 
 **File:** `my-app.service`
 ```ini
 [Unit]
 # describe the app
 Description=My App
-# start the app after the network is available
+# start the app after the network management stack has started
+# (this does not wait for the network to be up, see https://systemd.io/NETWORK_ONLINE)
 After=network.target
 
 [Service]
@@ -49,15 +50,17 @@ WantedBy=multi-user.target
 
 ***
 
-If your application starts a webserver, note that non-`root` users are not able to listen on ports 80 or 443 by default. To permanently allow Bun to listen on these ports when executed by a non-`root` user, use the following command. This step isn't necessary when running as `root`.
+If your application starts a webserver, non-`root` users cannot listen on ports 80 or 443 by default. To allow Bun to listen on these ports when run by a non-`root` user, use the following command. The command requires `sudo` permissions. This step isn't necessary when running as `root`.
 
 ```bash
-setcap CAP_NET_BIND_SERVICE=+eip ~/.bun/bin/bun
+setcap CAP_NET_BIND_SERVICE=+eip /home/YOUR_USER/.bun/bin/bun
 ```
+
+The command attaches the capability to the `bun` binary itself. Replacing the binary, for example with `bun upgrade`, removes the capability. Re-run the command after upgrading. Alternatively, add `AmbientCapabilities=CAP_NET_BIND_SERVICE` to the `[Service]` section of the service file instead.
 
 ***
 
-With the service file configured, you can now *enable* the service. Once enabled, it will start automatically on reboot. This requires `sudo` permissions.
+With the service file configured, *enable* the service. Once enabled, it starts automatically on reboot. Enabling the service requires `sudo` permissions.
 
 ```bash
 systemctl enable my-app
@@ -65,7 +68,7 @@ systemctl enable my-app
 
 ***
 
-To start the service without rebooting, you can manually *start* it.
+To start the service without rebooting, *start* it manually.
 
 ```bash
 systemctl start my-app
@@ -73,7 +76,7 @@ systemctl start my-app
 
 ***
 
-Check the status of your application with `systemctl status`. If you've started your app successfully, you should see something like this:
+Check the status of your application with `systemctl status`. If the app started successfully, the output looks like this:
 
 ```bash
 systemctl status my-app
@@ -81,19 +84,19 @@ systemctl status my-app
 
 ```txt
 ● my-app.service - My App
-     Loaded: loaded (/lib/systemd/system/my-app.service; enabled; preset: enabled)
+     Loaded: loaded (/etc/systemd/system/my-app.service; enabled; preset: enabled)
      Active: active (running) since Thu 2023-10-12 11:34:08 UTC; 1h 8min ago
    Main PID: 309641 (bun)
       Tasks: 3 (limit: 503)
      Memory: 40.9M
         CPU: 1.093s
      CGroup: /system.slice/my-app.service
-             └─309641 /home/YOUR_USER/.bun/bin/bun run /home/YOUR_USER/application/index.ts
+             └─309641 /home/YOUR_USER/.bun/bin/bun run index.ts
 ```
 
 ***
 
-To update the service, edit the contents of the service file, then reload the daemon.
+To update the service, edit the service file, then reload the daemon.
 
 ```bash
 systemctl daemon-reload
@@ -101,7 +104,7 @@ systemctl daemon-reload
 
 ***
 
-For a complete guide on the service unit configuration, you can check [this page](https://www.freedesktop.org/software/systemd/man/systemd.service.html). Or refer to this cheatsheet of common commands:
+For a complete guide to service unit configuration, see the [systemd.service documentation](https://www.freedesktop.org/software/systemd/man/systemd.service.html). Or use this cheatsheet of common commands:
 
 ```bash
 systemctl daemon-reload # tell systemd that some files got changed

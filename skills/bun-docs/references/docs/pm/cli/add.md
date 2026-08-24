@@ -17,6 +17,8 @@ bun add zod@^3.0.0
 bun add zod@latest
 ```
 
+Bun writes the package to `dependencies` unless you pass `--dev`, `--optional`, or `--peer`. If `package.json` already lists it in another group, Bun updates that entry in place.
+
 ## `--dev`
 
 > Note: **Alias** — `--development`, `-d`, `-D`
@@ -44,18 +46,20 @@ To add a package as a peer dependency (`"peerDependencies"`):
 bun add --peer @types/bun
 ```
 
+Bun installs peer dependencies by default, so no additional `devDependencies` entry is needed.
+
 ## `--exact`
 
 > Note: **Alias** — `-E`
 
-To add a package and pin to the resolved version, use `--exact`. This will resolve the version of the package and add it to your `package.json` with an exact version number instead of a version range.
+To pin a package to the resolved version, use `--exact`. Bun writes the exact version number to your `package.json` instead of a version range.
 
 ```bash
 bun add react --exact
 bun add react -E
 ```
 
-This will add the following to your `package.json`:
+The difference in `package.json`:
 
 **File:** `package.json`
 ```json
@@ -76,13 +80,69 @@ To view a complete list of options for this command:
 bun add --help
 ```
 
+## `--catalog`
+
+In a workspace, `--catalog` writes the version to the root `package.json` [catalog](/docs/pm/catalogs) and adds `"catalog:"` to the current package. `--catalog=<name>` uses a named catalog (`workspaces.catalogs.<name>`) and writes `"catalog:<name>"`.
+
+```bash
+bun add react --catalog
+bun add vitest --catalog=testing
+```
+
+**File:** `package.json`
+```json
+// root package.json
+{
+  "workspaces": {
+    "packages": ["packages/*"],
+    "catalog": {
+      "react": "^18.2.0"
+    }
+  }
+}
+```
+
+**File:** `packages/app/package.json`
+```json
+{
+  "dependencies": {
+    "react": "catalog:"
+  }
+}
+```
+
+* If the catalog already has an entry, Bun reuses it and writes only `"catalog:"` to the current package. Pass an explicit version (`bun add react@19 --catalog`) to replace the entry — this affects every package that references it.
+* If you omit the version and the current `package.json` already has a range (`"react": "^18.2.0"`), Bun catalogs that range.
+* A package that already references `"catalog:<name>"` keeps using that catalog.
+* Attach the name with `=`: `--catalog=testing`, not `--catalog testing`.
+* Bun catalogs tarball and git specifiers under the package's real name. It rejects relative paths and workspace packages.
+
+Even without the flag, `bun add react` (no version) writes `"catalog:"` if the default catalog already lists `react`. Pass a version to write a concrete range instead.
+
+## `--filter`
+
+> Note: **Alias** — `-F`
+
+In a monorepo, add the package to the matching workspace(s) instead of the current directory's package. See [filtering](/docs/pm/filter) for the pattern syntax. Repeat the flag to combine patterns; `!pattern` excludes.
+
+```bash
+bun add zod --filter api
+bun add -d typescript --filter './packages/*'
+bun add ./vendor/logger --filter '*'
+bun remove zod --filter '*' --filter '!api'
+```
+
+* `*` matches every workspace package but not the root. To include the root, name it: `--filter '*' --filter '<root-name>'`.
+* If no workspace matches, Bun writes nothing and the command fails.
+* Bun resolves local paths from the current directory and rewrites them relative to each selected package.
+* Bun updates `bun.lock` for the whole repo but links only the selected workspaces into `node_modules`, as with `bun install --filter`.
+* Cannot be combined with `--global`.
+
 ## `--global`
 
-> Note
-**Note** — This would not modify package.json of your current project folder. **Alias** - `bun add --global`, `bun add
--g`, `bun install --global` and `bun install -g`
+> Note: **Alias** — `bun add --global`, `bun add -g`, `bun install --global` and `bun install -g`
 
-To install a package globally, use the `-g`/`--global` flag. This will not modify the `package.json` of your current project. Typically this is used for installing command-line tools.
+To install a package globally, use the `-g`/`--global` flag. This does not modify the `package.json` of your current project. Use it to install command-line tools.
 
 ```bash
 bun add --global cowsay # or `bun add -g cowsay`
@@ -126,7 +186,7 @@ To tell Bun to allow lifecycle scripts for a particular package, add the package
 }
 ```
 
-Bun reads this field and will run lifecycle scripts for `my-trusted-package`.
+Bun reads this field and runs lifecycle scripts for `my-trusted-package`.
 
 ## Git dependencies
 
@@ -139,7 +199,7 @@ bun add git@github.com:moment/moment.git
 > Note
 To install private repositories, your system needs the appropriate SSH credentials to access the repository.
 
-Bun supports a variety of protocols, including [`github`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#github-urls), [`git`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#git-urls-as-dependencies), `git+ssh`, `git+https`, and many more.
+Bun supports a variety of protocols, including [`github`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#github-urls), [`git`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#git-urls-as-dependencies), `git+ssh`, and `git+https`.
 
 **File:** `package.json`
 ```json
@@ -155,13 +215,13 @@ Bun supports a variety of protocols, including [`github`](https://docs.npmjs.com
 
 ## Tarball dependencies
 
-A package name can correspond to a publicly hosted `.tgz` file. During installation, Bun will download and install the package from the specified tarball URL, rather than from the package registry.
+A package name can correspond to a publicly hosted `.tgz` file. Bun downloads and installs the package from that tarball URL rather than from the package registry.
 
 ```sh
 bun add zod@https://registry.npmjs.org/zod/-/zod-3.21.4.tgz
 ```
 
-This will add the following line to your `package.json`:
+`bun add` writes the URL to your `package.json`:
 
 **File:** `package.json`
 ```json
@@ -198,13 +258,17 @@ bun add <package> <@version>
 
 - (boolean) Only add dependencies to `package.json` if they are not already present
 
+- (string) Add the resolved version to the root `package.json` catalog and depend on it as `catalog:`; `--catalog=NAME` targets `catalogs.NAME`
+
+- (string) Add the package(s) to the matching workspaces instead of the current package. Alias: `-F`
+
 ### Project Files & Lockfiles
 
 - (boolean) Write a `yarn.lock` file (yarn v1). Alias: `-y`
 
 - (boolean) Don't update `package.json` or save a lockfile
 
-- (boolean) Save to `package.json` (true by default)
+- (boolean) Save to `package.json`
 
 - (boolean) Disallow changes to lockfile
 
@@ -216,13 +280,13 @@ bun add <package> <@version>
 
 ### Installation Control
 
-- (boolean) Don't install anything
+- (boolean) Perform a dry run without making changes
 
 - (boolean) Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
 
 - (boolean) Skip verifying integrity of newly downloaded packages
 
-- (boolean) Skip lifecycle scripts in the project's `package.json` (dependency scripts are never run)
+- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
 
 - (boolean) Recursively analyze & install dependencies of files passed as arguments (using Bun's bundler). Alias: `-a`
 
@@ -234,13 +298,13 @@ bun add <package> <@version>
 
 - (string) Use a specific registry by default, overriding `.npmrc`, `bunfig.toml`, and environment variables
 
-- (number) Maximum number of concurrent network requests (default 48)
+- (number) Maximum number of concurrent network requests
 
 ### Performance & Resource
 
-- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default), `hardlink`, `symlink`, `copyfile`
+- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default 5)
+- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
 
 ### Caching
 

@@ -1,13 +1,13 @@
 # Test configuration
 Source: https://bun.com/docs/test/configuration
 
-Learn how to configure Bun test behavior using bunfig.toml and command-line options
+Configure bun test behavior with bunfig.toml and command-line options
 
-Configure `bun test` via `bunfig.toml` file and command-line options. This page documents the available configuration options for `bun test`.
+Configure `bun test` with `bunfig.toml` and command-line options.
 
 ## Configuration File
 
-You can configure `bun test` behavior by adding a `[test]` section to your `bunfig.toml` file:
+To configure `bun test` in `bunfig.toml`, add a `[test]` section:
 
 **File:** `bunfig.toml`
 ```toml
@@ -19,19 +19,13 @@ You can configure `bun test` behavior by adding a `[test]` section to your `bunf
 
 ### root
 
-The `root` option specifies a root directory for test discovery, overriding the default behavior of scanning from the project root.
+The `root` option sets the directory Bun scans for tests, instead of the project root.
 
 **File:** `bunfig.toml`
 ```toml
 [test]
 root = "src"  # Only scan for tests in the src directory
 ```
-
-This is useful when you want to:
-
-* Limit test discovery to specific directories
-* Exclude certain parts of your project from test scanning
-* Organize tests in a specific subdirectory structure
 
 #### Examples
 
@@ -50,7 +44,7 @@ root = "tests"
 
 ### Preload Scripts
 
-Load scripts before running tests using the `preload` option:
+The `preload` option loads scripts before the tests run:
 
 **File:** `bunfig.toml`
 ```toml
@@ -99,9 +93,9 @@ mock.module("./external-api", () => ({
 
 ### Path Ignore Patterns
 
-Exclude files and directories from test discovery entirely using glob patterns. Unlike `coveragePathIgnorePatterns` which only affects coverage reports, `pathIgnorePatterns` prevents matching paths from being discovered and run as tests.
+`pathIgnorePatterns` excludes files and directories from test discovery entirely, using glob patterns. Unlike `coveragePathIgnorePatterns`, which only affects coverage reports, `pathIgnorePatterns` prevents Bun from discovering matching paths and running them as tests.
 
-This is useful when your project contains submodules, vendored code, or other directories with `*.test.ts` files that you don't want `bun test` to pick up.
+Use it when your project contains submodules, vendored code, or other directories with `*.test.ts` files that you don't want `bun test` to pick up.
 
 **File:** `bunfig.toml`
 ```toml
@@ -123,7 +117,7 @@ This is equivalent to using `--path-ignore-patterns` on the command line:
 bun test --path-ignore-patterns 'vendor/**' --path-ignore-patterns 'fixtures/**'
 ```
 
-Directories matching a pattern are pruned during scanning, so their contents are never traversed. This means ignoring a large directory tree is efficient -- Bun won't spend time reading files inside it.
+Bun prunes directories matching a pattern during scanning and never traverses their contents, so ignoring a large directory tree is cheap.
 
 #### Common Use Cases
 
@@ -149,34 +143,7 @@ pathIgnorePatterns = [
 ```
 
 > Note
-Command-line `--path-ignore-patterns` flags override the `bunfig.toml` value entirely -- the two are not merged.
-
-## Timeouts
-
-### Default Timeout
-
-Set the default timeout for all tests:
-
-**File:** `bunfig.toml`
-```toml
-[test]
-timeout = 10000  # 10 seconds (default is 5000ms)
-```
-
-This applies to all tests unless overridden by individual test timeouts:
-
-**File:** `test.ts`
-```ts
-// This test will use the default timeout from bunfig.toml
-test("uses default timeout", () => {
-  // test implementation
-});
-
-// This test overrides the default timeout
-test("custom timeout", () => {
-  // test implementation
-}, 30000); // 30 seconds
-```
+Command-line `--path-ignore-patterns` flags override the `bunfig.toml` value entirely. Bun does not merge the two.
 
 ## Reporters
 
@@ -243,17 +210,13 @@ The `smol` mode reduces memory usage by:
 * Being more aggressive about garbage collection
 * Reducing buffer sizes where possible
 
-This is useful for:
-
-* CI environments with limited memory
-* Large test suites that consume significant memory
-* Development environments with memory constraints
+Use it in memory-constrained environments, such as CI runners, or for large test suites.
 
 ## Test execution
 
 ### concurrentTestGlob
 
-Automatically run test files matching a glob pattern with concurrent test execution enabled. This is useful for gradually migrating test suites to concurrent execution or for running specific test types concurrently.
+Run test files matching a glob pattern with concurrent test execution enabled.
 
 **File:** `bunfig.toml`
 ```toml
@@ -261,13 +224,9 @@ Automatically run test files matching a glob pattern with concurrent test execut
 concurrentTestGlob = "**/concurrent-*.test.ts"  # Run files matching this pattern concurrently
 ```
 
-Test files matching this pattern will behave as if the `--concurrent` flag was passed, running all tests within those files concurrently. This allows you to:
+Test files matching the pattern behave as if you passed the `--concurrent` flag: every test in those files runs concurrently. Use this to migrate a test suite to concurrent execution gradually, or to run one kind of test (say, integration tests) concurrently while the rest stay sequential.
 
-* Gradually migrate your test suite to concurrent execution
-* Run integration tests concurrently while keeping unit tests sequential
-* Separate fast concurrent tests from tests that require sequential execution
-
-The `--concurrent` CLI flag will override this setting when specified, forcing all tests to run concurrently regardless of the glob pattern.
+The `--concurrent` CLI flag overrides this setting, forcing all tests to run concurrently regardless of the glob pattern.
 
 #### randomize
 
@@ -292,7 +251,7 @@ seed = 2444615283
 
 #### retry
 
-Default retry count for all tests. Failed tests will be retried up to this many times. Per-test `{ retry: N }` overrides this value. Default `0` (no retries).
+Default retry count for all tests. Bun retries a failed test up to this many times. Per-test `{ retry: N }` overrides this value. Default `0` (no retries).
 
 **File:** `bunfig.toml`
 ```toml
@@ -300,7 +259,7 @@ Default retry count for all tests. Failed tests will be retried up to this many 
 retry = 3
 ```
 
-The `--retry` CLI flag will override this setting when specified.
+The `--retry` CLI flag overrides this setting.
 
 #### rerunEach
 
@@ -331,7 +290,7 @@ coverageDir = "./coverage"
 
 ### Skip Test Files from Coverage
 
-Exclude files matching test patterns (e.g., `*.test.ts`) from the coverage report:
+Exclude files matching test patterns (for example `*.test.ts`) from the coverage report:
 
 **File:** `bunfig.toml`
 ```toml
@@ -341,7 +300,7 @@ coverageSkipTestFiles = true  # Exclude test files from coverage reports
 
 ### Coverage Thresholds
 
-The coverage threshold can be specified either as a number or as an object with specific thresholds:
+Specify the coverage threshold as a single number or as an object with per-metric thresholds:
 
 **File:** `bunfig.toml`
 ```toml
@@ -353,7 +312,7 @@ coverageThreshold = 0.8
 coverageThreshold = { lines = 0.9, functions = 0.8, statements = 0.85 }
 ```
 
-Setting any of these enables `fail_on_low_coverage`, causing the test run to fail if coverage is below the threshold.
+Setting any of these causes the test run to fail if coverage is below the threshold.
 
 #### Threshold Examples
 
@@ -392,7 +351,7 @@ coveragePathIgnorePatterns = [
 ]
 ```
 
-Files matching any of these patterns will be excluded from coverage calculation and reporting. See the [coverage documentation](/docs/test/code-coverage) for more details and examples.
+Bun excludes files matching any of these patterns from coverage calculation and reporting. See [Code coverage](/docs/test/code-coverage).
 
 #### Common Ignore Patterns
 
@@ -432,7 +391,7 @@ coveragePathIgnorePatterns = [
 
 ### Sourcemap Handling
 
-Internally, Bun transpiles every file. That means code coverage must also go through sourcemaps before they can be reported. We expose this as a flag to allow you to opt out of this behavior, but it will be confusing because during the transpilation process, Bun may move code around and change variable names. This option is mostly useful for debugging coverage issues.
+Bun transpiles every file, so coverage results pass through sourcemaps before they're reported. `coverageIgnoreSourcemaps` opts out of this, but the results are confusing: during transpilation, Bun may move code around and rename variables. The option is mostly useful for debugging coverage issues.
 
 **File:** `bunfig.toml`
 ```toml
@@ -446,7 +405,7 @@ transpilation process.
 
 ## Install Settings Inheritance
 
-The `bun test` command inherits relevant network and installation configuration (registry, cafile, prefer, exact, etc.) from the `[install]` section of `bunfig.toml`. This is important if tests need to interact with private registries or require specific install behaviors triggered during the test run.
+`bun test` inherits network and installation configuration (such as `registry`, `cafile`, `prefer`, and `exact`) from the `[install]` section of `bunfig.toml`. This matters if your tests reach a private registry or trigger installs during the run.
 
 **File:** `bunfig.toml`
 ```toml
@@ -459,12 +418,11 @@ prefer = "offline"
 [test]
 # Test-specific configuration
 coverage = true
-timeout = 10000
 ```
 
 ## Environment Variables
 
-Environment variables for tests should be set using `.env` files. Bun automatically loads `.env` files from your project root. For test-specific variables, create a `.env.test` file:
+Set environment variables for tests with `.env` files, which Bun loads from your project root automatically. For test-specific variables, create a `.env.test` file, which `bun test` loads automatically:
 
 **File:** `.env.test`
 ```ini
@@ -473,15 +431,9 @@ DATABASE_URL=postgresql://localhost:5432/test_db
 LOG_LEVEL=error
 ```
 
-Then load it with `--env-file`:
-
-```bash
-bun test --env-file=.env.test
-```
-
 ## Complete Configuration Example
 
-Here's a comprehensive example showing all available test configuration options:
+An example showing the available test configuration options:
 
 **File:** `bunfig.toml`
 ```toml
@@ -497,7 +449,6 @@ preload = ["./test-setup.ts", "./global-mocks.ts"]
 pathIgnorePatterns = ["vendor/**", "submodules/**"]
 
 # Execution settings
-timeout = 10000
 smol = true
 
 # Coverage configuration
@@ -528,77 +479,11 @@ Command-line options always override configuration file settings:
 **File:** `bunfig.toml`
 ```toml
 [test]
-timeout = 5000
 coverage = false
 ```
 
 ```bash
-# These CLI flags override the config file
-bun test --timeout 10000 --coverage
-# timeout will be 10000ms and coverage will be enabled
-```
-
-## Conditional Configuration
-
-You can use different configurations for different environments:
-
-**File:** `bunfig.toml`
-```toml
-[test]
-# Default test configuration
-coverage = false
-timeout = 5000
-
-# Override for CI environment
-[test.ci]
-coverage = true
-coverageThreshold = 0.8
-timeout = 30000
-```
-
-Then in CI:
-
-```bash
-# Use CI-specific settings
-bun test --config=ci
-```
-
-## Validation and Troubleshooting
-
-### Invalid Configuration
-
-Bun will warn about invalid configuration options:
-
-**File:** `bunfig.toml`
-```toml
-[test]
-invalidOption = true  # This will generate a warning
-```
-
-### Common Configuration Issues
-
-1. **Path Resolution**: Relative paths in config are resolved relative to the config file location
-2. **Pattern Matching**: Glob patterns use standard glob syntax
-3. **Type Mismatches**: Ensure numeric values are not quoted unless they should be strings
-
-**File:** `bunfig.toml`
-```toml
-[test]
-# Correct
-timeout = 10000
-
-# Incorrect - will be treated as string
-timeout = "10000"
-```
-
-### Debugging Configuration
-
-To see what configuration is being used:
-
-```bash
-# Show effective configuration
-bun test --dry-run
-
-# Verbose output to see configuration loading
-bun test --verbose
+# This CLI flag overrides the config file
+bun test --coverage
+# coverage will be enabled
 ```

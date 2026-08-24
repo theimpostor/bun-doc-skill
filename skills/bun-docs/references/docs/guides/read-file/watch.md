@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/read-file/watch
 
 Bun implements the `node:fs` module, including the `fs.watch` function for listening for file system changes.
 
-This code block listens for changes to files in the current directory. By default this operation is *shallow*, meaning that changes to files in subdirectories will not be detected.
+The following code listens for changes to files in the current directory. By default the watch is *shallow*: it does not detect changes to files in subdirectories.
 
 ```ts
 import { watch } from "fs";
@@ -16,7 +16,7 @@ const watcher = watch(import.meta.dir, (event, filename) => {
 
 ***
 
-To listen to changes in subdirectories, pass the `recursive: true` option to `fs.watch`.
+To listen for changes in subdirectories, pass the `recursive: true` option to `fs.watch`.
 
 ```ts
 import { watch } from "fs";
@@ -28,7 +28,7 @@ const watcher = watch(import.meta.dir, { recursive: true }, (event, relativePath
 
 ***
 
-Using the `node:fs/promises` module, you can listen for changes using `for await...of` instead of a callback.
+With the `node:fs/promises` module, you can listen for changes with `for await...of` instead of a callback.
 
 ```ts
 import { watch } from "fs/promises";
@@ -61,4 +61,4 @@ process.on("SIGINT", () => {
 
 ***
 
-Refer to [API > Binary data > Typed arrays](/docs/runtime/binary-data#typedarray) for more information on working with `Uint8Array` and other binary data formats in Bun.
+See the [Node.js documentation](https://nodejs.org/api/fs.html#fswatchfilename-options-listener) for `fs.watch`.

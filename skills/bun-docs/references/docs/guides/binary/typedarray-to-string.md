@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/binary/typedarray-to-string
 
 
-Bun implements the Web-standard [`TextDecoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder) class for converting from binary data types like `Uint8Array` and strings.
+Bun implements the Web-standard [`TextDecoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder) class for converting binary data types like `Uint8Array` to strings.
 
 ```ts
 const arr = new Uint8Array([104, 101, 108, 108, 111]);
@@ -13,4 +13,4 @@ const str = decoder.decode(arr);
 
 ***
 
-See [Docs > API > Binary Data](/docs/runtime/binary-data#conversion) for complete documentation on manipulating binary data with Bun.
+See [Binary Data](/docs/runtime/binary-data#conversion).

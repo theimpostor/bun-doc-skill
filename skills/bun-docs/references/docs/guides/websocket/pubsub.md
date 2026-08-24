@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/websocket/pubsub
 
 
-Bun's server-side `WebSocket` API provides a native pub-sub API. Sockets can be subscribed to a set of named channels using `socket.subscribe(<name>)`; messages can be published to a channel using `socket.publish(<name>, <message>)`.
+Bun's server-side `WebSocket` API includes native pub-sub. Subscribe a socket to a set of named channels with `socket.subscribe(<name>)`; publish a message to a channel with `server.publish(<name>, <message>)`.
 
 This code snippet implements a single-channel chat server.
 

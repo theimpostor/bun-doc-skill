@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/binary/blob-to-dataview
 
 
-The [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) class provides a number of methods for consuming its contents in different formats. This snippets reads the contents to an `ArrayBuffer`, then creates a `DataView` from the buffer.
+The [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) class provides several methods for consuming its contents in different formats. Read the contents into an `ArrayBuffer` with `.arrayBuffer()`, then create a `DataView` from the buffer.
 
 ```ts
 const blob = new Blob(["hello world"]);
@@ -11,4 +11,4 @@ const arr = new DataView(await blob.arrayBuffer());
 
 ***
 
-See [Docs > API > Binary Data](/docs/runtime/binary-data#conversion) for complete documentation on manipulating binary data with Bun.
+See [Binary Data](/docs/runtime/binary-data#conversion).

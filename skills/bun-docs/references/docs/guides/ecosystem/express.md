@@ -2,11 +2,9 @@
 Source: https://bun.com/docs/guides/ecosystem/express
 
 
-Express and other major Node.js HTTP libraries should work out of the box. Bun implements the [`node:http`](https://nodejs.org/api/http.html) and [`node:https`](https://nodejs.org/api/https.html) modules that these libraries rely on.
+Express and other major Node.js HTTP libraries should work in Bun without changes. Bun implements the [`node:http`](https://nodejs.org/api/http.html) and [`node:https`](https://nodejs.org/api/https.html) modules that these libraries rely on.
 
-> Note
-Refer to the [Runtime > Node.js APIs](/docs/runtime/nodejs-compat#node-http) page for more detailed compatibility
-information.
+> Note: See [Node.js compatibility](/docs/runtime/nodejs-compat#node-http) for details.
 
 ```sh
 bun add express

@@ -1,13 +1,13 @@
 # TCP
 Source: https://bun.com/docs/runtime/networking/tcp
 
-Use Bun's native TCP API to implement performance sensitive systems like database clients, game servers, or anything that needs to communicate over TCP (instead of HTTP)
+Use Bun's native TCP API to implement performance-sensitive systems like database clients, game servers, or anything that needs to communicate over TCP (instead of HTTP)
 
-This is a low-level API intended for library authors and for advanced use cases.
+Bun's TCP API is low-level, intended for library authors and advanced use cases.
 
 ## Start a server (`Bun.listen()`)
 
-To start a TCP server with `Bun.listen`:
+Start a TCP server with `Bun.listen`:
 
 **File:** `server.ts`
 ```ts
@@ -25,7 +25,7 @@ Bun.listen({
 ```
 
 ### An API designed for speed
-In Bun, a set of handlers are declared once per server instead of assigning callbacks to each socket, as with Node.js `EventEmitters` or the web-standard `WebSocket` API.
+In Bun, you declare one set of handlers per server instead of assigning callbacks to each socket, as with Node.js `EventEmitters` or the web-standard `WebSocket` API.
 
 **File:** `server.ts`
 ```ts
@@ -44,7 +44,7 @@ Bun.listen({
 
 For performance-sensitive servers, assigning listeners to each socket can cause significant garbage collector pressure and increase memory usage. By contrast, Bun only allocates one handler function for each event and shares it among all sockets. This is a small optimization, but it adds up.
 
-Contextual data can be attached to a socket in the `open` handler.
+Attach contextual data to a socket in the `open` handler.
 
 **File:** `server.ts`
 ```ts
@@ -82,7 +82,7 @@ Bun.listen({
 });
 ```
 
-The `key` and `cert` fields expect the *contents* of your TLS key and certificate. This can be a string, `BunFile`, `TypedArray`, or `Buffer`.
+The `key` and `cert` fields expect the *contents* of your TLS key and certificate. This can be a string, `BunFile`, `TypedArray`, `Buffer`, or an array of these.
 
 **File:** `server.ts`
 ```ts
@@ -97,7 +97,7 @@ Bun.listen({
 });
 ```
 
-The result of `Bun.listen` is a server that conforms to the `TCPSocket` interface.
+`Bun.listen` returns a server that conforms to the `TCPSocketListener` interface.
 
 **File:** `server.ts`
 ```ts
@@ -117,7 +117,7 @@ server.unref();
 
 ## Create a connection (`Bun.connect()`)
 
-Use `Bun.connect` to connect to a TCP server. Specify the server to connect to with `hostname` and `port`. TCP clients can define the same set of handlers as `Bun.listen`, plus a couple client-specific handlers.
+Use `Bun.connect` to connect to a TCP server. Specify the server with `hostname` and `port`. TCP clients can define the same set of handlers as `Bun.listen`, plus a few client-specific handlers.
 
 **File:** `server.ts`
 ```ts
@@ -155,7 +155,7 @@ const socket = await Bun.connect({
 
 ## Hot reloading
 
-Both TCP servers and sockets can be hot reloaded with new handlers.
+You can hot reload both TCP servers and sockets with new handlers.
 
 **File:** `server.ts`
 ```ts
@@ -190,7 +190,7 @@ socket.reload({
 
 ## Buffering
 
-Currently, TCP sockets in Bun do not buffer data. For performance-sensitive code, it's important to consider buffering carefully. For example, this:
+TCP sockets in Bun do not buffer data, so performance-sensitive code should buffer writes itself. For example, this:
 
 ```ts
 socket.write("h");
@@ -206,7 +206,7 @@ socket.write("o");
 socket.write("hello");
 ```
 
-To simplify this for now, consider using Bun's `ArrayBufferSink` with the `{stream: true}` option:
+To buffer writes, use Bun's `ArrayBufferSink` with the `{stream: true}` option:
 
 **File:** `server.ts`
 ```ts
@@ -237,4 +237,4 @@ queueMicrotask(() => {
 > Note
 **Corking**
 
-Support for corking is planned, but in the meantime backpressure must be managed manually with the `drain` handler.
+Support for corking is planned. In the meantime, you must manage backpressure manually with the `drain` handler.
