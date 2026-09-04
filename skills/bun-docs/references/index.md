@@ -12,7 +12,7 @@ This reference tree mirrors Bun's official docs and is intended to be read selec
 
 - Requested URL: `https://bun.sh/llms-full.txt`
 - Resolved URL: `https://bun.sh/llms-full.txt`
-- Generated: `2026-08-24T21:40:38.805305+00:00`
+- Generated: `2026-09-04T17:50:30.797529+00:00`
 - Page count: `319`
 
 ## Sections
