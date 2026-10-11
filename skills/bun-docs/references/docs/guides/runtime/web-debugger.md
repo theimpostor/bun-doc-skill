@@ -14,7 +14,7 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 Run the file with the `--inspect` flag.
 
@@ -35,20 +35,20 @@ Inspect in browser:
 --------------------- Bun Inspector ---------------------
 ```
 
-***
+---
 
 Open the provided `debug.bun.sh` URL in your browser to start a debugging session. From this interface, you can view the source code of the running file, view and set breakpoints, and execute code with the built-in console.
 
 ![Screenshot of Bun debugger, Console
 tab](https://github.com/oven-sh/bun/assets/3084745/e6a976a8-80cc-4394-8925-539025cc025d)
 
-***
+---
 
 Next, set a breakpoint. Open the Sources tab, which shows the code from earlier, and click line number `3` to set a breakpoint on the `console.log(req.url)` statement.
 
 ![screenshot of Bun debugger](https://github.com/oven-sh/bun/assets/3084745/3b69c7e9-25ff-4f9d-acc4-caa736862935)
 
-***
+---
 
 Then visit [`http://localhost:3000`](http://localhost:3000) in your browser to send an HTTP request to the server. The page hangs because the program is paused at the breakpoint you set.
 
@@ -56,32 +56,32 @@ Note how the UI has changed.
 
 ![screenshot of Bun debugger](https://github.com/oven-sh/bun/assets/3084745/8b565e58-5445-4061-9bc4-f41090dfe769)
 
-***
+---
 
 Use the console at the bottom to run arbitrary code in the context of the program, with full access to the variables in scope at the breakpoint.
 
 ![Bun debugger console](https://github.com/oven-sh/bun/assets/3084745/f4312b76-48ba-4a7d-b3b6-6205968ac681)
 
-***
+---
 
 The right side of the Sources pane lists the local variables in scope; drill down to see their properties and methods. The screenshot shows the `req` variable.
 
 ![Bun debugger variables panel](https://github.com/oven-sh/bun/assets/3084745/63d7f843-5180-489c-aa94-87c486e68646)
 
-***
+---
 
 The buttons in the upper left of the Sources pane control the program's execution.
 
 ![Bun debugger controls](https://github.com/oven-sh/bun/assets/3084745/41b76deb-7371-4461-9d5d-81b5a6d2f7a4)
 
-***
+---
 
 Here's what each control flow button does.
 
-* *Continue script execution* — runs the program until the next breakpoint or exception.
-* *Step over* — continues to the next line.
-* *Step into* — if the current statement contains a function call, steps into the called function.
-* *Step out* — if the current statement is a function call, finishes executing it, then steps out of the function to the location where it was called.
+- _Continue script execution_ — runs the program until the next breakpoint or exception.
+- _Step over_ — continues to the next line.
+- _Step into_ — if the current statement contains a function call, steps into the called function.
+- _Step out_ — if the current statement is a function call, finishes executing it, then steps out of the function to the location where it was called.
 
 ![Debugger control buttons cheat
 sheet](https://github-production-user-asset-6210df.s3.amazonaws.com/3084745/261510346-6a94441c-75d3-413a-99a7-efa62365f83d.png)

@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/cli/info
 
 Display package metadata from the npm registry
 
+
 `bun info` displays package metadata from the npm registry.
 
 ## Usage

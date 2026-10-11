@@ -3,6 +3,7 @@ Source: https://bun.com/docs/test/dom
 
 Learn how to test DOM elements and components using Bun with happy-dom and React Testing Library
 
+
 Bun's test runner plays well with existing component and DOM testing libraries, including React Testing Library and happy-dom.
 
 ## happy-dom
@@ -220,9 +221,9 @@ preload = ["./test-setup.ts"]
 
 happy-dom is fast, but for very large test suites you may want to:
 
-* Use `beforeEach` to reset the DOM state between tests
-* Avoid creating too many DOM elements in a single test
-* Use `cleanup` functions from testing libraries
+- Use `beforeEach` to reset the DOM state between tests
+- Avoid creating too many DOM elements in a single test
+- Use `cleanup` functions from testing libraries
 
 **File:** `test-setup.ts`
 ```ts

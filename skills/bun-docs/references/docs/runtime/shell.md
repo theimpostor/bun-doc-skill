@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/shell
 
 Use Bun's shell scripting API to run shell commands from JavaScript
 
+
 Bun Shell makes shell scripting with JavaScript & TypeScript fun. It's a cross-platform bash-like shell with JavaScript interop.
 
 Quickstart:
@@ -17,20 +18,20 @@ const response = await fetch("https://example.com");
 await $`cat < ${response} | wc -c`; // 1256
 ```
 
-***
+---
 
 ## Features
 
-* **Cross-platform**: works on Windows, Linux & macOS. Instead of installing `rimraf` or `cross-env`, you can use Bun Shell. It implements common shell commands like `ls`, `cd`, and `rm` natively.
-* **Familiar**: Bun Shell is a bash-like shell that supports redirection, pipes, and environment variables.
-* **Globs**: Bun Shell supports glob patterns natively, including `**`, `*`, and `{expansion}`.
-* **Template literals**: Template literals execute shell commands and interpolate variables and expressions.
-* **Safety**: Bun Shell escapes all strings by default, preventing shell injection attacks.
-* **JavaScript interop**: Use `Response`, `ArrayBuffer`, `Blob`, `Bun.file(path)` and other JavaScript objects as stdin, stdout, and stderr.
-* **Shell scripting**: Bun Shell runs shell scripts (`.sh` files).
-* **Custom interpreter**: Bun Shell is a small programming language with its own lexer, parser, and interpreter, written in Rust.
+- **Cross-platform**: works on Windows, Linux & macOS. Instead of installing `rimraf` or `cross-env`, you can use Bun Shell. It implements common shell commands like `ls`, `cd`, and `rm` natively.
+- **Familiar**: Bun Shell is a bash-like shell that supports redirection, pipes, and environment variables.
+- **Globs**: Bun Shell supports glob patterns natively, including `**`, `*`, and `{expansion}`.
+- **Template literals**: Template literals execute shell commands and interpolate variables and expressions.
+- **Safety**: Bun Shell escapes all strings by default, preventing shell injection attacks.
+- **JavaScript interop**: Use `Response`, `ArrayBuffer`, `Blob`, `Bun.file(path)` and other JavaScript objects as stdin, stdout, and stderr.
+- **Shell scripting**: Bun Shell runs shell scripts (`.sh` files).
+- **Custom interpreter**: Bun Shell is a small programming language with its own lexer, parser, and interpreter, written in Rust.
 
-***
+---
 
 ## Getting started
 
@@ -72,7 +73,7 @@ console.log(stdout); // Buffer(7) [ 72, 101, 108, 108, 111, 33, 10 ]
 console.log(stderr); // Buffer(0) []
 ```
 
-***
+---
 
 ## Error handling
 
@@ -123,21 +124,21 @@ $.throws(false);
 await $`something-that-may-fail`; // No exception thrown
 ```
 
-***
+---
 
 ## Redirection
 
-Redirect a command's *input* or *output* with the typical Bash operators:
+Redirect a command's _input_ or _output_ with the typical Bash operators:
 
-* `<` redirect stdin
-* `>` or `1>` redirect stdout
-* `2>` redirect stderr
-* `&>` redirect both stdout and stderr
-* `>>` or `1>>` redirect stdout, *appending* to the destination, instead of overwriting
-* `2>>` redirect stderr, *appending* to the destination, instead of overwriting
-* `&>>` redirect both stdout and stderr, *appending* to the destination, instead of overwriting
-* `1>&2` redirect stdout to stderr (writes to stdout go to stderr instead)
-* `2>&1` redirect stderr to stdout (writes to stderr go to stdout instead)
+- `<` redirect stdin
+- `>` or `1>` redirect stdout
+- `2>` redirect stderr
+- `&>` redirect both stdout and stderr
+- `>>` or `1>>` redirect stdout, _appending_ to the destination, instead of overwriting
+- `2>>` redirect stderr, _appending_ to the destination, instead of overwriting
+- `&>>` redirect both stdout and stderr, _appending_ to the destination, instead of overwriting
+- `1>&2` redirect stdout to stderr (writes to stdout go to stderr instead)
+- `2>&1` redirect stderr to stdout (writes to stderr go to stdout instead)
 
 Bun Shell also supports redirecting from and to JavaScript objects.
 
@@ -156,8 +157,8 @@ console.log(buffer.toString()); // Hello World!\n
 
 You can redirect output to these JavaScript objects:
 
-* `Buffer`, `Uint8Array`, `Uint16Array`, `Uint32Array`, `Int8Array`, `Int16Array`, `Int32Array`, `Float32Array`, `Float64Array`, `ArrayBuffer`, `SharedArrayBuffer` (writes to the underlying buffer)
-* `Bun.file(path)`, `Bun.file(fd)` (writes to the file)
+- `Buffer`, `Uint8Array`, `Uint16Array`, `Uint32Array`, `Int8Array`, `Int16Array`, `Int32Array`, `Float32Array`, `Float64Array`, `ArrayBuffer`, `SharedArrayBuffer` (writes to the underlying buffer)
+- `Bun.file(path)`, `Bun.file(fd)` (writes to the file)
 
 ### Example: Redirect input from JavaScript objects (`<`)
 
@@ -175,9 +176,9 @@ console.log(result); // hello i am a response body
 
 You can redirect from these JavaScript objects:
 
-* `Buffer`, `Uint8Array`, `Uint16Array`, `Uint32Array`, `Int8Array`, `Int16Array`, `Int32Array`, `Float32Array`, `Float64Array`, `ArrayBuffer`, `SharedArrayBuffer` (reads from the underlying buffer)
-* `Bun.file(path)`, `Bun.file(fd)` (reads from the file)
-* `Response` (reads from the body)
+- `Buffer`, `Uint8Array`, `Uint16Array`, `Uint32Array`, `Int8Array`, `Int16Array`, `Int32Array`, `Float32Array`, `Float64Array`, `ArrayBuffer`, `SharedArrayBuffer` (reads from the underlying buffer)
+- `Bun.file(path)`, `Bun.file(fd)` (reads from the file)
+- `Response` (reads from the body)
 
 ### Example: Redirect stdin -> file
 
@@ -271,6 +272,7 @@ await $`
 ```
 
 > Note
+
 Because Bun internally uses the special [`raw`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#raw_strings) property on the input template literal, using the backtick syntax for command substitution doesn't work:
 
 ```ts
@@ -293,7 +295,8 @@ It prints:
 
 Use the `$(...)` syntax instead.
 
-***
+
+---
 
 ## Environment variables
 
@@ -391,7 +394,7 @@ await $`pwd`; // /tmp
 await $`pwd`.cwd("/"); // /
 ```
 
-***
+---
 
 ## Reading output
 
@@ -453,36 +456,36 @@ const result = await $`echo "Hello World!"`.blob();
 console.log(result); // Blob(13) { size: 13, type: "text/plain" }
 ```
 
-***
+---
 
 ## Builtin Commands
 
 For cross-platform compatibility, Bun Shell implements a set of builtin commands, in addition to reading commands from the `PATH` environment variable.
 
-* `cd`: change the working directory
-* `ls`: list files in a directory (supports `-l` for long listing format)
-* `rm`: remove files and directories
-* `echo`: print text
-* `pwd`: print the working directory
-* `bun`: run bun in bun
-* `cat`
-* `touch`
-* `mkdir`
-* `which`
-* `mv`
-* `exit`
-* `true`
-* `false`
-* `yes`
-* `seq`
-* `dirname`
-* `basename`
+- `cd`: change the working directory
+- `ls`: list files in a directory (supports `-l` for long listing format)
+- `rm`: remove files and directories
+- `echo`: print text
+- `pwd`: print the working directory
+- `bun`: run bun in bun
+- `cat`
+- `touch`
+- `mkdir`
+- `which`
+- `mv`
+- `exit`
+- `true`
+- `false`
+- `yes`
+- `seq`
+- `dirname`
+- `basename`
 
 **Not** implemented yet, but planned:
 
-* See [Issue #9716](https://github.com/oven-sh/bun/issues/9716) for the full list.
+- See [Issue #9716](https://github.com/oven-sh/bun/issues/9716) for the full list.
 
-***
+---
 
 ## Utilities
 
@@ -521,7 +524,7 @@ await $`echo ${{ raw: '$(foo) `bar` "baz"' }}`;
 // => baz
 ```
 
-***
+---
 
 ## `.sh` file loader
 
@@ -551,20 +554,20 @@ bun .\script.sh
 Hello World! pwd=C:\Users\Demo
 ```
 
-***
+---
 
 ## Implementation notes
 
 Bun Shell is a small programming language implemented in Rust, with a handwritten lexer, parser, and interpreter. Unlike bash, zsh, and other shells, Bun Shell runs operations concurrently.
 
-***
+---
 
 ## Security in the Bun shell
 
-By design, Bun Shell *does not invoke a system shell* like `/bin/sh`. It's a
+By design, Bun Shell _does not invoke a system shell_ like `/bin/sh`. It's a
 re-implementation of bash that runs in the same Bun process.
 
-When parsing command arguments, Bun Shell treats all *interpolated variables* as single, literal strings.
+When parsing command arguments, Bun Shell treats all _interpolated variables_ as single, literal strings.
 
 This protects against **command injection**:
 
@@ -623,7 +626,7 @@ await $`git ls-remote origin ${branch}`;
 **Recommendation**: Always sanitize user-provided input before passing it as an argument to an external command.
 Validating arguments is your application's responsibility.
 
-***
+---
 
 ## Credits
 

@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/process/spawn
 
 
-Use [`Bun.spawn()`](/docs/runtime/child-process) to spawn a child process.
+Use [`Bun.spawn()`](/runtime/child-process) to spawn a child process.
 
 ```ts
 const proc = Bun.spawn(["echo", "hello"]);
@@ -11,7 +11,7 @@ const proc = Bun.spawn(["echo", "hello"]);
 await proc.exited;
 ```
 
-***
+---
 
 The second argument is a configuration object.
 
@@ -25,7 +25,7 @@ const proc = Bun.spawn(["echo", "Hello, world!"], {
 });
 ```
 
-***
+---
 
 By default, `proc.stdout` is a `ReadableStream` of the child process's `stdout`.
 
@@ -36,6 +36,6 @@ const output = await proc.stdout.text();
 output; // => "hello\n"
 ```
 
-***
+---
 
-See [Child processes](/docs/runtime/child-process).
+See [Child processes](/runtime/child-process).

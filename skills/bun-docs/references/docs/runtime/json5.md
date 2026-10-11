@@ -3,19 +3,20 @@ Source: https://bun.com/docs/runtime/json5
 
 Use Bun's built-in support for JSON5 files through both runtime APIs and bundler integration
 
+
 In Bun, JSON5 is a first-class citizen alongside JSON, TOML, and YAML. You can:
 
-* Parse and stringify JSON5 with `Bun.JSON5.parse` and `Bun.JSON5.stringify`
-* `import` & `require` JSON5 files as modules at runtime (including hot reloading & watch mode support)
-* `import` & `require` JSON5 files in frontend apps with Bun's bundler
+- Parse and stringify JSON5 with `Bun.JSON5.parse` and `Bun.JSON5.stringify`
+- `import` & `require` JSON5 files as modules at runtime (including hot reloading & watch mode support)
+- `import` & `require` JSON5 files in frontend apps with Bun's bundler
 
-***
+---
 
 ## Conformance
 
 Bun's JSON5 parser is written in Rust and passes 100% of the [official JSON5 test suite](https://github.com/json5/json5-tests). The [translated test suite](https://github.com/oven-sh/bun/blob/main/test/js/bun/json5/json5-test-suite.test.ts) lists every test case.
 
-***
+---
 
 ## Runtime API
 
@@ -49,15 +50,15 @@ console.log(data);
 
 JSON5 is a superset of JSON based on ECMAScript 5.1 syntax. It supports:
 
-* **Comments**: single-line (`//`) and multi-line (`/* */`)
-* **Trailing commas**: in objects and arrays
-* **Unquoted keys**: any valid ECMAScript 5.1 identifier
-* **Single-quoted strings**: in addition to double-quoted strings
-* **Multi-line strings**: using backslash line continuations
-* **Hex numbers**: `0xFF`
-* **Leading & trailing decimal points**: `.5` and `5.`
-* **Infinity and NaN**: positive and negative
-* **Explicit plus sign**: `+42`
+- **Comments**: single-line (`//`) and multi-line (`/* */`)
+- **Trailing commas**: in objects and arrays
+- **Unquoted keys**: any valid ECMAScript 5.1 identifier
+- **Single-quoted strings**: in addition to double-quoted strings
+- **Multi-line strings**: using backslash line continuations
+- **Hex numbers**: `0xFF`
+- **Leading & trailing decimal points**: `.5` and `5.`
+- **Infinity and NaN**: positive and negative
+- **Explicit plus sign**: `+42`
 
 ```ts
 const data = JSON5.parse(`{
@@ -149,7 +150,7 @@ JSON5.stringify({ inf: Infinity, ninf: -Infinity, nan: NaN });
 // {inf:Infinity,ninf:-Infinity,nan:NaN}
 ```
 
-***
+---
 
 ## Module Import
 
@@ -210,7 +211,7 @@ console.log(config.database.name); // "myapp"
 const { database, features } = require("./config.json5");
 ```
 
-***
+---
 
 ## Hot Reloading with JSON5
 
@@ -252,7 +253,7 @@ Run with hot reloading:
 bun --hot server.ts
 ```
 
-***
+---
 
 ## Bundler Integration
 
@@ -264,9 +265,9 @@ bun build app.ts --outdir=dist
 
 Parsing at build time means:
 
-* Zero runtime JSON5 parsing overhead in production
-* Smaller bundle sizes
-* Tree shaking of unused properties (named imports)
+- Zero runtime JSON5 parsing overhead in production
+- Smaller bundle sizes
+- Tree shaking of unused properties (named imports)
 
 ### Dynamic Imports
 

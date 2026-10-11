@@ -13,7 +13,7 @@ test("snapshot", () => {
 });
 ```
 
-***
+---
 
 The first time this test runs, Bun writes a snapshot file to a `__snapshots__` directory alongside the test file.
 
@@ -25,7 +25,7 @@ test
 └── snap.test.ts
 ```
 
-***
+---
 
 To regenerate snapshots, use the `--update-snapshots` flag.
 
@@ -44,6 +44,6 @@ test/snap.test.ts:
 Ran 1 test across 1 file. [102.00ms]
 ```
 
-***
+---
 
-See [Snapshots](/docs/test/snapshots).
+See [Snapshots](/test/snapshots).

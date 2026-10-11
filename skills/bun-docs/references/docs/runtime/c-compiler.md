@@ -3,9 +3,10 @@ Source: https://bun.com/docs/runtime/c-compiler
 
 Compile and run C from JavaScript with low overhead
 
+
 `bun:ffi` has experimental support for compiling and running C from JavaScript with low overhead.
 
-***
+---
 
 ## Usage (cc in `bun:ffi`)
 
@@ -53,27 +54,28 @@ What is the answer to the universe? 42
 
 ### Primitive types
 
-`cc` supports the same `FFIType` values as [`dlopen`](/docs/runtime/ffi).
+`cc` supports the same `FFIType` values as [`dlopen`](/runtime/ffi), except `buffer_length`. Only `cc` supports `napi_env` and `napi_value`.
 
-| `FFIType`   | C Type         | Aliases                     |
-| ----------- | -------------- | --------------------------- |
-| cstring     | `char*`        |                             |
-| function    | `(void*)(*)()` | `fn`, `callback`            |
-| ptr         | `void*`        | `pointer`, `void*`, `char*` |
-| i8          | `int8_t`       | `int8_t`                    |
-| i16         | `int16_t`      | `int16_t`                   |
-| i32         | `int32_t`      | `int32_t`, `int`            |
-| i64         | `int64_t`      | `int64_t`                   |
+| `FFIType`  | C Type         | Aliases                     |
+| ---------- | -------------- | --------------------------- |
+| buffer     | `char*`        |                             |
+| cstring    | `char*`        |                             |
+| function   | `(void*)(*)()` | `fn`, `callback`            |
+| ptr        | `void*`        | `pointer`, `void*`, `char*` |
+| i8         | `int8_t`       | `int8_t`                    |
+| i16        | `int16_t`      | `int16_t`                   |
+| i32        | `int32_t`      | `int32_t`, `int`            |
+| i64        | `int64_t`      | `int64_t`, `isize`          |
 | i64_fast   | `int64_t`      |                             |
-| u8          | `uint8_t`      | `uint8_t`                   |
-| u16         | `uint16_t`     | `uint16_t`                  |
-| u32         | `uint32_t`     | `uint32_t`                  |
-| u64         | `uint64_t`     | `uint64_t`, `usize`         |
+| u8         | `uint8_t`      | `uint8_t`                   |
+| u16        | `uint16_t`     | `uint16_t`                  |
+| u32        | `uint32_t`     | `uint32_t`                  |
+| u64        | `uint64_t`     | `uint64_t`, `usize`         |
 | u64_fast   | `uint64_t`     |                             |
-| f32         | `float`        | `float`                     |
-| f64         | `double`       | `double`                    |
-| bool        | `bool`         |                             |
-| char        | `char`         |                             |
+| f32        | `float`        | `float`                     |
+| f64        | `double`       | `double`                    |
+| bool       | `bool`         |                             |
+| char       | `char`         |                             |
 | napi_env   | `napi_env`     |                             |
 | napi_value | `napi_value`   |                             |
 
@@ -137,12 +139,12 @@ napi_value hello(napi_env env) {
 
 ### `cc` Reference
 
-#### `library: string[]`
+#### `library: string | string[]`
 
-Use the `library` array to specify the libraries to link with the C code.
+Use `library` to specify the libraries to link with the C code.
 
 ```ts
-type Library = string[];
+type Library = string | string[];
 
 cc({
   source: "hello.c",
@@ -205,3 +207,13 @@ cc({
   },
 });
 ```
+
+### Disabling `cc`
+
+Pass `--no-ffi-cc` to disable the C compiler for a process. Any call to `cc()` then throws an error with the code `ERR_FFI_CC_DISABLED`. The `--no-addons` flag also disables `cc()`, in addition to `process.dlopen`.
+
+```sh
+bun --no-ffi-cc ./app.ts
+```
+
+Workers inherit the setting from their parent. A Worker can also set it for itself with `execArgv: ["--no-ffi-cc"]`. Standalone executables can bake it in with `bun build --compile --compile-exec-argv="--no-ffi-cc"`.

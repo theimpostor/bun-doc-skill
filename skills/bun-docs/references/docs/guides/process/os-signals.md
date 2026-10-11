@@ -10,12 +10,12 @@ process.on("SIGINT", () => {
 });
 ```
 
-***
+---
 
 To run code when the process exits, listen for these events:
 
-* [`"beforeExit"`](https://nodejs.org/api/process.html#event-beforeexit): Bun emits this event when the event loop empties.
-* [`"exit"`](https://nodejs.org/api/process.html#event-exit): Bun emits this event when the event loop empties or when `process.exit()` is called.
+- [`"beforeExit"`](https://nodejs.org/api/process.html#event-beforeexit): Bun emits this event when the event loop empties.
+- [`"exit"`](https://nodejs.org/api/process.html#event-exit): Bun emits this event when the event loop empties or when `process.exit()` is called.
 
 Neither event is emitted when the process is killed by a signal it has no listener for. To run cleanup on a signal, listen for that signal and call `process.exit()` from the listener.
 
@@ -29,6 +29,6 @@ process.on("exit", code => {
 });
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils) for more utilities.
+See [Utils](/runtime/utils) for more utilities.

@@ -10,6 +10,6 @@ const arrBuf = await Bun.readableStreamToArrayBuffer(stream);
 const nodeBuf = Buffer.from(arrBuf);
 ```
 
-***
+---
 
-See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).
+See [Bun's other `ReadableStream` conversion functions](/runtime/utils#bun-readablestreamto).

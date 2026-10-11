@@ -3,6 +3,7 @@ Source: https://bun.com/docs/guides/test/concurrent-test-glob
 
 Set a glob pattern to decide which tests from which files run in parallel
 
+
 The `concurrentTestGlob` option in `bunfig.toml` runs tests concurrently in files whose names match a glob pattern.
 
 ## Project Structure
@@ -120,10 +121,10 @@ To migrate existing tests to concurrent execution:
 
 ## Tips
 
-* **Use descriptive prefixes**: `concurrent-`, `parallel-`, `async-`
-* **Keep related sequential tests together** in the same directory
-* **Document why certain tests must remain sequential** with comments
-* **Use `test.concurrent()` for fine-grained control** in sequential files
+- **Use descriptive prefixes**: `concurrent-`, `parallel-`, `async-`
+- **Keep related sequential tests together** in the same directory
+- **Document why certain tests must remain sequential** with comments
+- **Use `test.concurrent()` for fine-grained control** in sequential files
 (in files matched by `concurrentTestGlob`, plain `test()` already runs concurrently)
 
 ## Multiple Patterns
@@ -142,6 +143,6 @@ concurrentTestGlob = [
 
 Tests in files matching any of these patterns run concurrently:
 
-* All tests in `integration/` directories
-* All tests in `e2e/` directories
-* All tests with `concurrent-` prefix anywhere in the project
+- All tests in `integration/` directories
+- All tests in `e2e/` directories
+- All tests with `concurrent-` prefix anywhere in the project

@@ -14,7 +14,7 @@ name = "John Dough"
 email = "john@dough.com"
 ```
 
-***
+---
 
 Import the file like any other source file.
 
@@ -27,6 +27,6 @@ data.version; // => "1.0.0"
 data.author.name; // => "John Dough"
 ```
 
-***
+---
 
-See [TypeScript](/docs/runtime/typescript) for more on using TypeScript with Bun.
+See [TypeScript](/runtime/typescript) for more on using TypeScript with Bun.

@@ -6,7 +6,7 @@ Source: https://bun.com/docs/guides/ecosystem/sentry
 
 If you don't have a Sentry account and project yet, create one at [sentry.io](https://sentry.io/signup/), then return to this page.
 
-***
+---
 
 First, install the Sentry Bun SDK.
 
@@ -14,7 +14,7 @@ First, install the Sentry Bun SDK.
 bun add @sentry/bun
 ```
 
-***
+---
 
 Then initialize the SDK with your Sentry DSN in its own file. You can find your DSN in your Sentry project settings.
 
@@ -32,15 +32,15 @@ Sentry.init({
 });
 ```
 
-***
+---
 
-Start your app with [`--preload`](/docs/runtime) so this file runs before any of your app's modules. Bun evaluates a file's `import`s before its own code, so calling `Sentry.init()` at the top of your entry file would still run after everything that file imports.
+Start your app with [`--preload`](/runtime) so this file runs before any of your app's modules. Bun evaluates a file's `import`s before its own code, so calling `Sentry.init()` at the top of your entry file would still run after everything that file imports.
 
 ```sh
 bun --preload ./sentry.ts index.ts
 ```
 
-***
+---
 
 Verify that Sentry is working by capturing a test error:
 
@@ -57,6 +57,6 @@ setTimeout(() => {
 
 To view and resolve the recorded error, log into [sentry.io](https://sentry.io/) and open your project. Clicking the error's title opens a page with details, where you can mark it as resolved.
 
-***
+---
 
 To learn more about the Sentry Bun SDK, see the [Sentry documentation](https://docs.sentry.io/platforms/javascript/guides/bun).

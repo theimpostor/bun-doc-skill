@@ -8,7 +8,7 @@ To add an npm package as a peer dependency, use the `--peer` flag.
 bun add @types/bun --peer
 ```
 
-***
+---
 
 This adds the package to `peerDependencies` in `package.json`.
 
@@ -21,7 +21,7 @@ This adds the package to `peerDependencies` in `package.json`.
 }
 ```
 
-***
+---
 
 `bun install` installs peer dependencies by default, unless they are marked optional in `peerDependenciesMeta`.
 
@@ -39,6 +39,6 @@ This adds the package to `peerDependencies` in `package.json`.
 }
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

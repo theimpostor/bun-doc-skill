@@ -3,6 +3,7 @@ Source: https://bun.com/docs/test/configuration
 
 Configure bun test behavior with bunfig.toml and command-line options
 
+
 Configure `bun test` with `bunfig.toml` and command-line options.
 
 ## Configuration File
@@ -206,9 +207,9 @@ bun test --smol
 
 The `smol` mode reduces memory usage by:
 
-* Using less memory for the JavaScript heap
-* Being more aggressive about garbage collection
-* Reducing buffer sizes where possible
+- Using less memory for the JavaScript heap
+- Being more aggressive about garbage collection
+- Reducing buffer sizes where possible
 
 Use it in memory-constrained environments, such as CI runners, or for large test suites.
 
@@ -305,14 +306,14 @@ Specify the coverage threshold as a single number or as an object with per-metri
 **File:** `bunfig.toml`
 ```toml
 [test]
-# Simple threshold - applies to lines, functions, and statements
+# Simple threshold - applies to lines and functions
 coverageThreshold = 0.8
 
 # Detailed thresholds
-coverageThreshold = { lines = 0.9, functions = 0.8, statements = 0.85 }
+coverageThreshold = { lines = 0.9, functions = 0.8 }
 ```
 
-Setting any of these causes the test run to fail if coverage is below the threshold.
+Setting a threshold makes `bun test` exit with code 1 when coverage is enabled and any file's line or function coverage is below it. Bun accepts the `statements` key but does not currently enforce it. The check applies with any coverage reporter.
 
 #### Threshold Examples
 
@@ -325,8 +326,7 @@ coverageThreshold = 0.9
 # Different requirements for different metrics
 coverageThreshold = {
   lines = 0.85,      # 85% line coverage
-  functions = 0.90,  # 90% function coverage
-  statements = 0.80  # 80% statement coverage
+  functions = 0.90   # 90% function coverage
 }
 ```
 
@@ -351,7 +351,7 @@ coveragePathIgnorePatterns = [
 ]
 ```
 
-Bun excludes files matching any of these patterns from coverage calculation and reporting. See [Code coverage](/docs/test/code-coverage).
+Bun excludes files matching any of these patterns from coverage calculation and reporting. See [Code coverage](/test/code-coverage).
 
 #### Common Ignore Patterns
 
@@ -455,7 +455,7 @@ smol = true
 coverage = true
 coverageReporter = ["text", "lcov"]
 coverageDir = "./coverage"
-coverageThreshold = { lines = 0.85, functions = 0.90, statements = 0.80 }
+coverageThreshold = { lines = 0.85, functions = 0.90 }
 coverageSkipTestFiles = true
 coveragePathIgnorePatterns = [
   "**/*.spec.ts",

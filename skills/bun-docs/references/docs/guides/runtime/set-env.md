@@ -10,16 +10,16 @@ Bun.env.API_TOKEN; // => "secret"
 process.env.API_TOKEN; // => "secret"
 ```
 
-***
+---
 
 Set these variables in a `.env` file.
 
 Bun reads the following files automatically (listed in order of increasing precedence).
 
-* `.env`
-* `.env.production`, `.env.development`, `.env.test` (depending on value of `NODE_ENV`)
-* `.env.local` (not loaded when `NODE_ENV=test`)
-* `.env.production.local`, `.env.development.local`, `.env.test.local` (depending on value of `NODE_ENV`)
+- `.env`
+- `.env.production`, `.env.development`, `.env.test` (depending on value of `NODE_ENV`)
+- `.env.local` (not loaded when `NODE_ENV=test`)
+- `.env.production.local`, `.env.development.local`, `.env.test.local` (depending on value of `NODE_ENV`)
 
 **File:** `.env`
 ```ini
@@ -27,9 +27,10 @@ FOO=hello
 BAR=world
 ```
 
-***
+---
 
 You can also set variables on the command line.
+
 
 **File:** `Linux/macOS`
 ```sh
@@ -45,6 +46,7 @@ set FOO=helloworld && bun run dev
 $env:FOO="helloworld"; bun run dev
 ```
 
-***
 
-See [Environment variables](/docs/runtime/environment-variables).
+---
+
+See [Environment variables](/runtime/environment-variables).

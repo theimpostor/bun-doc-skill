@@ -2,13 +2,13 @@
 Source: https://bun.com/docs/guides/write-file/file-cp
 
 
-Use [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write) to copy a file to another location on disk. The first argument is a *destination*, like an absolute path or `BunFile` instance. The second argument is the *data* to write.
+Use [`Bun.write()`](/runtime/file-io#writing-files-bun-write) to copy a file to another location on disk. The first argument is a _destination_, like an absolute path or `BunFile` instance. The second argument is the _data_ to write.
 
 ```ts
 const file = Bun.file("/path/to/original.txt");
 await Bun.write("/path/to/copy.txt", file);
 ```
 
-***
+---
 
-See [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
+See [`Bun.write()`](/runtime/file-io#writing-files-bun-write).

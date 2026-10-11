@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/util/deep-equals
 
 
-`Bun.deepEquals()` checks if two objects are deeply equal. `expect().toEqual()` in Bun's [test runner](/docs/test/writing-tests) uses it internally.
+`Bun.deepEquals()` checks if two objects are deeply equal. `expect().toEqual()` in Bun's [test runner](/test/writing-tests) uses it internally.
 
 **File:** `index.ts`
 ```ts
@@ -12,7 +12,7 @@ const b = { a: 1, b: 2, c: { d: 3 } };
 Bun.deepEquals(a, b); // true
 ```
 
-***
+---
 
 Pass `true` as a third argument to enable strict mode. `expect().toStrictEqual()` uses strict mode.
 
@@ -36,6 +36,6 @@ class Foo {
 Bun.deepEquals(new Foo(), { a: 1 }, true); // false
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils).
+See [Utils](/runtime/utils).

@@ -20,7 +20,7 @@ jobs:
       - run: bun install
 ```
 
-***
+---
 
 To specify a version of Bun to install:
 
@@ -38,6 +38,6 @@ jobs:
           bun-version: "latest" # or "canary"
 ```
 
-***
+---
 
 See the [`setup-bun` README](https://github.com/oven-sh/setup-bun).

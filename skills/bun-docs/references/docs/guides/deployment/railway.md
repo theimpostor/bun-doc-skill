@@ -3,26 +3,30 @@ Source: https://bun.com/docs/guides/deployment/railway
 
 Deploy a Bun application to Railway from the CLI or dashboard, with optional PostgreSQL setup and automatic SSL
 
+
 Railway is an infrastructure platform: you provision infrastructure, develop against it locally, then deploy to the cloud. Railway deploys from GitHub with zero configuration, handles SSL automatically, and provisions databases.
 
 This guide deploys a Bun application with an optional PostgreSQL database, the same setup the following template provides.
 
 You can either follow this guide step-by-step or deploy the pre-configured template with one click:
 
-<a href="https://railway.com/deploy/bun-react-postgres?referralCode=Bun&utm_medium=integration&utm_source=template&utm_campaign=bun">
-<img alt="Deploy on Railway" />
+<a
+href="https://railway.com/deploy/bun-react-postgres?referralCode=Bun&utm_medium=integration&utm_source=template&utm_campaign=bun"
+target="_blank"
+>
+<img src="https://railway.com/button.svg" alt="Deploy on Railway" />
 </a>
 
-***
+---
 
 **Prerequisites**:
 
-* A Bun application ready for deployment
-* A [Railway account](https://railway.com/)
-* Railway CLI (for CLI deployment method)
-* A GitHub account (for Dashboard deployment method)
+- A Bun application ready for deployment
+- A [Railway account](https://railway.com/)
+- Railway CLI (for CLI deployment method)
+- A GitHub account (for Dashboard deployment method)
 
-***
+---
 
 ## Method 1: Deploy via CLI
 
@@ -71,16 +75,17 @@ railway up
 railway domain
 ```
 
+
 Your app is now live. `railway up` deploys your local directory rather than a GitHub repository. To have Railway auto-deploy on every GitHub push, connect the service to your repository with `railway service source connect --repo <owner>/<repo> --branch <branch>`.
 
-***
+---
 
 ## Method 2: Deploy via Dashboard
 
 ### Step 1
 Create a new project
 
-1. Go to [Railway Dashboard](https://railway.com/dashboard?utm_medium=integration\&utm_source=docs\&utm_campaign=bun)
+1. Go to [Railway Dashboard](https://railway.com/dashboard?utm_medium=integration&utm_source=docs&utm_campaign=bun)
 2. Click **"+ New"** → **"GitHub repo"**
 3. Choose your repository
 
@@ -102,9 +107,10 @@ Generate a public domain
 2. Go to **"Settings"** tab
 3. Under **"Networking"**, click **"Generate Domain"**
 
+
 Your app is now live. Railway auto-deploys on every GitHub push.
 
-***
+---
 
 ## Configuration (Optional)
 

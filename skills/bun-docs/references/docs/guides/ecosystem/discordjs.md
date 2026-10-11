@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/ecosystem/discordjs
 
 Discord.js runs on Bun with no extra setup. This guide builds a bot that answers a `/ping` slash command: you register the command once, then start the bot and use it in your server. If this is your first bot, copy each block as you reach it.
 
-***
+---
 
 Create a folder for your bot and set it up with `bun init`. Pick the defaults when it asks.
 
@@ -14,7 +14,7 @@ cd my-bot
 bun init
 ```
 
-***
+---
 
 Add Discord.js to the project.
 
@@ -22,24 +22,24 @@ Add Discord.js to the project.
 bun add discord.js
 ```
 
-***
+---
 
 Your bot needs its own account, which you create in Discord's developer portal. Open the [developer portal](https://discord.com/developers/applications), sign in, and create an **Application**. Discord adds a bot user to every new application automatically; it's on the **Bot** tab. The Discord.js guide's [setup walkthrough](https://discordjs.guide/legacy/preparations/app-setup) has screenshots if you get lost.
 
 Copy two values from the portal:
 
-* The **token** on the **Bot** tab: click **Reset Token** to generate it (Discord only shows it once). It's the password your code uses to log in, so treat it like one and keep it to yourself.
-* The **Application ID** on the **General Information** tab. Discord uses it to tie your commands to this app.
+- The **token** on the **Bot** tab: click **Reset Token** to generate it (Discord only shows it once). It's the password your code uses to log in, so treat it like one and keep it to yourself.
+- The **Application ID** on the **General Information** tab. Discord uses it to tie your commands to this app.
 
-***
+---
 
 A bot can't do anything in a server until you invite it. In the portal's **OAuth2** section, generate an invite URL with the `bot` and `applications.commands` scopes, open it, and add the bot to a server you manage. Slash commands need the `applications.commands` scope, so include it. A personal server you make for testing is a good place to start, and the Discord.js [guide to adding a bot](https://discordjs.guide/legacy/preparations/adding-your-app) walks through it with screenshots.
 
-***
+---
 
 You also need your server's ID to register the command there. In Discord, turn on **Settings > Advanced > Developer Mode**, then right-click your server's icon and choose **Copy Server ID**.
 
-***
+---
 
 Save all three values in `.env.local`. Bun reads this file on startup and loads it into `process.env`, so nothing secret lives in your code.
 
@@ -50,7 +50,7 @@ DISCORD_CLIENT_ID=your-application-id
 DISCORD_GUILD_ID=your-server-id
 ```
 
-***
+---
 
 Add `.env.local` to your `.gitignore` before you commit anything. Anyone who reads the token can control your bot, so the token should never land in version control.
 
@@ -60,7 +60,7 @@ node_modules
 .env.local
 ```
 
-***
+---
 
 Discord has to know about a command before anyone can use it. Register `/ping` with a short script named `deploy-commands.ts`.
 
@@ -92,7 +92,7 @@ bun run deploy-commands.ts
 
 You only run this again when you add a command or change its name or description, not every time the bot starts. Registering to your server instead of globally keeps the command scoped to where you're testing.
 
-***
+---
 
 Now the bot itself. Save it as `bot.ts`.
 
@@ -126,7 +126,7 @@ client.login(DISCORD_TOKEN);
 
 The ready handler logs a line once the bot connects. After that, `interactionCreate` runs whenever someone uses a slash command; it confirms the command was `/ping` and replies with `Pong!`.
 
-***
+---
 
 Start the bot with `bun run`.
 
@@ -142,11 +142,11 @@ Logged in as my-bot#1234
 
 The bot replies with `Pong!`. You've got a working Discord bot.
 
-***
+---
 
 To add another command, define it in `deploy-commands.ts`, run that script again, and add an `if` branch for its name in `bot.ts`. The [Discord.js docs](https://discord.js.org/docs) cover command options, permissions, buttons, embeds, and the rest of the API.
 
-***
+---
 
 When you deploy, there's no build or bundling step. Bun runs `bot.ts` and every file it imports directly, so you ship your source as-is and start it with the same `bun run bot.ts` you use while developing.
 
@@ -157,7 +157,6 @@ To keep the bot online and bring it back after a crash or reboot, run it under a
 ### systemd
 Link: `/guides/ecosystem/systemd`
 Run your bot as a Linux daemon
-
 ### PM2
 Link: `/guides/ecosystem/pm2`
 Manage your bot with PM2

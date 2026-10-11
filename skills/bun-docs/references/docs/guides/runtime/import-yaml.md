@@ -20,7 +20,7 @@ features:
   rateLimit: true
 ```
 
-***
+---
 
 Import the file like any other source file.
 
@@ -33,7 +33,7 @@ config.server.port; // => 3000
 config.features.auth; // => true
 ```
 
-***
+---
 
 You can also destructure top-level properties with named imports:
 
@@ -46,7 +46,7 @@ console.log(server.timeout); // => 30
 console.log(features.rateLimit); // => true
 ```
 
-***
+---
 
 Bun also supports [Import Attributes](https://github.com/tc39/proposal-import-attributes) syntax:
 
@@ -57,7 +57,7 @@ import config from "./config.yaml" with { type: "yaml" };
 config.database.port; // => 5432
 ```
 
-***
+---
 
 For parsing YAML strings at runtime, use `Bun.YAML.parse()`:
 
@@ -76,7 +76,7 @@ console.log(data.name); // => "John Doe"
 console.log(data.hobbies); // => ["reading", "coding"]
 ```
 
-***
+---
 
 ## TypeScript Support
 
@@ -103,6 +103,6 @@ declare const contents: {
 export = contents;
 ```
 
-***
+---
 
-See [YAML](/docs/runtime/yaml).
+See [YAML](/runtime/yaml).

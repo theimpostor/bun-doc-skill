@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/ecosystem/drizzle
 
 Drizzle is an ORM that supports both a SQL-like "query builder" API and an ORM-like [Queries API](https://orm.drizzle.team/docs/rqb). It supports the `bun:sqlite` built-in module.
 
-***
+---
 
 Create a fresh project with `bun init` and install Drizzle.
 
@@ -14,7 +14,7 @@ bun add drizzle-orm
 bun add -D drizzle-kit
 ```
 
-***
+---
 
 Then connect to a SQLite database with the `bun:sqlite` module and create the Drizzle database instance.
 
@@ -27,7 +27,7 @@ const sqlite = new Database("sqlite.db");
 export const db = drizzle({ client: sqlite });
 ```
 
-***
+---
 
 To see the database in action, add these lines to `index.ts`.
 
@@ -41,7 +41,7 @@ const result = db.all<{ text: string }>(query);
 console.log(result);
 ```
 
-***
+---
 
 Then run `index.ts` with Bun. Bun creates `sqlite.db` and executes the query.
 
@@ -57,7 +57,7 @@ bun run index.ts
 ]
 ```
 
-***
+---
 
 Now give the database a schema. Create a `schema.ts` file and define a `movies` table.
 
@@ -72,7 +72,7 @@ export const movies = sqliteTable("movies", {
 });
 ```
 
-***
+---
 
 Generate an initial SQL migration with the `drizzle-kit` CLI.
 
@@ -80,7 +80,7 @@ Generate an initial SQL migration with the `drizzle-kit` CLI.
 bunx drizzle-kit generate --dialect sqlite --schema ./schema.ts
 ```
 
-***
+---
 
 The command creates a `drizzle` directory containing a `.sql` migration file and a `meta` directory.
 
@@ -93,7 +93,7 @@ drizzle
     └── _journal.json
 ```
 
-***
+---
 
 Execute these migrations with a `migrate.ts` script. It connects to `sqlite.db`, then executes all unexecuted migrations in the `drizzle` directory.
 
@@ -109,7 +109,7 @@ const db = drizzle({ client: sqlite });
 migrate(db, { migrationsFolder: "./drizzle" });
 ```
 
-***
+---
 
 Run the script with `bun` to execute the migration.
 
@@ -117,7 +117,7 @@ Run the script with `bun` to execute the migration.
 bun run migrate.ts
 ```
 
-***
+---
 
 Now add some data to the database. Create a `seed.ts` file with the following contents.
 
@@ -144,7 +144,7 @@ await db.insert(schema.movies).values([
 console.log(`Seeding complete.`);
 ```
 
-***
+---
 
 Then run this file.
 
@@ -156,7 +156,7 @@ bun run seed.ts
 Seeding complete.
 ```
 
-***
+---
 
 The database now has a schema and some sample data. Query it with Drizzle by replacing the contents of `index.ts` with the following.
 
@@ -169,7 +169,7 @@ const result = await db.select().from(schema.movies);
 console.log(result);
 ```
 
-***
+---
 
 Then run the file. You should see the three movies you inserted.
 
@@ -195,6 +195,6 @@ bun run index.ts
 ]
 ```
 
-***
+---
 
 See the [Drizzle docs](https://orm.drizzle.team/docs/overview).

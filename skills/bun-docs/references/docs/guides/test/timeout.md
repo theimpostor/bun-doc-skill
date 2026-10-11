@@ -10,6 +10,6 @@ The default timeout is `5000` (5 seconds).
 bun test --timeout 3000 # 3 seconds
 ```
 
-***
+---
 
-See [`bun test`](/docs/test).
+See [`bun test`](/test).

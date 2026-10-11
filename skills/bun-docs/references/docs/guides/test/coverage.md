@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/test/coverage
 
 
-Bun's test runner has built-in *code coverage reporting*. Use it to see how much of your codebase your tests cover, and where the gaps are.
+Bun's test runner has built-in _code coverage reporting_. Use it to see how much of your codebase your tests cover, and where the gaps are.
 
-***
+---
 
 Pass the `--coverage` flag to `bun test` to print a coverage report after the test run.
 
@@ -33,7 +33,7 @@ All files    |   50.00 |   66.67 |
  3 expect() calls
 ```
 
-***
+---
 
 To enable coverage reporting by default, add the following to your `bunfig.toml`:
 
@@ -43,6 +43,6 @@ To enable coverage reporting by default, add the following to your `bunfig.toml`
 coverage = true # always enable coverage
 ```
 
-***
+---
 
-See [Code coverage](/docs/test/code-coverage).
+See [Code coverage](/test/code-coverage).

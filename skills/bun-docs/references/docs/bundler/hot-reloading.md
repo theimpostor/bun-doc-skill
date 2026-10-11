@@ -3,6 +3,7 @@ Source: https://bun.com/docs/bundler/hot-reloading
 
 Hot Module Replacement (HMR) for Bun's development server
 
+
 Hot Module Replacement (HMR) updates modules in a running application without a full page reload, preserving application state.
 
 > Note: HMR is enabled by default when using Bun's full-stack development server.
@@ -52,6 +53,7 @@ import.meta.hot.accept();
 doSomething(import.meta.hot.data);
 ```
 
+
 > Note
 The HMR API is still a work in progress. Some features are missing. To disable HMR in `Bun.serve`, set the development option to `{ hmr: false }`.
 
@@ -59,15 +61,15 @@ The HMR API is still a work in progress. Some features are missing. To disable H
 
 | Method             | Status | Notes                                                                 |
 | ------------------ | ------ | --------------------------------------------------------------------- |
-| `hot.accept()`     | ✅      | Indicate that a hot update can be replaced gracefully.                |
-| `hot.data`         | ✅      | Persist data between module evaluations.                              |
-| `hot.dispose()`    | ✅      | Add a callback function to run when a module is about to be replaced. |
-| `hot.invalidate()` | ❌      |                                                                       |
-| `hot.on()`         | ✅      | Attach an event listener.                                             |
-| `hot.off()`        | ✅      | Remove an event listener from `on`.                                   |
-| `hot.send()`       | ❌      |                                                                       |
+| `hot.accept()`     | ✅     | Indicate that a hot update can be replaced gracefully.                |
+| `hot.data`         | ✅     | Persist data between module evaluations.                              |
+| `hot.dispose()`    | ✅     | Add a callback function to run when a module is about to be replaced. |
+| `hot.invalidate()` | ❌     |                                                                       |
+| `hot.on()`         | ✅     | Attach an event listener.                                             |
+| `hot.off()`        | ✅     | Remove an event listener from `on`.                                   |
+| `hot.send()`       | ❌     |                                                                       |
 | `hot.prune()`      | 🚧     | Callback is currently never called.                                   |
-| `hot.decline()`    | ✅      | No-op to match Vite's `import.meta.hot`.                              |
+| `hot.decline()`    | ✅     | No-op to match Vite's `import.meta.hot`.                              |
 
 ## import.meta.hot.accept()
 
@@ -134,12 +136,12 @@ Indicates that a dependency's module can be accepted. When the dependency is upd
 **File:** `index.ts`
 ```ts
 import.meta.hot.accept(["./foo", "./bar"], newModules => {
-  // newModules is an array where each item corresponds to the updated module
-  // or undefined if that module had a syntax error
+  // newModules holds the updated module at its index and
+  // undefined for the other dependencies
 });
 ```
 
-This variant accepts an array of dependencies. The callback receives the updated modules, and `undefined` for any that had errors.
+This variant accepts an array of dependencies. The callback receives an array with the updated module at its index and `undefined` for the other dependencies.
 
 ## import.meta.hot.data
 
@@ -163,8 +165,8 @@ We recommend this pattern for stateful modules because Bun can minify `{}.prop ?
 
 Attaches an on-dispose callback. Bun calls it:
 
-* Just before the module is replaced with another copy (before the next is loaded)
-* After the module is detached (removing all imports to this module, see `import.meta.hot.prune()`)
+- Just before the module is replaced with another copy (before the next is loaded)
+- After the module is detached (removing all imports to this module, see `import.meta.hot.prune()`)
 
 **File:** `index.ts`
 ```ts

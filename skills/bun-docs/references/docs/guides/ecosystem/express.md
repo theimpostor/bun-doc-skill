@@ -4,13 +4,13 @@ Source: https://bun.com/docs/guides/ecosystem/express
 
 Express and other major Node.js HTTP libraries should work in Bun without changes. Bun implements the [`node:http`](https://nodejs.org/api/http.html) and [`node:https`](https://nodejs.org/api/https.html) modules that these libraries rely on.
 
-> Note: See [Node.js compatibility](/docs/runtime/nodejs-compat#node-http) for details.
+> Note: See [Node.js compatibility](/runtime/nodejs-compat#node-http) for details.
 
 ```sh
 bun add express
 ```
 
-***
+---
 
 To define an HTTP route and start a server with Express:
 
@@ -30,7 +30,7 @@ app.listen(port, () => {
 });
 ```
 
-***
+---
 
 To start the server on `localhost`:
 

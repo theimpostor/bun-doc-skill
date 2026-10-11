@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/cli/dedupe
 
 Remove duplicate versions of packages from bun.lock
 
+
 Over time, `bun.lock` can accumulate several versions of the same package even though one of them satisfies every range. For example, it can contain both `esbuild@0.15.10` and `esbuild@0.15.11` when the ranges are `^0.15.7` and `^0.15.8`. `bun dedupe` collapses these onto the smallest set of already-locked versions (preferring newer ones), saves `bun.lock`, and installs.
 
 ```bash
@@ -15,12 +16,12 @@ bun dedupe v1.4.0 (abc12345)
 ↳ esbuild 0.15.10 → 0.15.11
 ↳ react 18.2.0 → 18.3.1
 
-2 duplicate versions removed, 3 packages installed (checked 5 packages) [12.00ms]
+2 duplicate versions removed, 3 packages installed (checked 5 packages in bun.lock) [12.00ms]
 ```
 
 Each row is a version Bun removed and the version its dependents now use.
 
-`bun dedupe` only chooses between versions already in the lockfile and never modifies `package.json`. It never fetches new versions from the registry and never moves a dependency outside its range. Use [`bun update`](/docs/pm/cli/update) for that.
+`bun dedupe` only chooses between versions already in the lockfile and never modifies `package.json`. It never fetches new versions from the registry and never moves a dependency outside its range. Use [`bun update`](/pm/cli/update) for that.
 
 ### `--check` and `--dry-run`
 
@@ -36,7 +37,7 @@ bun dedupe v1.4.0 (abc12345)
 ↳ esbuild 0.15.10 → 0.15.11
 ↳ react 18.2.0 → 18.3.1
 
-2 duplicate versions can be removed (checked 5 packages) [9.00ms]
+2 duplicate versions can be removed (checked 5 packages in bun.lock) [9.00ms]
   bun dedupe
 ```
 
@@ -46,10 +47,10 @@ bun dedupe v1.4.0 (abc12345)
 
 ### Notes
 
-* Bun respects overrides and catalogs. It re-points each dependency using its effective range.
-* Bun may move a direct dependency to an *older* locked version if that's the only way to remove a duplicate (e.g. a transitive dependency pins it exactly). Use `bun update` or an [override](/docs/pm/overrides) if you want the newer one to win.
-* Bun never removes versions in `patchedDependencies`. If that forces another version to be kept too, Bun prints a `kept …` line explaining why.
-* Dependencies on a dist-tag, git URL, or tarball keep their resolved version.
-* Requires a lockfile that matches `package.json`. If dependencies changed since the last install, it exits with `bun.lock does not match package.json`. Run `bun install` first. Bun migrates a `package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml` automatically.
-* Cannot be combined with `--frozen-lockfile`, `--production`, or `--no-save`; use `--check` instead.
-* With the isolated linker, several copies of the *same* version that differ only in peer dependencies are not duplicates, and Bun does not report them. [`bun prune`](/docs/pm/cli/prune) cleans up stale store entries.
+- Bun respects overrides and catalogs. It re-points each dependency using its effective range.
+- Bun may move a direct dependency to an _older_ locked version if that's the only way to remove a duplicate (e.g. a transitive dependency pins it exactly). Use `bun update` or an [override](/pm/overrides) if you want the newer one to win.
+- Bun never removes versions in `patchedDependencies`. If that forces another version to be kept too, Bun prints a `kept …` line explaining why.
+- Dependencies on a dist-tag, git URL, or tarball keep their resolved version.
+- Requires a lockfile that matches `package.json`. If dependencies changed since the last install, it exits with `bun.lock does not match package.json`. Run `bun install` first. Bun migrates a `package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml` automatically.
+- Cannot be combined with `--frozen-lockfile`, `--production`, or `--no-save`; use `--check` instead.
+- With the isolated linker, several copies of the _same_ version that differ only in peer dependencies are not duplicates, and Bun does not report them. [`bun prune`](/pm/cli/prune) cleans up stale store entries.

@@ -3,21 +3,24 @@ Source: https://bun.com/docs/runtime/http/websockets
 
 Server-side WebSockets in Bun
 
+
 `Bun.serve()` supports server-side WebSockets, with on-the-fly compression, TLS support, and a Bun-native publish-subscribe API.
 
 > Info
+
 **⚡️ 7x more throughput**
 
 Bun's WebSockets are fast. For a [simple chatroom](https://github.com/oven-sh/bun/tree/main/bench/websocket-server/README.md) on Linux x64, Bun can handle 7x more messages per second than Node.js + [`"ws"`](https://github.com/websockets/ws).
 
 | **Messages sent per second** | **Runtime**                    | **Clients** |
 | ---------------------------- | ------------------------------ | ----------- |
-| \~700,000                    | (`Bun.serve`) Bun v0.2.1 (x64) | 16          |
-| \~100,000                    | (`ws`) Node v18.10.0 (x64)     | 16          |
+| ~700,000                     | (`Bun.serve`) Bun v0.2.1 (x64) | 16          |
+| ~100,000                     | (`ws`) Node v18.10.0 (x64)     | 16          |
 
 Internally Bun's WebSocket implementation is built on [uWebSockets](https://github.com/uNetworking/uWebSockets).
 
-***
+
+---
 
 ## Start a WebSocket server
 
@@ -53,6 +56,7 @@ Bun.serve({
 ```
 
 ### An API designed for speed
+
 In Bun, you declare handlers once per server, instead of per socket.
 
 You pass a single `WebSocketHandler` object to `Bun.serve()` with methods for `open`, `message`, `close`, `drain`, and `error`. This design differs from the client-side `WebSocket` class, which extends `EventTarget` (`onmessage`, `onopen`, `onclose`).
@@ -61,11 +65,12 @@ Clients tend to have few socket connections open, so an event-based API makes se
 
 But servers tend to have **many** socket connections open, which means:
 
-* Time spent adding/removing event listeners for each connection adds up
-* Extra memory spent on storing references to callback functions for each connection
-* Usually, people create new functions for each connection, which also means more memory
+- Time spent adding/removing event listeners for each connection adds up
+- Extra memory spent on storing references to callback functions for each connection
+- Usually, people create new functions for each connection, which also means more memory
 
 Reusing one handler object across every connection avoids both costs.
+
 
 The first argument to each handler is the `ServerWebSocket` instance handling the event. The `ServerWebSocket` class is a fast, Bun-native implementation of [`WebSocket`](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) with some additional features.
 
@@ -185,6 +190,7 @@ socket.addEventListener("message", event => {
 
 The browser sends cookies set on the page along with the WebSocket upgrade request. They are available on `req.headers` in the `fetch` handler. Parse them to identify the connecting user and set `data` accordingly.
 
+
 ### Pub/Sub
 
 Bun's `ServerWebSocket` includes a native publish-subscribe API for topic-based broadcasting. You specify a topic with a string identifier. An individual socket can `.subscribe()` to a topic and `.publish()` messages to all other subscribers to that topic (excluding itself). This topic-based broadcast API is similar to [MQTT](https://en.wikipedia.org/wiki/MQTT) and [Redis Pub/Sub](https://redis.io/topics/pubsub).
@@ -230,7 +236,7 @@ const server = Bun.serve({
 console.log(`Listening on ${server.hostname}:${server.port}`);
 ```
 
-Calling `.publish(topic, data)` sends the message to all subscribers of a topic *except* the socket that called `.publish()`. To send a message to all subscribers of a topic, use the `.publish()` method on the `Server` instance.
+Calling `.publish(topic, data)` sends the message to all subscribers of a topic _except_ the socket that called `.publish()`. To send a message to all subscribers of a topic, use the `.publish()` method on the `Server` instance.
 
 ```ts
 const server = Bun.serve({
@@ -268,9 +274,9 @@ For fine-grained control over compression characteristics, refer to the [Referen
 
 The `.send(message)` method of `ServerWebSocket` returns a `number` indicating the result of the operation.
 
-* `-1` — The message was enqueued but there is backpressure
-* `0` — The message was dropped due to a connection issue
-* `1+` — The number of bytes sent
+- `-1` — The message was enqueued but there is backpressure
+- `0` — The message was dropped due to a connection issue
+- `1+` — The number of bytes sent
 
 ### Timeouts and limits
 
@@ -296,7 +302,7 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 ## Connect to a `Websocket` server
 
@@ -311,7 +317,7 @@ const socket2 = new WebSocket("ws://localhost:3000", ["soap", "wamp"]);
 
 Browsers send cookies set on the page along with the WebSocket upgrade request. This is a standard feature of the `WebSocket` API.
 
-In Bun, you can also set custom headers directly in the constructor. This is a Bun-specific extension of the `WebSocket` standard. *It does not work in browsers.*
+In Bun, you can also set custom headers directly in the constructor. This is a Bun-specific extension of the `WebSocket` standard. _It does not work in browsers._
 
 ```ts
 const socket = new WebSocket("ws://localhost:3000", {
@@ -337,7 +343,25 @@ socket.addEventListener("close", event => {});
 socket.addEventListener("error", event => {});
 ```
 
-***
+### Backpressure
+
+The browser `WebSocket` API has no way to slow down a peer that sends faster than you consume: incoming messages are buffered in memory without bound. Bun adds `pause()` and `resume()`, which stop and restart reads from the underlying socket so the sender sees TCP backpressure instead. This is a Bun-specific extension. _It does not work in browsers._
+
+```ts
+const socket = new WebSocket("ws://localhost:3000");
+
+socket.addEventListener("message", event => {
+  if (!file.write(event.data)) {
+    // The file's buffer is full: stop reading until it drains.
+    socket.pause();
+    file.once("drain", () => socket.resume());
+  }
+});
+```
+
+`pause()` and `resume()` return `true` when they took effect (or will, once a connecting socket opens) and `false` when there is no socket to act on; `socket.isPaused` reports the current state. Messages already decoded when `pause()` is called may still be delivered. The `ws` package's `pause()`, `resume()`, and `isPaused` map to the same methods.
+
+---
 
 ## Reference
 

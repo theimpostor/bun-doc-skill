@@ -16,6 +16,6 @@ byteArray[0]; // first byte
 byteArray.length; // length of byteArray
 ```
 
-***
+---
 
-See [Typed arrays](/docs/runtime/binary-data#typedarray) for more on working with `Uint8Array` and other binary data formats in Bun.
+See [Typed arrays](/runtime/binary-data#typedarray) for more on working with `Uint8Array` and other binary data formats in Bun.

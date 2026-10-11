@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/sql
 
 Bun provides native bindings for working with SQL databases through a unified Promise-based API that supports PostgreSQL, MySQL, and SQLite.
 
+
 You write queries as tagged template literals, and the client supports connection pooling, transactions, and prepared statements.
 
 **File:** `db.ts`
@@ -33,20 +34,20 @@ const sqliteResults = await sqlite`
 
 ### Features
 
-* Tagged template literals to protect against SQL injection
-* Transactions
-* Named & positional parameters
-* Connection pooling
-* `BigInt` support
-* SASL (SCRAM-SHA-256), MD5, and Clear Text authentication
-* Connection timeouts
-* Returning rows as data objects, arrays of arrays, or Buffer
-* Binary protocol support makes it faster
-* TLS support (and auth mode)
-* Automatic configuration with environment variables
-* PostgreSQL `LISTEN` / `NOTIFY`
+- Tagged template literals to protect against SQL injection
+- Transactions
+- Named & positional parameters
+- Connection pooling
+- `BigInt` support
+- SASL (SCRAM-SHA-256), MD5, and Clear Text authentication
+- Connection timeouts
+- Returning rows as data objects, arrays of arrays, or Buffer
+- Binary protocol support makes it faster
+- TLS support (and auth mode)
+- Automatic configuration with environment variables
+- PostgreSQL `LISTEN` / `NOTIFY`
 
-***
+---
 
 ## Database Support
 
@@ -56,9 +57,9 @@ const sqliteResults = await sqlite`
 
 Bun uses PostgreSQL when:
 
-* The connection string doesn't match SQLite or MySQL patterns (it's the fallback adapter)
-* The connection string explicitly uses `postgres://` or `postgresql://` protocols
-* No connection string is provided and environment variables point to PostgreSQL
+- The connection string doesn't match SQLite or MySQL patterns (it's the fallback adapter)
+- The connection string explicitly uses `postgres://` or `postgresql://` protocols
+- No connection string is provided and environment variables point to PostgreSQL
 
 **File:** `db.ts`
 ```ts
@@ -111,6 +112,7 @@ await mysql`INSERT INTO users ${mysql(newUsers)}`;
 ```
 
 ### MySQL Connection String Formats
+
 MySQL accepts various URL formats for connection strings:
 
 ```ts
@@ -128,18 +130,22 @@ new SQL("mysql://user:pass@localhost/db?ssl=true");
 new SQL("mysql://user:pass@/database?socket=/var/run/mysqld/mysqld.sock");
 ```
 
+
 ### MySQL-Specific Features
+
 MySQL databases support:
 
-* **Prepared statements**: Automatically created for parameterized queries with statement caching
-* **Binary protocol**: For better performance with prepared statements and accurate type handling
-* **Multiple result sets**: Support for stored procedures returning multiple result sets
-* **Authentication plugins**: Support for mysql_native_password, caching_sha2_password (MySQL 8.0 default), and sha256_password
-* **SSL/TLS connections**: Configurable SSL modes similar to PostgreSQL
-* **Connection attributes**: Client information sent to server for monitoring
-* **Query pipelining**: Execute multiple prepared statements without waiting for responses
+- **Prepared statements**: Automatically created for parameterized queries with statement caching
+- **Binary protocol**: For better performance with prepared statements and accurate type handling
+- **Multiple result sets**: Support for stored procedures returning multiple result sets
+- **Authentication plugins**: Support for mysql_native_password, caching_sha2_password (MySQL 8.0 default), and sha256_password
+- **SSL/TLS connections**: Configurable SSL modes similar to PostgreSQL
+- **Connection attributes**: Client information sent to server for monitoring
+- **Query pipelining**: Execute multiple prepared statements without waiting for responses
+
 
 ### MySQL 8 authentication over plain TCP (allowPublicKeyRetrieval)
+
 MySQL 8 accounts default to the `caching_sha2_password` plugin. The first connection for a user requires full authentication: over an unencrypted connection the client has to download the server's RSA public key to encrypt the password. Bun refuses that by default (the same default as mysql2 and Connector/J), because an attacker on the network path could substitute their own key and recover the password. The connection fails with `ERR_MYSQL_PUBLIC_KEY_RETRIEVAL_NOT_ALLOWED`.
 
 Connect with TLS, or opt in explicitly if you trust the network (for example a local development database):
@@ -154,6 +160,7 @@ const mysql = new SQL({
   allowPublicKeyRetrieval: true, // permit RSA public key retrieval without TLS
 });
 ```
+
 
 ### SQLite
 
@@ -180,6 +187,7 @@ const sql3 = new SQL("myapp.db", { adapter: "sqlite" });
 ```
 
 ### SQLite Connection String Formats
+
 SQLite accepts various URL formats for connection strings:
 
 ```ts
@@ -210,7 +218,9 @@ new SQL("sqlite://data.db?mode=rwc"); // Read-write-create mode (default)
 > Note
 Simple filenames without a protocol (like `"myapp.db"`) require explicitly specifying `{ adapter: "sqlite" }` to avoid ambiguity with PostgreSQL.
 
+
 ### SQLite-Specific Options
+
 SQLite databases support additional configuration options:
 
 ```ts
@@ -231,9 +241,10 @@ const sql = new SQL({
 
 Bun parses query parameters in the URL to set these options:
 
-* `?mode=ro` → `readonly: true`
-* `?mode=rw` → `readonly: false, create: false`
-* `?mode=rwc` → `readonly: false, create: true` (default)
+- `?mode=ro` → `readonly: true`
+- `?mode=rw` → `readonly: false, create: false`
+- `?mode=rwc` → `readonly: false, create: true` (default)
+
 
 ## Inserting data
 
@@ -291,7 +302,7 @@ await sql`INSERT INTO users ${sql(user, "name", "email")}`;
 // Only inserts name and email columns, ignoring other fields
 ```
 
-***
+---
 
 ## Query Results
 
@@ -326,7 +337,7 @@ const rows = await sql`SELECT * FROM users`.raw();
 console.log(rows); // [[Buffer, Buffer], [Buffer, Buffer], [Buffer, Buffer]]
 ```
 
-***
+---
 
 ## SQL Fragments
 
@@ -401,7 +412,7 @@ await sql`SELECT * FROM products WHERE ids = ANY(${sql.array([1, 2, 3])})`;
 
 > Note: `sql.array` is PostgreSQL-only. Multi-dimensional arrays and NULL elements may not be supported yet.
 
-***
+---
 
 ## `sql``.simple()`
 
@@ -464,7 +475,7 @@ setTimeout(() => query.cancel(), 100);
 await query;
 ```
 
-***
+---
 
 ## Database Environment Variables
 
@@ -478,8 +489,8 @@ When you use `Bun.sql()` without arguments, or `new SQL()` with a connection str
 
 Bun selects MySQL when the connection string matches these patterns:
 
-* `mysql://...` - MySQL protocol URLs
-* `mysql2://...` - MySQL2 protocol URLs (compatibility alias)
+- `mysql://...` - MySQL protocol URLs
+- `mysql2://...` - MySQL2 protocol URLs (compatibility alias)
 
 ```ts
 // These all use MySQL automatically (no adapter needed)
@@ -495,11 +506,11 @@ DATABASE_URL="mysql2://user:pass@localhost:3306/mydb" bun run app.js
 
 Bun selects SQLite when the connection string matches these patterns:
 
-* `:memory:` - In-memory database
-* `sqlite://...` - SQLite protocol URLs
-* `sqlite:...` - SQLite protocol without slashes
-* `file://...` - File protocol URLs
-* `file:...` - File protocol without slashes
+- `:memory:` - In-memory database
+- `sqlite://...` - SQLite protocol URLs
+- `sqlite:...` - SQLite protocol without slashes
+- `file://...` - File protocol URLs
+- `file:...` - File protocol without slashes
 
 ```ts
 // These all use SQLite automatically (no adapter needed)
@@ -588,7 +599,7 @@ DATABASE_URL="file:///absolute/path/to/db.sqlite"
 
 **Note:** Bun ignores PostgreSQL-specific environment variables such as `POSTGRES_URL` and `PGHOST` when you use SQLite.
 
-***
+---
 
 ## Runtime Preconnection
 
@@ -607,7 +618,7 @@ bun --sql-preconnect --hot index.js
 
 The `--sql-preconnect` flag establishes a PostgreSQL connection at startup using your configured environment variables. If the connection fails, Bun handles the error without crashing your application.
 
-***
+---
 
 ## Connection Options
 
@@ -736,12 +747,14 @@ const sql = new SQL({
 ```
 
 ### SQLite Connection Notes
-* **Connection Pooling**: SQLite doesn't use connection pooling as it's a file-based database. Each `SQL` instance represents a single connection.
-* **Transactions**: SQLite supports nested transactions through savepoints, similar to PostgreSQL.
-* **Concurrent Access**: SQLite handles concurrent access through file locking. Use WAL mode for better concurrency.
-* **Memory Databases**: Using `:memory:` creates a temporary database that exists only for the connection lifetime.
 
-***
+- **Connection Pooling**: SQLite doesn't use connection pooling as it's a file-based database. Each `SQL` instance represents a single connection.
+- **Transactions**: SQLite supports nested transactions through savepoints, similar to PostgreSQL.
+- **Concurrent Access**: SQLite handles concurrent access through file locking. Use WAL mode for better concurrency.
+- **Memory Databases**: Using `:memory:` creates a temporary database that exists only for the connection lifetime.
+
+
+---
 
 ## Dynamic passwords
 
@@ -758,7 +771,7 @@ const sql = new SQL(url, {
 });
 ```
 
-***
+---
 
 ## SQLite-Specific Features
 
@@ -815,7 +828,7 @@ await sqlite`
 await sqlite`INSERT INTO flexible VALUES (${1}, ${"text"}, ${123.45}, ${Buffer.from("binary")})`;
 ```
 
-***
+---
 
 ## Transactions
 
@@ -888,7 +901,7 @@ await sql.commitDistributed("tx1");
 await sql.rollbackDistributed("tx1");
 ```
 
-***
+---
 
 ## Authentication
 
@@ -927,7 +940,22 @@ const sql = new SQL("postgres://user:password@localhost/mydb?sslmode=prefer");
 const sql = new SQL("postgres://user:password@localhost/mydb?sslmode=verify-full");
 ```
 
-***
+### Custom CA Certificates
+
+To verify the server against a CA that is not in the default trust store (for example an Amazon RDS or Google Cloud SQL bundle), pass the CA certificate as `tls.ca`, or pass the `BunFile` directly as `tls`. Both forms verify the certificate chain and the hostname (`verify-full`).
+
+```ts
+const sql = new SQL("postgres://user:password@db.example.com/mydb", {
+  tls: { ca: Bun.file("./rds-ca-bundle.pem") },
+});
+
+// Shorthand for the same configuration
+const sql = new SQL("postgres://user:password@db.example.com/mydb", {
+  tls: Bun.file("./rds-ca-bundle.pem"),
+});
+```
+
+---
 
 ## Connection Pooling
 
@@ -962,7 +990,7 @@ await sql.close({ timeout: 5 }); // wait 5 seconds and close all connections fro
 await sql.close({ timeout: 0 }); // close all connections from the pool immediately
 ```
 
-***
+---
 
 ## Reserved Connections
 
@@ -986,7 +1014,14 @@ try {
 } // Automatically released
 ```
 
-***
+When every connection is busy, `reserve()` waits until one frees up. Pass an `AbortSignal` to stop waiting: the promise rejects with `signal.reason` and no connection is taken from the pool. Aborting after the promise resolved has no effect, so a connection you received must still be released.
+
+```ts
+// Give up if no connection frees up within 5 seconds
+using reserved = await sql.reserve({ signal: AbortSignal.timeout(5000) });
+```
+
+---
 
 ## LISTEN / NOTIFY (PostgreSQL)
 
@@ -1015,9 +1050,9 @@ await subscription.unlisten();
 
 ### How it works
 
-* All subscriptions on a client share one dedicated connection. The first `listen()` opens it, and removing the last subscription closes it. As a result, a client that never listens never pays for the connection, and unlistening everything lets the process exit without `sql.close()`.
-* While anything is subscribed, that connection keeps the process alive, like a listening server.
-* If the connection drops, Bun re-establishes it with exponential backoff (250ms doubling to 32s, with jitter) and re-subscribes every channel. PostgreSQL only delivers to connected listeners, so notifications sent in between are lost. The optional third argument to `listen()` runs on the initial subscribe and after every reconnect, which is the place to catch up:
+- All subscriptions on a client share one dedicated connection. The first `listen()` opens it, and removing the last subscription closes it. As a result, a client that never listens never pays for the connection, and unlistening everything lets the process exit without `sql.close()`.
+- While anything is subscribed, that connection keeps the process alive, like a listening server.
+- If the connection drops, Bun re-establishes it with exponential backoff (250ms doubling to 32s, with jitter) and re-subscribes every channel. PostgreSQL only delivers to connected listeners, so notifications sent in between are lost. The optional third argument to `listen()` runs on the initial subscribe and after every reconnect, which is the place to catch up:
 
 ```ts
 await sql.listen("orders", handleOrder, async () => {
@@ -1025,8 +1060,8 @@ await sql.listen("orders", handleOrder, async () => {
 });
 ```
 
-* Every `listen()` call is its own subscription. Several on one channel share a single server-side `LISTEN`. Each callback receives every notification, and each handle's `unlisten()` removes only what its own call registered. A callback (either argument) that throws is reported as an uncaught exception and stays subscribed.
-* Bun quotes channel names as identifiers for you. Like any PostgreSQL identifier, they are limited to 63 bytes, and Bun rejects longer names rather than silently truncating them. PostgreSQL limits payloads to 8000 bytes by default.
+- Every `listen()` call is its own subscription. Several on one channel share a single server-side `LISTEN`. Each callback receives every notification, and each handle's `unlisten()` removes only what its own call registered. A callback (either argument) that throws is reported as an uncaught exception and stays subscribed.
+- Bun quotes channel names as identifiers for you. Like any PostgreSQL identifier, they are limited to 63 bytes, and Bun rejects longer names rather than silently truncating them. PostgreSQL limits payloads to 8000 bytes by default.
 
 ### `notify()`
 
@@ -1043,7 +1078,7 @@ The payload is optional: `sql.notify("cache-invalidated")` is PostgreSQL's bare 
 
 `LISTEN`/`NOTIFY` is PostgreSQL-only; on MySQL and SQLite these methods reject.
 
-***
+---
 
 ## Prepared Statements
 
@@ -1060,20 +1095,20 @@ When `prepare: false` is set:
 
 Queries still use the "extended" protocol, but run as [unnamed prepared statements](https://www.postgresql.org/docs/current/protocol-flow.html#PROTOCOL-FLOW-EXT-QUERY). An unnamed prepared statement lasts only until the next Parse statement specifying the unnamed statement as destination is issued.
 
-* Parameter binding is still safe against SQL injection
-* The server parses and plans each query from scratch
-* Queries are not [pipelined](https://www.postgresql.org/docs/current/protocol-flow.html#PROTOCOL-FLOW-PIPELINING)
-* Only one command per query is supported (unless you use `sql``.simple()`)
+- Parameter binding is still safe against SQL injection
+- The server parses and plans each query from scratch
+- Queries are not [pipelined](https://www.postgresql.org/docs/current/protocol-flow.html#PROTOCOL-FLOW-PIPELINING)
+- Only one command per query is supported (unless you use `sql``.simple()`)
 
 You might want to use `prepare: false` when:
 
-* Using PGBouncer in transaction mode (though since PGBouncer 1.21.0, protocol-level named prepared statements are supported when configured properly)
-* Debugging query execution plans
-* Working with dynamic SQL where query plans need to be regenerated frequently
+- Using PGBouncer in transaction mode (though since PGBouncer 1.21.0, protocol-level named prepared statements are supported when configured properly)
+- Debugging query execution plans
+- Working with dynamic SQL where query plans need to be regenerated frequently
 
 Disabling prepared statements can slow down queries that run frequently with different parameters, since the server parses and plans each one from scratch.
 
-***
+---
 
 ## Error Handling
 
@@ -1105,6 +1140,7 @@ try {
 ```
 
 ### PostgreSQL-Specific Error Codes
+
 ### PostgreSQL Connection Errors
 
 | Connection Errors                 | Description                                                                                                                                                                                                                                                                            |
@@ -1154,6 +1190,8 @@ try {
 | `ERR_POSTGRES_MULTIDIMENSIONAL_ARRAY_NOT_SUPPORTED_YET` | Multidimensional arrays not supported |
 | `ERR_POSTGRES_NULLS_IN_ARRAY_NOT_SUPPORTED_YET`         | NULL values in arrays not supported   |
 
+The client raises these errors while it decodes a result, after the server ran the query. Only that query rejects. The connection stays open, and the other queries on it continue. An `INSERT`, `UPDATE` or `DELETE ... RETURNING` can already be stored at that point, so do not retry a write blindly. To read the value, cast the column to `text` or use `.raw()`.
+
 ### Protocol Errors
 
 | Protocol Errors                         | Description                 |
@@ -1167,16 +1205,19 @@ try {
 
 ### Transaction Errors
 
-| Transaction Errors                       | Description                           |
-| ---------------------------------------- | ------------------------------------- |
-| `ERR_POSTGRES_UNSAFE_TRANSACTION`        | Unsafe transaction operation detected |
-| `ERR_POSTGRES_INVALID_TRANSACTION_STATE` | Invalid transaction state             |
+| Transaction Errors                       | Description                                                                                              |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `ERR_POSTGRES_UNSAFE_TRANSACTION`        | Unsafe transaction operation detected                                                                    |
+| `ERR_POSTGRES_INVALID_TRANSACTION_STATE` | Invalid transaction state                                                                                |
+| `ERR_POSTGRES_COMMIT_ROLLED_BACK`        | `COMMIT` was answered with `ROLLBACK` because the transaction was already aborted; nothing was committed |
+
 
 ### SQLite-Specific Errors
 
 SQLite errors carry SQLite's standard error codes and numbers:
 
 ### Common SQLite Error Codes
+
 | Error Code          | errno | Description                                          |
 | ------------------- | ----- | ---------------------------------------------------- |
 | `SQLITE_CONSTRAINT` | 19    | Constraint violation (UNIQUE, CHECK, NOT NULL, etc.) |
@@ -1212,7 +1253,8 @@ try {
 }
 ```
 
-***
+
+---
 
 ## Numbers and BigInt
 
@@ -1227,7 +1269,7 @@ console.log(typeof x, x); // "string" "9223372036854777"
 console.log(typeof y, y); // "number" 12345
 ```
 
-***
+---
 
 ## BigInt Instead of Strings
 
@@ -1243,16 +1285,16 @@ const [{ x }] = await sql`SELECT 9223372036854777 as x`;
 console.log(typeof x, x); // "bigint" 9223372036854777n
 ```
 
-***
+---
 
 ## Roadmap
 
 Things we haven't finished yet:
 
-* Column name transforms (for example, `snake_case` to `camelCase`). This is mostly blocked on a unicode-aware implementation of changing the case in C++ using WebKit's `WTF::String`.
-* Column type transforms
+- Column name transforms (for example, `snake_case` to `camelCase`). This is mostly blocked on a unicode-aware implementation of changing the case in C++ using WebKit's `WTF::String`.
+- Column type transforms
 
-***
+---
 
 ## Database-Specific Features
 
@@ -1260,9 +1302,9 @@ Things we haven't finished yet:
 
 MySQL supports multiple authentication plugins, which the client negotiates automatically:
 
-* **`mysql_native_password`** - Traditional MySQL authentication, widely compatible
-* **`caching_sha2_password`** - Default in MySQL 8.0+, more secure with RSA key exchange
-* **`sha256_password`** - SHA-256 based authentication
+- **`mysql_native_password`** - Traditional MySQL authentication, widely compatible
+- **`caching_sha2_password`** - Default in MySQL 8.0+, more secure with RSA key exchange
+- **`sha256_password`** - SHA-256 based authentication
 
 The client automatically handles authentication plugin switching when the server requests it.
 
@@ -1329,16 +1371,18 @@ Bun converts MySQL types to JavaScript types:
 | FLOAT, DOUBLE                           | number                   |                                                                                                  |
 | DATE                                    | Date                     | JavaScript Date object                                                                           |
 | DATETIME, TIMESTAMP                     | Date                     | Decoded as UTC (see note below); `0000-00-00` becomes an Invalid Date                            |
-| TIME                                    | number                   | Total of microseconds                                                                            |
+| TIME                                    | string                   | Formatted as `HH:MM:SS` (`HHH:MM:SS` above 99 hours); prepared queries drop fractional seconds   |
 | YEAR                                    | number                   |                                                                                                  |
 | CHAR, VARCHAR, VARSTRING, STRING        | string                   |                                                                                                  |
 | TINY TEXT, MEDIUM TEXT, TEXT, LONG TEXT | string                   |                                                                                                  |
 | TINY BLOB, MEDIUM BLOB, BLOB, LONG BLOB | Buffer                   | Same wire types as TEXT; Bun returns a Buffer when the column uses the binary character set      |
 | JSON                                    | object/array             | Automatically parsed                                                                             |
 | BIT(1)                                  | boolean                  | BIT(1) in MySQL                                                                                  |
-| GEOMETRY                                | string                   | Geometry data                                                                                    |
+| GEOMETRY                                | Buffer                   | Binary character set; the bytes are a 4-byte SRID followed by WKB                                |
 
 `DATETIME` and `TIMESTAMP` values have no timezone on the wire, so Bun reads them back as **UTC**. The `Date` you get has the same UTC wall-clock that was stored, regardless of the machine's timezone. Reading as UTC matches how Bun writes values (a bound `Date` stores its UTC components). The same applies to PostgreSQL's `timestamp` (without time zone); `timestamptz` carries an explicit offset and is unaffected.
+
+Bun also sets `time_zone = '+00:00'` on every MySQL connection it opens. The server converts `TIMESTAMP` columns through the session time zone, so this keeps the stored instant equal to the `Date` you bound, and it makes server-side time functions such as `NOW()` and `CURRENT_TIMESTAMP` evaluate in UTC. There is no option to pick a different session time zone yet: a manual `SET time_zone = ...` reaches only the one pooled connection that runs it ([#40254](https://github.com/oven-sh/bun/issues/40254) tracks a per-connection option).
 
 #### Differences from PostgreSQL
 
@@ -1356,16 +1400,16 @@ We haven't implemented `LOAD DATA INFILE` support yet.
 
 We haven't implemented these yet:
 
-* `COPY` support
+- `COPY` support
 
 We also haven't implemented some of the more uncommon features like:
 
-* GSSAPI authentication
-* `SCRAM-SHA-256-PLUS` support
-* Point & PostGIS types
-* All the multi-dimensional integer array types (only a couple of the types are supported)
+- GSSAPI authentication
+- `SCRAM-SHA-256-PLUS` support
+- Point & PostGIS types
+- All the multi-dimensional integer array types (only a couple of the types are supported)
 
-***
+---
 
 ## Common Patterns & Best Practices
 
@@ -1410,21 +1454,18 @@ try {
 4. **Index properly**: MySQL relies heavily on indexes for query performance
 5. **Use `utf8mb4` charset**: It's set by default and handles all Unicode characters
 
-***
+---
 
 ## Frequently Asked Questions
 
-<AccordionGroup>
 ### Why is this `Bun.sql` and not `Bun.postgres`?
 The plan was to add more database drivers. The unified API now supports PostgreSQL, MySQL, and SQLite.
-
 ### How do I know which database adapter is being used?
 Bun detects the adapter automatically from the connection string:
 
-* URLs starting with `mysql://` or `mysql2://` use MySQL
-* URLs matching SQLite patterns (`:memory:`, `sqlite://`, `file://`) use SQLite
-* Everything else defaults to PostgreSQL
-
+- URLs starting with `mysql://` or `mysql2://` use MySQL
+- URLs matching SQLite patterns (`:memory:`, `sqlite://`, `file://`) use SQLite
+- Everything else defaults to PostgreSQL
 ### Are MySQL stored procedures supported?
 Yes, stored procedures are supported, including OUT parameters and multiple result sets:
 
@@ -1435,7 +1476,6 @@ const results = await mysql`CALL GetUserStats(${userId}, @total_orders)`;
 // Get OUT parameter
 const outParam = await mysql`SELECT @total_orders as total`;
 ```
-
 ### Can I use MySQL-specific SQL syntax?
 Yes, you can use any MySQL-specific syntax:
 
@@ -1446,9 +1486,9 @@ await mysql`SHOW TABLES`;
 await mysql`DESCRIBE users`;
 await mysql`EXPLAIN SELECT * FROM users WHERE id = ${id}`;
 ```
-</AccordionGroup>
 
-***
+
+---
 
 ## Why not just use an existing library?
 

@@ -14,7 +14,7 @@ bun add drizzle-orm @neondatabase/serverless
 bun add -D drizzle-kit
 ```
 
-***
+---
 
 Create a `.env.local` file and add your [Neon Postgres connection string](https://neon.com/docs/connect/connect-from-any-app) to it.
 
@@ -23,7 +23,7 @@ Create a `.env.local` file and add your [Neon Postgres connection string](https:
 DATABASE_URL=postgresql://username:password@ep-adj-noun-guid.us-east-1.aws.neon.tech/neondb?sslmode=require
 ```
 
-***
+---
 
 In `db.ts`, connect to the Neon database with the Neon serverless driver, wrapped in a Drizzle database instance.
 
@@ -39,7 +39,7 @@ const sql = neon(process.env.DATABASE_URL!);
 export const db = drizzle({ client: sql });
 ```
 
-***
+---
 
 To see the database in action, add these lines to `index.ts`.
 
@@ -53,7 +53,7 @@ const result = await db.execute(query);
 console.log(result.rows);
 ```
 
-***
+---
 
 Then run `index.ts` with Bun.
 
@@ -69,7 +69,7 @@ bun run index.ts
 ]
 ```
 
-***
+---
 
 Define a schema for the database with Drizzle ORM primitives. Create a `schema.ts` file and add this code.
 
@@ -85,7 +85,7 @@ export const authors = pgTable("authors", {
 });
 ```
 
-***
+---
 
 Then use the `drizzle-kit` CLI to generate an initial SQL migration.
 
@@ -93,7 +93,7 @@ Then use the `drizzle-kit` CLI to generate an initial SQL migration.
 bunx drizzle-kit generate --dialect postgresql --schema ./schema.ts --out ./drizzle
 ```
 
-***
+---
 
 The command creates a `drizzle` directory containing a `.sql` migration file and a `meta` directory.
 
@@ -106,7 +106,7 @@ drizzle
     └── _journal.json
 ```
 
-***
+---
 
 Execute these migrations with a `migrate.ts` script. The script opens a new connection to the Neon database and executes all unexecuted migrations in the `drizzle` directory.
 
@@ -128,7 +128,7 @@ const main = async () => {
 main();
 ```
 
-***
+---
 
 Run the script with `bun`.
 
@@ -140,7 +140,7 @@ bun run migrate.ts
 Migration completed
 ```
 
-***
+---
 
 Now add some data to the database. Create a `seed.ts` file with the following contents.
 
@@ -179,7 +179,7 @@ async function main() {
 main();
 ```
 
-***
+---
 
 Then run this file.
 
@@ -191,7 +191,7 @@ bun run seed.ts
 Seeding completed
 ```
 
-***
+---
 
 The database now has a schema and sample data. Query it with Drizzle by replacing the contents of `index.ts` with the following.
 
@@ -204,7 +204,7 @@ const result = await db.select().from(schema.authors);
 console.log(result);
 ```
 
-***
+---
 
 Then run the file. It prints the three authors you inserted.
 
@@ -233,7 +233,7 @@ bun run index.ts
 ]
 ```
 
-***
+---
 
 This example used the Neon serverless driver's SQL-over-HTTP functionality. Neon's serverless driver also exposes `Client` and `Pool` constructors to enable sessions, interactive transactions, and node-postgres compatibility. Refer to [Neon's documentation](https://neon.com/docs/serverless/serverless-driver) for a complete overview.
 

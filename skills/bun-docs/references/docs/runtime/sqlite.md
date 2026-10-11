@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/sqlite
 
 Bun natively implements a high-performance SQLite3 driver.
 
+
 Bun natively implements a high-performance [SQLite3](https://www.sqlite.org/) driver. To use it, import from the built-in `bun:sqlite` module.
 
 **File:** `db.ts`
@@ -22,21 +23,21 @@ The API is synchronous and fast. Credit to [better-sqlite3](https://github.com/J
 
 Features include:
 
-* Transactions
-* Parameters (named & positional)
-* Prepared statements
-* Datatype conversions (`BLOB` becomes `Uint8Array`)
-* Map query results to classes without an ORM - `query.as(MyClass)`
-* The fastest performance of any SQLite driver for JavaScript
-* `bigint` support
-* Multi-query statements (for example `SELECT 1; SELECT 2;`) in a single call to `database.run(query)`
+- Transactions
+- Parameters (named & positional)
+- Prepared statements
+- Datatype conversions (`BLOB` becomes `Uint8Array`)
+- Map query results to classes without an ORM - `query.as(MyClass)`
+- The fastest performance of any SQLite driver for JavaScript
+- `bigint` support
+- Multi-query statements (for example `SELECT 1; SELECT 2;`) in a single call to `database.run(query)`
 
 The `bun:sqlite` module is roughly 3-6x faster than `better-sqlite3` and 8-9x faster than `deno.land/x/sqlite` for read queries. Each driver was benchmarked against the [Northwind Traders](https://github.com/jpwhite3/northwind-SQLite3/blob/46d5f8a64f396f87cd374d1600dbf521523980e8/Northwind_large.sqlite.zip) dataset. View and run the [benchmark source](https://github.com/oven-sh/bun/tree/main/bench/sqlite).
 
 ![SQLite benchmarks for Bun, better-sqlite3, and
 deno.land/x/sqlite](https://user-images.githubusercontent.com/709451/168459263-8cd51ca3-a924-41e9-908d-cf3478a3b7f3.png)
 
-***
+---
 
 ## Database
 
@@ -180,7 +181,7 @@ Internally, `.serialize()` calls [`sqlite3_serialize`](https://www.sqlite.org/c3
 
 ### `.query()`
 
-Use the `db.query()` method on your `Database` instance to [prepare](https://www.sqlite.org/c3ref/prepare.html) a SQL query. The result is a `Statement` instance that is cached on the `Database` instance. *The query is not executed.*
+Use the `db.query()` method on your `Database` instance to [prepare](https://www.sqlite.org/c3ref/prepare.html) a SQL query. The result is a `Statement` instance that is cached on the `Database` instance. _The query is not executed._
 
 **File:** `db.ts`
 ```ts
@@ -208,7 +209,8 @@ Use `.prepare()` instead of `.query()` when you want a fresh `Statement` instanc
 const query = db.prepare("SELECT * FROM foo WHERE bar = ?");
 ```
 
-***
+
+---
 
 ## WAL mode
 
@@ -231,8 +233,8 @@ docs](https://www.sqlite.org/wal.html) for a more detailed overview.
 
 When using WAL mode with a file-based database, SQLite creates two sidecar files alongside your database: a write-ahead log (`-wal`) and a shared-memory index (`-shm`). Whether SQLite removes these files automatically after `.close()` depends on your platform:
 
-* **macOS**: Bun uses the system-provided SQLite, which Apple builds with persistent WAL enabled. The `-wal` and `-shm` files **persist** after close. This is not a bug — it is how Apple configured the system SQLite.
-* **Linux** and **Windows**: Bun statically links its own SQLite build, which follows upstream defaults. SQLite **typically removes** the sidecar files after close when no other connections are open.
+- **macOS**: Bun uses the system-provided SQLite, which Apple builds with persistent WAL enabled. The `-wal` and `-shm` files **persist** after close. This is not a bug — it is how Apple configured the system SQLite.
+- **Linux** and **Windows**: Bun statically links its own SQLite build, which follows upstream defaults. SQLite **typically removes** the sidecar files after close when no other connections are open.
 
 To ensure sidecar files are cleaned up on all platforms, disable WAL persistence and run a truncating checkpoint before closing:
 
@@ -253,11 +255,11 @@ db.close();
 // Only mydb.sqlite remains — no -wal or -shm files
 ```
 
-***
+---
 
 ## Statements
 
-A `Statement` is a *prepared query*, which means it's been parsed and compiled into an efficient binary form. It can be executed multiple times.
+A `Statement` is a _prepared query_, which means it's been parsed and compiled into an efficient binary form. It can be executed multiple times.
 
 Create a statement with the `.query` method on your `Database` instance.
 
@@ -508,7 +510,7 @@ const results = query.all("hello", "goodbye");
 ];
 ```
 
-***
+---
 
 ## Integers
 
@@ -575,11 +577,11 @@ console.log(result.max_int);
 9007199254741092
 ```
 
-***
+---
 
 ## Transactions
 
-A transaction executes multiple queries *atomically*: either all of them succeed or none do. Create a transaction with the `db.transaction()` method:
+A transaction executes multiple queries _atomically_: either all of them succeed or none do. Create a transaction with the `db.transaction()` method:
 
 **File:** `db.ts`
 ```ts
@@ -589,7 +591,7 @@ const insertCats = db.transaction(cats => {
 });
 ```
 
-No cats have been inserted yet. `db.transaction()` returns a new function (`insertCats`) that *wraps* the function that executes the queries.
+No cats have been inserted yet. `db.transaction()` returns a new function (`insertCats`) that _wraps_ the function that executes the queries.
 
 To execute the transaction, call this function. The transaction function passes its arguments through to the wrapped function and returns the wrapped function's return value. The wrapped function also has access to the `this` context as defined where the transaction is executed.
 
@@ -612,6 +614,7 @@ The driver automatically [begins](https://www.sqlite.org/lang_transaction.html) 
 **Nested transactions** — You can call transaction functions from inside other transaction functions. When you do, the inner transaction becomes a [savepoint](https://www.sqlite.org/lang_savepoint.html).
 
 ### View nested transaction example
+
 **File:** `db.ts`
 ```ts
 // setup
@@ -636,6 +639,7 @@ adopt([
   { $name: "Junior", $age: 1 },
 ]);
 ```
+
 
 Transactions also come with `deferred`, `immediate`, and `exclusive` versions.
 
@@ -666,7 +670,7 @@ brew install sqlite
 which sqlite # get path to binary
 ```
 
-To point `bun:sqlite` to the new build, call `Database.setCustomSQLite(path)` before creating any `Database` instances. (On other operating systems, this is a no-op.) Pass a path to the SQLite `.dylib` file, *not* the executable. With recent versions of Homebrew this is something like `/opt/homebrew/Cellar/sqlite/<version>/libsqlite3.dylib`.
+To point `bun:sqlite` to the new build, call `Database.setCustomSQLite(path)` before creating any `Database` instances. (On other operating systems, this is a no-op.) Pass a path to the SQLite `.dylib` file, _not_ the executable. With recent versions of Homebrew this is something like `/opt/homebrew/Cellar/sqlite/<version>/libsqlite3.dylib`.
 
 **File:** `db.ts`
 ```ts
@@ -677,6 +681,9 @@ Database.setCustomSQLite("/path/to/libsqlite.dylib");
 const db = new Database();
 db.loadExtension("myext");
 ```
+
+Workers can repeat `setCustomSQLite()` with the exact same path. Bun rejects a different path after SQLite loads.
+
 
 ### `.fileControl(cmd: number, value: any)`
 
@@ -694,11 +701,11 @@ db.fileControl(constants.SQLITE_FCNTL_PERSIST_WAL, 0);
 
 `value` can be:
 
-* `number`
-* `TypedArray`
-* `undefined` or `null`
+- `number`
+- `TypedArray`
+- `undefined` or `null`
 
-***
+---
 
 ## Reference
 

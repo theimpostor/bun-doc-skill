@@ -8,7 +8,7 @@ To add an npm package as an optional dependency, use the `--optional` flag.
 bun add zod --optional
 ```
 
-***
+---
 
 This adds the package to `optionalDependencies` in `package.json`.
 
@@ -21,6 +21,6 @@ This adds the package to `optionalDependencies` in `package.json`.
 }
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

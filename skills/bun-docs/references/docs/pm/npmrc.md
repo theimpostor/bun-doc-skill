@@ -17,10 +17,10 @@ Bun matches credentials in `.npmrc` (`//<registry>/:_authToken`, etc.) to regist
 Values may reference environment variables. Bun replaces `${NAME}` with the variable's value, or leaves it as-is if the variable is unset. `${NAME?}` becomes an empty string if unset.
 
 > Note
-We recommend migrating your `.npmrc` file to Bun's [`bunfig.toml`](/docs/runtime/bunfig) format, which supports more
+We recommend migrating your `.npmrc` file to Bun's [`bunfig.toml`](/runtime/bunfig) format, which supports more
 options, including Bun-specific ones.
 
-***
+---
 
 ## Supported options
 
@@ -35,7 +35,7 @@ To change it, set the `registry` option in `.npmrc`:
 registry=http://localhost:4873/
 ```
 
-The equivalent `bunfig.toml` option is [`install.registry`](/docs/runtime/bunfig#install-registry):
+The equivalent `bunfig.toml` option is [`install.registry`](/runtime/bunfig#install-registry):
 
 **File:** `bunfig.toml`
 ```toml
@@ -51,7 +51,7 @@ install.registry = "http://localhost:4873/"
 @myorg:registry=http://localhost:4873/
 ```
 
-The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-scopes):
+The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/runtime/bunfig#install-scopes):
 
 **File:** `bunfig.toml`
 ```toml
@@ -83,13 +83,13 @@ myorg = "http://localhost:4873/"
 
 Bun supports the following options:
 
-* `_authToken`
-* `username`
-* `_password` (base64 encoded password)
-* `_auth` (base64 encoded username:password, for example `btoa(username + ":" + password)`)
-* `email`
+- `_authToken`
+- `username`
+- `_password` (base64 encoded password)
+- `_auth` (base64 encoded username:password, for example `btoa(username + ":" + password)`)
+- `email`
 
-The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/docs/runtime/bunfig#install-scopes):
+The equivalent `bunfig.toml` option is to add a key in [`install.scopes`](/runtime/bunfig#install-scopes):
 
 **File:** `bunfig.toml`
 ```toml
@@ -107,7 +107,7 @@ Controls how Bun installs workspace packages when they are available locally:
 link-workspace-packages=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.linkWorkspacePackages`](/docs/runtime/bunfig#install-linkworkspacepackages):
+The equivalent `bunfig.toml` option is [`install.linkWorkspacePackages`](/runtime/bunfig#install-linkworkspacepackages):
 
 **File:** `bunfig.toml`
 ```toml
@@ -124,7 +124,7 @@ Always saves exact versions without the `^` prefix:
 save-exact=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.exact`](/docs/runtime/bunfig#install-exact):
+The equivalent `bunfig.toml` option is [`install.exact`](/runtime/bunfig#install-exact):
 
 **File:** `bunfig.toml`
 ```toml
@@ -152,7 +152,7 @@ Shows what Bun would install without installing anything:
 dry-run=true
 ```
 
-The equivalent `bunfig.toml` option is [`install.dryRun`](/docs/runtime/bunfig#install-dryrun):
+The equivalent `bunfig.toml` option is [`install.dryRun`](/runtime/bunfig#install-dryrun):
 
 **File:** `bunfig.toml`
 ```toml
@@ -173,7 +173,7 @@ cache=/path/to/cache
 cache=false
 ```
 
-The equivalent `bunfig.toml` option is [`install.cache`](/docs/runtime/bunfig#install-cache):
+The equivalent `bunfig.toml` option is [`install.cache`](/runtime/bunfig#install-cache):
 
 **File:** `bunfig.toml`
 ```toml
@@ -223,7 +223,7 @@ Valid values: `dev`, `peer`, `optional`
 
 ### `install-strategy` and `node-linker`: Installation strategy
 
-Control how Bun lays out packages in `node_modules`. For compatibility with other package managers, Bun accepts both npm's `install-strategy` and pnpm/yarn's `node-linker`. See [isolated installs](/docs/pm/isolated-installs) for how the hoisted and isolated layouts differ.
+Control how Bun lays out packages in `node_modules`. For compatibility with other package managers, Bun accepts both npm's `install-strategy` and pnpm/yarn's `node-linker`. See [isolated installs](/pm/isolated-installs) for how the hoisted and isolated layouts differ.
 
 **npm's `install-strategy`:**
 
@@ -240,11 +240,11 @@ install-strategy=linked
 
 `node-linker` controls the installation mode. Bun accepts values from both pnpm and yarn:
 
-| Value          | Description                                      | Accepted by |
-| -------------- | ------------------------------------------------ | ----------- |
-| `isolated`     | Symlinked structure with isolated dependencies   | pnpm        |
+| Value          | Description                                     | Accepted by |
+| -------------- | ----------------------------------------------- | ----------- |
+| `isolated`     | Symlinked structure with isolated dependencies  | pnpm        |
 | `hoisted`      | Flat node_modules structure                     | pnpm        |
-| `pnpm`         | Symlinked structure (same as `isolated`)         | yarn        |
+| `pnpm`         | Symlinked structure (same as `isolated`)        | yarn        |
 | `node-modules` | Flat node_modules structure (same as `hoisted`) | yarn        |
 
 **File:** `.npmrc`

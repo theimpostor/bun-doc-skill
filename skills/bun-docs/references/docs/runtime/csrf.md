@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/csrf
 
 Generate and verify CSRF tokens with Bun's built-in API
 
+
 `Bun.CSRF` generates and verifies [CSRF (Cross-Site Request Forgery)](https://owasp.org/www-community/attacks/csrf) tokens. Bun signs tokens with HMAC. Each token includes an issue timestamp and an expiry duration.
 
 **File:** `csrf.ts`
@@ -21,7 +22,7 @@ it, a token is only bound to the secret, so any token the server has ever issued
 can therefore obtain a token in their own session and replay it in a forged cross-site request from a victim's
 browser.
 
-***
+---
 
 ## `Bun.CSRF.generate()`
 
@@ -34,8 +35,8 @@ const token = Bun.CSRF.generate("my-secret-key");
 
 **Parameters:**
 
-* `secret` (string, optional) — The secret key used to sign the token. If not provided, Bun generates a random in-memory default secret (unique per thread).
-* `options` (object, optional):
+- `secret` (string, optional) — The secret key used to sign the token. If not provided, Bun generates a random in-memory default secret (unique per thread).
+- `options` (object, optional):
 
 | Option      | Type     | Default       | Description                                                                                                                                                 |
 | ----------- | -------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -62,7 +63,7 @@ const token2 = Bun.CSRF.generate("my-secret", {
 });
 ```
 
-***
+---
 
 ## `Bun.CSRF.verify()`
 
@@ -75,8 +76,8 @@ const isValid = Bun.CSRF.verify(token, { secret: "my-secret-key" });
 
 **Parameters:**
 
-* `token` (string, required) — The token to verify.
-* `options` (object, optional):
+- `token` (string, required) — The token to verify.
+- `options` (object, optional):
 
 | Option      | Type     | Default       | Description                                                                                                                                                                                                     |
 | ----------- | -------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -104,7 +105,7 @@ const isValid2 = Bun.CSRF.verify(token, {
 });
 ```
 
-***
+---
 
 ## Using with `Bun.serve()`
 
@@ -164,7 +165,7 @@ const server = Bun.serve({
 console.log(`Listening on ${server.url}`);
 ```
 
-***
+---
 
 ## Default secret
 
@@ -179,7 +180,7 @@ const isValid = Bun.CSRF.verify(token); // true
 
 For production use, always provide an explicit secret shared across your infrastructure.
 
-***
+---
 
 ## TypeScript
 

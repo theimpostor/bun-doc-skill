@@ -6,7 +6,7 @@ Source: https://bun.com/docs/guides/ecosystem/pm2
 
 PM2 offers process monitoring, automatic restarts, and scaling. It keeps your application running when you deploy it to a cloud-hosted virtual private server (VPS).
 
-***
+---
 
 You can use PM2 with Bun in two ways: as a CLI option or in a configuration file.
 
@@ -18,7 +18,7 @@ To start your application with PM2 and Bun as the interpreter, run:
 pm2 start --interpreter ~/.bun/bin/bun index.ts
 ```
 
-***
+---
 
 ### With a configuration file
 
@@ -36,7 +36,7 @@ module.exports = {
 };
 ```
 
-***
+---
 
 After saving the file, start your application with PM2.
 
@@ -44,6 +44,6 @@ After saving the file, start your application with PM2.
 pm2 start pm2.config.cjs
 ```
 
-***
+---
 
 Your JavaScript/TypeScript web server now runs as a daemon with PM2, using Bun as the interpreter.

@@ -1,8 +1,8 @@
 {
-  "requested_url": "https://bun.sh/llms-full.txt",
-  "resolved_url": "https://bun.sh/llms-full.txt",
-  "generated_at": "2026-08-24T21:40:38.805444+00:00",
-  "page_count": 319,
+  "requested_url": "https://github.com/oven-sh/bun/tree/bun-v1.4.3/docs",
+  "resolved_url": "https://github.com/oven-sh/bun/tree/bun-v1.4.3/docs",
+  "generated_at": "2026-10-11T19:12:51.307640+00:00",
+  "page_count": 323,
   "sections": [
     "bundler",
     "getting-started",
@@ -29,5 +29,6 @@
     "runtime-networking",
     "runtime-templating",
     "test"
-  ]
+  ],
+  "source_ref": "bun-v1.4.3"
 }

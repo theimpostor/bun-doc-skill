@@ -2,14 +2,14 @@
 Source: https://bun.com/docs/guides/binary/arraybuffer-to-typedarray
 
 
-A `Uint8Array` is a *typed array*, a view over the data in an underlying `ArrayBuffer`.
+A `Uint8Array` is a _typed array_, a view over the data in an underlying `ArrayBuffer`.
 
 ```ts
 const buffer = new ArrayBuffer(64);
 const arr = new Uint8Array(buffer);
 ```
 
-***
+---
 
 Create instances of other typed arrays the same way.
 
@@ -25,7 +25,7 @@ const arr6 = new BigInt64Array(buffer);
 const arr7 = new BigUint64Array(buffer);
 ```
 
-***
+---
 
 To create a typed array that only views a portion of the underlying buffer, pass the offset and length to the constructor.
 
@@ -34,6 +34,6 @@ const buffer = new ArrayBuffer(64);
 const arr = new Uint8Array(buffer, 0, 16); // view first 16 bytes
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

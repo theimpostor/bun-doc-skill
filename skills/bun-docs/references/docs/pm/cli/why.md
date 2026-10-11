@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/cli/why
 
 Explain why a package is installed
 
+
 `bun why` explains why a package is installed in your project by showing the dependency chain that led to it.
 
 ## Usage
@@ -13,12 +14,12 @@ bun why <package>
 
 ## Arguments
 
-* `<package>`: The name of the package to explain. Supports glob patterns like `@org/*` or `*-lodash`.
+- `<package>`: The name of the package to explain. Supports glob patterns like `@org/*` or `*-lodash`.
 
 ## Options
 
-* `--top`: Show only the top-level dependencies instead of the complete dependency tree.
-* `--depth <number>`: Maximum depth of the dependency tree to display.
+- `--top`: Show only the top-level dependencies instead of the complete dependency tree.
+- `--depth <number>`: Maximum depth of the dependency tree to display.
 
 ## Examples
 
@@ -76,9 +77,9 @@ express@4.18.2
 
 The output shows:
 
-* The package name and version being queried
-* The dependency chain that led to its installation
-* The type of dependency (dev, peer, optional, or production)
-* The version requirement specified in each package's dependencies
+- The package name and version being queried
+- The dependency chain that led to its installation
+- The type of dependency (dev, peer, optional, or production)
+- The version requirement specified in each package's dependencies
 
 For nested dependencies, the command shows the complete dependency tree by default, with indentation indicating the relationship hierarchy.

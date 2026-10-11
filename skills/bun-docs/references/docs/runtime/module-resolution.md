@@ -3,11 +3,13 @@ Source: https://bun.com/docs/runtime/module-resolution
 
 How Bun resolves modules and handles imports in JavaScript and TypeScript
 
+
 The JavaScript ecosystem is in a years-long transition from CommonJS modules to native ES modules (ESM). Different runtimes and build tools have historically disagreed on how import specifiers map to files on disk. Bun aims to provide a consistent and predictable module resolution system that works without configuration.
 
 ## Syntax
 
 Consider the following files.
+
 
 **File:** `index.ts`
 ```ts
@@ -23,6 +25,7 @@ export function hello() {
 }
 ```
 
+
 Running `index.ts` prints "Hello world!".
 
 ```bash
@@ -32,24 +35,24 @@ Hello world!
 
 Here `./hello` is a relative path with no extension. **Extensioned imports are optional but supported.** To resolve this import, Bun checks for the following files in order:
 
-* `./hello.tsx`
-* `./hello.jsx`
-* `./hello.mts`
-* `./hello.ts`
-* `./hello.mjs`
-* `./hello.js`
-* `./hello.cts`
-* `./hello.cjs`
-* `./hello.json`
-* `./hello/index.tsx`
-* `./hello/index.jsx`
-* `./hello/index.mts`
-* `./hello/index.ts`
-* `./hello/index.mjs`
-* `./hello/index.js`
-* `./hello/index.cts`
-* `./hello/index.cjs`
-* `./hello/index.json`
+- `./hello.tsx`
+- `./hello.jsx`
+- `./hello.mts`
+- `./hello.ts`
+- `./hello.mjs`
+- `./hello.js`
+- `./hello.cts`
+- `./hello.cjs`
+- `./hello.json`
+- `./hello/index.tsx`
+- `./hello/index.jsx`
+- `./hello/index.mts`
+- `./hello/index.ts`
+- `./hello/index.mjs`
+- `./hello/index.js`
+- `./hello/index.cts`
+- `./hello/index.cjs`
+- `./hello/index.json`
 
 > Note
 The exact order varies by context: `require()` tries CommonJS extensions (`.cts`, `.cjs`) before ESM ones (`.mts`,
@@ -75,6 +78,7 @@ import { hello } from "./hello.js"; // this also works
 
 Bun supports both ES modules (`import`/`export` syntax) and CommonJS modules (`require()`/`module.exports`). The following CommonJS version also works in Bun.
 
+
 **File:** `index.js`
 ```js
 const { hello } = require("./hello");
@@ -91,9 +95,10 @@ function hello() {
 exports.hello = hello;
 ```
 
+
 That said, using CommonJS is discouraged in new projects.
 
-***
+---
 
 ## Module systems
 
@@ -118,6 +123,7 @@ const { baz } = require("./baz.tsx");
 ```
 
 ### What is a CommonJS module?
+
 In 2016, ECMAScript added support for [ES modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). ES modules are the standard for JavaScript modules. However, millions of npm packages still use CommonJS modules.
 
 CommonJS modules use `module.exports` to export values and are typically imported with `require`.
@@ -130,11 +136,12 @@ module.exports = { stuff };
 
 The biggest difference between CommonJS and ES modules is that CommonJS modules are synchronous, while ES modules are asynchronous. Other differences:
 
-* ES modules support top-level `await` and CommonJS modules don't.
-* ES modules are always in [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode), while CommonJS modules are not.
-* Browsers do not have native support for CommonJS modules, but they do have native support for ES modules through `<script type="module">`.
-* CommonJS modules are not statically analyzable, while ES modules only allow static imports and exports.
-* Static `import` statements run synchronously, just like CommonJS `require`. You can also load ES modules on the fly with the asynchronous `import()` function, called a "dynamic import".
+- ES modules support top-level `await` and CommonJS modules don't.
+- ES modules are always in [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode), while CommonJS modules are not.
+- Browsers do not have native support for CommonJS modules, but they do have native support for ES modules through `<script type="module">`.
+- CommonJS modules are not statically analyzable, while ES modules only allow static imports and exports.
+- Static `import` statements run synchronously, just like CommonJS `require`. You can also load ES modules on the fly with the asynchronous `import()` function, called a "dynamic import".
+
 
 ### Using `import`
 
@@ -165,7 +172,7 @@ The only exception to this rule is top-level await. You can't `require()` a file
 
 Fortunately, very few libraries use top-level await, so this is rarely a problem. But if you're using top-level await in your application code, make sure that file isn't `require()`'d from elsewhere in your application. Use `import` or [dynamic `import()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import) instead.
 
-***
+---
 
 ## Importing packages
 
@@ -195,7 +202,7 @@ Once it finds the `foo` package, Bun reads its `package.json` to determine the p
 }
 ```
 
-Whichever of these conditions occurs *first* in the `package.json` determines the package's entrypoint.
+Whichever of these conditions occurs _first_ in the `package.json` determines the package's entrypoint.
 
 Bun respects subpath [`"exports"`](https://nodejs.org/api/packages.html#subpath-exports) and [`"imports"`](https://nodejs.org/api/packages.html#imports).
 
@@ -268,7 +275,7 @@ Multiple paths use the platform's delimiter (`:` on Unix, `;` on Windows):
 
 ```bash
 NODE_PATH=./packages:./lib bun run src/index.js  # Unix/macOS
-NODE_PATH=./packages;./lib bun run src/index.js  # Windows
+NODE_PATH="./packages;./lib" bun run src/index.js  # Windows
 ```
 
 ### Custom conditions
@@ -296,7 +303,28 @@ await Bun.build({
 });
 ```
 
-***
+### Built-in replacements for npm packages
+
+Bun includes its own implementation of a few npm packages. When you import one of the following specifiers, Bun loads the built-in module. Bun does this even when the package is installed in `node_modules`.
+
+| Specifier                                                                             | Built-in module                                                                                                                |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `undici`                                                                              | `fetch`, `Request`, `Response`, `Headers`, `FormData`, `File`, and `WebSocket` are Bun's own. `request()` calls Bun's `fetch`. |
+| `node-fetch`                                                                          | A wrapper around Bun's `fetch`. `response.body` is a Node.js `Readable` stream, as in `node-fetch`.                            |
+| `isomorphic-fetch`                                                                    | Bun's `fetch`.                                                                                                                 |
+| `@vercel/fetch`                                                                       | A wrapper around Bun's `fetch`.                                                                                                |
+| `ws`, `ws/lib/websocket`                                                              | `WebSocket` and `WebSocketServer`, built on Bun's native WebSocket client and server.                                          |
+| `utf-8-validate`                                                                      | The same native function as `isUtf8()` in `node:buffer`.                                                                       |
+| `abort-controller`, `abort-controller/polyfill`                                       | The global `AbortController` and `AbortSignal`.                                                                                |
+| `next/dist/compiled/undici`, `next/dist/compiled/node-fetch`, `next/dist/compiled/ws` | The same built-in modules as `undici`, `node-fetch`, and `ws`.                                                                 |
+
+A built-in module does not implement every API of the package it replaces. For example, the built-in `undici` exports `Agent`, `Pool`, `Client`, `ProxyAgent`, and `MockAgent` so that imports succeed. These classes do not manage connections, and `fetch` ignores the `dispatcher` option. `stream()`, `pipeline()`, `connect()`, and `upgrade()` throw an error. If your code needs an API that is missing, [open an issue](https://bun.com/issues).
+
+Bun matches the whole specifier. Any other subpath, such as `undici/package.json`, resolves to the installed package. For a replaced specifier, `require.resolve()` and `import.meta.resolve()` return the name of the built-in module instead of a file path. For example, both `"undici"` and `"next/dist/compiled/undici"` resolve to `"undici"`.
+
+[`bun build`](/bundler) applies the same replacement when the target is `bun`, and leaves the import in the bundle. With `--target=node` or `--target=browser`, `bun build` bundles the copy in `node_modules`.
+
+---
 
 ## Path re-mapping
 
@@ -327,6 +355,7 @@ Bun also supports [Node.js-style subpath imports](https://nodejs.org/api/package
 ```
 
 ### Low-level details of CommonJS interop in Bun
+
 Bun's JavaScript runtime has native support for CommonJS. When Bun's JavaScript transpiler detects usages of `module.exports`, it treats the file as CommonJS. The module loader then wraps the transpiled module in a function shaped like this:
 
 ```js
@@ -341,7 +370,8 @@ Once the CommonJS module is successfully evaluated, Bun creates a Synthetic Modu
 
 Bun's bundler works differently: it wraps the CommonJS module in a `require_${moduleName}` function which returns the `module.exports` object.
 
-***
+
+---
 
 ## `import.meta`
 

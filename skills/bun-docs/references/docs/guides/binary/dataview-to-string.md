@@ -10,6 +10,6 @@ const decoder = new TextDecoder();
 const str = decoder.decode(dv);
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

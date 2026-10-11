@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/image
 
 Decode, transform, and encode images with a fast native pipeline
 
+
 `Bun.Image` is a chainable image pipeline for decoding, resizing, rotating, and re-encoding JPEG, PNG, WebP, HEIC, and AVIF. It is built on libjpeg-turbo, spng, libwebp, and SIMD geometry kernels, with zero npm dependencies and no native addon build step.
 
 ```ts
@@ -28,6 +29,8 @@ Bun sniffs the format from the bytes and ignores extensions and `Content-Type`.
 **Path strings are filesystem paths.** Don't pass user-controlled strings directly to the constructor — that's an arbitrary-file-read primitive. Read untrusted input into a `Buffer` (with `fetch` or `Bun.file` and your own validation) and pass the bytes.
 
 When passing a `TypedArray`/`ArrayBuffer`, don't mutate it while a terminal is pending — decode runs off-thread and borrows the bytes. Bun refuses `SharedArrayBuffer` and resizable buffers; use `buf.slice()` to pass a fixed view.
+
+Bun decodes a damaged JPEG when libjpeg-turbo can finish the decode with only a warning. Examples are stray bytes between segments, a missing end-of-image marker, and truncated scan data. libjpeg-turbo fills the blocks that have no data with flat grey. A progressive file that is cut after its first scan has data for every block, so Bun returns the whole picture with less detail. When libjpeg-turbo cannot finish the decode, the terminal rejects with `ERR_IMAGE_DECODE_FAILED`. `metadata()` reads only the header, so it can resolve for a file that a terminal rejects.
 
 A second `options` argument guards against decompression bombs and controls EXIF handling:
 
@@ -63,13 +66,13 @@ img.resize(800, 600, { filter: "mitchell" });
 | `fit`              | Behavior                                            |
 | ------------------ | --------------------------------------------------- |
 | `"fill"` (default) | Stretch to exactly `width × height`                 |
-| `"inside"`         | Preserve aspect ratio; result fits *within* the box |
+| `"inside"`         | Preserve aspect ratio; result fits _within_ the box |
 
 `filter` selects the resampling kernel. The default `"lanczos3"` is the right choice for photographs.
 
 | Filter                    | Use when                                         |
 | ------------------------- | ------------------------------------------------ |
-| `"lanczos3"` *(default)*  | General-purpose, sharpest for photos             |
+| `"lanczos3"` _(default)_  | General-purpose, sharpest for photos             |
 | `"lanczos2"`              | Slightly softer, fewer ringing artifacts         |
 | `"mitchell"`              | Smooth gradients; the classic bicubic compromise |
 | `"cubic"`                 | Catmull-Rom — sharper than Mitchell, can ring    |
@@ -131,20 +134,20 @@ await img.write(Bun.s3.file("bucket/out.webp"));
 
 ## Placeholders
 
-`.placeholder()` returns a low-quality placeholder to inline in HTML before the real image loads. The placeholder is a [ThumbHash](https://evanw.github.io/thumbhash/)-rendered ≤32px blur as a `data:` URL. It is \~400–700 bytes and needs no client-side decoder:
+`.placeholder()` returns a low-quality placeholder to inline in HTML before the real image loads. The placeholder is a [ThumbHash](https://evanw.github.io/thumbhash/)-rendered ≤32px blur as a `data:` URL. It is ~400–700 bytes and needs no client-side decoder:
 
 ```ts
 const lqip = await Bun.file("hero.jpg").image().placeholder();
 // <img src={lqip} … /> — then swap to the real URL on load.
 ```
 
-For coarse-to-fine rendering of the image *itself*, encode a progressive JPEG:
+For coarse-to-fine rendering of the image _itself_, encode a progressive JPEG:
 
 ```ts
 img.jpeg({ progressive: true });
 ```
 
-After the first terminal resolves, `img.width` and `img.height` reflect the *output* dimensions (they're `-1` before).
+After the first terminal resolves, `img.width` and `img.height` reflect the _output_ dimensions (they're `-1` before).
 
 ## `Bun.serve` integration
 
@@ -180,17 +183,17 @@ For a passive "image in clipboard, press ⌘V" hint, poll `clipboardChangeCount(
 
 ## Platform backends
 
-|                        | Linux                            | macOS               | Windows      |
-| ---------------------- | -------------------------------- | ------------------- | ------------ |
-| JPEG / PNG / WebP      | libjpeg-turbo · spng · libwebp   | same                | same         |
-| BMP / GIF (decode)     | built-in                         | ImageIO             | WIC          |
+|                        | Linux                             | macOS               | Windows      |
+| ---------------------- | --------------------------------- | ------------------- | ------------ |
+| JPEG / PNG / WebP      | libjpeg-turbo · spng · libwebp    | same                | same         |
+| BMP / GIF (decode)     | built-in                          | ImageIO             | WIC          |
 | TIFF (decode)          | ❌                                | ImageIO             | WIC          |
-| Resize / rotate / flip | Highway SIMD                     | Accelerate vImage ³ | Highway SIMD |
+| Resize / rotate / flip | Highway SIMD                      | Accelerate vImage ³ | Highway SIMD |
 | HEIC / AVIF            | ❌ `ERR_IMAGE_FORMAT_UNSUPPORTED` | ImageIO ²           | WIC ¹        |
 | Clipboard              | ❌ returns `null`                 | NSPasteboard        | Win32        |
 
 ¹ Windows requires the **HEIF Image Extensions** / **AV1 Video Extension** from the Microsoft Store.
-² AVIF *encode* needs an OS AV1 encoder — Apple Silicon M3+ only. Intel Mac and M1/M2 reject with `ERR_IMAGE_FORMAT_UNSUPPORTED`; AVIF *decode* works everywhere ImageIO does (macOS 13+).
+² AVIF _encode_ needs an OS AV1 encoder — Apple Silicon M3+ only. Intel Mac and M1/M2 reject with `ERR_IMAGE_FORMAT_UNSUPPORTED`; AVIF _decode_ works everywhere ImageIO does (macOS 13+).
 ³ Resize uses vImage only with the default `lanczos3` filter; every other `filter` uses Highway SIMD on macOS too.
 
 When a system-backend format isn't available on the current machine, the terminal rejects with `error.code === "ERR_IMAGE_FORMAT_UNSUPPORTED"`. Branch on that error code to fall back to a portable format:

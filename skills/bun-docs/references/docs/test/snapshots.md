@@ -3,6 +3,7 @@ Source: https://bun.com/docs/test/snapshots
 
 Learn how to use snapshot testing in Bun to save and compare output between test runs
 
+
 Snapshot testing saves the output of a value and compares it against future test runs. Use it for UI components, complex objects, or any output that needs to remain consistent.
 
 ## Basic Snapshots
@@ -75,10 +76,10 @@ import { test, expect } from "bun:test";
 
 test("inline snapshot", () => {
   expect({ hello: "world" }).toMatchInlineSnapshot(`
-{
-  "hello": "world",
-}
-`);
+    {
+      "hello": "world",
+    }
+  `);
 });
 ```
 
@@ -391,10 +392,10 @@ When snapshots fail, Bun shows a diff:
 
 Common causes:
 
-* Intentional changes (update with `--update-snapshots`)
-* Unintentional changes (fix the code)
-* Dynamic data (use property matchers)
-* Environment differences (normalize the data)
+- Intentional changes (update with `--update-snapshots`)
+- Unintentional changes (fix the code)
+- Dynamic data (use property matchers)
+- Environment differences (normalize the data)
 
 ### Platform Differences
 

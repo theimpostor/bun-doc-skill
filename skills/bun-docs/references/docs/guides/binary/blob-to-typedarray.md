@@ -16,6 +16,6 @@ const blob = new Blob(["hello world"]);
 const arr = new Uint8Array(await blob.arrayBuffer());
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

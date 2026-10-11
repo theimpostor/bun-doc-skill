@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/ecosystem/mongoose
 
 MongoDB and Mongoose work with Bun with no extra configuration. This guide assumes you've already installed MongoDB and are running it as a background process or service on your development machine. See the [MongoDB installation guide](https://www.mongodb.com/docs/manual/installation/) for details.
 
-***
+---
 
 Once MongoDB is running, create a directory and initialize it with `bun init`.
 
@@ -14,7 +14,7 @@ cd mongoose-app
 bun init
 ```
 
-***
+---
 
 Then add Mongoose as a dependency.
 
@@ -22,7 +22,7 @@ Then add Mongoose as a dependency.
 bun add mongoose
 ```
 
-***
+---
 
 In `schema.ts`, declare and export an `Animal` model.
 
@@ -48,7 +48,7 @@ export type Animal = mongoose.InferSchemaType<typeof animalSchema>;
 export const Animal = mongoose.model("Animal", animalSchema);
 ```
 
-***
+---
 
 In `index.ts`, import `Animal`, connect to MongoDB, and add some data to the database.
 
@@ -75,7 +75,7 @@ animals[0]!.speak(); // logs "Moo!"
 await mongoose.disconnect();
 ```
 
-***
+---
 
 Run the file with `bun run`.
 
@@ -87,6 +87,6 @@ bun run index.ts
 Moo!
 ```
 
-***
+---
 
 As you build your application, refer to the official [MongoDB](https://www.mongodb.com/docs) and [Mongoose](https://mongoosejs.com/docs/) docs.

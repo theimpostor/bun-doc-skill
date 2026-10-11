@@ -1,6 +1,6 @@
 # Runtime
 
-Use for Bun runtime APIs, `bunfig.toml`, file I/O, data formats such as XML and YAML, globals, compatibility, shell, plugins, workers, and built-in services.
+Use for `bun check`, Bun runtime APIs, `bunfig.toml`, file I/O, data formats such as XML and YAML, globals, compatibility, shell, plugins, workers, `Bun.ModuleGraph`, and built-in services.
 
 Use this file to pick the most relevant Bun doc page before opening the page itself.
 
@@ -12,7 +12,9 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Bun APIs](../docs/runtime/bun-apis.md) - `runtime/bun-apis`
 - [bunfig.toml](../docs/runtime/bunfig.md) - `runtime/bunfig`
 - [C Compiler](../docs/runtime/c-compiler.md) - `runtime/c-compiler`
+- [Type checking](../docs/runtime/check.md) - `runtime/check`
 - [Spawn](../docs/runtime/child-process.md) - `runtime/child-process`
+- [Code generation from strings](../docs/runtime/code-generation-from-strings.md) - `runtime/code-generation-from-strings`
 - [Color](../docs/runtime/color.md) - `runtime/color`
 - [Console](../docs/runtime/console.md) - `runtime/console`
 - [Cookies](../docs/runtime/cookies.md) - `runtime/cookies`
@@ -34,6 +36,7 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [JSONL](../docs/runtime/jsonl.md) - `runtime/jsonl`
 - [JSX](../docs/runtime/jsx.md) - `runtime/jsx`
 - [Markdown](../docs/runtime/markdown.md) - `runtime/markdown`
+- [ModuleGraph](../docs/runtime/module-graph.md) - `runtime/module-graph`
 - [Module Resolution](../docs/runtime/module-resolution.md) - `runtime/module-resolution`
 - [Node-API](../docs/runtime/node-api.md) - `runtime/node-api`
 - [Node.js Compatibility](../docs/runtime/nodejs-compat.md) - `runtime/nodejs-compat`
@@ -49,6 +52,7 @@ Use this file to pick the most relevant Bun doc page before opening the page its
 - [Streams](../docs/runtime/streams.md) - `runtime/streams`
 - [TOML](../docs/runtime/toml.md) - `runtime/toml`
 - [Transpiler](../docs/runtime/transpiler.md) - `runtime/transpiler`
+- [TypeScript](../docs/runtime/typescript.md) - `runtime/typescript`
 - [Utils](../docs/runtime/utils.md) - `runtime/utils`
 - [Watch Mode](../docs/runtime/watch-mode.md) - `runtime/watch-mode`
 - [Web APIs](../docs/runtime/web-apis.md) - `runtime/web-apis`

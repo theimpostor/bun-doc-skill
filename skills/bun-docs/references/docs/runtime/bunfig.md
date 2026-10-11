@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/bunfig
 
 Configure Bun's behavior using its configuration file bunfig.toml
 
+
 `bunfig.toml` is Bun's configuration file.
 
 Bun relies on pre-existing configuration files like `package.json` and `tsconfig.json` where it can; `bunfig.toml` is only for Bun-specific settings. The file is optional, and Bun works without it.
@@ -13,10 +14,10 @@ Put `bunfig.toml` in your project root, alongside your `package.json`.
 
 To configure Bun's package manager globally, you can also create a `.bunfig.toml` file at one of the following paths:
 
-* `$HOME/.bunfig.toml`
-* `$XDG_CONFIG_HOME/.bunfig.toml`
+- `$HOME/.bunfig.toml`
+- `$XDG_CONFIG_HOME/.bunfig.toml`
 
-Only package manager commands (`bun install`, `bun add`, `bun remove`, `bun update`, `bun pm`, `bunx`, and so on) read the global file. If Bun finds both a global and a local `bunfig`, it shallow-merges them, with local overriding global. CLI flags override `bunfig` settings where applicable.
+Only package manager commands (`bun install`, `bun add`, `bun remove`, `bun update`, `bun pm`, `bunx`, and so on) read the global file. If Bun finds both a global and a local `bunfig`, it loads both; keys set in the local file override the same keys in the global file. CLI flags override `bunfig` settings where applicable.
 
 ## Runtime
 
@@ -47,10 +48,10 @@ jsxImportSource = "react"
 
 Refer to the tsconfig docs for more information on these fields.
 
-* [`jsx`](https://www.typescriptlang.org/tsconfig#jsx)
-* [`jsxFactory`](https://www.typescriptlang.org/tsconfig#jsxFactory)
-* [`jsxFragment`](https://www.typescriptlang.org/tsconfig#jsxFragment)
-* [`jsxImportSource`](https://www.typescriptlang.org/tsconfig#jsxImportSource)
+- [`jsx`](https://www.typescriptlang.org/tsconfig#jsx)
+- [`jsxFactory`](https://www.typescriptlang.org/tsconfig#jsxFactory)
+- [`jsxFragment`](https://www.typescriptlang.org/tsconfig#jsxFragment)
+- [`jsxImportSource`](https://www.typescriptlang.org/tsconfig#jsxImportSource)
 
 ### `smol`
 
@@ -86,7 +87,7 @@ The `define` field replaces global identifiers with constant expressions whereve
 
 ### `loader`
 
-Configure how Bun maps file extensions to [loaders](/docs/bundler/loaders). Use this to load file types Bun doesn't support natively.
+Configure how Bun maps file extensions to [loaders](/bundler/loaders). Use this to load file types Bun doesn't support natively.
 
 **File:** `bunfig.toml`
 ```toml
@@ -97,19 +98,19 @@ Configure how Bun maps file extensions to [loaders](/docs/bundler/loaders). Use 
 
 Bun supports the following loaders:
 
-* `jsx`
-* `js`
-* `ts`
-* `tsx`
-* `css`
-* `file`
-* `json`
-* `toml`
-* `wasm`
-* `napi`
-* `base64`
-* `dataurl`
-* `text`
+- `jsx`
+- `js`
+- `ts`
+- `tsx`
+- `css`
+- `file`
+- `json`
+- `toml`
+- `wasm`
+- `napi`
+- `base64`
+- `dataurl`
+- `text`
 
 ### `telemetry`
 
@@ -248,12 +249,12 @@ The coverage threshold. By default, no threshold is set. If your test suite does
 coverageThreshold = 0.9
 ```
 
-You can set separate thresholds for line, function, and statement coverage.
+You can set separate thresholds for line and function coverage. Bun accepts a `statements` key but does not currently enforce it.
 
 **File:** `bunfig.toml`
 ```toml
 [test]
-coverageThreshold = { lines = 0.7, functions = 0.8, statements = 0.9 }
+coverageThreshold = { lines = 0.7, functions = 0.8 }
 ```
 
 ### `test.coverageSkipTestFiles`
@@ -490,7 +491,7 @@ exact = false
 
 Whether to skip lifecycle scripts during install. Default `false`. Equivalent to the `--ignore-scripts` flag.
 
-When `true`, Bun does not run any `preinstall` / `install` / `postinstall` / `prepare` scripts, both for your project and for packages in `trustedDependencies`. See [Lifecycle scripts](/docs/pm/lifecycle).
+When `true`, Bun does not run any `preinstall` / `install` / `postinstall` / `prepare` scripts, both for your project and for packages in `trustedDependencies`. See [Lifecycle scripts](/pm/lifecycle).
 
 **File:** `bunfig.toml`
 ```toml
@@ -522,7 +523,7 @@ saveTextLockfile = false
 
 ### `install.auto`
 
-Configure Bun's [auto-install](/docs/runtime/auto-install) behavior. Default `"auto"` — when no `node_modules` folder is found, Bun installs dependencies on the fly during execution.
+Configure Bun's [auto-install](/runtime/auto-install) behavior. Default `"auto"` — when no `node_modules` folder is found, Bun installs dependencies on the fly during execution.
 
 **File:** `bunfig.toml`
 ```toml
@@ -551,11 +552,21 @@ prefer = "online"
 
 Valid values are:
 
-| Value       | Description                                                                                        |
-| ----------- | -------------------------------------------------------------------------------------------------- |
-| `"online"`  | Default. Check the registry for stale packages as needed.                                          |
-| `"offline"` | Skip staleness checks and resolve packages from the local cache. Equivalent to `--prefer-offline`. |
-| `"latest"`  | Always check npm for the latest matching versions. Equivalent to `--prefer-latest`.                |
+| Value       | Description                                                                                                                         |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `"online"`  | Default. Check the registry for stale packages as needed.                                                                           |
+| `"offline"` | Skip staleness checks and resolve packages from the local cache. Equivalent to `--prefer-offline` (also honoured by `bun install`). |
+| `"latest"`  | Always check npm for the latest matching versions. Equivalent to `--prefer-latest`.                                                 |
+
+### `install.offline`
+
+When `true`, `bun install` never touches the network: package metadata and tarballs must already be in the cache, and anything missing is an error. Default `false`. Equivalent to `bun install --offline`. For the softer "use the cache when possible" behaviour see `install.prefer = "offline"` / `--prefer-offline`.
+
+**File:** `bunfig.toml`
+```toml
+[install]
+offline = true
+```
 
 ### `install.frozenLockfile`
 
@@ -701,7 +712,7 @@ print = "yarn"
 
 Configure the linker strategy: how `bun install` lays out dependencies in `node_modules`. Defaults to `"isolated"` for new workspaces, `"hoisted"` for new single-package projects and existing projects (made pre-v1.3.2).
 
-See [Isolated installs](/docs/pm/isolated-installs).
+See [Isolated installs](/pm/isolated-installs).
 
 **File:** `bunfig.toml`
 ```toml
@@ -720,7 +731,7 @@ Valid values are:
 
 When using the `"isolated"` linker, share package installations across projects in a global virtual store at `<cache>/links/`. Bun links `node_modules/.bun/<pkg>@<ver>` into the store instead of materializing each package into the project. Makes warm installs after `rm -rf node_modules` an order of magnitude faster. Default `false`. You can also set it with the `BUN_INSTALL_GLOBAL_STORE` environment variable.
 
-See [Global virtual store](/docs/pm/global-store).
+See [Global virtual store](/pm/global-store).
 
 **File:** `bunfig.toml`
 ```toml
@@ -795,12 +806,12 @@ scanner = "@oven/bun-security-scanner" # example name, replace with your scanner
 
 When a security scanner is configured:
 
-* Auto-install is automatically disabled for security
-* Packages are scanned before installation
-* Installation is cancelled if fatal issues are found
-* Security warnings are displayed during installation
+- Auto-install is automatically disabled for security
+- Packages are scanned before installation
+- Installation is cancelled if fatal issues are found
+- Security warnings are displayed during installation
 
-Learn more about [using and writing security scanners](/docs/pm/security-scanner-api).
+Learn more about [using and writing security scanners](/pm/security-scanner-api).
 
 ### `install.minimumReleaseAge`
 
@@ -813,7 +824,7 @@ Configure a minimum age (in seconds) for npm package versions. During installati
 minimumReleaseAge = 259200
 ```
 
-See [Minimum release age](/docs/pm/cli/install#minimum-release-age).
+See [Minimum release age](/pm/cli/install#minimum-release-age).
 
 ### `install.minimumReleaseAgeExcludes`
 
@@ -928,7 +939,7 @@ bun run --silent dev
 
 ### `run.elide-lines` - truncate filtered output
 
-The number of lines of script output shown per script when using `--filter`. Default `10`. Set to `0` to show all lines. Equivalent to the `--elide-lines` flag.
+Truncate each script's output to its last N lines when using `--filter` in a terminal. Default `0` (show all lines). Equivalent to the `--elide-lines` flag.
 
 **File:** `bunfig.toml`
 ```toml

@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/websocket/context
 
 A WebSocket server typically needs to store some identifying information or context for each connected client.
 
-With [Bun.serve()](/docs/runtime/http/websockets#contextual-data), set this "contextual data" by passing a `data` parameter to `server.upgrade()` when upgrading the connection.
+With [Bun.serve()](/runtime/http/websockets#contextual-data), set this "contextual data" by passing a `data` parameter to `server.upgrade()` when upgrading the connection.
 
 **File:** `server.ts`
 ```ts
@@ -34,7 +34,7 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 It's common to read cookies/headers from the incoming request to identify the connecting client.
 

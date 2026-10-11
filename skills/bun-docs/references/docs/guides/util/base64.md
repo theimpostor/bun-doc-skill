@@ -43,6 +43,7 @@ const encoded = btoa("bun"); // => "YnVu"
 const decoded = atob(encoded); // => "bun"
 ```
 
-***
 
-See [Web APIs](/docs/runtime/web-apis).
+---
+
+See [Web APIs](/runtime/web-apis).

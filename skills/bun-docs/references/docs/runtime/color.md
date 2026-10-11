@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/color
 
 Format colors as CSS, ANSI, numbers, hex strings, and more
 
+
 `Bun.color(input, outputFormat?)` uses Bun's CSS parser to parse, normalize, and convert colors from user input to any of these output formats:
 
 | Format       | Example                          |
@@ -25,11 +26,11 @@ Format colors as CSS, ANSI, numbers, hex strings, and more
 
 Use it to:
 
-* Validate and normalize colors to persist in a database (`number` is the most database-friendly)
-* Convert colors to different formats
-* Color terminal output beyond the basic 16 colors (use `ansi` to auto-detect terminal color support, or `ansi-16`, `ansi-256`, or `ansi-16m` to target a specific color depth)
-* Format colors for use in CSS injected into HTML
-* Get the `r`, `g`, `b`, and `a` color components as JavaScript objects or numbers from a CSS color string
+- Validate and normalize colors to persist in a database (`number` is the most database-friendly)
+- Convert colors to different formats
+- Color terminal output beyond the basic 16 colors (use `ansi` to auto-detect terminal color support, or `ansi-16`, `ansi-256`, or `ansi-16m` to target a specific color depth)
+- Format colors for use in CSS injected into HTML
+- Get the `r`, `g`, `b`, and `a` color components as JavaScript objects or numbers from a CSS color string
 
 It's a built-in alternative to the npm packages [`color`](https://github.com/Qix-/color) and [`tinycolor2`](https://github.com/bgrins/TinyColor), with full support for parsing CSS color strings and zero dependencies.
 
@@ -37,19 +38,19 @@ It's a built-in alternative to the npm packages [`color`](https://github.com/Qix
 
 `Bun.color` accepts any of the following:
 
-* Standard CSS color names like `"red"`
-* Numbers like `0xff0000`
-* Hex strings like `"#f00"`
-* RGB strings like `"rgb(255, 0, 0)"`
-* RGBA strings like `"rgba(255, 0, 0, 1)"`
-* HSL strings like `"hsl(0, 100%, 50%)"`
-* HSLA strings like `"hsla(0, 100%, 50%, 1)"`
-* RGB objects like `{ r: 255, g: 0, b: 0 }`
-* RGBA objects like `{ r: 255, g: 0, b: 0, a: 1 }`
-* RGB arrays like `[255, 0, 0]`
-* RGBA arrays like `[255, 0, 0, 255]`
-* LAB strings like `"lab(50% 50 50)"`
-* ... anything else that CSS can parse as a single color value
+- Standard CSS color names like `"red"`
+- Numbers like `0xff0000`
+- Hex strings like `"#f00"`
+- RGB strings like `"rgb(255, 0, 0)"`
+- RGBA strings like `"rgba(255, 0, 0, 1)"`
+- HSL strings like `"hsl(0, 100%, 50%)"`
+- HSLA strings like `"hsla(0, 100%, 50%, 1)"`
+- RGB objects like `{ r: 255, g: 0, b: 0 }`
+- RGBA objects like `{ r: 255, g: 0, b: 0, a: 1 }`
+- RGB arrays like `[255, 0, 0]`
+- RGBA arrays like `[255, 0, 0, 255]`
+- LAB strings like `"lab(50% 50 50)"`
+- ... anything else that CSS can parse as a single color value
 
 ### Format colors as CSS
 
@@ -245,7 +246,7 @@ Bun.color([255, 0, 0], "HEX"); // "#FF0000"
 
 ### Bundle-time client-side color formatting
 
-Like many of Bun's APIs, you can invoke `Bun.color` at bundle time with a [macro](/docs/bundler/macros) for use in client-side JavaScript builds:
+Like many of Bun's APIs, you can invoke `Bun.color` at bundle time with a [macro](/bundler/macros) for use in client-side JavaScript builds:
 
 **File:** `client-side.ts`
 ```ts

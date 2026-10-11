@@ -3,12 +3,13 @@ Source: https://bun.com/docs/runtime/watch-mode
 
 Automatic reloading in Bun with --watch and --hot modes
 
+
 Bun supports two kinds of automatic reloading:
 
-* `--watch` mode, which hard restarts Bun's process when imported files change.
-* `--hot` mode, which soft reloads the code (without restarting the process) when imported files change.
+- `--watch` mode, which hard restarts Bun's process when imported files change.
+- `--hot` mode, which soft reloads the code (without restarting the process) when imported files change.
 
-***
+---
 
 ## `--watch` mode
 
@@ -26,12 +27,20 @@ To run your tests in `--watch` mode:
 bun --watch test
 ```
 
+To type check before every restart, add [`--check`](/runtime/check#watch-mode). After a type error, Bun waits for your next change instead of running the file.
+
+```bash
+bun --watch --check index.tsx
+```
+
 In `--watch` mode, Bun keeps track of all imported files and watches them for changes. When a file changes, Bun restarts the process with the same CLI arguments and environment variables as the initial run. If Bun crashes, `--watch` attempts to restart the process.
 
 > Note
+
 **⚡️ Reloads are fast.** The filesystem watchers you're probably used to have several layers of libraries wrapping the native APIs or, worse, rely on polling.
 
 Instead, Bun uses the operating system's native filesystem watcher APIs, like kqueue or inotify, to detect file changes. Bun also applies several optimizations to scale to larger projects, such as setting a high rlimit for file descriptors, statically allocating file path buffers, and reusing file descriptors when possible.
+
 
 The following examples show Bun live-reloading a file as you edit it, with VSCode configured to save the file [on each keystroke](https://code.visualstudio.com/docs/editor/codebasics#_save-auto-save).
 
@@ -66,14 +75,15 @@ bun --watch test
 > Note
 The **`--no-clear-screen`** flag, like TypeScript's `--preserveWatchOutput`, keeps Bun from clearing the terminal in
 watch mode. Use it when running multiple `bun build --watch` commands at the same time with a tool like
-`concurrently`, where one instance clearing the screen could hide another's errors: `bun build --watch   --no-clear-screen`.
+`concurrently`, where one instance clearing the screen could hide another's errors: `bun build --watch
+--no-clear-screen`.
 
 > Note
 Before each restart, `bun run --watch` runs the handlers your script registered for the kill signal. The default is
 `SIGTERM`, matching the signal Node.js sends its watched process. Use **`--watch-kill-signal`** to pick a different
 signal, e.g. `bun --watch --watch-kill-signal SIGINT index.ts`.
 
-***
+---
 
 ## `--hot` mode
 
@@ -113,9 +123,9 @@ bun --hot server.ts
 ```
 
 ```txt
+Reloaded 0 times
 Reloaded 1 times
 Reloaded 2 times
-Reloaded 3 times
 ```
 
 Traditional file watchers like `nodemon` restart the entire process, so HTTP servers and other stateful objects are lost. By contrast, `bun --hot` reflects the updated code without restarting the process.
@@ -140,12 +150,14 @@ Bun.serve({
 > Note
 Support for Vite's `import.meta.hot` is planned, to enable better lifecycle management for hot reloading and to align with the ecosystem.
 
+
 ### Implementation details
+
 On hot reload, Bun:
 
-* Resets the internal `require` cache and ES module registry (`Loader.registry`)
-* Runs the garbage collector synchronously (to minimize memory leaks, at the cost of runtime performance)
-* Re-transpiles all of your code from scratch (including sourcemaps)
-* Re-evaluates the code with JavaScriptCore
+- Resets the internal `require` cache and ES module registry (`Loader.registry`)
+- Runs the garbage collector synchronously (to minimize memory leaks, at the cost of runtime performance)
+- Re-transpiles all of your code from scratch (including sourcemaps)
+- Re-evaluates the code with JavaScriptCore
 
 This implementation isn't particularly optimized. It re-transpiles files that haven't changed. It makes no attempt at incremental compilation. It's a starting point.

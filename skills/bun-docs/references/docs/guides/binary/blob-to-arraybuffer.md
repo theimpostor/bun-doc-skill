@@ -9,6 +9,6 @@ const blob = new Blob(["hello world"]);
 const buf = await blob.arrayBuffer();
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

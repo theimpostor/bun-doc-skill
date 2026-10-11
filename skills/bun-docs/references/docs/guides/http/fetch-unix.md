@@ -14,7 +14,7 @@ const body = await response.json();
 console.log(body); // { ... }
 ```
 
-***
+---
 
 The `unix` option is the local file path to a unix domain socket. `fetch()` sends the request over that socket instead of a TCP connection. HTTPS is also supported: use the `https://` protocol in the URL instead of `http://`.
 

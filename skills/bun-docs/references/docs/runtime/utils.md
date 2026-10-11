@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/utils
 
 Use Bun's utility functions to work with the runtime
 
+
 ## `Bun.version`
 
 A `string` containing the version of the `bun` CLI that is currently running.
@@ -236,7 +237,7 @@ const currentFile = import.meta.url;
 Bun.openInEditor(currentFile);
 ```
 
-You can override this with the `debug.editor` setting in your [`bunfig.toml`](/docs/runtime/bunfig).
+You can override this with the `debug.editor` setting in your [`bunfig.toml`](/runtime/bunfig).
 
 **File:** `bunfig.toml`
 ```toml
@@ -303,19 +304,19 @@ Bun.deepEquals(new Foo(), { a: 1 }, true); // false
 
 Escapes the following characters from an input string:
 
-* `"` becomes `"`
-* `&` becomes `&`
-* `'` becomes `'`
-* `<` becomes `<`
-* `>` becomes `>`
+- `"` becomes `"`
+- `&` becomes `&`
+- `'` becomes `'`
+- `<` becomes `<`
+- `>` becomes `>`
 
-This function is optimized for large input. On an M1X, it processes 480 MB/s -
+This function is optimized for large input. On an M1 Max, it processes 480 MB/s -
 20 GB/s, depending on how much data is being escaped and whether there is non-ASCII
 text. Bun converts non-string types to a string before escaping.
 
 ## `Bun.stringWidth()`
 
-> Note: \~6,756x faster `string-width` alternative
+> Note: ~6,756x faster `string-width` alternative
 
 Get the column count of a string as a terminal would display it.
 Supports ANSI escape codes, emoji, and wide characters.
@@ -332,7 +333,7 @@ Use it to align text in a terminal or to check whether a string contains ANSI es
 
 The API matches the "string-width" npm package, so you can port existing code to Bun and vice versa.
 
-[In this benchmark](https://github.com/oven-sh/bun/blob/5147c0ba7379d85d4d1ed0714b84d6544af917eb/bench/snippets/string-width.mjs#L13), `Bun.stringWidth` is \~6,756x faster than the `string-width` npm package for input larger than about 500 characters. Big thanks to [sindresorhus](https://github.com/sindresorhus) for their work on `string-width`.
+[In this benchmark](https://github.com/oven-sh/bun/blob/5147c0ba7379d85d4d1ed0714b84d6544af917eb/bench/snippets/string-width.mjs#L13), `Bun.stringWidth` is ~6,756x faster than the `string-width` npm package for input larger than about 500 characters. Big thanks to [sindresorhus](https://github.com/sindresorhus) for their work on `string-width`.
 
 ```ts
 ❯ bun string-width.mjs
@@ -353,6 +354,7 @@ npm/string-width    500 chars ascii             249,710 ns/iter (239,970 ns … 
 `Bun.stringWidth` is implemented in native code with SIMD instructions and accounts for Latin1, UTF-16, and UTF-8 encodings. It passes `string-width`'s tests.
 
 ### View full benchmark
+
 1 nanosecond (ns) is 1 billionth of a second. For converting between units:
 
 | Unit | 1 Millisecond |
@@ -419,6 +421,7 @@ npm/string-width 19,000 chars ansi+emoji+ascii   27.19 ms/iter   (26.89 ms … 2
 npm/string-width 95,000 chars ansi+emoji+ascii     3.68 s/iter        (3.66 s … 3.7 s)    3.69 s     3.7 s     3.7 s
 ```
 
+
 TypeScript definition:
 
 **File:** `expandable`
@@ -447,7 +450,7 @@ namespace Bun {
 }
 ```
 
-***
+---
 
 ## `Bun.fileURLToPath()`
 
@@ -458,7 +461,7 @@ const path = Bun.fileURLToPath(new URL("file:///foo/bar.txt"));
 console.log(path); // "/foo/bar.txt"
 ```
 
-***
+---
 
 ## `Bun.pathToFileURL()`
 
@@ -469,7 +472,7 @@ const url = Bun.pathToFileURL("/foo/bar.txt");
 console.log(url); // "file:///foo/bar.txt"
 ```
 
-***
+---
 
 ## `Bun.gzipSync()`
 
@@ -486,6 +489,7 @@ compressed; // => Uint8Array(30)
 Optionally, pass a parameters object as the second argument:
 
 ### zlib compression options
+
 **File:** `expandable`
 ```ts
 export type ZlibCompressionOptions = {
@@ -558,7 +562,8 @@ export type ZlibCompressionOptions = {
 };
 ```
 
-***
+
+---
 
 ## `Bun.gunzipSync()`
 
@@ -574,7 +579,7 @@ dec.decode(uncompressed);
 // => "hellohellohello..."
 ```
 
-***
+---
 
 ## `Bun.deflateSync()`
 
@@ -590,7 +595,7 @@ compressed; // => Uint8Array(12)
 
 The second argument supports the same set of configuration options as [`Bun.gzipSync`](#bun-gzipsync).
 
-***
+---
 
 ## `Bun.inflateSync()`
 
@@ -606,7 +611,7 @@ dec.decode(decompressed);
 // => "hellohellohello..."
 ```
 
-***
+---
 
 ## `Bun.zstdCompress()` / `Bun.zstdCompressSync()`
 
@@ -642,7 +647,7 @@ dec.decode(decompressedSync);
 // => "hellohellohello..."
 ```
 
-***
+---
 
 ## `Bun.inspect()`
 
@@ -732,7 +737,7 @@ console.log(
 );
 ```
 
-***
+---
 
 ## `Bun.nanoseconds()`
 
@@ -743,7 +748,7 @@ Bun.nanoseconds();
 // => 7288958
 ```
 
-***
+---
 
 ## `Bun.readableStreamTo*()`
 
@@ -779,11 +784,11 @@ await Bun.readableStreamToFormData(stream);
 await Bun.readableStreamToFormData(stream, multipartFormBoundary);
 ```
 
-***
+---
 
 ## `Bun.resolveSync()`
 
-Resolves a file path or module specifier using Bun's internal [module resolution](/docs/runtime/module-resolution) algorithm. The first argument is the path to resolve, and the second argument is the "root". If nothing matches, it throws an `Error`.
+Resolves a file path or module specifier using Bun's internal [module resolution](/runtime/module-resolution) algorithm. The first argument is the path to resolve, and the second argument is the "root". If nothing matches, it throws an `Error`.
 
 ```ts
 Bun.resolveSync("./foo.ts", "/path/to/project");
@@ -806,11 +811,11 @@ To resolve relative to the directory containing the current file, pass `import.m
 Bun.resolveSync("./foo.ts", import.meta.dir);
 ```
 
-***
+---
 
 ## `Bun.stripANSI()`
 
-> Note: \~6-57x faster `strip-ansi` alternative
+> Note: ~6-57x faster `strip-ansi` alternative
 
 `Bun.stripANSI(text: string): string`
 
@@ -875,7 +880,7 @@ npm/strip-ansi 212,992 chars long-ansi      1.36 ms/iter   1.38 ms
 
 ```
 
-***
+---
 
 ## `Bun.wrapAnsi()`
 
@@ -966,7 +971,7 @@ namespace Bun {
 }
 ```
 
-***
+---
 
 ## `serialize` & `deserialize` in `bun:jsc`
 
@@ -982,7 +987,7 @@ console.log(obj); // => { foo: "bar" }
 
 Internally, [`structuredClone`](https://developer.mozilla.org/en-US/docs/Web/API/structuredClone) and [`postMessage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) serialize and deserialize the same way. `serialize` and `deserialize` expose the underlying [HTML Structured Clone Algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) to JavaScript as a SharedArrayBuffer.
 
-***
+---
 
 ## `estimateShallowMemoryUsageOf` in `bun:jsc`
 

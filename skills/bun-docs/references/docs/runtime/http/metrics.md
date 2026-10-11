@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/http/metrics
 
 Monitor server activity with built-in metrics
 
+
 ### `server.pendingRequests` and `server.pendingWebSockets`
 
 Monitor server activity with built-in counters:

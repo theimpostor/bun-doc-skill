@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/ecosystem/tanstack-start
 
 [TanStack Start](https://tanstack.com/start/latest) is a full-stack framework powered by TanStack Router and [Vite](https://vite.dev/). It supports full-document SSR, streaming, server functions, and bundling.
 
-***
+---
 
 ### Create a new TanStack Start app
 Use the interactive CLI to create a new TanStack Start app.
@@ -35,7 +35,8 @@ In the scripts field of your `package.json`, prefix the Vite CLI commands with `
 }
 ```
 
-***
+
+---
 
 ## Hosting
 
@@ -705,46 +706,40 @@ bun run start
 
 The server listens on port 3000 by default; set the `PORT` environment variable to change it.
 
+
 ### Vercel
 Link: `/guides/deployment/vercel`
 Deploy on Vercel
-
 ### Render
 Link: `/guides/deployment/render`
 Deploy on Render
-
 ### Railway
 Link: `/guides/deployment/railway`
 Deploy on Railway
-
 ### DigitalOcean
 Link: `/guides/deployment/digital-ocean`
 Deploy on DigitalOcean
-
 ### AWS Lambda
 Link: `/guides/deployment/aws-lambda`
 Deploy on AWS Lambda
-
 ### Google Cloud Run
 Link: `/guides/deployment/google-cloud-run`
 Deploy on Google Cloud Run
 
-***
+---
 
 ## Templates
 
 ### Todo App with Tanstack + Bun
 Link: `https://github.com/bun-templates/bun-tanstack-todo`
 A Todo application built with Bun, TanStack Start, and PostgreSQL.
-
 ### Bun + TanStack Start Application
 Link: `https://github.com/bun-templates/bun-tanstack-basic`
 A TanStack Start template using Bun with SSR and file-based routing.
-
 ### Basic Bun + Tanstack Starter
 Link: `https://github.com/bun-templates/bun-tanstack-start`
 The basic TanStack starter using the Bun runtime and Bun's file APIs.
 
-***
+---
 
 [→ See TanStack Start's hosting documentation](https://tanstack.com/start/latest/docs/framework/react/guide/hosting)

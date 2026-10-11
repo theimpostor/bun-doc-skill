@@ -13,7 +13,7 @@ test.skip("unimplemented feature", () => {
 });
 ```
 
-***
+---
 
 Running `bun test` doesn't execute this test. The terminal output marks it as skipped.
 
@@ -31,9 +31,9 @@ test.test.ts:
 Ran 1 test across 1 file. [74.00ms]
 ```
 
-***
+---
 
 See also:
 
-* [Mark a test as a todo](/docs/guides/test/todo-tests)
-* [Writing tests](/docs/test/writing-tests)
+- [Mark a test as a todo](/guides/test/todo-tests)
+- [Writing tests](/test/writing-tests)

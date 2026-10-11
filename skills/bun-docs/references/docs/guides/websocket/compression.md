@@ -15,7 +15,7 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 To enable compression for individual messages, pass `true` as the second parameter to `ws.send()`. This requires `perMessageDeflate` to be enabled; otherwise Bun sends the message uncompressed.
 

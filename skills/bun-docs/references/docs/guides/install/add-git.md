@@ -8,7 +8,7 @@ Bun supports directly adding GitHub repositories as dependencies of your project
 bun add github:lodash/lodash
 ```
 
-***
+---
 
 This adds the following line to your `package.json`:
 
@@ -21,7 +21,7 @@ This adds the following line to your `package.json`:
 }
 ```
 
-***
+---
 
 Bun supports several protocols for specifying Git dependencies.
 
@@ -34,6 +34,6 @@ bun add github:lodash/lodash#4.17.21
 
 When possible, Bun downloads GitHub dependencies as HTTP tarballs, which is faster.
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

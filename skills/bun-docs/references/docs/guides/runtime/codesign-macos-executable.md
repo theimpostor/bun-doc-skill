@@ -3,13 +3,14 @@ Source: https://bun.com/docs/guides/runtime/codesign-macos-executable
 
 Fix the "can't be opened because it is from an unidentified developer" Gatekeeper warning when running your JavaScript executable.
 
+
 Compile your executable using the `--compile` flag.
 
 ```sh
 bun build --compile ./path/to/entry.ts --outfile myapp
 ```
 
-***
+---
 
 List your available signing identities. You'll pass one of these to `codesign` in a later step. This command requires macOS.
 
@@ -22,7 +23,7 @@ security find-identity -v -p codesigning
    1 valid identities found
 ```
 
-***
+---
 
 Optional, but recommended: create an `entitlements.plist` file with the necessary permissions for the JavaScript engine to work correctly.
 
@@ -46,7 +47,7 @@ Optional, but recommended: create an `entitlements.plist` file with the necessar
 </plist>
 ```
 
-***
+---
 
 Sign your executable using the `codesign` command and verify it works.
 
@@ -55,6 +56,6 @@ codesign --entitlements entitlements.plist -vvvv --deep --sign "XXXXXXXXXX" ./my
 codesign -vvv --verify ./myapp
 ```
 
-***
+---
 
-For more information on macOS codesigning, refer to [Apple's Code Signing documentation](https://developer.apple.com/documentation/security/code_signing_services). For details about creating single-file executables with Bun, see [Standalone Executables](/docs/bundler/executables). This guide requires Bun v1.2.4 or newer.
+For more information on macOS codesigning, refer to [Apple's Code Signing documentation](https://developer.apple.com/documentation/security/code_signing_services). For details about creating single-file executables with Bun, see [Standalone Executables](/bundler/executables). This guide requires Bun v1.2.4 or newer.

@@ -9,6 +9,6 @@ const blob = new Blob(["hello world"]);
 const arr = new DataView(await blob.arrayBuffer());
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

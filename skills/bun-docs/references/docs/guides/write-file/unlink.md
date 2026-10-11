@@ -11,6 +11,6 @@ const file = Bun.file(path);
 await file.delete();
 ```
 
-***
+---
 
-See [`Bun.file()`](/docs/runtime/file-io#reading-files-bun-file).
+See [`Bun.file()`](/runtime/file-io#reading-files-bun-file).

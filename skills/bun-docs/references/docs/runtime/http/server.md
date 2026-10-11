@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/http/server
 
 Use `Bun.serve` to start a high-performance HTTP server in Bun
 
+
 ## Basic Setup
 
 **File:** `index.ts`
@@ -47,7 +48,7 @@ const server = Bun.serve({
 console.log(`Server running at ${server.url}`);
 ```
 
-***
+---
 
 ## HTML imports
 
@@ -67,11 +68,11 @@ Bun.serve({
 });
 ```
 
-HTML imports do more than serve HTML: they run Bun's [bundler](/docs/bundler), JavaScript transpiler, and CSS parser, so you can build frontends with React, TypeScript, and Tailwind CSS.
+HTML imports do more than serve HTML: they run Bun's [bundler](/bundler), JavaScript transpiler, and CSS parser, so you can build frontends with React, TypeScript, and Tailwind CSS.
 
-For a complete guide to building full-stack applications with HTML imports, see [fullstack dev server](/docs/bundler/fullstack).
+For a complete guide to building full-stack applications with HTML imports, see [fullstack dev server](/bundler/fullstack).
 
-***
+---
 
 ## Configuration
 
@@ -114,31 +115,31 @@ console.log(server.url); // http://localhost:3000
 
 Several flags and environment variables set the default port, which Bun uses when the `port` option is not set.
 
-* `--port` CLI flag
+- `--port` CLI flag
 
 ```sh
 bun --port=4002 server.ts
 ```
 
-* `BUN_PORT` environment variable
+- `BUN_PORT` environment variable
 
 ```sh
 BUN_PORT=4002 bun server.ts
 ```
 
-* `PORT` environment variable
+- `PORT` environment variable
 
 ```sh
 PORT=4002 bun server.ts
 ```
 
-* `NODE_PORT` environment variable
+- `NODE_PORT` environment variable
 
 ```sh
 NODE_PORT=4002 bun server.ts
 ```
 
-***
+---
 
 ## Unix domain sockets
 
@@ -168,7 +169,7 @@ Bun.serve({
 
 Unlike unix domain sockets, abstract namespace sockets are not bound to the filesystem and are automatically removed when the last reference to the socket is closed.
 
-***
+---
 
 ## HTTP/3 (QUIC)
 
@@ -208,9 +209,39 @@ Bun.serve({
 ```
 
 > Note
-`http3` is not supported with unix domain sockets: QUIC requires a UDP port. `http1: false` requires `http3: true`.
+`http3` is not supported with unix domain sockets: QUIC requires a UDP port. `http1: false` requires `http2: true` or
+`http3: true`.
 
-***
+---
+
+## HTTP/2
+
+> Note: HTTP/2 support in `Bun.serve` is **experimental** and may change in future releases.
+
+Set `http2: true` to serve HTTP/2 on the same port and with the same routes and `fetch` handler as HTTP/1.1.
+
+```ts
+Bun.serve({
+  tls: {
+    key: Bun.file("./key.pem"),
+    cert: Bun.file("./cert.pem"),
+  },
+  http2: true,
+  fetch(req) {
+    return new Response("Hello over HTTP/2!");
+  },
+});
+```
+
+With `tls`, Bun picks the protocol per connection using ALPN. Clients that offer `h2` (browsers, `curl`, `node:http2`) get HTTP/2. Everyone else gets HTTP/1.1.
+
+Without `tls`, Bun serves HTTP/2 to connections that open with the HTTP/2 preface ("prior knowledge"), such as `curl --http2-prior-knowledge` or `http2.connect("http://...")` from `node:http2`. Other connections get HTTP/1.1.
+
+Set `http1: false` to refuse HTTP/1.x clients. Over TLS, clients that offer ALPN without `h2` fail the handshake; clients that send no ALPN at all, and cleartext connections that don't start with the preface, receive `505 HTTP Version Not Supported`. With `http1: false` the server cannot accept WebSocket connections, since `server.upgrade()` is HTTP/1.1-only.
+
+`server.upgrade()` only works on HTTP/1.1 requests. WebSockets over HTTP/2, server push, and response trailers (needed by gRPC) are not supported.
+
+---
 
 ## idleTimeout
 
@@ -234,7 +265,7 @@ Bun.serve({
 quiet for longer than `idleTimeout`, Bun closes the connection mid-response. For long-lived streams, disable the
 timeout for that request with [`server.timeout(req, 0)`](#server-timeout-request-seconds).
 
-***
+---
 
 ## export default syntax
 
@@ -255,7 +286,7 @@ The type parameter `<undefined>` is the WebSocket data type. If you add a `webso
 
 You can run this file as-is: when Bun sees a file with a `default` export containing a `fetch` handler, it passes the export into `Bun.serve`.
 
-***
+---
 
 ## Hot Route Reloading
 
@@ -276,7 +307,7 @@ server.reload({
 });
 ```
 
-***
+---
 
 ## Server Lifecycle Methods
 
@@ -350,7 +381,7 @@ server.reload({
 
 Use this for development and hot reloading. You can update only `fetch`, `error`, `routes`, and `websocket`.
 
-***
+---
 
 ## Per-Request Controls
 
@@ -372,7 +403,7 @@ const server = Bun.serve({
 });
 ```
 
-Use `server.timeout(req, 0)` to keep a long-lived streaming response (like Server-Sent Events) alive without raising the global `idleTimeout` for every request:
+Use `server.timeout(req, 0)` to keep a long-lived streaming response (like Server-Sent Events) alive without raising the global `idleTimeout` for every request. Over HTTP/2 the timeout belongs to the connection, so the most permissive value among its open requests applies:
 
 ```ts
 Bun.serve({
@@ -413,7 +444,7 @@ const server = Bun.serve({
 
 Returns `null` for closed requests or Unix domain sockets.
 
-***
+---
 
 ## Server Metrics
 
@@ -449,7 +480,7 @@ const server = Bun.serve({
 });
 ```
 
-***
+---
 
 ## Benchmarks
 
@@ -475,16 +506,17 @@ The `Bun.serve` server can handle roughly 2.5x more requests per second than Nod
 
 | Runtime | Requests per second |
 | ------- | ------------------- |
-| Node 16 | \~64,000            |
-| Bun     | \~160,000           |
+| Node 16 | ~64,000             |
+| Bun     | ~160,000            |
 
 ![image](https://user-images.githubusercontent.com/709451/162389032-fc302444-9d03-46be-ba87-c12bd8ce89a0.png)
 
-***
+---
 
 ## Practical example: REST API
 
 Here's a basic database-backed REST API using Bun's router with zero dependencies:
+
 
 **File:** `server.ts`
 ```ts
@@ -553,7 +585,8 @@ export interface Post {
 }
 ```
 
-***
+
+---
 
 ## Reference
 

@@ -19,6 +19,6 @@ const uint8 = await stream.bytes();
 
 `Bun.readableStreamToBytes(stream)` does the same thing, but is deprecated in favor of `stream.bytes()`.
 
-***
+---
 
-See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).
+See [Bun's other `ReadableStream` conversion functions](/runtime/utils#bun-readablestreamto).

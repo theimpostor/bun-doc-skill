@@ -13,6 +13,6 @@ const decompressed = Bun.inflateSync(compressed);
 // => Uint8Array
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils).
+See [Utils](/runtime/utils).

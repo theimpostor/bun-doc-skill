@@ -43,7 +43,7 @@ bun create nuxt@latest my-nuxt-app
 ╰──────────────────────╯
 ```
 
-***
+---
 
 To start the dev server, run `bun --bun run dev` from the project root. This executes the `nuxt dev` command defined in the `"dev"` script in `package.json`.
 
@@ -72,7 +72,7 @@ $ nuxt dev
 ℹ Vite client warmed up in 9ms
 ```
 
-***
+---
 
 Once the dev server starts, open [http://localhost:3000](http://localhost:3000) to see the app. It renders Nuxt's built-in `NuxtWelcome` template component.
 
@@ -81,7 +81,7 @@ To start developing your app, replace `<NuxtWelcome />` in `app/app.vue` with yo
 ![Demo Nuxt app running on
 localhost](https://github.com/oven-sh/bun/assets/3084745/2c683ecc-3298-4bb0-b8c0-cf4cfaea1daa)
 
-***
+---
 
 For production builds, the default preset is compatible with Bun, but the [Bun preset](https://nitro.build/deploy/runtimes/bun) generates better optimized builds.
 
@@ -110,6 +110,6 @@ After building, start the server:
 bun run ./.output/server/index.mjs
 ```
 
-***
+---
 
 Refer to the [Nuxt website](https://nuxt.com/docs) for complete documentation.

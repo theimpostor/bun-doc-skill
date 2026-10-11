@@ -3,9 +3,10 @@ Source: https://bun.com/docs/project/contributing
 
 Contributing to Bun
 
-Configuring a development environment for Bun can take 10-30 minutes depending on your internet connection and computer speed. You will need \~10GB of free disk space for the repository and build artifacts.
 
-If you are using Windows, see [Building Windows](/docs/project/building-windows).
+Configuring a development environment for Bun can take 10-30 minutes depending on your internet connection and computer speed. You will need ~10GB of free disk space for the repository and build artifacts.
+
+If you are using Windows, see [Building Windows](/project/building-windows).
 
 ## Using Nix (Alternative)
 
@@ -21,6 +22,7 @@ bun bd
 ## Install Dependencies (Manual)
 
 Using your system's package manager, install Bun's dependencies:
+
 
 **File:** `macOS`
 ```bash
@@ -39,13 +41,14 @@ sudo pacman -S base-devel cmake git go libiconv libtool make ninja pkg-config py
 
 **File:** `Fedora`
 ```bash
-sudo dnf install clang21 llvm21 lld21 cmake git golang libtool ninja-build pkg-config ruby libatomic-static libstdc++-static sed unzip which libicu-devel 'perl(Math::BigInt)'
+sudo dnf install clang23 llvm23 lld23 cmake git golang libtool ninja-build pkg-config ruby libatomic-static libstdc++-static sed unzip which libicu-devel 'perl(Math::BigInt)'
 ```
 
 **File:** `openSUSE`
 ```bash
 sudo zypper install go cmake ninja automake git icu rustup
 ```
+
 
 Bun is written in Rust and requires a specific nightly toolchain (pinned in `rust-toolchain.toml`). Install Rust with [rustup](https://rustup.rs) rather than your distro's `rust`/`cargo` packages — the build scripts use rustup to automatically install and update the pinned nightly:
 
@@ -54,6 +57,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 Before starting, install a release build of Bun: the build uses Bun's bundler to transpile and minify code, and to run the code generation scripts.
+
 
 **File:** `Native`
 ```bash
@@ -70,6 +74,7 @@ npm install -g bun
 brew tap oven-sh/bun
 brew install bun
 ```
+
 
 ### Optional: Install `ccache`
 
@@ -96,17 +101,18 @@ The build scripts detect and use `ccache` automatically if it's available. Check
 
 ## Install LLVM
 
-Bun requires LLVM 21.1.8 (`clang` is part of LLVM). The build system enforces this version: a mismatched version causes memory allocation failures at runtime. In most cases, you can install LLVM through your system package manager:
+Bun requires LLVM 23.1.1 (`clang` is part of LLVM). The build system enforces this version: a mismatched version causes memory allocation failures at runtime. In most cases, you can install LLVM through your system package manager:
+
 
 **File:** `macOS`
 ```bash
-brew install llvm@21
+brew install llvm@23
 ```
 
 **File:** `Ubuntu/Debian`
 ```bash
 # LLVM has an automatic installation script that is compatible with all versions of Ubuntu
-wget https://apt.llvm.org/llvm.sh -O - | sudo bash -s -- 21 all
+wget https://apt.llvm.org/llvm.sh -O - | sudo bash -s -- 23 all
 ```
 
 **File:** `Arch`
@@ -121,31 +127,34 @@ sudo dnf install llvm clang lld-devel
 
 **File:** `openSUSE`
 ```bash
-sudo zypper install clang21 lld21 llvm21
+sudo zypper install clang23 lld23 llvm23
 ```
 
-If none of these work, install it [manually](https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.8).
 
-Make sure Clang/LLVM 21 is in your path:
+If none of these work, install it [manually](https://github.com/llvm/llvm-project/releases/tag/llvmorg-23.1.1).
+
+Make sure Clang/LLVM 23 is in your path:
 
 ```bash
-which clang-21
+which clang-23
 ```
 
 If not, add it manually:
 
+
 **File:** `macOS`
 ```bash
 # use fish_add_path if you're using fish
-# use path+="$(brew --prefix llvm@21)/bin" if you are using zsh
-export PATH="$(brew --prefix llvm@21)/bin:$PATH"
+# use path+="$(brew --prefix llvm@23)/bin" if you are using zsh
+export PATH="$(brew --prefix llvm@23)/bin:$PATH"
 ```
 
 **File:** `Arch`
 ```bash
 # use fish_add_path if you're using fish
-export PATH="$PATH:/usr/lib/llvm21/bin"
+export PATH="$PATH:/usr/lib/llvm23/bin"
 ```
+
 
 > Warning
 ⚠️ On Ubuntu \<= 20.04, you may need to install the C++ standard library separately. See the [troubleshooting section](#span-file-not-found-on-ubuntu).
@@ -189,22 +198,22 @@ bun bd ./foo.ts
 
 A full debug build can take a few minutes when Rust or C++ has changed; cargo's incremental compilation makes subsequent Rust-only rebuilds much faster. If your development workflow is "change one line, save, rebuild", you will still spend too much time waiting for the link step. Instead:
 
-* Batch up your changes
-* Use `cargo check -p <crate>` (or `bun run rust:check` for the whole workspace) to type-check Rust changes without linking. `bun run watch` runs `cargo check` on every save.
-* Ensure rust-analyzer is running for inline diagnostics (the recommended VSCode extensions set this up)
-* Prefer using the debugger ("CodeLLDB" in VSCode) to step through the code.
-* Use debug logs. `BUN_DEBUG_<scope>=1` enables debug logging for the corresponding `declare_scope!(<scope>, ...)` / `scoped_log!(<scope>, ...)` logs. Set `BUN_DEBUG_QUIET_LOGS=1` to disable all debug logging that isn't explicitly enabled. To dump debug logs into a file, set `BUN_DEBUG=<path-to-file>.log`. Debug logs are removed in release builds.
-* src/js/**.ts changes rebuild almost instantly. Single-crate Rust changes and C++ changes are incremental; only the final link is unavoidable.
+- Batch up your changes
+- Use `cargo check -p <crate>` (or `bun run rust:check` for the whole workspace) to type-check Rust changes without linking. `bun run watch` runs `cargo check` on every save.
+- Ensure rust-analyzer is running for inline diagnostics (the recommended VSCode extensions set this up)
+- Prefer using the debugger ("CodeLLDB" in VSCode) to step through the code.
+- Use debug logs. `BUN_DEBUG_<scope>=1` enables debug logging for the corresponding `declare_scope!(<scope>, ...)` / `scoped_log!(<scope>, ...)` logs. Set `BUN_DEBUG_QUIET_LOGS=1` to disable all debug logging that isn't explicitly enabled. To dump debug logs into a file, set `BUN_DEBUG=<path-to-file>.log`. Debug logs are removed in release builds.
+- src/js/**.ts changes rebuild almost instantly. Single-crate Rust changes and C++ changes are incremental; only the final link is unavoidable.
 
 ## Code generation scripts
 
 Bun's build process runs several code generation scripts automatically when certain files change:
 
-* `./src/codegen/generate-jssink.ts` -- Generates `build/debug/codegen/JSSink.cpp`, `build/debug/codegen/JSSink.h` which implement various classes for interfacing with `ReadableStream`. This is internally how `FileSink`, `ArrayBufferSink`, `"type": "direct"` streams and other code related to streams work.
-* `./src/codegen/generate-classes.ts` -- Generates Rust & C++ bindings for JavaScriptCore classes implemented in Rust. `**/*.classes.ts` files define the interfaces for classes, methods, prototypes, and getters/setters; the code generator reads them to generate the boilerplate that implements the JavaScript objects in C++ and wires them up to Rust.
-* `./src/codegen/cppbind.ts` -- Scans the C++ bindings for functions marked with an export attribute and generates automatic Rust FFI wrappers (`cpp.rs`) for them.
-* `./src/codegen/bundle-modules.ts` -- Bundles built-in modules like `node:fs`, `bun:ffi` into files included in the final binary. In development, these can be reloaded without rebuilding native code (you still need to run `bun run build`, but it re-reads the transpiled files from disk afterwards). In release builds, these are embedded into the binary.
-* `./src/codegen/bundle-functions.ts` -- Bundles globally-accessible functions implemented in JavaScript/TypeScript like `ReadableStream` and `WritableStream`. These are used similarly to the builtin modules, but the output more closely aligns with what WebKit/Safari does for Safari's built-in functions, so implementations can be copy-pasted from WebKit as a starting point.
+- `./src/codegen/generate-jssink.ts` -- Generates `build/debug/codegen/JSSink.cpp`, `build/debug/codegen/JSSink.h` which implement various classes for interfacing with `ReadableStream`. This is internally how `FileSink`, `ArrayBufferSink`, `"type": "direct"` streams and other code related to streams work.
+- `./src/codegen/generate-classes.ts` -- Generates Rust & C++ bindings for JavaScriptCore classes implemented in Rust. `**/*.classes.ts` files define the interfaces for classes, methods, prototypes, and getters/setters; the code generator reads them to generate the boilerplate that implements the JavaScript objects in C++ and wires them up to Rust.
+- `./src/codegen/cppbind.ts` -- Scans the C++ bindings for functions marked with an export attribute and generates automatic Rust FFI wrappers (`cpp.rs`) for them.
+- `./src/codegen/bundle-modules.ts` -- Bundles built-in modules like `node:fs`, `bun:ffi` into files included in the final binary. In development, these can be reloaded without rebuilding native code (you still need to run `bun run build`, but it re-reads the transpiled files from disk afterwards). In release builds, these are embedded into the binary.
+- `./src/codegen/bundle-functions.ts` -- Bundles globally-accessible functions implemented in JavaScript/TypeScript like `ReadableStream` and `WritableStream`. These are used similarly to the builtin modules, but the output more closely aligns with what WebKit/Safari does for Safari's built-in functions, so implementations can be copy-pasted from WebKit as a starting point.
 
 ## Modifying ESM modules
 
@@ -283,13 +292,13 @@ bun sync-webkit-source
 bun run build:local
 ```
 
-`bun run build:local` handles everything: configuring JSC, building JSC, and building Bun. On subsequent runs, JSC rebuilds incrementally if any WebKit sources changed. `ninja -Cbuild/debug-local` also works after the first build, and builds both Bun and JSC.
+`bun run build:local` handles everything: configuring JSC, building JSC, and building Bun. On subsequent runs, JSC rebuilds incrementally if any WebKit sources changed.
 
 The build output goes to `./build/debug-local` (instead of `./build/debug`), so you'll need to update a couple of places:
 
-* The first line in `src/js/builtins.d.ts`
-* The `CompilationDatabase` line in `.clangd` config should be `CompilationDatabase: build/debug-local`
-* In `.vscode/launch.json`, many configurations use `./build/debug/`, change them as you see fit
+- The first line in `src/js/builtins.d.ts`
+- The `CompilationDatabase` line in `.clangd` config should be `CompilationDatabase: build/debug-local`
+- In `.vscode/launch.json`, many configurations use `./build/debug/`, change them as you see fit
 
 The WebKit folder, including build artifacts, is 8GB+ in size.
 
@@ -319,7 +328,7 @@ The issue may also surface when first running `bun run build`, with Clang unable
 ```txt
 The C++ compiler
 
-  "/usr/bin/clang++-21"
+  "/usr/bin/clang++-23"
 
 is not able to compile a simple test program.
 ```
@@ -371,9 +380,9 @@ The built version of Bun may not work on other systems if compiled this way.
 
 ## Using bun-debug
 
-* Disable logging: `BUN_DEBUG_QUIET_LOGS=1 bun-debug ...` (to disable all debug logging)
-* Enable logging for a specific scope: `BUN_DEBUG_EventLoop=1 bun-debug ...` (to enable `scoped_log!(EventLoop, ...)` output)
-* Bun transpiles every file it runs. To see the actual executed source in a debug build, find it in `/tmp/bun-debug-src/...path/to/file`. For example, the transpiled version of `/home/bun/index.ts` is in `/tmp/bun-debug-src/home/bun/index.ts`
+- Disable logging: `BUN_DEBUG_QUIET_LOGS=1 bun-debug ...` (to disable all debug logging)
+- Enable logging for a specific scope: `BUN_DEBUG_EventLoop=1 bun-debug ...` (to enable `scoped_log!(EventLoop, ...)` output)
+- Bun transpiles every file it runs. To see the actual executed source in a debug build, find it in `/tmp/bun-debug-src/...path/to/file`. For example, the transpiled version of `/home/bun/index.ts` is in `/tmp/bun-debug-src/home/bun/index.ts`
 
 ## Contributing to the docs
 
@@ -383,14 +392,14 @@ The docs are the MDX files in `docs/` in the Bun repository. [bun.com/docs](http
 
 A docs page describes what Bun does and what you can do with it. Write it so that a developer who is new to Bun can read the page once and act on it. These guidelines are adapted from the [Next.js docs contribution guide](https://nextjs.org/docs/community/contribution-guide#voice):
 
-* Write short sentences that each make one point. If a sentence needs several commas or a parenthetical, split it up or turn it into a list.
-* Use plain words: "use" rather than "utilize", "to" rather than "in order to". Cut filler such as "Note that" and "Please".
-* Use the active voice and name the actor: "Bun reads `bunfig.toml`", rather than "`bunfig.toml` is read". A sentence built around "is" and "by" is usually passive.
-* Describe current behavior in the present tense: "Bun installs the package", rather than "Bun will install the package".
-* Name the subject when "this" or "it" could refer to more than one thing: "`--isolate` is how Jest behaves by default", rather than "This is how Jest behaves by default".
-* Address the reader as "you", and make Bun (or the specific tool) the other actor: "Bun caches the tarball", rather than "we cache the tarball" or "let's cache the tarball".
-* Leave out "easy", "simple", "just", and "quick". They add nothing when a task is easy and discourage readers when it is not. State the concrete property instead: "one command", "no configuration".
-* Say what to do rather than what to avoid: "use `port: 0` so the operating system picks a free port", rather than "don't hardcode ports". State limitations plainly; a limitation is a fact, not a warning to the reader.
-* Use gender-neutral language: "developers", "users", "they".
-* Make link text name its destination: "see [`bun install`](/docs/pm/cli/install)", rather than "see here".
-* Run every code example before you publish it, and check option names and defaults against the implementation on `main`.
+- Write short sentences that each make one point. If a sentence needs several commas or a parenthetical, split it up or turn it into a list.
+- Use plain words: "use" rather than "utilize", "to" rather than "in order to". Cut filler such as "Note that" and "Please".
+- Use the active voice and name the actor: "Bun reads `bunfig.toml`", rather than "`bunfig.toml` is read". A sentence built around "is" and "by" is usually passive.
+- Describe current behavior in the present tense: "Bun installs the package", rather than "Bun will install the package".
+- Name the subject when "this" or "it" could refer to more than one thing: "`--isolate` is how Jest behaves by default", rather than "This is how Jest behaves by default".
+- Address the reader as "you", and make Bun (or the specific tool) the other actor: "Bun caches the tarball", rather than "we cache the tarball" or "let's cache the tarball".
+- Leave out "easy", "simple", "just", and "quick". They add nothing when a task is easy and discourage readers when it is not. State the concrete property instead: "one command", "no configuration".
+- Say what to do rather than what to avoid: "use `port: 0` so the operating system picks a free port", rather than "don't hardcode ports". State limitations plainly; a limitation is a fact, not a warning to the reader.
+- Use gender-neutral language: "developers", "users", "they".
+- Make link text name its destination: "see [`bun install`](/pm/cli/install)", rather than "see here".
+- Run every code example before you publish it, and check option names and defaults against the implementation on `main`.

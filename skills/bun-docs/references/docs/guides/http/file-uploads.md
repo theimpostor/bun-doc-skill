@@ -26,7 +26,7 @@ const server = Bun.serve({
 console.log(`Listening on http://localhost:${server.port}`);
 ```
 
-***
+---
 
 Define the HTML form in another file, `index.html`.
 
@@ -48,7 +48,7 @@ Define the HTML form in another file, `index.html`.
 </html>
 ```
 
-***
+---
 
 Run the server and visit [`localhost:4000`](http://localhost:4000) to see the form.
 
@@ -57,13 +57,13 @@ bun run index.ts
 Listening on http://localhost:4000
 ```
 
-***
+---
 
 The form sends a `POST` request with the form data to the `/action` endpoint. Handle that request in the server.
 
 First, call [`.formData()`](https://developer.mozilla.org/en-US/docs/Web/API/Request/formData) on the incoming `Request` to asynchronously parse its contents into a `FormData` instance. Then use [`.get()`](https://developer.mozilla.org/en-US/docs/Web/API/FormData/get) to extract the `name` and `profilePicture` fields; `name` is a `string` and `profilePicture` is a `Blob`.
 
-Finally, write the `Blob` to disk with [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
+Finally, write the `Blob` to disk with [`Bun.write()`](/runtime/file-io#writing-files-bun-write).
 
 **File:** `index.ts`
 ```ts

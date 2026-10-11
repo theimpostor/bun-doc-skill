@@ -8,6 +8,6 @@ Use `Bun.nanoseconds()` to get the total number of nanoseconds the `bun` process
 Bun.nanoseconds();
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils) for more utilities.
+See [Utils](/runtime/utils) for more utilities.

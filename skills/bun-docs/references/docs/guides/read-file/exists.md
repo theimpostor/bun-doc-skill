@@ -12,6 +12,6 @@ const file = Bun.file(path);
 await file.exists(); // boolean;
 ```
 
-***
+---
 
-See [File I/O](/docs/runtime/file-io) for more on working with `BunFile`.
+See [File I/O](/runtime/file-io) for more on working with `BunFile`.

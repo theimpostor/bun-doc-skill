@@ -3,16 +3,17 @@ Source: https://bun.com/docs/pm/lifecycle
 
 How Bun handles package lifecycle scripts securely
 
-Packages on `npm` can define *lifecycle scripts* in their `package.json`. These are some of the most common, among [many others](https://docs.npmjs.com/cli/v10/using-npm/scripts):
 
-* `preinstall`: Runs before the package is installed
-* `postinstall`: Runs after the package is installed
-* `preuninstall`: Runs before the package is uninstalled
-* `prepublishOnly`: Runs before the package is published
+Packages on `npm` can define _lifecycle scripts_ in their `package.json`. These are some of the most common, among [many others](https://docs.npmjs.com/cli/v10/using-npm/scripts):
+
+- `preinstall`: Runs before the package is installed
+- `postinstall`: Runs after the package is installed
+- `preuninstall`: Runs before the package is uninstalled
+- `prepublishOnly`: Runs before the package is published
 
 These scripts are arbitrary shell commands that the package manager is expected to run at the appropriate time. Because running arbitrary code is a security risk, Bun does not execute arbitrary lifecycle scripts by default, unlike other `npm` clients.
 
-***
+---
 
 ## `postinstall`
 
@@ -29,7 +30,7 @@ The `postinstall` script is particularly important. It's widely used to build or
 }
 ```
 
-***
+---
 
 ## `trustedDependencies`
 
@@ -66,7 +67,7 @@ Defining `trustedDependencies` in `package.json` **replaces** the default list r
 
 Set `trustedDependencies: []` when you want to opt out of the default allow list entirely without passing `--ignore-scripts` on every install. If you define `trustedDependencies` with an explicit list, include any packages from the [default list](https://github.com/oven-sh/bun/blob/main/src/install/default-trusted-dependencies.txt) whose lifecycle scripts you still need (for example, `sharp` or `esbuild`). Bun no longer trusts those packages implicitly.
 
-***
+---
 
 ## `--ignore-scripts`
 
@@ -76,7 +77,7 @@ To disable lifecycle scripts for all packages, use the `--ignore-scripts` flag.
 bun install --ignore-scripts
 ```
 
-To make this the default for a project, set [`install.ignoreScripts`](/docs/runtime/bunfig#install-ignorescripts) in `bunfig.toml`:
+To make this the default for a project, set [`install.ignoreScripts`](/runtime/bunfig#install-ignorescripts) in `bunfig.toml`:
 
 **File:** `bunfig.toml`
 ```toml

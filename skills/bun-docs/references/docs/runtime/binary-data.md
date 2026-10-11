@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/binary-data
 
 Working with binary data in JavaScript
 
+
 Bun implements several data types and utilities for working with binary data in JavaScript, most of which are Web-standard. Bun-specific APIs are noted as such.
 
 This cheat sheet doubles as a table of contents; click a class in the left column to jump to its section.
@@ -14,9 +15,9 @@ This cheat sheet doubles as a table of contents; click a class in the left colum
 | [`DataView`](#dataview)     | A class that provides a `get/set` API for writing some number of bytes to an `ArrayBuffer` at a particular byte offset. Often used for reading or writing binary protocols.                    |
 | [`Blob`](#blob)             | A readonly blob of binary data usually representing a file. Has a MIME `type`, a `size`, and methods for converting to `ArrayBuffer`, `ReadableStream`, and string.                            |
 | [`File`](#file)             | A subclass of `Blob` that represents a file. Has a `name` and `lastModified` timestamp. Node.js v20 has experimental support.                                                                  |
-| [`BunFile`](#bunfile)       | *Bun only*. A subclass of `Blob` that represents a lazily-loaded file on disk. Created with `Bun.file(path)`.                                                                                  |
+| [`BunFile`](#bunfile)       | _Bun only_. A subclass of `Blob` that represents a lazily-loaded file on disk. Created with `Bun.file(path)`.                                                                                  |
 
-***
+---
 
 ## `ArrayBuffer` and views
 
@@ -37,7 +38,7 @@ const slice = buf.slice(0, 4); // returns new ArrayBuffer
 slice.byteLength; // => 4
 ```
 
-To read or write the data, you need a "view": a class that *wraps* an `ArrayBuffer` instance and lets you read and manipulate the underlying data. There are two types of views: *typed arrays* and `DataView`.
+To read or write the data, you need a "view": a class that _wraps_ an `ArrayBuffer` instance and lets you read and manipulate the underlying data. There are two types of views: _typed arrays_ and `DataView`.
 
 ### `DataView`
 
@@ -99,7 +100,7 @@ Typed arrays are a family of classes that provide an `Array`-like interface for 
 
 > Note
 It's common to refer to this family of classes collectively by their shared superclass `TypedArray`. This class is
-*internal* to JavaScript; you can't directly create instances of it, and `TypedArray` is not defined in the global
+_internal_ to JavaScript; you can't directly create instances of it, and `TypedArray` is not defined in the global
 scope. Think of it as an `interface` or an abstract class.
 
 ```ts
@@ -168,7 +169,7 @@ const arr = new Uint32Array(buf);
 
 A `Uint32` value requires four bytes (32 bits). Because the `ArrayBuffer` is 10 bytes long, there's no way to cleanly divide its contents into 4-byte chunks.
 
-To fix this, create a typed array over a particular "slice" of the `ArrayBuffer`. The following `Uint32Array` only "views" the *first* 8 bytes of the underlying `ArrayBuffer`: a `byteOffset` of `0` and a `length` of `2`, the number of `Uint32` values the array holds.
+To fix this, create a typed array over a particular "slice" of the `ArrayBuffer`. The following `Uint32Array` only "views" the _first_ 8 bytes of the underlying `ArrayBuffer`: a `byteOffset` of `0` and a `length` of `2`, the number of `Uint32` values the array holds.
 
 ```ts
 // create typed array from ArrayBuffer slice
@@ -331,7 +332,7 @@ const file = new File(["<html>Hello</html>"], "index.html", {
 
 See the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/API/Blob).
 
-***
+---
 
 ## Streams
 
@@ -369,9 +370,9 @@ for await (const chunk of stream) {
 // => "world"
 ```
 
-For more on streams in Bun, see [Streams](/docs/runtime/streams).
+For more on streams in Bun, see [Streams](/runtime/streams).
 
-***
+---
 
 ## Conversion
 
@@ -379,7 +380,7 @@ Use this section as a reference for converting one binary format to another.
 
 ### From `ArrayBuffer`
 
-Since `ArrayBuffer` stores the data that underlies other binary structures like `TypedArray`, the following snippets are not *converting* from `ArrayBuffer` to another format. Instead, they *create* a new instance using the underlying data.
+Since `ArrayBuffer` stores the data that underlies other binary structures like `TypedArray`, the following snippets are not _converting_ from `ArrayBuffer` to another format. Instead, they _create_ a new instance using the underlying data.
 
 #### To `TypedArray`
 
@@ -453,11 +454,12 @@ new ReadableStream({
 });
 ```
 
+
 ### From `TypedArray`
 
 #### To `ArrayBuffer`
 
-The `buffer` property is the underlying `ArrayBuffer`. A `TypedArray` can be a view of a *slice* of that buffer, so the sizes may differ.
+The `buffer` property is the underlying `ArrayBuffer`. A `TypedArray` can be a view of a _slice_ of that buffer, so the sizes may differ.
 
 ```ts
 arr.buffer;
@@ -494,8 +496,7 @@ Array.from(arr);
 #### To `Blob`
 
 ```ts
-// only if arr is a view of its entire backing ArrayBuffer
-new Blob([arr.buffer], { type: "text/plain" });
+new Blob([arr], { type: "text/plain" });
 ```
 
 #### To `ReadableStream`
@@ -510,6 +511,7 @@ new ReadableStream({
 ```
 
 ### With chunking
+
 To stream the `ArrayBuffer` in chunks, split the `TypedArray` into chunks and enqueue each one individually.
 
 ```ts
@@ -522,6 +524,7 @@ new ReadableStream({
   },
 });
 ```
+
 
 ### From `DataView`
 
@@ -594,6 +597,7 @@ new ReadableStream({
   },
 });
 ```
+
 
 ### From `Buffer`
 
@@ -672,6 +676,7 @@ new ReadableStream({
 });
 ```
 
+
 ### From `Blob`
 
 #### To `ArrayBuffer`
@@ -725,7 +730,7 @@ blob.stream();
 ```ts
 stream; // ReadableStream
 
-const buffer = new Response(stream).arrayBuffer();
+const buffer = await new Response(stream).arrayBuffer();
 ```
 
 But this approach is verbose and adds unnecessary overhead. Bun implements optimized convenience functions for converting a `ReadableStream` to various binary formats.

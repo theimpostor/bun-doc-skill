@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/cli/link
 
 Link local packages for development
 
+
 Use `bun link` in a local directory to register the current package as a "linkable" package.
 
 ```bash
@@ -56,7 +57,7 @@ bun unlink v1.3.3 (7416672e)
 success: unlinked package "cool-pkg"
 ```
 
-***
+---
 
 # CLI Usage
 
@@ -66,88 +67,192 @@ bun link <packages>
 
 ### Installation Scope
 
-- (boolean) Install globally. Alias: `-g`
+### `--global`
+
+Type: `boolean`
+Install globally. Alias: `-g`
 
 ### Dependency Management
 
-- (boolean) Don't install devDependencies. Alias: `-p`
+### `--production`
 
-- (string) Exclude `dev`, `optional`, or `peer` dependencies from install
+Type: `boolean`
+Don't install devDependencies. Alias: `-p`
+
+### `--omit`
+
+Type: `string`
+Exclude `dev`, `optional`, or `peer` dependencies from install
 
 ### Project Files & Lockfiles
 
-- (boolean) Write a `yarn.lock` file (yarn v1). Alias: `-y`
+### `--yarn`
 
-- (boolean) Disallow changes to lockfile
+Type: `boolean`
+Write a `yarn.lock` file (yarn v1). Alias: `-y`
 
-- (boolean) Save a text-based lockfile
+### `--frozen-lockfile`
 
-- (boolean) Generate a lockfile without installing dependencies
+Type: `boolean`
+Disallow changes to lockfile
 
-- (boolean) Don't update `package.json` or save a lockfile
+### `--save-text-lockfile`
 
-- (boolean) Save to `package.json`
+Type: `boolean`
+Save a text-based lockfile
 
-- (boolean) Add to `trustedDependencies` in the project's `package.json` and install the package(s)
+### `--lockfile-only`
+
+Type: `boolean`
+Generate a lockfile without installing dependencies
+
+### `--no-save`
+
+Type: `boolean`
+Has no effect. `bun link` updates `package.json` and the lockfile only with `--save`
+
+### `--save`
+
+Type: `boolean`
+Save to `package.json`
+
+### `--trust`
+
+Type: `boolean`
+Add to `trustedDependencies` in the project's `package.json` and install the package(s)
 
 ### Installation Control
 
-- (boolean) Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
+### `--force`
 
-- (boolean) Skip verifying integrity of newly downloaded packages
+Type: `boolean`
+Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
 
-- (string) Platform-specific optimizations for installing dependencies. One of `clonefile`, `hardlink`, `symlink`, or `copyfile`
+### `--no-verify`
 
-- (string) Linker strategy (one of `isolated` or `hoisted`)
+Type: `boolean`
+Skip verifying integrity of newly downloaded packages
 
-- (boolean) Perform a dry run without making changes
+### `--backend`
 
-- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
+Type: `string`
+Platform-specific optimizations for installing dependencies. One of `clonefile`, `hardlink`,{" "}
+`symlink`, or `copyfile`
+
+### `--linker`
+
+Type: `string`
+Linker strategy (one of `isolated` or `hoisted`)
+
+### `--dry-run`
+
+Type: `boolean`
+With `bun link <package>`, resolve but don't install packages, update `package.json`, or
+save a lockfile. Has no effect on bare `bun link`, which still registers the current package
+
+### `--ignore-scripts`
+
+Type: `boolean`
+Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
 
 ### Network & Registry
 
-- (string) Provide a Certificate Authority signing certificate
+### `--ca`
 
-- (string) Same as `--ca`, but as a file path to the certificate
+Type: `string`
+Provide a Certificate Authority signing certificate
 
-- (string) Use a specific registry by default, overriding `.npmrc`, `bunfig.toml`, and environment variables
+### `--cafile`
 
-- (number) Maximum number of concurrent network requests
+Type: `string`
+Same as `--ca`, but as a file path to the certificate
+
+### `--registry`
+
+Type: `string`
+Use a specific registry by default, overriding `.npmrc`, `bunfig.toml`, and environment
+variables
+
+### `--network-concurrency`
+
+Type: `number`; Default: `48`
+Maximum number of concurrent network requests
 
 ### Performance & Resource
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
+### `--concurrent-scripts`
+
+Type: `number`
+Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
 
 ### Caching
 
-- (string) Store & load cached data from a specific directory path
+### `--cache-dir`
 
-- (boolean) Ignore manifest cache entirely
+Type: `string`
+Store & load cached data from a specific directory path
+
+### `--no-cache`
+
+Type: `boolean`
+Ignore manifest cache entirely
 
 ### Output & Logging
 
-- (boolean) Don't log anything
+### `--silent`
 
-- (boolean) Disable the progress bar
+Type: `boolean`
+Don't log anything
 
-- (boolean) Excessively verbose logging
+### `--quiet`
 
-- (boolean) Disable the progress bar
+Type: `boolean`
+Disable the progress bar
 
-- (boolean) Don't print a summary
+### `--verbose`
+
+Type: `boolean`
+Excessively verbose logging
+
+### `--no-progress`
+
+Type: `boolean`
+Disable the progress bar
+
+### `--no-summary`
+
+Type: `boolean`
+Don't print a summary
 
 ### Platform Targeting
 
-- (string) Override CPU architecture for optional dependencies (e.g., `x64`, `arm64`, `*` for all)
+### `--cpu`
 
-- (string) Override operating system for optional dependencies (e.g., `linux`, `darwin`, `*` for all)
+Type: `string`
+Override CPU architecture for optional dependencies (e.g., `x64`, `arm64`, `*` for
+all)
+
+### `--os`
+
+Type: `string`
+Override operating system for optional dependencies (e.g., `linux`, `darwin`, `*` for
+all)
 
 ### Global Configuration & Context
 
-- (string) Specify path to config file (`bunfig.toml`). Alias: `-c`
+### `--config`
 
-- (string) Set a specific current working directory
+Type: `string`
+Specify path to config file (`bunfig.toml`). Alias: `-c`
+
+### `--cwd`
+
+Type: `string`
+Set a specific current working directory
 
 ### Help
 
-- (boolean) Print this help menu. Alias: `-h`
+### `--help`
+
+Type: `boolean`
+Print this help menu. Alias: `-h`

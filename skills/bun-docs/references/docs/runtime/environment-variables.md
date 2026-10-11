@@ -3,16 +3,17 @@ Source: https://bun.com/docs/runtime/environment-variables
 
 Read and configure environment variables in Bun, including automatic .env file support
 
+
 Bun reads your `.env` files automatically and provides idiomatic ways to read and write your environment variables programmatically. You can also configure parts of Bun's runtime behavior with Bun-specific environment variables.
 
 ## Setting environment variables
 
 Bun reads the following files automatically (listed in order of increasing precedence).
 
-* `.env`
-* `.env.production`, `.env.development`, `.env.test` (depending on the value of `NODE_ENV`)
-* `.env.local`
-* `.env.production.local`, `.env.development.local`, `.env.test.local` (depending on the value of `NODE_ENV`)
+- `.env`
+- `.env.production`, `.env.development`, `.env.test` (depending on the value of `NODE_ENV`)
+- `.env.local` (not loaded when `NODE_ENV=test`)
+- `.env.production.local`, `.env.development.local`, `.env.test.local` (depending on the value of `NODE_ENV`)
 
 **File:** `.env`
 ```ini
@@ -21,6 +22,7 @@ BAR=world
 ```
 
 You can also set variables on the command line.
+
 
 **File:** `Linux/macOS`
 ```sh
@@ -36,8 +38,10 @@ set FOO=helloworld && bun run dev
 $env:FOO="helloworld"; bun run dev
 ```
 
+
 ### Cross-platform solution with Windows
-For a cross-platform solution, use [Bun Shell](/docs/runtime/shell), for example through `bun exec`.
+
+For a cross-platform solution, use [Bun Shell](/runtime/shell), for example through `bun exec`.
 
 ```sh
 bun exec 'FOO=helloworld bun run dev'
@@ -52,13 +56,14 @@ On Windows, `package.json` scripts called with `bun run` automatically use the *
 },
 ```
 
+
 Or set them programmatically by assigning a property to `process.env`.
 
 ```ts
 process.env.FOO = "hello";
 ```
 
-***
+---
 
 ## Manually specifying `.env` files
 
@@ -69,6 +74,16 @@ bun --env-file=.env.1 src/index.ts
 
 bun --env-file=.env.abc --env-file=.env.def run build
 ```
+
+The path does not have to be a regular file. Bun reads a pipe, a FIFO, or a device until the end of the input, so secrets can reach the process without a file on disk:
+
+```sh
+bun --env-file=<(./fetch-secrets.sh) src/index.ts
+
+echo "API_KEY=..." | bun --env-file=/dev/stdin src/index.ts
+```
+
+A pipe can be read only once. Bun reads it when the process starts, and `Worker` threads and `bun test --parallel` workers reuse the values. A process that starts again with the same arguments reads the path again: a `--watch` reload, and children of `child_process.fork()` or `cluster.fork()`, which inherit `execArgv`. A pipe is then empty and a FIFO waits for a new writer, the same as with Node.js.
 
 ## Disabling automatic `.env` loading
 
@@ -90,7 +105,7 @@ Files passed with `--env-file` still load even when default loading is disabled.
 
 When invoked as `node` (for example via `bun --bun`, `bunx --bun`, or a `node` symlink pointing at Bun), Bun disables automatic `.env` loading to match Node.js. This lets tools with their own mode-aware `.env` resolution, such as Vite's `loadEnv`, pick the correct `.env.{mode}` file instead of seeing Bun's pre-populated values as shell-set overrides. Bun still honors explicit `--env-file` arguments.
 
-***
+---
 
 ## Quotation marks
 
@@ -105,7 +120,7 @@ FOO=`hello`
 
 ### Expansion
 
-Bun automatically *expands* environment variables, so you can reference previously-defined variables.
+Bun automatically _expands_ environment variables, so you can reference previously-defined variables.
 
 **File:** `.env`
 ```ini
@@ -230,7 +245,7 @@ BUN_RUNTIME_TRANSPILER_CACHE_PATH=0 bun run dev
 
 It caches:
 
-* The transpiled output of source files larger than 4 KB.
-* The sourcemap for the transpiled output of the file
+- The transpiled output of source files larger than 4 KB.
+- The sourcemap for the transpiled output of the file
 
 Cached files use the `.pile` extension.

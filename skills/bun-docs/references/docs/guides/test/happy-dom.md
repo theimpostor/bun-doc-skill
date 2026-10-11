@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/test/happy-dom
 
 Use [Happy DOM](https://github.com/capricorn86/happy-dom) to write browser tests with Bun's test runner. Happy DOM implements mocked versions of browser APIs like `document` and `location`.
 
-***
+---
 
 Install `@happy-dom/global-registrator`.
 
@@ -12,7 +12,7 @@ Install `@happy-dom/global-registrator`.
 bun add -d @happy-dom/global-registrator
 ```
 
-***
+---
 
 This module exports a "registrator" that injects the mocked browser APIs into the global scope.
 
@@ -23,9 +23,9 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator";
 GlobalRegistrator.register();
 ```
 
-***
+---
 
-This file needs to run before any of your test files. That's a job for Bun's built-in [*preload*](/docs/runtime/bunfig#test-preload) option. Create a `bunfig.toml` file in the root of your project (if it doesn't already exist) and add the following lines.
+This file needs to run before any of your test files. That's a job for Bun's built-in [_preload_](/runtime/bunfig#test-preload) option. Create a `bunfig.toml` file in the root of your project (if it doesn't already exist) and add the following lines.
 
 The `./happydom.ts` file should contain the registration code from the previous step.
 
@@ -35,7 +35,7 @@ The `./happydom.ts` file should contain the registration code from the previous 
 preload = "./happydom.ts"
 ```
 
-***
+---
 
 Now `bun test` executes `happydom.ts` before your test files, so you can write tests that use browser APIs.
 
@@ -50,7 +50,7 @@ test("set button text", () => {
 });
 ```
 
-***
+---
 
 With Happy DOM registered, the test passes.
 
@@ -69,6 +69,6 @@ dom.test.ts:
 Ran 1 test across 1 file. [125.00ms]
 ```
 
-***
+---
 
-See the [Happy DOM repo](https://github.com/capricorn86/happy-dom) and [DOM testing](/docs/test/dom).
+See the [Happy DOM repo](https://github.com/capricorn86/happy-dom) and [DOM testing](/test/dom).

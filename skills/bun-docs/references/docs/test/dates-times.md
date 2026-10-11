@@ -3,13 +3,14 @@ Source: https://bun.com/docs/test/dates-times
 
 Learn how to manipulate time and dates in your Bun tests using setSystemTime and Jest compatibility functions
 
+
 `bun:test` lets you change what time it is in your tests.
 
 This works with any of the following:
 
-* `Date.now`
-* `new Date()`
-* `new Intl.DateTimeFormat().format()`
+- `Date.now`
+- `new Date()`
+- `new Intl.DateTimeFormat().format()`
 
 ## setSystemTime
 

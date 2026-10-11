@@ -22,7 +22,7 @@ jobs:
       - run: bun run build
 ```
 
-***
+---
 
 To specify a version of Bun to install:
 
@@ -40,6 +40,25 @@ jobs:
           bun-version: 1.3.3 # or "latest", "canary", "1.3.x"
 ```
 
-***
+---
+
+To type check your project, run [`bun check`](/runtime/check#run-in-ci). GitHub shows each type error as an annotation on the pull request diff.
+
+**File:** `workflow.yml`
+```yaml
+name: my-workflow
+jobs:
+  my-job:
+    name: my-job
+    runs-on: ubuntu-latest
+    steps:
+      # ...
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun check
+```
+
+---
 
 See the [`setup-bun` README](https://github.com/oven-sh/setup-bun) for all options.

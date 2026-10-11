@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/cron
 
 Schedule and parse cron jobs with Bun
 
+
 Bun has built-in support for cron — parse expressions, run a callback on a schedule inside your process, or register OS-level jobs that survive restarts.
 
 ## Quickstart
@@ -28,7 +29,7 @@ const next = Bun.cron.parse("30 9 * * MON-FRI");
 await Bun.cron("./worker.ts", "30 2 * * MON", "weekly-report");
 ```
 
-***
+---
 
 ## `Bun.cron.parse()`
 
@@ -63,7 +64,7 @@ for (let i = 0; i < 3; i++) {
 }
 ```
 
-***
+---
 
 ## Cron expression syntax
 
@@ -133,8 +134,8 @@ Bun.cron("0 9 * * *", handler, { tz: "America/New_York" });
 
 DST transitions:
 
-* **Spring-forward** — a schedule that lands in the missing hour fires that day, shifted forward by the gap (e.g. `30 2 * * *` runs at 3:30 on the spring-forward day). For multi-minute patterns inside the gap (`*/15 2 * * *`), only the first match fires.
-* **Fall-back** — a fixed-time schedule in the duplicated hour (`30 1 * * *`) fires once, at the first occurrence. A schedule whose minute or hour field is `*` (`0 * * * *`, `* * * * *`) fires through **both** occurrences — once per real-time minute, matching crontab on Linux.
+- **Spring-forward** — a schedule that lands in the missing hour fires that day, shifted forward by the gap (e.g. `30 2 * * *` runs at 3:30 on the spring-forward day). For multi-minute patterns inside the gap (`*/15 2 * * *`), only the first match fires.
+- **Fall-back** — a fixed-time schedule in the duplicated hour (`30 1 * * *`) fires once, at the first occurrence. A schedule whose minute or hour field is `*` (`0 * * * *`, `* * * * *`) fires through **both** occurrences — once per real-time minute, matching crontab on Linux.
 
 ### Day-of-month and day-of-week interaction
 
@@ -147,7 +148,7 @@ Bun.cron.parse("0 0 15 * FRI");
 
 When you specify only one (the other is `*`), Bun uses only that field for matching.
 
-***
+---
 
 ## `Bun.cron(schedule, handler)` — in-process
 
@@ -181,14 +182,14 @@ Returns a [`CronJob`](#the-cronjob-handle) synchronously. Throws a `TypeError` i
 
 ### No-overlap guarantee
 
-Bun computes the next fire time only after the handler and any returned `Promise` settle. If your handler takes 90 seconds and the schedule is `* * * * *`, the second fire is the first minute boundary *after* the handler finishes, not 60 seconds after the first fire. Invocations never stack.
+Bun computes the next fire time only after the handler and any returned `Promise` settle. If your handler takes 90 seconds and the schedule is `* * * * *`, the second fire is the first minute boundary _after_ the handler finishes, not 60 seconds after the first fire. Invocations never stack.
 
 ### Error handling
 
 Errors match `setTimeout` semantics:
 
-* A synchronous `throw` emits `process.on("uncaughtException")`.
-* A rejected returned `Promise` emits `process.on("unhandledRejection")`.
+- A synchronous `throw` emits `process.on("uncaughtException")`.
+- A rejected returned `Promise` emits `process.on("unhandledRejection")`.
 
 Without a listener, the process exits with code `1`. With a listener, the job keeps running — it does not stop on the first failure.
 
@@ -221,7 +222,7 @@ job.ref(); // keep the process alive (default)
 
 In-process cron honors `jest.useFakeTimers()`. `setSystemTime()`, `advanceTimersByTime()`, and `runAllTimers()` control when it fires, so you can test scheduled callbacks without waiting on the real clock.
 
-***
+---
 
 ## `Bun.cron(path, schedule, title)` — OS-level
 
@@ -263,7 +264,7 @@ export default {
 
 The handler can be `async`. Bun waits for the returned promise to settle before exiting.
 
-***
+---
 
 ## How it works per platform
 
@@ -440,7 +441,7 @@ schtasks /delete /tn "bun-cron-weekly-report" /f
 
 Or open **Task Scheduler** (taskschd.msc), find the task named `bun-cron-<title>`, right-click, and delete it.
 
-***
+---
 
 ## `Bun.cron.remove()`
 

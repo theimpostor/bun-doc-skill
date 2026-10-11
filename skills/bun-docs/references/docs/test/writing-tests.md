@@ -3,6 +3,7 @@ Source: https://bun.com/docs/test/writing-tests
 
 Write tests with Bun's Jest-compatible API, including async tests, timeouts, and test modifiers
 
+
 Define tests with a Jest-like API imported from the built-in `bun:test` module. Long term, Bun aims for complete Jest compatibility.
 
 ## Basic Usage
@@ -155,7 +156,7 @@ test.todo("fix this", () => {
 });
 ```
 
-To run todo tests and find any that pass, use `bun test --todo`.
+To run todo tests and find any that pass, use `bun test --todo`. Once `myTestFunction()` works, Bun reports the test above as a failure.
 
 ```bash
 bun test --todo
@@ -248,8 +249,8 @@ test.todoIf(macOS)("runs on posix", () => {
 
 Use `test.failing()` when you know a test is failing but you want to track it and be notified when it starts passing. This inverts the test result:
 
-* A failing test marked with `.failing()` passes
-* A passing test marked with `.failing()` fails, with a message that it now passes and should be fixed
+- A failing test marked with `.failing()` passes
+- A passing test marked with `.failing()` fails, with a message that it now passes and should be fixed
 
 **File:** `math.test.ts`
 ```ts
@@ -341,8 +342,8 @@ describe.each([
 
 How Bun passes arguments to your test function depends on the structure of your test cases:
 
-* If a table row is an array (like `[1, 2, 3]`), Bun passes each element as an individual argument
-* If a row is not an array (like an object), Bun passes it as a single argument
+- If a table row is an array (like `[1, 2, 3]`), Bun passes each element as an individual argument
+- If a row is not an array (like an object), Bun passes it as a single argument
 
 **File:** `example.test.ts`
 ```ts
@@ -450,12 +451,14 @@ Bun includes `expectTypeOf` for testing TypeScript types, compatible with Vitest
 
 ### expectTypeOf
 
-> Warning: These functions are no-ops at runtime. Run TypeScript separately to verify the type checks.
+> Warning
+These functions are no-ops at runtime. Run [`bun check`](/runtime/check) or `bun test --check` to verify the type
+assertions.
 
 The `expectTypeOf` function provides type-level assertions that TypeScript's type checker verifies. To test your types:
 
 1. Write your type assertions using `expectTypeOf`
-2. Run `bunx tsc --noEmit` to check that your types are correct
+2. Run `bun check` to check that your types are correct
 
 **File:** `example.test.ts`
 ```ts
@@ -495,106 +498,106 @@ Bun implements the following matchers. Full Jest compatibility is planned; see t
 
 | Status | Matcher            |
 | ------ | ------------------ |
-| ✅      | `.not`             |
-| ✅      | `.toBe()`          |
-| ✅      | `.toEqual()`       |
-| ✅      | `.toBeNull()`      |
-| ✅      | `.toBeUndefined()` |
-| ✅      | `.toBeNaN()`       |
-| ✅      | `.toBeDefined()`   |
-| ✅      | `.toBeFalsy()`     |
-| ✅      | `.toBeTruthy()`    |
-| ✅      | `.toStrictEqual()` |
+| ✅     | `.not`             |
+| ✅     | `.toBe()`          |
+| ✅     | `.toEqual()`       |
+| ✅     | `.toBeNull()`      |
+| ✅     | `.toBeUndefined()` |
+| ✅     | `.toBeNaN()`       |
+| ✅     | `.toBeDefined()`   |
+| ✅     | `.toBeFalsy()`     |
+| ✅     | `.toBeTruthy()`    |
+| ✅     | `.toStrictEqual()` |
 
 ### String and Array Matchers
 
 | Status | Matcher               |
 | ------ | --------------------- |
-| ✅      | `.toContain()`        |
-| ✅      | `.toHaveLength()`     |
-| ✅      | `.toMatch()`          |
-| ✅      | `.toContainEqual()`   |
-| ✅      | `.stringContaining()` |
-| ✅      | `.stringMatching()`   |
-| ✅      | `.arrayContaining()`  |
+| ✅     | `.toContain()`        |
+| ✅     | `.toHaveLength()`     |
+| ✅     | `.toMatch()`          |
+| ✅     | `.toContainEqual()`   |
+| ✅     | `.stringContaining()` |
+| ✅     | `.stringMatching()`   |
+| ✅     | `.arrayContaining()`  |
 
 ### Object Matchers
 
 | Status | Matcher                 |
 | ------ | ----------------------- |
-| ✅      | `.toHaveProperty()`     |
-| ✅      | `.toMatchObject()`      |
-| ✅      | `.toContainAllKeys()`   |
-| ✅      | `.toContainValue()`     |
-| ✅      | `.toContainValues()`    |
-| ✅      | `.toContainAllValues()` |
-| ✅      | `.toContainAnyValues()` |
-| ✅      | `.objectContaining()`   |
+| ✅     | `.toHaveProperty()`     |
+| ✅     | `.toMatchObject()`      |
+| ✅     | `.toContainAllKeys()`   |
+| ✅     | `.toContainValue()`     |
+| ✅     | `.toContainValues()`    |
+| ✅     | `.toContainAllValues()` |
+| ✅     | `.toContainAnyValues()` |
+| ✅     | `.objectContaining()`   |
 
 ### Number Matchers
 
 | Status | Matcher                     |
 | ------ | --------------------------- |
-| ✅      | `.toBeCloseTo()`            |
-| ✅      | `.closeTo()`                |
-| ✅      | `.toBeGreaterThan()`        |
-| ✅      | `.toBeGreaterThanOrEqual()` |
-| ✅      | `.toBeLessThan()`           |
-| ✅      | `.toBeLessThanOrEqual()`    |
+| ✅     | `.toBeCloseTo()`            |
+| ✅     | `.closeTo()`                |
+| ✅     | `.toBeGreaterThan()`        |
+| ✅     | `.toBeGreaterThanOrEqual()` |
+| ✅     | `.toBeLessThan()`           |
+| ✅     | `.toBeLessThanOrEqual()`    |
 
 ### Function and Class Matchers
 
 | Status | Matcher             |
 | ------ | ------------------- |
-| ✅      | `.toThrow()`        |
-| ✅      | `.toBeInstanceOf()` |
+| ✅     | `.toThrow()`        |
+| ✅     | `.toBeInstanceOf()` |
 
 ### Promise Matchers
 
 | Status | Matcher       |
 | ------ | ------------- |
-| ✅      | `.resolves()` |
-| ✅      | `.rejects()`  |
+| ✅     | `.resolves()` |
+| ✅     | `.rejects()`  |
 
 ### Mock Function Matchers
 
 | Status | Matcher                       |
 | ------ | ----------------------------- |
-| ✅      | `.toHaveBeenCalled()`         |
-| ✅      | `.toHaveBeenCalledTimes()`    |
-| ✅      | `.toHaveBeenCalledWith()`     |
-| ✅      | `.toHaveBeenLastCalledWith()` |
-| ✅      | `.toHaveBeenNthCalledWith()`  |
-| ✅      | `.toHaveReturned()`           |
-| ✅      | `.toHaveReturnedTimes()`      |
-| ✅      | `.toHaveReturnedWith()`       |
-| ✅      | `.toHaveLastReturnedWith()`   |
-| ✅      | `.toHaveNthReturnedWith()`    |
+| ✅     | `.toHaveBeenCalled()`         |
+| ✅     | `.toHaveBeenCalledTimes()`    |
+| ✅     | `.toHaveBeenCalledWith()`     |
+| ✅     | `.toHaveBeenLastCalledWith()` |
+| ✅     | `.toHaveBeenNthCalledWith()`  |
+| ✅     | `.toHaveReturned()`           |
+| ✅     | `.toHaveReturnedTimes()`      |
+| ✅     | `.toHaveReturnedWith()`       |
+| ✅     | `.toHaveLastReturnedWith()`   |
+| ✅     | `.toHaveNthReturnedWith()`    |
 
 ### Snapshot Matchers
 
 | Status | Matcher                                 |
 | ------ | --------------------------------------- |
-| ✅      | `.toMatchSnapshot()`                    |
-| ✅      | `.toMatchInlineSnapshot()`              |
-| ✅      | `.toThrowErrorMatchingSnapshot()`       |
-| ✅      | `.toThrowErrorMatchingInlineSnapshot()` |
+| ✅     | `.toMatchSnapshot()`                    |
+| ✅     | `.toMatchInlineSnapshot()`              |
+| ✅     | `.toThrowErrorMatchingSnapshot()`       |
+| ✅     | `.toThrowErrorMatchingInlineSnapshot()` |
 
 ### Utility Matchers
 
 | Status | Matcher            |
 | ------ | ------------------ |
-| ✅      | `.extend`          |
-| ✅      | `.anything()`      |
-| ✅      | `.any()`           |
-| ✅      | `.assertions()`    |
-| ✅      | `.hasAssertions()` |
+| ✅     | `.extend`          |
+| ✅     | `.anything()`      |
+| ✅     | `.any()`           |
+| ✅     | `.assertions()`    |
+| ✅     | `.hasAssertions()` |
 
 ### Not Yet Implemented
 
 | Status | Matcher                    |
 | ------ | -------------------------- |
-| ❌      | `.addSnapshotSerializer()` |
+| ❌     | `.addSnapshotSerializer()` |
 
 ## Best Practices
 

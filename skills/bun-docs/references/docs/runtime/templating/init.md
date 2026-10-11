@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/templating/init
 
 Scaffold an empty Bun project with the interactive `bun init` command
 
+
 Scaffold a new Bun project with `bun init`.
 
 ```bash
@@ -21,13 +22,13 @@ bun init my-app
  + CLAUDE.md
  + .cursor/rules/use-bun-instead-of-node-vite-npm-pnpm.mdc -> CLAUDE.md
  + index.ts
- + tsconfig.json (for editor autocomplete)
+ + tsconfig.json (for bun check and editor autocomplete)
  + README.md
 ```
 
 Press `enter` to accept the default answer for each prompt, or pass the `-y` flag to auto-accept the defaults.
 
-***
+---
 
 `bun init` infers settings with sane defaults and is non-destructive when run multiple times.
 
@@ -35,21 +36,21 @@ Press `enter` to accept the default answer for each prompt, or pass the `-y` fla
 
 It creates:
 
-* a `package.json` file with a name that defaults to the current directory name
-* a `tsconfig.json` or `jsconfig.json` file, depending on whether the entry point is a TypeScript file
-* an entry point, which defaults to `index.ts` unless any of `index.{tsx, jsx, js, mts, mjs}` exist or the `package.json` specifies a `module` or `main` field
-* a `README.md` file
+- a `package.json` file with a name that defaults to the current directory name, and a `typecheck` script that runs [`bun check`](/runtime/check)
+- a `tsconfig.json` or `jsconfig.json` file, depending on whether the entry point is a TypeScript file
+- an entry point, which defaults to `index.ts` unless any of `index.{tsx, jsx, js, mts, mjs}` exist or the `package.json` specifies a `module` or `main` field
+- a `README.md` file
 
 AI Agent rules (disable with `$BUN_AGENT_RULE_DISABLED=1`):
 
-* a `CLAUDE.md` file when `bun init` detects Claude CLI (disable with `CLAUDE_CODE_AGENT_RULE_DISABLED` env var)
-* a `.cursor/rules/*.mdc` file when `bun init` detects Cursor (disable with `CURSOR_AGENT_RULE_DISABLED` env var); the file tells [Cursor AI](https://cursor.sh) to use Bun instead of Node.js and npm
+- a `CLAUDE.md` file when `bun init` detects Claude CLI (disable with `CLAUDE_CODE_AGENT_RULE_DISABLED` env var)
+- a `.cursor/rules/*.mdc` file when `bun init` detects Cursor (disable with `CURSOR_AGENT_RULE_DISABLED` env var); the file tells [Cursor AI](https://cursor.sh) to use Bun instead of Node.js and npm
 
 Pass `-y` or `--yes` to accept the defaults without prompting.
 
-At the end, it runs `bun install` to install `@types/bun`.
+At the end, it runs `bun install` to install `@types/bun`, which [`bun check`](/runtime/check) and your editor read, and `typescript`, which your editor uses.
 
-***
+---
 
 ## CLI Usage
 
@@ -59,43 +60,78 @@ bun init <folder?>
 
 ### Initialization Options
 
-- (boolean) Accept all default prompts without asking questions. Alias: `-y`
+### `--yes`
 
-- (boolean) Only initialize type definitions (skip app scaffolding). Alias: `-m`
+Type: `boolean`
+{" "}
+Accept all default prompts without asking questions. Alias: `-y`{" "}
+### `--minimal`
+
+Type: `boolean`
+{" "}
+Only initialize type definitions (skip app scaffolding). Alias: `-m`{" "}
 
 ### Project Templates
 
-- (string|boolean) Scaffold a React project. When used without a value, creates a baseline React app. <br> Accepts values for presets: <ul> <li> `tailwind` – React app preconfigured with Tailwind CSS </li> <li> `shadcn` – React app with `@shadcn/ui` and Tailwind CSS </li> </ul> Examples: <pre> ` bun init --reactbun init --react=tailwindbun init --react=shadcn ` </pre>
+### `--react`
+
+Type: `string|boolean`
+{" "}
+Scaffold a React project. When used without a value, creates a baseline React app.
+<br> Accepts values for presets:{" "}
+<ul>
+{" "}
+<li>
+`tailwind` – React app preconfigured with Tailwind CSS
+</li>{" "}
+<li>
+`shadcn` – React app with `@shadcn/ui` and Tailwind CSS
+</li>{" "}
+</ul>{" "}
+Examples:{" "}
+<pre>
+<code>
+bun init --react{"\n"}bun init --react=tailwind{"\n"}bun init --react=shadcn
+</code>
+</pre>{" "}
 
 ### Output & Files
 
-- (info) Initializes project files and configuration for the chosen options. Exact files vary by template.
+### `(result)`
+
+Type: `info`
+{" "}
+Initializes project files and configuration for the chosen options. Exact files vary by template.{" "}
 
 ### Help
 
-- (boolean) Print this help menu. Alias: `-h`
+### `--help`
+
+Type: `boolean`
+{" "}
+Print this help menu. Alias: `-h`{" "}
 
 ### Examples
 
-* Accept all defaults
+- Accept all defaults
 
 ```bash
 bun init -y
 ```
 
-* React
+- React
 
 ```bash
 bun init --react
 ```
 
-* React + Tailwind CSS
+- React + Tailwind CSS
 
 ```bash
 bun init --react=tailwind
 ```
 
-* React + @shadcn/ui
+- React + @shadcn/ui
 ```bash
 bun init --react=shadcn
 ```

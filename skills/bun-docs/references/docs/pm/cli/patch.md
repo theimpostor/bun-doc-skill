@@ -3,18 +3,19 @@ Source: https://bun.com/docs/pm/cli/patch
 
 Persistently patch node_modules packages in a git-friendly way
 
+
 `bun patch` persistently patches packages in `node_modules` in a maintainable, git-friendly way.
 
 Sometimes you need a small change to a package in `node_modules/` to fix a bug or add a feature. `bun patch` lets you do this without vendoring the entire package.
 
 Features:
 
-* Generates `.patch` files that Bun applies to dependencies in `node_modules` on install
-* You can commit `.patch` files to your repository and reuse them across installs, projects, and machines
-* `"patchedDependencies"` in `package.json` keeps track of patched packages
-* Patches packages in `node_modules/` while preserving the integrity of Bun's [Global Cache](/docs/pm/global-cache)
-* Test your changes locally before committing them with `bun patch --commit <pkg>`
-* To preserve disk space and keep `bun install` fast, Bun commits patched packages to the Global Cache and shares them across projects where possible
+- Generates `.patch` files that Bun applies to dependencies in `node_modules` on install
+- You can commit `.patch` files to your repository and reuse them across installs, projects, and machines
+- `"patchedDependencies"` in `package.json` keeps track of patched packages
+- Patches packages in `node_modules/` while preserving the integrity of Bun's [Global Cache](/pm/global-cache)
+- Test your changes locally before committing them with `bun patch --commit <pkg>`
+- To preserve disk space and keep `bun install` fast, Bun commits patched packages to the Global Cache and shares them across projects where possible
 
 #### Step 1. Prepare the package for patching
 
@@ -36,9 +37,10 @@ Always run `bun patch <pkg>` first. It ensures the package folder in `node_modul
 
 If you skip it, you might end up editing the package globally in the cache.
 
+
 #### Step 2. Test your changes locally
 
-`bun patch <pkg>` makes it safe to edit `<pkg>` in `node_modules/` directly, while preserving the integrity of Bun's [Global Cache](/docs/pm/global-cache). It works by re-creating an unlinked clone of the package in `node_modules/`. `bun patch --commit <pkg>` then diffs that clone against the original package in the Global Cache.
+`bun patch <pkg>` makes it safe to edit `<pkg>` in `node_modules/` directly, while preserving the integrity of Bun's [Global Cache](/pm/global-cache). It works by re-creating an unlinked clone of the package in `node_modules/`. `bun patch --commit <pkg>` then diffs that clone against the original package in the Global Cache.
 
 #### Step 3. Commit your changes
 
@@ -60,7 +62,7 @@ bun patch --commit react --patches-dir=mypatches
 bun patch-commit react
 ```
 
-***
+---
 
 # CLI Usage
 
@@ -70,94 +72,207 @@ bun patch <package>@<version>
 
 ### Patch Generation
 
-- (boolean) Install a package containing modifications in `dir`
+### `--commit`
 
-- (string) The directory to put the patch file in (only if --commit is used)
+Type: `boolean`
+Install a package containing modifications in `dir`
+
+### `--patches-dir`
+
+Type: `string`
+The directory to put the patch file in (only if --commit is used)
 
 ### Dependency Management
 
-- (boolean) Don't install devDependencies. Alias: `-p`
+### `--production`
 
-- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
+Type: `boolean`
+Don't install devDependencies. Alias: `-p`
 
-- (boolean) Add to `trustedDependencies` in the project's `package.json` and install the package(s)
+### `--ignore-scripts`
 
-- (boolean) Install globally. Alias: `-g`
+Type: `boolean`
+Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
 
-- (string) Exclude `dev`, `optional`, or `peer` dependencies from install
+### `--trust`
+
+Type: `boolean`
+Add to `trustedDependencies` in the project's `package.json` and install the package(s)
+
+### `--global`
+
+Type: `boolean`
+Install globally. Alias: `-g`
+
+### `--omit`
+
+Type: `string`
+Exclude `dev`, `optional`, or `peer` dependencies from install
 
 ### Project Files & Lockfiles
 
-- (boolean) Write a `yarn.lock` file (yarn v1). Alias: `-y`
+### `--yarn`
 
-- (boolean) Don't update `package.json` or save a lockfile
+Type: `boolean`
+Write a `yarn.lock` file (yarn v1). Alias: `-y`
 
-- (boolean) Save to `package.json` (true by default)
+### `--no-save`
 
-- (boolean) Disallow changes to lockfile
+Type: `boolean`
+Don't update `package.json` or save a lockfile
 
-- (boolean) Save a text-based lockfile
+### `--save`
 
-- (boolean) Generate a lockfile without installing dependencies
+Type: `boolean`; Default: `true`
+Save to `package.json` (true by default)
+
+### `--frozen-lockfile`
+
+Type: `boolean`
+Disallow changes to lockfile
+
+### `--save-text-lockfile`
+
+Type: `boolean`
+Save a text-based lockfile
+
+### `--lockfile-only`
+
+Type: `boolean`
+Generate a lockfile without installing dependencies
 
 ### Installation Control
 
-- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
+### `--backend`
 
-- (string) Linker strategy (one of `isolated` or `hoisted`)
+Type: `string`
+Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on
+macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
 
-- (number) Only install packages published at least N seconds ago (security feature)
+### `--linker`
 
-- (boolean) Perform a dry run without making changes
+Type: `string`
+Linker strategy (one of `isolated` or `hoisted`)
 
-- (boolean) Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
+### `--minimum-release-age`
 
-- (boolean) Skip verifying integrity of newly downloaded packages
+Type: `number`
+Only install packages published at least N seconds ago (security feature)
+
+### `--dry-run`
+
+Type: `boolean`
+Don't install packages, update `package.json`, or save a lockfile. The package is still copied into{" "}
+`node_modules` for patching, and `--commit` still writes the patch file
+
+### `--force`
+
+Type: `boolean`
+Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
+
+### `--no-verify`
+
+Type: `boolean`
+Skip verifying integrity of newly downloaded packages
 
 ### Network & Registry
 
-- (string) Provide a Certificate Authority signing certificate
+### `--ca`
 
-- (string) Same as `--ca`, but as a file path to the certificate
+Type: `string`
+Provide a Certificate Authority signing certificate
 
-- (string) Use a specific registry by default, overriding `.npmrc`, `bunfig.toml`, and environment variables
+### `--cafile`
 
-- (number) Maximum number of concurrent network requests (default 48)
+Type: `string`
+Same as `--ca`, but as a file path to the certificate
+
+### `--registry`
+
+Type: `string`
+Use a specific registry by default, overriding `.npmrc`, `bunfig.toml`, and environment
+variables
+
+### `--network-concurrency`
+
+Type: `number`; Default: `48`
+Maximum number of concurrent network requests (default 48)
 
 ### Performance & Resource
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
+### `--concurrent-scripts`
+
+Type: `number`
+Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
 
 ### Caching
 
-- (string) Store & load cached data from a specific directory path
+### `--cache-dir`
 
-- (boolean) Ignore manifest cache entirely
+Type: `string`
+Store & load cached data from a specific directory path
+
+### `--no-cache`
+
+Type: `boolean`
+Ignore manifest cache entirely
 
 ### Output & Logging
 
-- (boolean) Don't log anything
+### `--silent`
 
-- (boolean) Disable the progress bar
+Type: `boolean`
+Don't log anything
 
-- (boolean) Excessively verbose logging
+### `--quiet`
 
-- (boolean) Disable the progress bar
+Type: `boolean`
+Disable the progress bar
 
-- (boolean) Don't print a summary
+### `--verbose`
+
+Type: `boolean`
+Excessively verbose logging
+
+### `--no-progress`
+
+Type: `boolean`
+Disable the progress bar
+
+### `--no-summary`
+
+Type: `boolean`
+Don't print a summary
 
 ### Platform Targeting
 
-- (string) Override CPU architecture for optional dependencies (e.g., `x64`, `arm64`, `*` for all)
+### `--cpu`
 
-- (string) Override operating system for optional dependencies (e.g., `linux`, `darwin`, `*` for all)
+Type: `string`
+Override CPU architecture for optional dependencies (e.g., `x64`, `arm64`, `*` for
+all)
+
+### `--os`
+
+Type: `string`
+Override operating system for optional dependencies (e.g., `linux`, `darwin`, `*` for
+all)
 
 ### Global Configuration & Context
 
-- (string) Specify path to config file (`bunfig.toml`). Alias: `-c`
+### `--config`
 
-- (string) Set a specific current working directory
+Type: `string`
+Specify path to config file (`bunfig.toml`). Alias: `-c`
+
+### `--cwd`
+
+Type: `string`
+Set a specific current working directory
 
 ### Help
 
-- (boolean) Print this help menu. Alias: `-h`
+### `--help`
+
+Type: `boolean`
+Print this help menu. Alias: `-h`

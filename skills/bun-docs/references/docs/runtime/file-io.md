@@ -3,10 +3,13 @@ Source: https://bun.com/docs/runtime/file-io
 
 Bun provides a set of optimized APIs for reading and writing files.
 
-> Note
-The `Bun.file` and `Bun.write` APIs documented on this page are heavily optimized and are the recommended way to work with files in Bun. For operations they don't cover, such as `mkdir` or `readdir`, use Bun's [nearly complete](/docs/runtime/nodejs-compat#node-fs) implementation of the [`node:fs`](https://nodejs.org/api/fs.html) module.
 
-***
+> Note
+
+The `Bun.file` and `Bun.write` APIs documented on this page are heavily optimized and are the recommended way to work with files in Bun. For operations they don't cover, such as `mkdir` or `readdir`, use Bun's [nearly complete](/runtime/nodejs-compat#node-fs) implementation of the [`node:fs`](https://nodejs.org/api/fs.html) module.
+
+
+---
 
 ## Reading files (`Bun.file()`)
 
@@ -71,7 +74,7 @@ Call `.delete()` to delete a file.
 await Bun.file("logs.json").delete();
 ```
 
-***
+---
 
 ## Writing files (`Bun.write()`)
 
@@ -81,24 +84,25 @@ The `Bun.write` function is a multi-tool for writing payloads of all kinds to di
 
 The first argument is the `destination`, which can be any of the following:
 
-* `string`: A path to a location on the file system. Use the `"path"` module to manipulate paths.
-* `URL`: A `file://` descriptor.
-* `BunFile`: A file reference.
+- `string`: A path to a location on the file system. Use the `"path"` module to manipulate paths.
+- `URL`: A `file://` descriptor.
+- `BunFile`: A file reference.
 
 The second argument is the data to write. It can be any of the following:
 
-* `string`
-* `Blob` (including `BunFile`)
-* `ArrayBuffer` or `SharedArrayBuffer`
-* `TypedArray` (`Uint8Array`, et. al.)
-* `Response`
+- `string`
+- `Blob` (including `BunFile`)
+- `ArrayBuffer` or `SharedArrayBuffer`
+- `TypedArray` (`Uint8Array`, et. al.)
+- `Response`
 
 Bun handles each combination with the fastest available system call on the current platform.
 
 ### See syscalls
+
 | Output               | Input          | System call                   | Platform |
 | -------------------- | -------------- | ----------------------------- | -------- |
-| file                 | file           | copy_file_range             | Linux    |
+| file                 | file           | copy_file_range               | Linux    |
 | file                 | pipe           | sendfile                      | Linux    |
 | pipe                 | pipe           | splice                        | Linux    |
 | terminal             | file           | sendfile                      | Linux    |
@@ -108,6 +112,7 @@ Bun handles each combination with the fastest available system call on the curre
 | file (exists)        | file           | fcopyfile                     | macOS    |
 | file                 | Blob or string | write                         | macOS    |
 | file                 | Blob or string | write                         | Linux    |
+
 
 To write a string to disk:
 
@@ -146,7 +151,7 @@ const response = await fetch("https://bun.com");
 await Bun.write("index.html", response);
 ```
 
-***
+---
 
 ## Incremental writing with `FileSink`
 
@@ -173,7 +178,7 @@ The `FileSink` buffers these chunks internally. To flush the buffer to disk, use
 writer.flush(); // write buffer to disk
 ```
 
-The buffer also auto-flushes when the `FileSink`'s *high water mark* is reached; that is, when its internal buffer is full. You can configure this value.
+The buffer also auto-flushes when the `FileSink`'s _high water mark_ is reached; that is, when its internal buffer is full. You can configure this value.
 
 ```ts
 const file = Bun.file("output.txt");
@@ -195,7 +200,7 @@ writer.unref();
 writer.ref();
 ```
 
-***
+---
 
 ## Directories
 
@@ -233,7 +238,7 @@ import { mkdir } from "node:fs/promises";
 await mkdir("path/to/dir", { recursive: true });
 ```
 
-***
+---
 
 ## Benchmarks
 
@@ -258,9 +263,9 @@ bun ./cat.ts ./path-to-file
 
 It runs 2x faster than GNU `cat` for large files on Linux.
 
-<img alt="Cat screenshot" />
+![Cat screenshot](/images/cat.jpg)
 
-***
+---
 
 ## Reference
 

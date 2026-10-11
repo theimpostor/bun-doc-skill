@@ -9,6 +9,6 @@ const stream = new ReadableStream();
 const json = await stream.json();
 ```
 
-***
+---
 
-See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).
+See [Bun's other `ReadableStream` conversion functions](/runtime/utils#bun-readablestreamto).

@@ -9,12 +9,13 @@ When running a file with `bun`, the time zone defaults to your system's configur
 
 When running tests with `bun test`, Bun sets the time zone to `UTC` to make tests more deterministic.
 
+
 **File:** `process.ts`
 ```ts
 process.env.TZ = "America/New_York";
 ```
 
-***
+---
 
 You can also set `TZ` on the command line when running a Bun command.
 
@@ -22,7 +23,7 @@ You can also set `TZ` on the command line when running a Bun command.
 TZ=America/New_York bun run dev
 ```
 
-***
+---
 
 Once `TZ` is set, every `Date` instance uses that time zone.
 

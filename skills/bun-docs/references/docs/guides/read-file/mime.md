@@ -15,6 +15,6 @@ const image = Bun.file("./image.png");
 image.type; // image/png
 ```
 
-***
+---
 
-See [File I/O](/docs/runtime/file-io) for more on working with `BunFile`.
+See [File I/O](/runtime/file-io) for more on working with `BunFile`.

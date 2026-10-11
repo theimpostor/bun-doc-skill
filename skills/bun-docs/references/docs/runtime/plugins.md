@@ -3,7 +3,8 @@ Source: https://bun.com/docs/runtime/plugins
 
 Universal plugin API for extending Bun's runtime and bundler
 
-Bun has a universal plugin API that extends both the *runtime* and the *bundler*.
+
+Bun has a universal plugin API that extends both the _runtime_ and the _bundler_.
 
 Plugins intercept imports and perform custom loading logic, like reading files or transpiling code. Use them to add support for additional file types, such as `.scss`. In Bun's bundler, plugins can implement framework-level features like CSS extraction, macros, and client-server code co-location.
 
@@ -11,10 +12,10 @@ Plugins intercept imports and perform custom loading logic, like reading files o
 
 Plugins register callbacks that run at various points in the lifecycle of a bundle:
 
-* [`onStart()`](#onstart): Run once the bundler has started a bundle
-* [`onResolve()`](#onresolve): Run before the bundler resolves a module
-* [`onLoad()`](#onload): Run before the bundler loads a module
-* [`onBeforeParse()`](#onbeforeparse): Run zero-copy native addons in the parser thread before the bundler parses a file
+- [`onStart()`](#onstart): Run once the bundler has started a bundle
+- [`onResolve()`](#onresolve): Run before the bundler resolves a module
+- [`onLoad()`](#onload): Run before the bundler loads a module
+- [`onBeforeParse()`](#onbeforeparse): Run zero-copy native addons in the parser thread before the bundler parses a file
 
 ### Reference
 
@@ -90,14 +91,14 @@ await Bun.build({
 
 ### Namespaces
 
-`onLoad` and `onResolve` accept an optional `namespace` string. Every module has a namespace, which prefixes the import in transpiled code. For instance, a loader with a `filter: /.yaml$/` and `namespace: "yaml:"` transforms an import from `./myfile.yaml` into `yaml:./myfile.yaml`.
+`onLoad` and `onResolve` accept an optional `namespace` string. Every module has a namespace, which prefixes its path. For instance, when `onResolve` returns `{ path: "./myfile.yaml", namespace: "yaml" }`, the module is `yaml:./myfile.yaml`.
 
 The default namespace is `"file"` and you don't need to specify it: `import myModule from "./my-module.ts"` is the same as `import myModule from "file:./my-module.ts"`.
 
 Other common namespaces are:
 
-* `"bun"`: for Bun-specific modules (`"bun:test"`, `"bun:sqlite"`)
-* `"node"`: for Node.js modules (`"node:fs"`, `"node:path"`)
+- `"bun"`: for Bun-specific modules (`"bun:test"`, `"bun:sqlite"`)
+- `"node"`: for Node.js modules (`"node:fs"`, `"node:path"`)
 
 ### `onStart`
 
@@ -109,16 +110,18 @@ Registers a callback that runs when the bundler starts a new bundle.
 
 **File:** `index.ts`
 ```ts
-import { plugin } from "bun";
-
-plugin({
-  name: "onStart example",
-
-  setup(build) {
-    build.onStart(() => {
-      console.log("Bundle started!");
-    });
-  },
+await Bun.build({
+  entrypoints: ["./app.ts"],
+  plugins: [
+    {
+      name: "onStart example",
+      setup(build) {
+        build.onStart(() => {
+          console.log("Bundle started!");
+        });
+      },
+    },
+  ],
 });
 ```
 
@@ -178,7 +181,11 @@ The first argument to `onResolve()` is an object with a `filter` and [`namespace
 
 The second argument to `onResolve()` is a callback that runs for each module import Bun finds that matches the `filter` and `namespace` defined in the first argument.
 
-The callback receives the *path* to the matching module and can return a *new path* for it. Bun reads the contents of the *new path* and parses it as a module.
+The callback receives the _path_ to the matching module and can return a _new path_ for it. Bun reads the contents of the _new path_ and parses it as a module.
+
+At runtime, the callback runs once for each `import` or `require()` as it executes. A _new path_ without a `namespace` is resolved from the importing module like any other import, without running `onResolve()` callbacks on it: it can be relative, leave out its extension, or name a package. If nothing is found there, the _new path_ is used as it is when an [`onLoad()`](#onload) callback matches it, so it does not have to exist on disk.
+
+A bare name such as `"my-virtual.js"` could also be a package in the registry, so `onResolve()` callbacks run on it once more. If one of them returns a path, the name is the plugin's own and is never [auto-installed](/runtime/auto-install).
 
 For example, redirecting all imports to `images/` to `./public/images/`:
 
@@ -215,13 +222,13 @@ onLoad(
 
 After Bun's bundler has resolved a module, it needs to read and parse the module's contents.
 
-Use the `onLoad()` lifecycle callback to modify the *contents* of a module before Bun reads and parses it.
+Use the `onLoad()` lifecycle callback to modify the _contents_ of a module before Bun reads and parses it.
 
 Like `onResolve()`, the first argument to `onLoad()` filters which modules this invocation of `onLoad()` applies to.
 
-The second argument to `onLoad()` is a callback that runs for each matching module *before* Bun loads its contents into memory.
+The second argument to `onLoad()` is a callback that runs for each matching module _before_ Bun loads its contents into memory.
 
-The callback receives the matching module's *path*, its *namespace*, the default *loader* for that file, and a *defer* function.
+The callback receives the matching module's _path_, its _namespace_, the default _loader_ for that file, and a _defer_ function.
 
 The callback can return a new `contents` string for the module as well as a new `loader`.
 
@@ -234,7 +241,10 @@ import type { BunPlugin } from "bun";
 const envPlugin: BunPlugin = {
   name: "env plugin",
   setup(build) {
-    build.onLoad({ filter: /env/, namespace: "file" }, args => {
+    build.onResolve({ filter: /^env$/ }, args => {
+      return { path: args.path, namespace: "env" };
+    });
+    build.onLoad({ filter: /env/, namespace: "env" }, args => {
       return {
         contents: `export default ${JSON.stringify(process.env)}`,
         loader: "js",
@@ -257,7 +267,7 @@ This plugin transforms all imports of the form `import env from "env"` into a Ja
 
 #### `.defer()`
 
-The `onLoad` callback receives a `defer` function, which returns a `Promise` that resolves once Bun has loaded all *other* modules. Await it when a module's contents depend on other modules.
+The `onLoad` callback receives a `defer` function, which returns a `Promise` that resolves once Bun has loaded all _other_ modules. Await it when a module's contents depend on other modules.
 
 ##### Example: tracking and reporting unused exports
 
@@ -308,11 +318,11 @@ You can call the `.defer()` function only once per `onLoad` callback.
 
 Bun's bundler is fast partly because it is written in native code and uses multiple threads to load and parse modules in parallel. Plugins written in JavaScript cannot take advantage of this, because JavaScript itself is single-threaded.
 
-Native plugins are written as [NAPI](/docs/runtime/node-api) modules and can run on multiple threads, so they run much faster than JavaScript plugins. They can also skip unnecessary work such as the UTF-8 -> UTF-16 conversion needed to pass strings to JavaScript.
+Native plugins are written as [NAPI](/runtime/node-api) modules and can run on multiple threads, so they run much faster than JavaScript plugins. They can also skip unnecessary work such as the UTF-8 -> UTF-16 conversion needed to pass strings to JavaScript.
 
 The following lifecycle hooks are available to native plugins:
 
-* [`onBeforeParse()`](#onbeforeparse): Called on any thread before Bun's bundler parses a file.
+- [`onBeforeParse()`](#onbeforeparse): Called on any thread before Bun's bundler parses a file.
 
 Native plugins are NAPI modules which expose lifecycle hooks as C ABI functions. To create one, export a C ABI function that matches the signature of the lifecycle hook you want to implement.
 

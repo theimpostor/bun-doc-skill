@@ -3,7 +3,8 @@ Source: https://bun.com/docs/pm/workspaces
 
 Develop complex monorepos with multiple independent packages
 
-Bun supports [`workspaces`](https://docs.npmjs.com/cli/v9/using-npm/workspaces?v=true#description) in `package.json`. With workspaces, you develop several independent packages in a single repository, a *monorepo*.
+
+Bun supports [`workspaces`](https://docs.npmjs.com/cli/v9/using-npm/workspaces?v=true#description) in `package.json`. With workspaces, you develop several independent packages in a single repository, a _monorepo_.
 
 A monorepo commonly has this structure:
 
@@ -45,7 +46,7 @@ The `"workspaces"` key in the root `package.json` lists the subdirectories to tr
 
 > Note
 **Glob support** — Bun supports full glob syntax in `"workspaces"`, including negative patterns such as
-`!**/excluded/**`. See [supported glob patterns](/docs/runtime/glob#supported-glob-patterns).
+`!**/excluded/**`. See [supported glob patterns](/runtime/glob#supported-glob-patterns).
 
 **File:** `package.json`
 ```json
@@ -95,22 +96,60 @@ A specific version takes precedence over the package's `package.json` version:
 
 Workspaces have a few major benefits.
 
-* **Split code into logical parts.** If one package relies on another, add it as a dependency in `package.json`. If package `b` depends on `a`, `bun install` installs your local `packages/a` directory into `node_modules` instead of downloading it from the npm registry.
-* **Bun can de-duplicate dependencies.** If `a` and `b` share a common dependency, Bun *hoists* it to the root `node_modules` directory. This saves disk space and minimizes the "dependency hell" of multiple versions of a package installed at once.
-* **Run scripts in multiple packages.** Use the [`--filter` flag](/docs/pm/filter) to run `package.json` scripts in several packages at once, or `--workspaces` to run scripts across all workspaces.
+- **Split code into logical parts.** If one package relies on another, add it as a dependency in `package.json`. If package `b` depends on `a`, `bun install` installs your local `packages/a` directory into `node_modules` instead of downloading it from the npm registry.
+- **Bun can de-duplicate dependencies.** If `a` and `b` share a common dependency, Bun _hoists_ it to the root `node_modules` directory. This saves disk space and minimizes the "dependency hell" of multiple versions of a package installed at once.
+- **Run scripts in multiple packages.** Use the [`--filter` flag](/pm/filter) to run `package.json` scripts in several packages at once, or `--workspaces` to run scripts across all workspaces.
+
+## Self-contained workspaces
+
+With the hoisted linker, dependencies shared by several workspaces are hoisted to the root
+`node_modules`. Some tools cannot follow that: Electron packagers and serverless bundlers walk,
+prune and repackage _one workspace's_ `node_modules` and expect every dependency to be physically
+present under it. Mark such a workspace as self-contained, either in its own `package.json`
+(the same key Yarn uses; only the `"workspaces"` value changes the layout):
+
+**File:** `apps/desktop/package.json`
+```json
+{
+  "name": "desktop",
+  "installConfig": { "hoistingLimits": "workspaces" }
+}
+```
+
+or from the root `package.json`, next to the workspace globs:
+
+**File:** `package.json`
+```json
+{
+  "workspaces": {
+    "packages": ["apps/*", "packages/*"],
+    "selfContained": ["apps/desktop"]
+  }
+}
+```
+
+(entries are workspace paths or package names)
+
+For that workspace `bun install` then behaves as a hoisting barrier — nothing it depends on,
+directly or transitively (including through other workspaces it depends on), is placed above
+`apps/desktop/node_modules`, so that directory is a complete tree — and materializes those
+packages as real copies instead of hardlinks / clones from the cache, so tools that rewrite them
+cannot affect the cache or other projects. All other workspaces keep hoisting to the root as usual. The lockfile does not record the setting. Bun reads it from `package.json` on every install, `--frozen-lockfile` included, so the lockfile is the same with and without it.
+This setting has no effect with the isolated linker, where every package already resolves only its
+own dependencies.
 
 ## Share versions with Catalogs
 
 When many packages need the same dependency versions, define those versions once
 in a catalog in the root `package.json` and reference them from your workspaces
 with the `catalog:` protocol. Updating the catalog updates every package that
-references it. See [Catalogs](/docs/pm/catalogs).
+references it. See [Catalogs](/pm/catalogs).
 
 > Note
 ⚡️ **Speed** — Installs are fast, even for big monorepos. Bun installs the [Remix](https://github.com/remix-run/remix) monorepo in about `500ms` on Linux.
 
-* 28x faster than `npm install`
-* 12x faster than `yarn install` (v1)
-* 8x faster than `pnpm install`
+- 28x faster than `npm install`
+- 12x faster than `yarn install` (v1)
+- 8x faster than `pnpm install`
 
-<Image />
+![Image](https://user-images.githubusercontent.com/709451/212829600-77df9544-7c9f-4d8d-a984-b2cd0fd2aa52.png)

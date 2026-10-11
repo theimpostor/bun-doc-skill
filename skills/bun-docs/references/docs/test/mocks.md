@@ -3,6 +3,7 @@ Source: https://bun.com/docs/test/mocks
 
 Learn how to create and use mock functions, spies, and module mocks in Bun tests
 
+
 Mocking replaces a dependency with a controlled implementation. Bun supports function mocks, spies, and module mocks.
 
 ## Basic Function Mocks
@@ -302,6 +303,28 @@ test("mock.module", async () => {
 });
 ```
 
+When the factory returns a promise that is still pending, Bun updates the already-imported module once the promise settles. In that case `mock.module()` returns a promise that resolves after the update, and otherwise it returns `undefined`. `await mock.module(...)` inside a test or hook covers both. At the top level of a test file, Bun waits for pending module mocks before it runs the file's tests.
+
+**File:** `test.ts`
+```ts
+import { test, expect, mock } from "bun:test";
+import { foo } from "./module";
+
+mock.module("./module", async () => {
+  const { default: fixture } = await import("./fixture.json");
+  return { foo: fixture.foo };
+});
+
+test("async factory", () => {
+  expect(foo).toBe("baz");
+});
+```
+
+**File:** `fixture.json`
+```json
+{ "foo": "baz" }
+```
+
 ### Hoisting & Preloading
 
 To make sure a module is mocked before it's imported, use `--preload` to load your mocks before your tests run.
@@ -528,14 +551,14 @@ Bun evaluates the mock factory callback only when the module is imported or requ
 
 Bun resolves the module specifier the same way it resolves an `import`, supporting:
 
-* Relative paths (`'./module'`)
-* Absolute paths (`'/path/to/module'`)
-* Package names (`'lodash'`)
+- Relative paths (`'./module'`)
+- Absolute paths (`'/path/to/module'`)
+- Package names (`'lodash'`)
 
 ### Import Timing Effects
 
-* **When mocking before first import**: No side effects from the original module occur
-* **When mocking after import**: The original module's side effects have already happened
+- **When mocking before first import**: No side effects from the original module occur
+- **When mocking after import**: The original module's side effects have already happened
 
 For this reason, use `--preload` for mocks that need to prevent side effects.
 

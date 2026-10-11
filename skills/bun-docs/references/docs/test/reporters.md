@@ -4,7 +4,7 @@ Source: https://bun.com/docs/test/reporters
 
 `bun test` supports different output formats through reporters, both built-in and custom.
 
-***
+---
 
 ## Built-in Reporters
 
@@ -22,7 +22,7 @@ test/package-json-lint.test.ts:
  4 pass
  0 fail
  4 expect() calls
-Ran 4 tests across 1 file. [1.44ms]
+Ran 4 tests across 1 file. [8.00ms]
 ```
 
 When a terminal doesn't support colors, the output avoids non-ASCII characters:
@@ -37,7 +37,7 @@ test/package-json-lint.test.ts:
  4 pass
  0 fail
  4 expect() calls
-Ran 4 tests across 1 file. [0.66ms]
+Ran 4 tests across 1 file. [9.00ms]
 ```
 
 ### Dots Reporter
@@ -89,16 +89,16 @@ It includes the following environment variables when available:
 
 The JUnit reporter does not include:
 
-* `stdout` and `stderr` output from individual tests
-* Precise timestamp fields per test case
+- `stdout` and `stderr` output from individual tests
+- Precise timestamp fields per test case
 
 ### GitHub Actions reporter
 
 `bun test` detects when it's running inside GitHub Actions and emits GitHub Actions annotations to the console directly. No configuration is needed beyond installing Bun and running `bun test`.
 
-For an example GitHub Actions workflow, see [CI/CD integration](/docs/pm/cli/install#ci%2Fcd).
+For an example GitHub Actions workflow, see [CI/CD integration](/pm/cli/install#ci%2Fcd).
 
-***
+---
 
 ## Custom Reporters
 
@@ -115,8 +115,8 @@ Bun extends the standard WebKit Inspector Protocol with two custom domains:
 
 Custom reporters can listen for these events:
 
-* `TestReporter.found`: Emitted when a test is discovered
-* `TestReporter.start`: Emitted when a test starts running
-* `TestReporter.end`: Emitted when a test completes
-* `Console.messageAdded`: Emitted when console output occurs during a test
-* `LifecycleReporter.error`: Emitted when an error or exception occurs
+- `TestReporter.found`: Emitted when a test is discovered
+- `TestReporter.start`: Emitted when a test starts running
+- `TestReporter.end`: Emitted when a test completes
+- `Console.messageAdded`: Emitted when console output occurs during a test
+- `LifecycleReporter.error`: Emitted when an error or exception occurs

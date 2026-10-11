@@ -11,6 +11,6 @@ console.log(await blob.text());
 // => "hello"
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

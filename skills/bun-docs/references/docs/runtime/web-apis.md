@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/web-apis
 
 Web-standard APIs supported by Bun for server-side JavaScript
 
+
 Some Web APIs, like the [DOM API](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API#html_dom_api_interfaces) and [History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API), aren't relevant in a server-first runtime like Bun. Many others are broadly useful outside the browser; when possible, Bun implements these Web-standard APIs instead of introducing new ones.
 
 Bun partially or completely supports the following Web APIs.

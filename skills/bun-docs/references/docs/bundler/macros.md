@@ -3,6 +3,7 @@ Source: https://bun.com/docs/bundler/macros
 
 Run JavaScript functions at bundle-time with Bun macros
 
+
 Macros are JavaScript functions that run at bundle-time. Bun inlines their return values directly into your bundle.
 
 As a toy example, consider this function that returns a random number.
@@ -49,8 +50,8 @@ If you find yourself running a lot of code at bundle-time though, consider runni
 
 Macros are import statements annotated with either:
 
-* `with { type: 'macro' }` — an import attribute, a Stage 4 ECMAScript proposal
-* `assert { type: 'macro' }` — an import assertion, an earlier incarnation of import attributes that has now been abandoned (but several browsers and runtimes already support it)
+- `with { type: 'macro' }` — an import attribute, a Stage 4 ECMAScript proposal
+- `assert { type: 'macro' }` — an import assertion, an earlier incarnation of import attributes that has now been abandoned (but several browsers and runtimes already support it)
 
 ## Security considerations
 
@@ -116,7 +117,7 @@ The first import resolves to `./node_modules/my-package/index.js`; Bun's bundler
 
 When Bun's transpiler sees a macro import, it calls the function using Bun's JavaScript runtime and converts the return value into an AST node.
 
-Macros run synchronously in the transpiler during the visiting phase, after the transpiler parses the file into an AST. They run in the order they are imported. The transpiler waits for each macro to finish before continuing, and awaits any Promise a macro returns.
+Macros run synchronously in the transpiler during the visiting phase, after the transpiler parses the file into an AST. They run in the order their calls appear in the file; the transpiler does not load or run a macro module until it reaches a call to one of its exports. The transpiler waits for each macro to finish before continuing, and awaits any Promise a macro returns.
 
 Bun's bundler is multi-threaded, so macros execute in parallel in multiple spawned JavaScript "workers".
 
@@ -168,8 +169,8 @@ export async function getText() {
 
 The transpiler implements special logic for serializing common data formats like `Response` and `Blob`.
 
-* **Response**: Bun reads the `Content-Type` and serializes accordingly. For example, it parses a Response with type `application/json` into an object and inlines `text/plain` as a string. Bun base64-encodes Responses with an unrecognized or undefined type.
-* **Blob**: As with Response, the serialization depends on the `type` property.
+- **Response**: Bun reads the `Content-Type` and serializes accordingly. For example, it parses a Response with type `application/json` into an object and inlines `text/plain` as a string. Bun base64-encodes Responses with an unrecognized or undefined type.
+- **Blob**: As with Response, the serialization depends on the `type` property.
 
 The result of `fetch` is `Promise<Response>`, so a macro can return it directly.
 
@@ -249,6 +250,7 @@ export function getGitCommitHash() {
 
 When you build it, Bun replaces the `getGitCommitHash` call with the result of calling the function:
 
+
 **File:** `input`
 ```ts
 import { getGitCommitHash } from "./getGitCommitHash.ts" with { type: "macro" };
@@ -260,6 +262,7 @@ console.log(`The current Git commit hash is ${getGitCommitHash()}`);
 ```ts
 console.log(`The current Git commit hash is 3ee3259104e4507cf62c160f0ff5357ec4c7a7f8`);
 ```
+
 
 > Info
 You're probably thinking "Why not use `process.env.GIT_COMMIT_HASH`?" Well, you can do that too. But can you do this
@@ -297,6 +300,7 @@ export async function extractMetaTags(url: string) {
 ```
 
 Bun erases the `extractMetaTags` function at bundle-time and replaces it with the result of the function call. The fetch request happens at bundle-time, and Bun embeds the result in the bundle. Bun also eliminates the branch throwing the error since it's unreachable, provided that the minify syntax option is enabled.
+
 
 **File:** `input`
 ```jsx

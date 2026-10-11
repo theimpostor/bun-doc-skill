@@ -3,6 +3,7 @@ Source: https://bun.com/docs/test/parallel
 
 Run test files across CPU cores with --parallel, isolate files from each other with --isolate, run tests within a file concurrently, and split suites across CI machines with --shard and --timings
 
+
 `bun test` has three independent knobs for running more than one thing at a time:
 
 | Flag                               | Unit of parallelism             | What it does                                                                                                         |
@@ -60,7 +61,7 @@ Flags that affect how tests execute (`--timeout`, `--preload`, `--define`, `--co
 
 The coordinator merges coverage, JUnit XML and snapshot writes, so `--parallel --coverage --reporter=junit --reporter-outfile=junit.xml` produces one report.
 
-If a worker crashes (a test calls `process.exit`), the coordinator reports the file that worker was running as failed, and a replacement worker picks up the remaining files. A crash from a fatal signal aborts the whole run, so later passing files can't mask it.
+If a worker crashes (a test calls `process.exit`), the coordinator reports the file that worker was running as failed, and a replacement worker picks up the remaining files. A crash from a fatal signal aborts the whole run, so later passing files can't mask it. With a single effective worker (`--parallel=1`, or a suite with one test file), `bun test` runs the files in the main process, so `process.exit` ends the run with that exit code.
 
 ### When `--parallel` helps, and when it doesn't
 
@@ -74,10 +75,10 @@ bun test --isolate
 
 Runs each test file in a fresh JavaScript global object inside the same process. Between files Bun:
 
-* creates a new `globalThis` (so properties a file stuck on `globalThis`, patched built-ins, and module-level state are gone),
-* clears the ESM and CommonJS module registries (every file re-evaluates its imports),
-* closes servers, sockets, file watchers and subprocesses the file left open, cancels its timers, and restores fake timers,
-* re-runs `--preload` scripts in the new global.
+- creates a new `globalThis` (so properties a file stuck on `globalThis`, patched built-ins, and module-level state are gone),
+- clears the ESM and CommonJS module registries (every file re-evaluates its imports),
+- closes servers, sockets, file watchers and subprocesses the file left open, cancels its timers, and restores fake timers,
+- re-runs `--preload` scripts in the new global.
 
 Isolating every file is how Jest and Vitest behave by default. It makes "passes alone, fails in the full suite" bugs go away at the cost of re-evaluating imports per file.
 
@@ -87,7 +88,7 @@ Without `--isolate` (the default), all files share one global and one module reg
 
 ## Concurrent tests within a file
 
-`--parallel` spreads *files* across cores. Within one file tests still run one at a time unless you opt in to concurrency, which lets `async` tests overlap while one is waiting on I/O:
+`--parallel` spreads _files_ across cores. Within one file tests still run one at a time unless you opt in to concurrency, which lets `async` tests overlap while one is waiting on I/O:
 
 **File:** `api.test.ts`
 ```ts
@@ -109,12 +110,12 @@ test.serial("resets the database", async () => {
 });
 ```
 
-* `test.concurrent(...)` / `describe.concurrent(...)` mark individual tests or whole groups.
-* `--concurrent` treats every test as concurrent; `test.serial` opts back out.
-* `--max-concurrency=N` caps how many run at once (default 20).
-* [`concurrentTestGlob`](/docs/test/configuration#concurrenttestglob) in `bunfig.toml` turns it on for matching files only.
+- `test.concurrent(...)` / `describe.concurrent(...)` mark individual tests or whole groups.
+- `--concurrent` treats every test as concurrent; `test.serial` opts back out.
+- `--max-concurrency=N` caps how many run at once (default 20).
+- [`concurrentTestGlob`](/test/configuration#concurrenttestglob) in `bunfig.toml` turns it on for matching files only.
 
-Concurrent tests share a thread and a global; this is cooperative concurrency for I/O-bound tests, not extra CPU cores. `expect.assertions()` and other per-test global state need care under concurrency — see [Concurrent test execution](/docs/test/index#concurrent-test-execution).
+Concurrent tests share a thread and a global; this is cooperative concurrency for I/O-bound tests, not extra CPU cores. `expect.assertions()` and other per-test global state need care under concurrency — see [Concurrent test execution](/test/index#concurrent-test-execution).
 
 ## Splitting a suite across CI machines with `--shard`
 
@@ -152,15 +153,15 @@ The file is plain JSON, slowest first, so it doubles as a "what's slow" report:
 }
 ```
 
-* Paths are relative to the project root; values are wall-clock milliseconds for the whole file.
-* Without `--shard`, `--update-timings` merges into what it read, so re-running part of the suite locally refreshes those entries and keeps the rest. Entries for files that no longer exist are left alone; delete the file to start over.
-* With `--shard`, `--update-timings` writes **only the files that shard ran** — see below.
-* Bun assumes files with no entry take the median time when cutting shards, and starts them first under `--parallel`.
-* With `--timings`, `--parallel` also uses the durations: the coordinator cuts worker chunks by time and each worker starts its slowest file first.
+- Paths are relative to the project root; values are wall-clock milliseconds for the whole file.
+- Without `--shard`, `--update-timings` merges into what it read, so re-running part of the suite locally refreshes those entries and keeps the rest. Entries for files that no longer exist are left alone; delete the file to start over.
+- With `--shard`, `--update-timings` writes **only the files that shard ran** — see below.
+- Bun assumes files with no entry take the median time when cutting shards, and starts them first under `--parallel`.
+- With `--timings`, `--parallel` also uses the durations: the coordinator cuts worker chunks by time and each worker starts its slowest file first.
 
 #### One timings file per shard
 
-You can pass `--timings` more than once. Bun reads the files as one table and skips paths that don't exist yet. `--update-timings` writes to the **first** path. Under `--shard` that output contains only the files the shard ran, so the shards' outputs are disjoint. Read together on the next run, they add up to the whole suite with no merge step. [Large codebases](/docs/test/index#large-codebases) on the main page has the full CI workflow.
+You can pass `--timings` more than once. Bun reads the files as one table and skips paths that don't exist yet. `--update-timings` writes to the **first** path. Under `--shard` that output contains only the files the shard ran, so the shards' outputs are disjoint. Read together on the next run, they add up to the whole suite with no merge step. [Large codebases](/test/index#large-codebases) on the main page has the full CI workflow.
 
 ## How it compares
 

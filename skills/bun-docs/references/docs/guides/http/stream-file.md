@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/http/stream-file
 
 
-[`Bun.file()`](/docs/runtime/file-io#reading-files-bun-file) accepts a path and returns a lazily-loaded `BunFile` instance, which you can pass directly to the `new Response` constructor.
+[`Bun.file()`](/runtime/file-io#reading-files-bun-file) accepts a path and returns a lazily-loaded `BunFile` instance, which you can pass directly to the `new Response` constructor.
 
 **File:** `server.ts`
 ```ts
@@ -11,7 +11,7 @@ const file = Bun.file(path);
 const resp = new Response(file);
 ```
 
-***
+---
 
 Bun determines the `Content-Type` from the file extension and sets it on the `Response`.
 
@@ -30,9 +30,9 @@ new Response(Bun.file("./img.png")).headers.get("Content-Type");
 // => image/png
 ```
 
-***
+---
 
-Putting it all together with [`Bun.serve()`](/docs/runtime/http/server).
+Putting it all together with [`Bun.serve()`](/runtime/http/server).
 
 **File:** `server.ts`
 ```ts
@@ -46,6 +46,6 @@ Bun.serve({
 });
 ```
 
-***
+---
 
-See [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
+See [`Bun.write()`](/runtime/file-io#writing-files-bun-write).

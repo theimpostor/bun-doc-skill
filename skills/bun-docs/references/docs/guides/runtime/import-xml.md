@@ -15,7 +15,7 @@ Bun natively supports `.xml` imports.
 </config>
 ```
 
-***
+---
 
 Import the file like any other source file. The module is the parsed document: one key for the root element, `"@name"` keys for attributes, and arrays for repeated elements. Every value is a string.
 
@@ -29,7 +29,7 @@ doc.config.server["@port"]; // => "3000"
 doc.config.feature.map(f => f["@name"]); // => ["auth", "rateLimit"]
 ```
 
-***
+---
 
 The root element is also available as a named import:
 
@@ -41,7 +41,7 @@ console.log(config.database["@name"]); // => "myapp"
 console.log(Number(config.server["@timeout"])); // => 30
 ```
 
-***
+---
 
 For parsing XML strings at runtime, use `Bun.XML.parse()`:
 
@@ -60,6 +60,6 @@ console.log(data.user.hobby); // => ["reading", "coding"]
 console.log(data.user["@id"]); // => "7"
 ```
 
-***
+---
 
-See [XML](/docs/runtime/xml) for the rest of Bun's XML support, including the ordered `{ compact: false }` node tree and `Bun.XML.stringify()`.
+See [XML](/runtime/xml) for the rest of Bun's XML support, including the ordered `{ compact: false }` node tree and `Bun.XML.stringify()`.

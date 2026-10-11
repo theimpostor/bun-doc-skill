@@ -9,7 +9,7 @@ Source: https://bun.com/docs/guides/util/sleep
 await Bun.sleep(1000);
 ```
 
-***
+---
 
 Internally, `Bun.sleep()` is equivalent to the following [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout) snippet.
 
@@ -17,6 +17,6 @@ Internally, `Bun.sleep()` is equivalent to the following [`setTimeout`](https://
 await new Promise(resolve => setTimeout(resolve, ms));
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils).
+See [Utils](/runtime/utils).

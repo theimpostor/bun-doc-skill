@@ -2,9 +2,9 @@
 Source: https://bun.com/docs/guides/test/run-tests
 
 
-Bun has a built-in [test runner](/docs/test) with a Jest-like `expect` API.
+Bun has a built-in [test runner](/test) with a Jest-like `expect` API.
 
-***
+---
 
 To use it, run `bun test` from your project directory. The test runner recursively searches for files matching the following patterns and runs the tests they contain.
 
@@ -16,7 +16,7 @@ To use it, run `bun test` from your project directory. The test runner recursive
 *_spec.{js|jsx|ts|tsx|mjs|cjs|mts|cts}
 ```
 
-***
+---
 
 Here's the output of a typical run: three test files (`test.test.js`, `test2.test.js`, and `test3.test.js`), each containing two tests (`add` and `multiply`).
 
@@ -43,7 +43,7 @@ test3.test.js:
 Ran 6 tests across 3 files. [9.00ms]
 ```
 
-***
+---
 
 To only run certain test files, pass a positional argument to `bun test`. The runner only executes files with that argument in their path.
 
@@ -62,7 +62,7 @@ test3.test.js:
 Ran 2 tests across 1 file. [15.00ms]
 ```
 
-***
+---
 
 Every test has a name: the first argument to the `test` function. You can also group tests into suites with `describe`.
 
@@ -80,7 +80,7 @@ describe("math", () => {
 });
 ```
 
-***
+---
 
 To filter tests by name, use the `-t`/`--test-name-pattern` flag.
 
@@ -107,6 +107,6 @@ test3.test.js:
 Ran 3 tests across 3 files. [59.00ms]
 ```
 
-***
+---
 
-See [`bun test`](/docs/test).
+See [`bun test`](/test).

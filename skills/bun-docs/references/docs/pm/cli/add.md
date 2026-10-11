@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/cli/add
 
 Add packages to your project with Bun's fast package manager
 
+
 To add a particular package:
 
 ```bash
@@ -82,7 +83,7 @@ bun add --help
 
 ## `--catalog`
 
-In a workspace, `--catalog` writes the version to the root `package.json` [catalog](/docs/pm/catalogs) and adds `"catalog:"` to the current package. `--catalog=<name>` uses a named catalog (`workspaces.catalogs.<name>`) and writes `"catalog:<name>"`.
+In a workspace, `--catalog` writes the version to the root `package.json` [catalog](/pm/catalogs) and adds `"catalog:"` to the current package. `--catalog=<name>` uses a named catalog (`workspaces.catalogs.<name>`) and writes `"catalog:<name>"`.
 
 ```bash
 bun add react --catalog
@@ -111,11 +112,11 @@ bun add vitest --catalog=testing
 }
 ```
 
-* If the catalog already has an entry, Bun reuses it and writes only `"catalog:"` to the current package. Pass an explicit version (`bun add react@19 --catalog`) to replace the entry — this affects every package that references it.
-* If you omit the version and the current `package.json` already has a range (`"react": "^18.2.0"`), Bun catalogs that range.
-* A package that already references `"catalog:<name>"` keeps using that catalog.
-* Attach the name with `=`: `--catalog=testing`, not `--catalog testing`.
-* Bun catalogs tarball and git specifiers under the package's real name. It rejects relative paths and workspace packages.
+- If the catalog already has an entry, Bun reuses it and writes only `"catalog:"` to the current package. Pass an explicit version (`bun add react@19 --catalog`) to replace the entry — this affects every package that references it.
+- If you omit the version and the current `package.json` already has a range (`"react": "^18.2.0"`), Bun catalogs that range.
+- A package that already references `"catalog:<name>"` keeps using that catalog.
+- Attach the name with `=`: `--catalog=testing`, not `--catalog testing`.
+- Bun catalogs tarball and git specifiers under the package's real name. It rejects relative paths and workspace packages.
 
 Even without the flag, `bun add react` (no version) writes `"catalog:"` if the default catalog already lists `react`. Pass a version to write a concrete range instead.
 
@@ -123,7 +124,7 @@ Even without the flag, `bun add react` (no version) writes `"catalog:"` if the d
 
 > Note: **Alias** — `-F`
 
-In a monorepo, add the package to the matching workspace(s) instead of the current directory's package. See [filtering](/docs/pm/filter) for the pattern syntax. Repeat the flag to combine patterns; `!pattern` excludes.
+In a monorepo, add the package to the matching workspace(s) instead of the current directory's package. See [filtering](/pm/filter) for the pattern syntax. Repeat the flag to combine patterns; `!pattern` excludes.
 
 ```bash
 bun add zod --filter api
@@ -132,11 +133,11 @@ bun add ./vendor/logger --filter '*'
 bun remove zod --filter '*' --filter '!api'
 ```
 
-* `*` matches every workspace package but not the root. To include the root, name it: `--filter '*' --filter '<root-name>'`.
-* If no workspace matches, Bun writes nothing and the command fails.
-* Bun resolves local paths from the current directory and rewrites them relative to each selected package.
-* Bun updates `bun.lock` for the whole repo but links only the selected workspaces into `node_modules`, as with `bun install --filter`.
-* Cannot be combined with `--global`.
+- `*` matches every workspace package but not the root. To include the root, name it: `--filter '*' --filter '<root-name>'`.
+- If no workspace matches, Bun writes nothing and the command fails.
+- Bun resolves local paths from the current directory and rewrites them relative to each selected package.
+- Bun updates `bun.lock` for the whole repo but links only the selected workspaces into `node_modules`, as with `bun install --filter`.
+- Cannot be combined with `--global`.
 
 ## `--global`
 
@@ -161,6 +162,7 @@ cowsay "Bun!"
 ```
 
 ### Configuring global installation behavior
+
 **File:** `bunfig.toml`
 ```toml
 [install]
@@ -170,6 +172,7 @@ globalDir = "~/.bun/install/global"
 # where globally-installed package bins are linked
 globalBinDir = "~/.bun/bin"
 ```
+
 
 ## Trusted dependencies
 
@@ -232,7 +235,9 @@ bun add zod@https://registry.npmjs.org/zod/-/zod-3.21.4.tgz
 }
 ```
 
-***
+A tarball URL can carry credentials, such as `https://user:password@example.com/zod-3.21.4.tgz`. Bun sends them as an `Authorization: Basic` header and requests the URL without them, like npm. The URL, credentials included, is written to `package.json` and to the lockfile.
+
+---
 
 ## CLI Usage
 
@@ -242,92 +247,208 @@ bun add <package> <@version>
 
 ### Dependency Management
 
-- (boolean) Don't install devDependencies. Alias: `-p`
+### `--production`
 
-- (string) Exclude `dev`, `optional`, or `peer` dependencies from install
+Type: `boolean`
+Don't install devDependencies. Alias: `-p`
 
-- (boolean) Install globally. Alias: `-g`
+### `--omit`
 
-- (boolean) Add dependency to `devDependencies`. Alias: `-d`
+Type: `string`
+Exclude `dev`, `optional`, or `peer` dependencies from install
 
-- (boolean) Add dependency to `optionalDependencies`
+### `--global`
 
-- (boolean) Add dependency to `peerDependencies`
+Type: `boolean`
+Install globally. Alias: `-g`
 
-- (boolean) Add the exact version instead of the `^` range. Alias: `-E`
+### `--dev`
 
-- (boolean) Only add dependencies to `package.json` if they are not already present
+Type: `boolean`
+Add dependency to `devDependencies`. Alias: `-d`
 
-- (string) Add the resolved version to the root `package.json` catalog and depend on it as `catalog:`; `--catalog=NAME` targets `catalogs.NAME`
+### `--optional`
 
-- (string) Add the package(s) to the matching workspaces instead of the current package. Alias: `-F`
+Type: `boolean`
+Add dependency to `optionalDependencies`
+
+### `--peer`
+
+Type: `boolean`
+Add dependency to `peerDependencies`
+
+### `--exact`
+
+Type: `boolean`
+Add the exact version instead of the `^` range. Alias: `-E`
+
+### `--only-missing`
+
+Type: `boolean`
+Only add dependencies to `package.json` if they are not already present
+
+### `--catalog`
+
+Type: `string`
+Add the resolved version to the root `package.json` catalog and depend on it as `catalog:`;{" "}
+`--catalog=NAME` targets `catalogs.NAME`
+
+### `--filter`
+
+Type: `string`
+Add the package(s) to the matching workspaces instead of the current package. Alias: `-F`
 
 ### Project Files & Lockfiles
 
-- (boolean) Write a `yarn.lock` file (yarn v1). Alias: `-y`
+### `--yarn`
 
-- (boolean) Don't update `package.json` or save a lockfile
+Type: `boolean`
+Write a `yarn.lock` file (yarn v1). Alias: `-y`
 
-- (boolean) Save to `package.json`
+### `--no-save`
 
-- (boolean) Disallow changes to lockfile
+Type: `boolean`
+Don't update `package.json` or save a lockfile
 
-- (boolean) Add to `trustedDependencies` in the project's `package.json` and install the package(s)
+### `--save`
 
-- (boolean) Save a text-based lockfile
+Type: `boolean`; Default: `true`
+Save to `package.json`
 
-- (boolean) Generate a lockfile without installing dependencies
+### `--frozen-lockfile`
+
+Type: `boolean`
+Disallow changes to lockfile
+
+### `--trust`
+
+Type: `boolean`
+Add to `trustedDependencies` in the project's `package.json` and install the package(s)
+
+### `--save-text-lockfile`
+
+Type: `boolean`
+Save a text-based lockfile
+
+### `--lockfile-only`
+
+Type: `boolean`
+Generate a lockfile without installing dependencies
 
 ### Installation Control
 
-- (boolean) Perform a dry run without making changes
+### `--dry-run`
 
-- (boolean) Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
+Type: `boolean`
+Resolve the packages but don't install them, update `package.json`, or save a lockfile (the project's own
+lifecycle scripts still run)
 
-- (boolean) Skip verifying integrity of newly downloaded packages
+### `--force`
 
-- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
+Type: `boolean`
+Always request the latest versions from the registry & reinstall all dependencies. Alias: `-f`
 
-- (boolean) Recursively analyze & install dependencies of files passed as arguments (using Bun's bundler). Alias: `-a`
+### `--no-verify`
+
+Type: `boolean`
+Skip verifying integrity of newly downloaded packages
+
+### `--ignore-scripts`
+
+Type: `boolean`
+Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
+
+### `--analyze`
+
+Type: `boolean`
+Recursively analyze & install dependencies of files passed as arguments (using Bun's bundler). Alias:{" "}
+`-a`
 
 ### Network & Registry
 
-- (string) Provide a Certificate Authority signing certificate
+### `--ca`
 
-- (string) Same as `--ca`, but as a file path to the certificate
+Type: `string`
+Provide a Certificate Authority signing certificate
 
-- (string) Use a specific registry by default, overriding `.npmrc`, `bunfig.toml`, and environment variables
+### `--cafile`
 
-- (number) Maximum number of concurrent network requests
+Type: `string`
+Same as `--ca`, but as a file path to the certificate
+
+### `--registry`
+
+Type: `string`
+Use a specific registry by default, overriding `.npmrc`, `bunfig.toml`, and environment
+variables
+
+### `--network-concurrency`
+
+Type: `number`; Default: `48`
+Maximum number of concurrent network requests
 
 ### Performance & Resource
 
-- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
+### `--backend`
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
+Type: `string`
+Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on
+macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
+
+### `--concurrent-scripts`
+
+Type: `number`
+Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
 
 ### Caching
 
-- (string) Store & load cached data from a specific directory path
+### `--cache-dir`
 
-- (boolean) Ignore manifest cache entirely
+Type: `string`
+Store & load cached data from a specific directory path
+
+### `--no-cache`
+
+Type: `boolean`
+Ignore manifest cache entirely
 
 ### Output & Logging
 
-- (boolean) Don't log anything
+### `--silent`
 
-- (boolean) Excessively verbose logging
+Type: `boolean`
+Don't log anything
 
-- (boolean) Disable the progress bar
+### `--verbose`
 
-- (boolean) Don't print a summary
+Type: `boolean`
+Excessively verbose logging
+
+### `--no-progress`
+
+Type: `boolean`
+Disable the progress bar
+
+### `--no-summary`
+
+Type: `boolean`
+Don't print a summary
 
 ### Global Configuration & Context
 
-- (string) Specify path to config file (`bunfig.toml`). Alias: `-c`
+### `--config`
 
-- (string) Set a specific current working directory
+Type: `string`
+Specify path to config file (`bunfig.toml`). Alias: `-c`
+
+### `--cwd`
+
+Type: `string`
+Set a specific current working directory
 
 ### Help
 
-- (boolean) Print this help menu. Alias: `-h`
+### `--help`
+
+Type: `boolean`
+Print this help menu. Alias: `-h`

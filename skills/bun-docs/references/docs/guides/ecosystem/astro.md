@@ -45,7 +45,7 @@ bun create astro
 ╰─────╯
 ```
 
-***
+---
 
 Start the dev server with `bunx`.
 
@@ -61,12 +61,12 @@ bunx --bun astro dev
 ┃ Network  use --host to expose
 ```
 
-***
+---
 
 Open [http://localhost:4321](http://localhost:4321) in your browser to see the result. Astro hot-reloads the app as you edit your source files.
 
-<img />
+<img src="https://i.imgur.com/Dswiu6w.png" caption="An Astro starter app running on Bun" />
 
-***
+---
 
 See the [Astro docs](https://docs.astro.build/en/getting-started/).

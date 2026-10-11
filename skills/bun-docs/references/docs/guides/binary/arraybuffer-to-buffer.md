@@ -11,7 +11,7 @@ const arrBuffer = new ArrayBuffer(64);
 const nodeBuffer = Buffer.from(arrBuffer);
 ```
 
-***
+---
 
 To create a `Buffer` that only views a portion of the underlying buffer, pass the offset and length to `Buffer.from()`.
 
@@ -20,6 +20,6 @@ const arrBuffer = new ArrayBuffer(64);
 const nodeBuffer = Buffer.from(arrBuffer, 0, 16); // view first 16 bytes
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

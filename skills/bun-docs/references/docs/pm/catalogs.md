@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/catalogs
 
 Share common dependency versions across multiple packages in a monorepo
 
+
 **Catalogs** share dependency versions across the packages in a monorepo. Rather than repeating the same versions in each workspace package, you define them once in the root `package.json` and reference them throughout your project.
 
 ## Overview
@@ -94,7 +95,7 @@ In your workspace packages, use the `catalog:` protocol to reference versions:
 }
 ```
 
-`catalog:` references work in `dependencies`, `devDependencies`, `optionalDependencies`, `peerDependencies`, and as the value of a root [`overrides`](/docs/pm/overrides) rule. A catalog reference behaves exactly as if the catalog's range were written inline.
+`catalog:` references work in `dependencies`, `devDependencies`, `optionalDependencies`, `peerDependencies`, and as the value of a root [`overrides`](/pm/overrides) rule. A catalog reference behaves exactly as if the catalog's range were written inline.
 
 ### 3. Run Bun Install
 
@@ -149,10 +150,10 @@ Reference with `catalog:<name>`:
 
 ## Benefits of Using Catalogs
 
-* **Consistency**: All packages use the same version of critical dependencies
-* **Maintenance**: Update a dependency version in one place instead of across multiple `package.json` files
-* **Clarity**: Makes it obvious which dependencies are standardized across your monorepo
-* **Simplicity**: No extra version resolution strategies or external tools
+- **Consistency**: All packages use the same version of critical dependencies
+- **Maintenance**: Update a dependency version in one place instead of across multiple `package.json` files
+- **Clarity**: Makes it obvious which dependencies are standardized across your monorepo
+- **Simplicity**: No extra version resolution strategies or external tools
 
 ## Real-World Example
 
@@ -252,7 +253,7 @@ Then run `bun install` to update all packages.
 
 ## Adding to the catalog with `bun add`
 
-`bun add --catalog` adds the entry to the root catalog and writes `"catalog:"` to the current package; `--catalog=<name>` adds it to `catalogs.<name>` and writes `"catalog:<name>"`. Bun reuses an existing catalog entry unless you pass an explicit version. See [`bun add --catalog`](/docs/pm/cli/add#--catalog).
+`bun add --catalog` adds the entry to the root catalog and writes `"catalog:"` to the current package; `--catalog=<name>` adds it to `catalogs.<name>` and writes `"catalog:<name>"`. Bun reuses an existing catalog entry unless you pass an explicit version. See [`bun add --catalog`](/pm/cli/add#--catalog).
 
 ```bash
 bun add react --catalog
@@ -264,8 +265,8 @@ Even without the flag, `bun add react` (no version) writes `"catalog:"` when the
 
 Bun's lockfile tracks catalog versions, so installs are consistent across environments. The lockfile includes:
 
-* The catalog definitions from your package.json
-* The resolution of each cataloged dependency
+- The catalog definitions from your package.json
+- The resolution of each cataloged dependency
 
 **File:** `bun.lock(excerpt)`
 ```json
@@ -305,11 +306,11 @@ Bun's lockfile tracks catalog versions, so installs are consistent across enviro
 
 ## Limitations and Edge Cases
 
-* Catalog references must match a dependency defined in either `catalog` or one of the named `catalogs`
-* Bun ignores empty strings and whitespace in catalog names and treats them as the default catalog
-* `catalog:default` is the same as `catalog:`. You can define the default catalog as either `catalog` or `catalogs.default`, but a package listed in both is an error
-* Invalid dependency versions in catalogs fail to resolve during `bun install`
-* `catalog:` only works in the root and workspace `package.json` files. Inside a published package it fails to resolve. Publish with `bun publish` or `bun pm pack`, which replace it with the real range (see [Publishing](#publishing))
+- Catalog references must match a dependency defined in either `catalog` or one of the named `catalogs`
+- Bun ignores empty strings and whitespace in catalog names and treats them as the default catalog
+- `catalog:default` is the same as `catalog:`. You can define the default catalog as either `catalog` or `catalogs.default`, but a package listed in both is an error
+- Invalid dependency versions in catalogs fail to resolve during `bun install`
+- `catalog:` only works in the root and workspace `package.json` files. Inside a published package it fails to resolve. Publish with `bun publish` or `bun pm pack`, which replace it with the real range (see [Publishing](#publishing))
 
 ## Publishing
 

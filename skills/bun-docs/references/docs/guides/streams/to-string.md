@@ -11,6 +11,6 @@ const str = await stream.text();
 
 `Bun.readableStreamToText(stream)` does the same thing, but is deprecated in favor of `stream.text()`.
 
-***
+---
 
-See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).
+See [Bun's other `ReadableStream` conversion functions](/runtime/utils#bun-readablestreamto).

@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/networking/udp
 
 Use Bun's UDP API to implement services with advanced real-time requirements, such as voice chat.
 
+
 ## Bind a UDP socket (`Bun.udpSocket()`)
 
 To create a new (bound) UDP socket:
@@ -118,8 +119,8 @@ as destinations and does not perform DNS resolution.
 A packet you send may not fit into the operating system's packet buffer. You can detect that this
 has happened when:
 
-* `send` returns `false`
-* `sendMany` returns a number smaller than the number of packets you specified
+- `send` returns `false`
+- `sendMany` returns a number smaller than the number of packets you specified
 
 In either case, Bun calls the `drain` socket handler once the socket becomes writable again:
 

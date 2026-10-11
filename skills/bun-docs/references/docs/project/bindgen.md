@@ -3,6 +3,7 @@ Source: https://bun.com/docs/project/bindgen
 
 Bindgen for Bun
 
+
 > Note: This document is for maintainers and contributors to Bun, and describes internal implementation details.
 
 The bindings generator scans for `*.bind.ts` files to find function and class
@@ -12,8 +13,8 @@ code.
 There are other code generators and systems that achieve similar purposes;
 the following will all eventually be phased out in favor of this one:
 
-* "Classes generator", converting `*.classes.ts` for custom classes.
-* "JS2Native", allowing ad-hoc calls from `src/js` to native code.
+- "Classes generator", converting `*.classes.ts` for custom classes.
+- "JS2Native", allowing ad-hoc calls from `src/js` to native code.
 
 ## Creating JS Functions in Rust
 
@@ -66,9 +67,11 @@ declare function add(a: number, b: number = -1): number;
 
 The code generator emits a C++ thunk that validates and coerces the JS
 arguments, then calls the Rust implementation. On the Rust side bindgen emits
-nothing: the matching module is hand-written in
-`src/jsc/bindings/GeneratedBindings.rs` and is reachable as
-`crate::r#gen::<basename>` (for `bindgen_test.bind.ts`, that's
+nothing; both the dispatch shim the thunk calls
+(`bindgen_Bindgen_test_dispatchAdd1` in `src/runtime/hw_exports.rs`, which
+calls `add`) and the `create_*_callback` module in
+`src/jsc/bindings/GeneratedBindings.rs` are hand-written. The module is
+reachable as `crate::r#gen::<basename>` (for `bindgen_test.bind.ts`, that's
 `crate::r#gen::bindgen_test`). To construct a `JSFunction` wrapping the
 native implementation, use `generated::create_add_callback(global)`:
 
@@ -79,7 +82,8 @@ let js_fn: JSValue = generated::create_add_callback(global);
 ```
 
 In JS files in `src/js/`, `$bindgenFn("bindgen_test.bind.ts", "add")` returns
-a handle to the implementation.
+a handle to the implementation, through a hand-written
+`js2native_bindgen_<basename>_<fn>` export in `src/runtime/hw_exports.rs`.
 
 Exported bindgen functions are snake_cased on the Rust side
 (`requiredAndOptionalArg` → `required_and_optional_arg`). The hand-written
@@ -98,9 +102,9 @@ freed after the function returns.
 
 TLDRs from the WebIDL spec:
 
-* ByteString can only contain valid latin1 characters. It is not safe to assume `bun_core::String` is already in 8-bit format, but it is extremely likely.
-* USVString does not contain invalid surrogate pairs, so its text can be represented correctly in UTF-8.
-* DOMString is the loosest but also the most recommended strategy.
+- ByteString can only contain valid latin1 characters. It is not safe to assume `bun_core::String` is already in 8-bit format, but it is extremely likely.
+- USVString does not contain invalid surrogate pairs, so its text can be represented correctly in UTF-8.
+- DOMString is the loosest but also the most recommended strategy.
 
 ## Function Variants
 
@@ -196,9 +200,9 @@ A `oneOf` is a union of two or more types. It is represented as a Rust
 
 You can chain attributes onto `t.*` types. On all types:
 
-* `.required`, in dictionary parameters only
-* `.optional`, in function arguments only
-* `.default(T)`
+- `.required`, in dictionary parameters only
+- `.optional`, in function arguments only
+- `.default(T)`
 
 When a value is `.optional`, it is lowered to a Rust `Option<T>`:
 

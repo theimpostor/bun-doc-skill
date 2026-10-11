@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/webview
 
 Control a headless browser from Bun for automation, testing, and scraping — zero dependencies on macOS, Chrome DevTools Protocol everywhere else
 
+
 `Bun.WebView` is a headless browser built into the runtime. Use it to load pages, run JavaScript inside them, simulate real user input, and capture screenshots — without Puppeteer, Playwright, or a separate browser download.
 
 > Warning: This API is experimental and may change in future releases.
@@ -17,11 +18,11 @@ const title = await view.evaluate("document.title");
 await Bun.write("page.png", await view.screenshot());
 ```
 
-On macOS, `Bun.WebView` uses the system's `WKWebView` — nothing to install. On Linux it drives an installed Chrome, Chromium, Edge, or Brave over the Chrome DevTools Protocol.
+On macOS, `Bun.WebView` uses the system's `WKWebView` — nothing to install. On Linux and Windows it drives an installed Chrome, Chromium, Edge, or Brave over the Chrome DevTools Protocol; on Windows the preinstalled Edge is enough.
 
 Each view runs its page in a separate renderer process. All input methods (`click`, `type`, `press`, `scroll`) dispatch **native** browser events, so the page sees `isTrusted: true` — the same as a real user.
 
-***
+---
 
 ## Creating a view
 
@@ -35,7 +36,7 @@ const view = new Bun.WebView({
 
 The constructor is synchronous — it returns immediately and spawns the browser subprocess in the background. The first operation you `await` (such as `navigate()` or `evaluate()`) waits for the browser to be ready.
 
-If you pass `url`, the view begins navigating before the constructor returns. Passing `url` is equivalent to calling `view.navigate(url)` on the next line.
+If you pass `url`, the view begins navigating before the constructor returns, the same way `view.navigate(url)` on the next line would. One difference: the constructor keeps the navigation's promise internal, so a failure never surfaces as a rejection. Set `onNavigationFailed` to observe it.
 
 ### Automatic cleanup with `using`
 
@@ -69,18 +70,18 @@ not per-view. Bun spawns Chrome once per Bun process, so the first view's direct
 With the WebKit backend, persistent storage requires macOS 15.2+. On older macOS versions, use `dataStore:
 "ephemeral"` (the default).
 
-***
+---
 
 ## Backends
 
 `Bun.WebView` supports two rendering engines. The default depends on your platform:
 
-| Backend    | Engine    | Platforms     | Requirements                                                                         |
-| ---------- | --------- | ------------- | ------------------------------------------------------------------------------------ |
-| `"webkit"` | WKWebView | macOS only    | None — uses the system `WebKit.framework`                                            |
-| `"chrome"` | Blink     | macOS / Linux | Chrome, Chromium, Edge, or Brave installed (or Playwright's `chrome-headless-shell`) |
+| Backend    | Engine    | Platforms               | Requirements                                                                         |
+| ---------- | --------- | ----------------------- | ------------------------------------------------------------------------------------ |
+| `"webkit"` | WKWebView | macOS only              | None — uses the system `WebKit.framework`                                            |
+| `"chrome"` | Blink     | macOS / Linux / Windows | Chrome, Chromium, Edge, or Brave installed (or Playwright's `chrome-headless-shell`) |
 
-On macOS the default is `"webkit"`; elsewhere it's `"chrome"`. Requesting `backend: "webkit"` on a non-macOS platform throws.
+On macOS the default is `"webkit"`; elsewhere it's `"chrome"`. Requesting `backend: "webkit"` on a non-macOS platform throws. The `"chrome"` backend drives one browser per process and can only be used from the main thread; constructing it inside a `Worker` throws.
 
 ```ts
 // Force Chrome on macOS
@@ -103,15 +104,18 @@ When Bun needs to spawn Chrome, it searches in this order:
 
 1. The `path` you passed in `backend: { type: "chrome", path: "..." }`
 2. The `BUN_CHROME_PATH` environment variable
-3. `$PATH` (`google-chrome-stable`, `google-chrome`, `chromium-browser`, `chromium`, `brave-browser`, `microsoft-edge`, `chrome`)
-4. Standard install locations (`/Applications/Google Chrome.app`, `~/Applications/...`, `/usr/bin/...`, `/snap/bin/...`)
-5. Playwright's cache (`~/Library/Caches/ms-playwright` or `~/.cache/ms-playwright`) for `chrome-headless-shell`
+3. `$PATH` (`google-chrome-stable`, `google-chrome`, `chromium-browser`, `chromium`, `brave-browser`, `microsoft-edge`, `chrome`; on Windows `chrome`, `chromium`, `brave`, `msedge`)
+4. Standard install locations (`/Applications/Google Chrome.app`, `~/Applications/...`, `/usr/bin/...`, `/snap/bin/...`; on Windows the `Application*.exe` directories under `%ProgramFiles%`, `%ProgramFiles(x86)%`, and `%LOCALAPPDATA%`)
+5. Playwright's cache (`~/Library/Caches/ms-playwright`, `~/.cache/ms-playwright`, or `%LOCALAPPDATA%\ms-playwright`) for `chrome-headless-shell`
 
 If Bun finds none, the constructor throws.
 
-<h4>
-Connecting to an already-running Chrome
-</h4>
+> Note
+Microsoft Edge refuses to start under the Windows `LocalSystem` account: it exits immediately and the first operation
+rejects with "Chrome process closed the pipe". A service or CI agent that only has Edge available needs to run Bun as
+a regular user account.
+
+#### Connecting to an already-running Chrome {#existing-chrome}
 
 By default, before spawning, Bun reads the `DevToolsActivePort` file from standard profile directories to check whether a Chrome-family browser is **already running** with remote debugging enabled. If found, Bun connects to that browser over WebSocket instead of spawning a new one — your views open as tabs in your existing browser.
 
@@ -175,7 +179,7 @@ new Bun.WebView({
 
 The `"webkit"` backend accepts the same `stdout`/`stderr` options.
 
-***
+---
 
 ## Navigation
 
@@ -217,7 +221,7 @@ view.onNavigationFailed = error => {
 
 These fire **before** the corresponding `navigate()` promise settles, so by the time `await view.navigate(...)` returns, your callback has already run. Set to `null` to remove.
 
-***
+---
 
 ## Evaluating JavaScript
 
@@ -231,8 +235,8 @@ const user = await view.evaluate("({ name: 'bun', ok: true })");
 
 Bun wraps the script as `await (<your script>)`, so:
 
-* It must be an **expression**, not a statement sequence. For multiple statements, wrap in an IIFE: `evaluate("(() => { let x = foo(); return x + 1 })()")`.
-* If it evaluates to a `Promise`, `evaluate()` awaits the promise and returns its resolved value.
+- It must be an **expression**, not a statement sequence. For multiple statements, wrap in an IIFE: `evaluate("(() => { let x = foo(); return x + 1 })()")`.
+- If it evaluates to a `Promise`, `evaluate()` awaits the promise and returns its resolved value.
 
 The result round-trips through `JSON.stringify` in the page and `JSON.parse` in Bun. Arrays and plain objects come back as real structures; `undefined`, functions, and symbols resolve to `undefined`; circular references reject.
 
@@ -248,7 +252,7 @@ If the script throws (or returns a rejected promise), `evaluate()` rejects with 
 
 Only one `evaluate()` may be in flight per view at a time; a second concurrent call throws `ERR_INVALID_STATE`.
 
-***
+---
 
 ## Screenshots
 
@@ -275,7 +279,7 @@ The `encoding` option controls how Bun hands back the image bytes:
 
 | `encoding`           | Returns                          | Notes                                                                                                    |
 | -------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `"blob"` *(default)* | `Blob`                           | MIME type set automatically. Zero-copy mmap-backed on WebKit. Works with `Bun.write()`, `new Response()` |
+| `"blob"` _(default)_ | `Blob`                           | MIME type set automatically. Zero-copy mmap-backed on WebKit. Works with `Bun.write()`, `new Response()` |
 | `"buffer"`           | `Buffer`                         | Node `Buffer`. Zero-copy mmap-backed on WebKit                                                           |
 | `"base64"`           | `string`                         | Base64-encoded. Zero-decode on Chrome (CDP returns base64 natively)                                      |
 | `"shmem"`            | `{ name: string, size: number }` | POSIX shared-memory segment name. Caller owns `shm_unlink`. Not supported on Windows                     |
@@ -300,7 +304,7 @@ process.stdout.write(`\x1b_Gf=100,t=s,a=T,S=${size};${btoa(name)}\x1b\\`);
 
 On WebKit, the shm name looks like `/bun-webview-<pid>-<seq>`; on Chrome, `/bun-chrome-<pid>-<seq>`. If you request `"shmem"` and don't hand the name to something that will `shm_unlink` it, the segment leaks until your process exits.
 
-***
+---
 
 ## Input simulation
 
@@ -330,11 +334,11 @@ await view.click("button.primary", { timeout: 5000 });
 
 An element is actionable when it:
 
-* exists in the DOM
-* has a non-zero bounding box
-* is inside the viewport
-* has been **stable** (bounding box unchanged) for two consecutive animation frames
-* is the topmost element at its center point (not covered by an overlay)
+- exists in the DOM
+- has a non-zero bounding box
+- is inside the viewport
+- has been **stable** (bounding box unchanged) for two consecutive animation frames
+- is the topmost element at its center point (not covered by an overlay)
 
 The check runs page-side at `requestAnimationFrame` rate. If the element never becomes actionable within `timeout` milliseconds (default `30000`), the promise rejects with an error like `timeout waiting for '#submit' to be actionable`.
 
@@ -397,7 +401,7 @@ await view.resize(1920, 1080);
 
 Width and height must each be between `1` and `16384`.
 
-***
+---
 
 ## Console capture
 
@@ -428,8 +432,8 @@ const view = new Bun.WebView({
 
 Primitive arguments (strings, numbers, booleans, `null`, `undefined`) unwrap to their raw values. Object arguments arrive as a serialized descriptor:
 
-* **Chrome backend**: the raw CDP [`RemoteObject`](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#type-RemoteObject) — an object with `type`, `className`, `description`, and (when available) a `preview.properties` array.
-* **WebKit backend**: the `JSON.stringify` round-trip of the object. Functions, circular references, and other non-serializable values fall back to their `String(...)` coercion.
+- **Chrome backend**: the raw CDP [`RemoteObject`](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#type-RemoteObject) — an object with `type`, `className`, `description`, and (when available) a `preview.properties` array.
+- **WebKit backend**: the `JSON.stringify` round-trip of the object. Functions, circular references, and other non-serializable values fall back to their `String(...)` coercion.
 
 If you don't pass `console`, Bun drops page-side console output.
 
@@ -437,11 +441,9 @@ If you don't pass `console`, Bun drops page-side console output.
 Ordering guarantee: a `console.log(...)` inside a script you pass to `evaluate()` reaches your handler **before** that
 `evaluate()` resolves. Both travel over the same IPC connection.
 
-***
+---
 
-<h2>
-Raw Chrome DevTools Protocol
-</h2>
+## Raw Chrome DevTools Protocol {#cdp}
 
 When using `backend: "chrome"`, you can drop down to raw [CDP](https://chromedevtools.github.io/devtools-protocol/) commands for anything the high-level API doesn't cover.
 
@@ -488,7 +490,7 @@ Bun drops events that have no registered listener before it even parses their JS
 
 On the WebKit backend, `cdp()` throws `ERR_METHOD_NOT_IMPLEMENTED` — there is no DevTools Protocol bridge. The `EventTarget` interface still works for your own `dispatchEvent()` calls.
 
-***
+---
 
 ## Lifecycle
 
@@ -498,7 +500,7 @@ On the WebKit backend, `cdp()` throws `ERR_METHOD_NOT_IMPLEMENTED` — there is 
 view.close();
 ```
 
-Closing is synchronous and idempotent. It destroys the page's renderer process, rejects any pending promises on the view with `Error("WebView closed")`, and makes every subsequent method call throw `ERR_INVALID_STATE`.
+Closing is synchronous and idempotent. It destroys the page's renderer process, rejects any pending promises on the view with `Error("WebView closed")`, and makes every subsequent method call throw `ERR_INVALID_STATE`. The rejections are marked as handled: a promise you hold still rejects catchably, but a pending operation nothing holds never triggers `unhandledRejection`.
 
 `view[Symbol.dispose]` and `view[Symbol.asyncDispose]` both point to `close()`, so `using` / `await using` work.
 
@@ -520,23 +522,23 @@ The browser subprocess does **not** keep Bun's event loop alive on its own. An o
 
 If the browser subprocess dies unexpectedly (crash, OOM-kill, `SIGKILL`), every pending promise on every view rejects with an error describing how it died (`"Chrome killed by signal 9"`, `"WebView host process died"`). Further operations on those views throw.
 
-***
+---
 
 ## Concurrency model
 
 Each view has a small number of independent operation "slots". One operation of each kind may be in flight at a time:
 
-* one `navigate()` (shared with `reload()`/`goBack()`/`goForward()` on the Chrome backend)
-* one `evaluate()`
-* one `screenshot()`
-* one `cdp()` (Chrome only)
-* one "simple" operation — `click()`, `type()`, `press()`, `scroll()`, `scrollTo()`, `resize()` (and `reload()`/`goBack()`/`goForward()` on the WebKit backend) share this slot
+- one `navigate()` (shared with `reload()`/`goBack()`/`goForward()` on the Chrome backend)
+- one `evaluate()`
+- one `screenshot()`
+- one `cdp()` (Chrome only)
+- one "simple" operation — `click()`, `type()`, `press()`, `scroll()`, `scrollTo()`, `resize()` (and `reload()`/`goBack()`/`goForward()` on the WebKit backend) share this slot
 
 Starting a second operation while its slot is occupied throws `ERR_INVALID_STATE` synchronously — it does **not** queue. In practice, `await` each call.
 
 Operations on **different views** are fully independent and run in parallel — each view has its own renderer process.
 
-***
+---
 
 ## Reference
 
@@ -567,9 +569,9 @@ Operations on **different views** are fully independent and run in parallel — 
 
 | Property             | Type                                             | Description                                                                                 |
 | -------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| `url`                | `string` *(readonly)*                            | The current URL. Updated when a navigation completes. Empty string before first navigation. |
-| `title`              | `string` *(readonly)*                            | The page's `<title>`. Updated when a navigation completes.                                  |
-| `loading`            | `boolean` *(readonly)*                           | `true` while a navigation is in flight.                                                     |
+| `url`                | `string` _(readonly)_                            | The current URL. Updated when a navigation completes. Empty string before first navigation. |
+| `title`              | `string` _(readonly)_                            | The page's `<title>`. Updated when a navigation completes.                                  |
+| `loading`            | `boolean` _(readonly)_                           | `true` while a navigation is in flight.                                                     |
 | `onNavigated`        | `((url: string, title: string) => void) | null` | Fires after each successful navigation, before the `navigate()` promise resolves.           |
 | `onNavigationFailed` | `((error: Error) => void) | null`               | Fires after each failed navigation, before the `navigate()` promise rejects.                |
 

@@ -3,6 +3,7 @@ Source: https://bun.com/docs/bundler/fullstack
 
 Build fullstack applications with Bun's integrated dev server that bundles frontend assets and handles API routes
 
+
 To get started, import HTML files and pass them to the `routes` option in `Bun.serve()`.
 
 **File:** `app.ts`
@@ -30,7 +31,7 @@ const server = serve({
       },
       async POST(req) {
         const { name, email } = await req.json();
-        const [user] = await sql`INSERT INTO users (name, email) VALUES (${name}, ${email})`;
+        const [user] = await sql`INSERT INTO users (name, email) VALUES (${name}, ${email}) RETURNING *`;
         return Response.json(user);
       },
     },
@@ -126,6 +127,7 @@ Becomes something like this:
 
 To use React in your client-side code, import `react-dom/client` and render your app.
 
+
 **File:** `src/backend.ts`
 ```ts
 import dashboard from "../public/dashboard.html";
@@ -183,6 +185,7 @@ export default function App() {
 }
 ```
 
+
 ## Development Mode
 
 When building locally, enable development mode by setting `development: true` in `Bun.serve()`.
@@ -210,10 +213,10 @@ Bun.serve({
 
 When `development` is `true`, Bun:
 
-* Includes the SourceMap header in the response so that devtools can show the original source code
-* Disables minification
-* Re-bundles assets on each request to a `.html` file
-* Enables hot module reloading (unless you set `hmr: false`)
+- Includes the SourceMap header in the response so that devtools can show the original source code
+- Disables minification
+- Re-bundles assets on each request to a `.html` file
+- Enables hot module reloading (unless you set `hmr: false`)
 
 ### Advanced Development Configuration
 
@@ -243,14 +246,14 @@ Bun sends the logs over the existing HMR WebSocket connection.
 
 ### Development vs Production
 
-| Feature             | Development            | Production |
-| ------------------- | ---------------------- | ---------- |
-| **Source maps**     | ✅ Enabled              | ❌ Disabled |
-| **Minification**    | ❌ Disabled             | ✅ Enabled  |
-| **Hot reloading**   | ✅ Enabled              | ❌ Disabled |
-| **Asset bundling**  | 🔄 On each request     | 💾 Cached  |
+| Feature             | Development           | Production  |
+| ------------------- | --------------------- | ----------- |
+| **Source maps**     | ✅ Enabled            | ❌ Disabled |
+| **Minification**    | ❌ Disabled           | ✅ Enabled  |
+| **Hot reloading**   | ✅ Enabled            | ❌ Disabled |
+| **Asset bundling**  | 🔄 On each request    | 💾 Cached   |
 | **Console logging** | 🖥️ Browser → Terminal | ❌ Disabled |
-| **Error details**   | 📝 Detailed            | 🔒 Minimal |
+| **Error details**   | 📝 Detailed           | 🔒 Minimal  |
 
 ## Production Mode
 
@@ -282,9 +285,9 @@ If you'd rather not add a build step, set `development: false` in `Bun.serve()`.
 
 With this setting, Bun:
 
-* Enables in-memory caching of bundled assets. Bun bundles assets lazily on the first request to an `.html` file and caches the result in memory until the server restarts.
-* Enables `Cache-Control` and `ETag` headers
-* Minifies JavaScript/TypeScript/TSX/JSX files
+- Enables in-memory caching of bundled assets. Bun bundles assets lazily on the first request to an `.html` file and caches the result in memory until the server restarts.
+- Enables `Cache-Control` and `ETag` headers
+- Minifies JavaScript/TypeScript/TSX/JSX files
 
 **File:** `src/backend.ts`
 ```ts
@@ -522,7 +525,8 @@ process.env; env.FOO`.
 If an environment variable is not set, you may see runtime errors like `ReferenceError: process
 is not defined` in the browser.
 
-See [HTML & static sites](/docs/bundler/html-static#inline-environment-variables) for build-time configuration and examples.
+
+See [HTML & static sites](/bundler/html-static#inline-environment-variables) for build-time configuration and examples.
 
 ## Sourcemaps
 
@@ -546,10 +550,10 @@ Bun uses `HTMLRewriter` to scan for `<script>` and `<link>` tags in HTML files a
 ### Processing Pipeline
 
 ### 1. <script> Processing
-* Transpiles TypeScript, JSX, and TSX in `<script>` tags
-* Bundles imported dependencies
-* Generates sourcemaps for debugging in development
-* Minifies when `development` is not `true` in `Bun.serve()`
+- Transpiles TypeScript, JSX, and TSX in `<script>` tags
+- Bundles imported dependencies
+- Generates sourcemaps for debugging in development
+- Minifies when `development` is not `true` in `Bun.serve()`
 
 **File:** `index.html`
 ```html
@@ -557,9 +561,9 @@ Bun uses `HTMLRewriter` to scan for `<script>` and `<link>` tags in HTML files a
 ```
 
 ### 2. <link> Processing
-* Processes CSS imports and `<link>` tags
-* Concatenates CSS files
-* Rewrites url and asset paths to include content-addressable hashes in URLs
+- Processes CSS imports and `<link>` tags
+- Concatenates CSS files
+- Rewrites url and asset paths to include content-addressable hashes in URLs
 
 **File:** `index.html`
 ```html
@@ -567,17 +571,15 @@ Bun uses `HTMLRewriter` to scan for `<script>` and `<link>` tags in HTML files a
 ```
 
 ### 3. <img> & Asset Processing
-* Rewrites links to assets to include content-addressable hashes in URLs
-* Inlines small assets in CSS files into `data:` URLs, reducing the total number of HTTP requests sent over the wire
-
+- Rewrites links to assets to include content-addressable hashes in URLs
+- Inlines small assets in CSS files into `data:` URLs, reducing the total number of HTTP requests sent over the wire
 ### 4. HTML Rewriting
-* Combines all `<script>` tags into a single `<script>` tag with a content-addressable hash in the URL
-* Combines all `<link>` tags into a single `<link>` tag with a content-addressable hash in the URL
-* Outputs a new HTML file
-
+- Combines all `<script>` tags into a single `<script>` tag with a content-addressable hash in the URL
+- Combines all `<link>` tags into a single `<link>` tag with a content-addressable hash in the URL
+- Outputs a new HTML file
 ### 5. Serving
-* Exposes all the output files from the bundler as static routes, using the same mechanism internally as when you pass a Response object to `routes` in `Bun.serve()`.
-* This pipeline works similarly to how `Bun.build` processes HTML files.
+- Exposes all the output files from the bundler as static routes, using the same mechanism internally as when you pass a Response object to `routes` in `Bun.serve()`.
+- This pipeline works similarly to how `Bun.build` processes HTML files.
 
 ## Complete Example
 
@@ -1105,13 +1107,13 @@ export default function handler(req, res) {
 
 ### Current Limitations
 
-* Auto-discovery of API routes is not implemented
-* Server-side rendering (SSR) is not built-in
+- Auto-discovery of API routes is not implemented
+- Server-side rendering (SSR) is not built-in
 
 ### Planned Features
 
-* File-based routing for API endpoints
-* Built-in SSR support
-* Enhanced plugin ecosystem
+- File-based routing for API endpoints
+- Built-in SSR support
+- Enhanced plugin ecosystem
 
 > Note: The fullstack dev server is a work in progress. Features and APIs may change.

@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/glob
 
 Use Bun's fast native implementation of file globbing
 
+
 ## Quickstart
 
 **Scan a directory for files matching `*.ts`**:
@@ -120,7 +121,7 @@ glob.match("baz.ts"); // => true
 glob.match("bat.ts"); // => false
 ```
 
-You can use character ranges (for example `[0-9]`, `[a-z]`). The negation operators `^` or `!` match anything *except* the characters in the brackets (for example `[^ab]`, `[!a-z]`).
+You can use character ranges (for example `[0-9]`, `[a-z]`). The negation operators `^` or `!` match anything _except_ the characters in the brackets (for example `[^ab]`, `[!a-z]`).
 
 ```ts
 const glob = new Glob("ba[a-z][0-9][^4-9].ts");
@@ -167,15 +168,17 @@ Bun also implements Node.js's `fs.glob()` functions:
 import { glob, globSync, promises } from "node:fs";
 
 // Array of patterns
-const files = await promises.glob(["**/*.ts", "**/*.js"]);
+const files = await Array.fromAsync(promises.glob(["**/*.ts", "**/*.js"]));
 
 // Exclude patterns
-const filtered = await promises.glob("**/*", {
-  exclude: ["node_modules/**", "*.test.*"],
-});
+const filtered = await Array.fromAsync(
+  promises.glob("**/*", {
+    exclude: ["node_modules/**", "**/*.test.*"],
+  }),
+);
 ```
 
 All three functions (`fs.glob()`, `fs.globSync()`, `fs.promises.glob()`) support:
 
-* Array of patterns as the first argument
-* `exclude` option to filter results
+- Array of patterns as the first argument
+- `exclude` option to filter results

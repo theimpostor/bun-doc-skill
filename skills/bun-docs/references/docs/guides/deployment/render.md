@@ -8,7 +8,7 @@ It provides auto deploys from GitHub, a global CDN, private networks, automatic 
 
 Render supports Bun natively. You can deploy Bun apps as web services, background workers, cron jobs, and more.
 
-***
+---
 
 As an example, this guide deploys an Express HTTP server to Render.
 
@@ -19,13 +19,13 @@ Create a new GitHub repo named `myapp`. Git clone it locally.
 git clone git@github.com:my-github-username/myapp.git
 cd myapp
 ```
-
 ### Step 2
 Add the Express library.
 
 ```sh
 bun add express
 ```
+
 
 ### Step 3
 Define a server with Express:
@@ -38,15 +38,15 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.get("/", (req, res) => {
-	res.send("Hello World!");
+res.send("Hello World!");
 });
 
 app.listen(port, () => {
-	console.log(`Listening on port ${port}...`);
+console.log(`Listening on port ${port}...`);
 });
 ```
-
 ### Step 4
+
 Commit your changes and push to GitHub.
 
 ```sh
@@ -54,7 +54,6 @@ git add app.ts bun.lock package.json
 git commit -m "Create simple Express app"
 git push origin main
 ```
-
 ### Step 5
 In your [Render Dashboard](https://dashboard.render.com/), click `New` > `Web Service` and connect your `myapp` repo.
 
@@ -66,6 +65,7 @@ In the Render UI, provide the following values during web service creation:
 | **Runtime**       | `Node`        |
 | **Build Command** | `bun install` |
 | **Start Command** | `bun app.ts`  |
+
 
 Once the build finishes, your web service is live at its assigned `onrender.com` URL.
 

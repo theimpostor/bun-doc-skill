@@ -8,7 +8,7 @@ Use the `--bail` flag to abort a test run after the first failure, so a continuo
 bun test --bail
 ```
 
-***
+---
 
 To bail after a certain number of failures, pass a number after the flag.
 
@@ -17,6 +17,6 @@ To bail after a certain number of failures, pass a number after the flag.
 bun test --bail=10
 ```
 
-***
+---
 
-See [`bun test`](/docs/test).
+See [`bun test`](/test).

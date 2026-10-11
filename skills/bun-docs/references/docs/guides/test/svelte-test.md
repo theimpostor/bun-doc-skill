@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/test/svelte-test
 
 
-Use Bun's [Plugin API](/docs/runtime/plugins) to add a custom loader for `.svelte` files, and the `test.preload` option in `bunfig.toml` to load it before your tests run.
+Use Bun's [Plugin API](/runtime/plugins) to add a custom loader for `.svelte` files, and the `test.preload` option in `bunfig.toml` to load it before your tests run.
 
 First, install `@testing-library/svelte`, `svelte`, and `@happy-dom/global-registrator`.
 
@@ -53,7 +53,7 @@ plugin({
 });
 ```
 
-***
+---
 
 Add this to `bunfig.toml` so Bun preloads the plugin before your tests run.
 
@@ -67,7 +67,7 @@ preload = ["./svelte-loader.ts"]
 # test.preload = ["./svelte-loader.ts"]
 ```
 
-***
+---
 
 Add an example `.svelte` file in your project.
 
@@ -81,7 +81,7 @@ Add an example `.svelte` file in your project.
 <button on:click={() => (count += 1)}>+1</button>
 ```
 
-***
+---
 
 Now you can `import` or `require` `*.svelte` files in your tests. Bun loads each Svelte component as a JavaScript module.
 
@@ -106,7 +106,7 @@ test("Counter increments when clicked", async () => {
 });
 ```
 
-***
+---
 
 Use `bun test` to run your tests.
 

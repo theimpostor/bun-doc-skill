@@ -11,7 +11,7 @@ arr.length; // 64
 arr[0]; // 0 (instantiated with all zeros)
 ```
 
-***
+---
 
 The `Uint8Array` class supports array indexing and iteration. To convert the instance to a regular `Array`, use `Array.from()`. This is likely slower than using the `Uint8Array` directly.
 
@@ -22,6 +22,6 @@ const regularArr = Array.from(uintArr);
 // number[]
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

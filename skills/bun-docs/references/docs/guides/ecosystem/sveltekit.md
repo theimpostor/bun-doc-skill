@@ -42,7 +42,7 @@ bunx sv create my-app
 └  You're all set!
 ```
 
-***
+---
 
 Once the project is initialized, `cd` into the new project. The dependencies are already installed, so you don't need to run `bun install`.
 
@@ -66,17 +66,17 @@ bun --bun run dev
     ➜  press h + enter to show help
 ```
 
-***
+---
 
 Visit [http://localhost:5173](http://localhost:5173/) in a browser to see the template app.
 
 ![SvelteKit app running](https://github.com/oven-sh/bun/assets/3084745/7c76eae8-78f9-44fa-9f15-1bd3ca1a47c0)
 
-***
+---
 
 Edit and save `src/routes/+page.svelte` and the dev server hot-reloads your changes in the browser.
 
-***
+---
 
 To build for production, you need a SvelteKit adapter. We recommend `svelte-adapter-bun`; install it with `bun add -D svelte-adapter-bun`.
 
@@ -106,7 +106,7 @@ export default defineConfig({
 });
 ```
 
-***
+---
 
 To build a production bundle:
 
@@ -132,7 +132,7 @@ bun --bun run build
     ✔ done
 ```
 
-***
+---
 
 Then start the production server with `bun ./build/index.js`. It listens on port `3000` by default; set the `PORT` environment variable to change it.
 
