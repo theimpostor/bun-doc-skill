@@ -13,7 +13,7 @@ test("snapshot", () => {
 });
 ```
 
-***
+---
 
 The first time this test runs, Bun evaluates the value passed into `expect()` and writes it to a `__snapshots__` directory alongside the test file. (Note the `snapshots: +1 added` line in the output.)
 
@@ -32,7 +32,7 @@ test/snap.test.ts:
 Ran 1 test across 1 file. [82.00ms]
 ```
 
-***
+---
 
 The `__snapshots__` directory contains a `.snap` file for each test file in the directory.
 
@@ -44,7 +44,7 @@ test
 └── snap.test.ts
 ```
 
-***
+---
 
 The `snap.test.ts.snap` file is a JavaScript file that exports a serialized version of the value passed into `expect()`. Bun pretty-prints the `{foo: "bar"}` object in Jest's snapshot format, which is not strict JSON (note the trailing comma).
 
@@ -59,7 +59,7 @@ exports[`snapshot 1`] = `
 `;
 ```
 
-***
+---
 
 On later runs, Bun reads the snapshot file and compares it to the value passed into `expect()`. If they differ, the test fails.
 
@@ -78,7 +78,7 @@ test/snap.test.ts:
 Ran 1 test across 1 file. [101.00ms]
 ```
 
-***
+---
 
 To update snapshots, use the `--update-snapshots` flag.
 
@@ -98,6 +98,6 @@ test/snap.test.ts:
 Ran 1 test across 1 file. [102.00ms]
 ```
 
-***
+---
 
-See [Snapshots](/docs/test/snapshots).
+See [Snapshots](/test/snapshots).

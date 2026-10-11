@@ -8,7 +8,7 @@ To add an npm package as a dependency, use `bun add`.
 bun add zod
 ```
 
-***
+---
 
 This adds the package to `dependencies` in `package.json`. By default, Bun uses the `^` range specifier, which accepts future minor and patch versions.
 
@@ -21,7 +21,7 @@ This adds the package to `dependencies` in `package.json`. By default, Bun uses 
 }
 ```
 
-***
+---
 
 To pin your project to the exact version you installed, use `--exact`. This adds the package to `dependencies` without the `^`.
 
@@ -29,7 +29,7 @@ To pin your project to the exact version you installed, use `--exact`. This adds
 bun add zod --exact
 ```
 
-***
+---
 
 To specify an exact version or a tag:
 
@@ -38,6 +38,6 @@ bun add zod@3.0.0
 bun add zod@next
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

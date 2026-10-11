@@ -12,9 +12,9 @@ const file = Bun.file(path);
 const buffer = await file.arrayBuffer();
 ```
 
-***
+---
 
-Read the binary content of the `ArrayBuffer` with a typed array, such as `Int8Array`. For `Uint8Array`, use [`.bytes()`](/docs/guides/read-file/uint8array).
+Read the binary content of the `ArrayBuffer` with a typed array, such as `Int8Array`. For `Uint8Array`, use [`.bytes()`](/guides/read-file/uint8array).
 
 **File:** `index.ts`
 ```ts
@@ -25,6 +25,6 @@ bytes[0];
 bytes.length;
 ```
 
-***
+---
 
-See [Typed arrays](/docs/runtime/binary-data#typedarray) for more on working with typed arrays in Bun.
+See [Typed arrays](/runtime/binary-data#typedarray) for more on working with typed arrays in Bun.

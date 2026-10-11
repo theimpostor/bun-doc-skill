@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/transpiler
 
 Use Bun's transpiler to transpile JavaScript and TypeScript code
 
+
 Bun exposes its internal transpiler as the `Bun.Transpiler` class. To create an instance:
 
 ```ts
@@ -11,7 +12,7 @@ const transpiler = new Bun.Transpiler({
 });
 ```
 
-***
+---
 
 ## `.transformSync()`
 
@@ -43,6 +44,7 @@ export function Home(props) {
 }
 ```
 
+
 To override the default loader specified in the `new Bun.Transpiler()` constructor, pass a second argument to `.transformSync()`.
 
 ```ts
@@ -50,11 +52,13 @@ transpiler.transformSync("<div>hi!</div>", "tsx");
 ```
 
 ### Nitty gritty
+
 `.transformSync` runs the transpiler in the same thread as the calling code.
 
-[Macros](/docs/bundler/macros) run in the same thread as the transpiler, but in a separate event loop from the rest of your application. Macros and regular code share globals, so it is possible (but not recommended) to share state between them. Using AST nodes outside of a macro is undefined behavior.
+[Macros](/bundler/macros) run in the same thread as the transpiler, but in a separate event loop from the rest of your application. Macros and regular code share globals, so it is possible (but not recommended) to share state between them. Using AST nodes outside of a macro is undefined behavior.
 
-***
+
+---
 
 ## `.transform()`
 
@@ -66,20 +70,23 @@ const result = await transpiler.transform("<div>hi!</div>");
 console.log(result);
 ```
 
-Unless you're transpiling *many* large files, use `Bun.Transpiler.transformSync`. The threadpool overhead often costs more than the transpilation itself.
+Unless you're transpiling _many_ large files, use `Bun.Transpiler.transformSync`. The threadpool overhead often costs more than the transpilation itself.
 
 ```ts
 await transpiler.transform("<div>hi!</div>", "tsx");
 ```
 
 ### Nitty gritty
+
 The `.transform()` method runs the transpiler in Bun's worker threadpool, so running it 100 times spreads the work across `Math.floor($cpu_count * 0.8)` threads without blocking the main JavaScript thread.
 
 If your code uses a macro, the transpiler may spawn a new copy of Bun's JavaScript runtime environment in that new thread.
 
+
 ## `.scan()`
 
 The `.scan()` method scans source code and returns a list of its imports and exports, plus metadata about each one. [Type-only](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export) imports and exports are ignored.
+
 
 **File:** `example.ts`
 ```ts
@@ -116,20 +123,22 @@ const result = transpiler.scan(code);
 }
 ```
 
+
 Each import in the `imports` array has a `path` and `kind`. Bun categorizes imports into the following kinds:
 
-* `import-statement`: `import React from 'react'`
-* `require-call`: `const val = require('./cjs.js')`
-* `require-resolve`: `require.resolve('./cjs.js')`
-* `dynamic-import`: `import('./loader')`
-* `import-rule`: `@import 'foo.css'`
-* `url-token`: `url('./foo.png')`
+- `import-statement`: `import React from 'react'`
+- `require-call`: `const val = require('./cjs.js')`
+- `require-resolve`: `require.resolve('./cjs.js')`
+- `dynamic-import`: `import('./loader')`
+- `import-rule`: `@import 'foo.css'`
+- `url-token`: `url('./foo.png')`
 
-***
+---
 
 ## `.scanImports()`
 
 In performance-sensitive code, use the `.scanImports()` method to get a list of imports. It's faster than `.scan()` (especially for large files) but marginally less accurate due to its performance optimizations.
+
 
 **File:** `example.ts`
 ```ts
@@ -167,7 +176,8 @@ const result = transpiler.scanImports(code);
 ]
 ```
 
-***
+
+---
 
 ## Reference
 

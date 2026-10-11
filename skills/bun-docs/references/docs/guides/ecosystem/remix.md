@@ -6,7 +6,7 @@ Source: https://bun.com/docs/guides/ecosystem/remix
 
 > Note: This guide covers Remix 3. To create a Remix 2 project, use `create-remix` instead.
 
-***
+---
 
 Scaffold a new project with the Remix CLI.
 
@@ -32,7 +32,7 @@ cd my-remix-app
 bun install
 ```
 
-***
+---
 
 The generated `server.ts` creates a `node:http` server that hands every request to the app's router. Bun runs it directly; pass `--watch` to restart the server whenever a file it imports changes.
 
@@ -46,7 +46,7 @@ Server listening on http://localhost:44100
 
 Open [http://localhost:44100](http://localhost:44100) to see the starter page. The routes live in `app/routes.ts` and `app/router.ts`. `app/actions/home-page.tsx` renders the starter home page.
 
-***
+---
 
 The `scripts` generated in `package.json` run the server with Node.js and the `remix/node-tsx` TypeScript loader. Bun runs TypeScript itself, so point the scripts at `bun` instead.
 
@@ -74,11 +74,11 @@ Server listening on http://localhost:44100
 > Note
 The generated `hmr` script (`hmr.ts`) also loads `remix/node-tsx`, which relies on `module.registerHooks()`. Bun does
 not implement that API yet, so the script fails under Bun. See [Node.js
-compatibility](/docs/runtime/nodejs-compat#node-module). `bun --watch` restarts the server on changes instead.
+compatibility](/runtime/nodejs-compat#node-module). `bun --watch` restarts the server on changes instead.
 
-***
+---
 
-The router is a `fetch` handler, so you can also serve the app with [`Bun.serve()`](/docs/runtime/http/server) instead of `node:http`.
+The router is a `fetch` handler, so you can also serve the app with [`Bun.serve()`](/runtime/http/server) instead of `node:http`.
 
 **File:** `server.ts`
 ```ts
@@ -92,6 +92,6 @@ const server = Bun.serve({
 console.log(`Server listening on ${server.url}`);
 ```
 
-***
+---
 
 See the Remix [documentation](https://github.com/remix-run/remix/tree/main/docs) to learn more.

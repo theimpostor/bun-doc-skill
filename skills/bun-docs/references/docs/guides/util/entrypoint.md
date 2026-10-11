@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/util/entrypoint
 
 
-Bun provides a handful of module-specific utilities on the [`import.meta`](/docs/runtime/module-resolution#import-meta) object. Use `import.meta.main` to check if the current file is the entrypoint of the current process.
+Bun provides a handful of module-specific utilities on the [`import.meta`](/runtime/module-resolution#import-meta) object. Use `import.meta.main` to check if the current file is the entrypoint of the current process.
 
 **File:** `index.ts`
 ```ts
@@ -13,6 +13,6 @@ if (import.meta.main) {
 }
 ```
 
-***
+---
 
-See [`import.meta`](/docs/runtime/module-resolution#import-meta).
+See [`import.meta`](/runtime/module-resolution#import-meta).

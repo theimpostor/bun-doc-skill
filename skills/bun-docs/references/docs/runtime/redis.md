@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/redis
 
 Use Bun's native Redis client with a Promise-based API
 
+
 > Note: Bun's Redis client supports Redis server versions 7.2 and up.
 
 Bun's native Redis client has a Promise-based API with built-in connection management, fully typed responses, and TLS support.
@@ -29,7 +30,7 @@ const exists = await redis.exists("greeting");
 await redis.del("greeting");
 ```
 
-***
+---
 
 ## Getting Started
 
@@ -52,9 +53,9 @@ await client.incr("counter");
 
 By default, the client reads connection information from the following environment variables (in order of precedence):
 
-* `REDIS_URL`
-* `VALKEY_URL`
-* If not set, defaults to `"redis://localhost:6379"`
+- `REDIS_URL`
+- `VALKEY_URL`
+- If not set, defaults to `"redis://localhost:6379"`
 
 ### Connection Lifecycle
 
@@ -91,7 +92,7 @@ await client.set("key", "value");
 client.close();
 ```
 
-***
+---
 
 ## Basic Operations
 
@@ -181,7 +182,7 @@ const randomTag = await redis.srandmember("tags");
 const poppedTag = await redis.spop("tags");
 ```
 
-***
+---
 
 ## Pub/Sub
 
@@ -202,7 +203,7 @@ import { RedisClient } from "bun";
 const writer = new RedisClient("redis://localhost:6379");
 await writer.connect();
 
-writer.publish("general", "Hello everyone!");
+await writer.publish("general", "Hello everyone!");
 
 writer.close();
 ```
@@ -250,6 +251,7 @@ const subscriber = await redis.duplicate();
 await subscriber.subscribe("foo", () => {});
 await redis.set("bar", "baz");
 ```
+
 
 ### Publishing
 
@@ -353,41 +355,42 @@ console.log(client.bufferedAmount);
 
 The client automatically converts Redis responses to JavaScript values:
 
-* Integer responses are returned as JavaScript numbers
-* Bulk strings are returned as JavaScript strings
-* Simple strings are returned as JavaScript strings
-* Null bulk strings are returned as `null`
-* Array responses are returned as JavaScript arrays
-* Error responses throw JavaScript errors with appropriate error codes
-* Boolean responses (RESP3) are returned as JavaScript booleans
-* Map responses (RESP3) are returned as JavaScript objects
-* Set responses (RESP3) are returned as JavaScript arrays
+- Integer responses are returned as JavaScript numbers
+- Bulk strings are returned as JavaScript strings
+- Simple strings are returned as JavaScript strings
+- Null bulk strings and null arrays are returned as `null`
+- Array responses are returned as JavaScript arrays
+- Big number responses (RESP3) are returned as `BigInt`. A payload that is not an integer literal is returned as a string. `getBuffer` returns the payload as a `Buffer`.
+- Error responses throw JavaScript errors with appropriate error codes
+- Boolean responses (RESP3) are returned as JavaScript booleans
+- Map responses (RESP3) are returned as JavaScript objects
+- Set responses (RESP3) are returned as JavaScript arrays
 
 Special handling for specific commands:
 
-* `EXISTS` returns a boolean instead of a number (1 becomes true, 0 becomes false)
-* `SISMEMBER` returns a boolean (1 becomes true, 0 becomes false)
+- `EXISTS` returns a boolean instead of a number (1 becomes true, 0 becomes false)
+- `SISMEMBER` returns a boolean (1 becomes true, 0 becomes false)
 
 The following commands disable automatic pipelining:
 
-* `AUTH`
-* `INFO`
-* `QUIT`
-* `EXEC`
-* `MULTI`
-* `WATCH`
-* `SCRIPT`
-* `SELECT`
-* `CLUSTER`
-* `DISCARD`
-* `UNWATCH`
-* `PIPELINE`
-* `SUBSCRIBE`
-* `PSUBSCRIBE`
-* `UNSUBSCRIBE`
-* `UNPSUBSCRIBE`
+- `AUTH`
+- `INFO`
+- `QUIT`
+- `EXEC`
+- `MULTI`
+- `WATCH`
+- `SCRIPT`
+- `SELECT`
+- `CLUSTER`
+- `DISCARD`
+- `UNWATCH`
+- `PIPELINE`
+- `SUBSCRIBE`
+- `PSUBSCRIBE`
+- `UNSUBSCRIBE`
+- `UNPSUBSCRIBE`
 
-***
+---
 
 ## Connection Options
 
@@ -399,7 +402,10 @@ const client = new RedisClient("redis://localhost:6379", {
   // Connection timeout in milliseconds (default: 10000)
   connectionTimeout: 5000,
 
-  // Idle timeout in milliseconds (default: 0 = no timeout)
+  // Idle timeout in milliseconds (default: 0 = no timeout). Bun counts it
+  // from the last data the server sent. Sending does not reset it. When it
+  // fires, Bun closes the connection and runs onclose. Bun does not reconnect
+  // on its own, even with autoReconnect: true. Call connect() to reconnect.
   idleTimeout: 30000,
 
   // Whether to automatically reconnect on disconnection (default: true)
@@ -434,10 +440,10 @@ When a connection is lost, the client automatically attempts to reconnect with e
 2. The client caps the reconnection delay at 2000ms (2 seconds)
 3. The client attempts to reconnect up to `maxRetries` times (default: 20)
 4. While disconnected, the client:
-* Queues commands if `enableOfflineQueue` is true (default)
-* Rejects commands immediately if `enableOfflineQueue` is false
+- Queues commands if `enableOfflineQueue` is true (default)
+- Rejects commands immediately if `enableOfflineQueue` is false
 
-***
+---
 
 ## Supported URL Formats
 
@@ -470,7 +476,7 @@ new RedisClient("redis+tls+unix:///path/to/socket");
 new RedisClient("redis+tls+unix:///path/to/socket");
 ```
 
-***
+---
 
 ## Error Handling
 
@@ -493,11 +499,12 @@ try {
 
 Common error codes:
 
-* `ERR_REDIS_CONNECTION_CLOSED` - Connection to the server was closed
-* `ERR_REDIS_AUTHENTICATION_FAILED` - Failed to authenticate with the server
-* `ERR_REDIS_INVALID_RESPONSE` - Received an invalid response from the server
+- `ERR_REDIS_CONNECTION_CLOSED` - Connection to the server was closed
+- `ERR_REDIS_AUTHENTICATION_FAILED` - Failed to authenticate with the server
+- `ERR_REDIS_INVALID_RESPONSE` - Received an invalid response from the server
+- `ERR_REDIS_SERVER_ERROR` - The server sent an error reply, either rejecting one command or, in subscriber mode, closing the connection
 
-***
+---
 
 ## Example Use Cases
 
@@ -580,7 +587,7 @@ async function getSession(sessionId) {
 }
 ```
 
-***
+---
 
 ## Implementation Notes
 
@@ -590,9 +597,9 @@ Bun's Redis client is implemented in Rust and uses the Redis Serialization Proto
 
 Limitations we plan to address in future versions:
 
-* Transactions (MULTI/EXEC) require raw commands
+- Transactions (MULTI/EXEC) require raw commands
 
 Unsupported features:
 
-* Redis Sentinel
-* Redis Cluster
+- Redis Sentinel
+- Redis Cluster

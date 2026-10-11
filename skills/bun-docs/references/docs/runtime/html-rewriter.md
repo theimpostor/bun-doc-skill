@@ -3,9 +3,10 @@ Source: https://bun.com/docs/runtime/html-rewriter
 
 Use Bun's HTMLRewriter to transform HTML documents with CSS selectors
 
+
 HTMLRewriter transforms HTML documents with CSS selectors. It works with `Response`, `string`, and `ArrayBuffer` inputs. Bun's implementation is based on Cloudflare's [lol-html](https://github.com/cloudflare/lol-html).
 
-***
+---
 
 ## Usage
 
@@ -340,21 +341,21 @@ rewriter.onDocument({
 
 When transforming a Response, HTMLRewriter:
 
-* Preserves the status code, headers, and other response properties
-* Transforms the body while maintaining streaming capabilities
-* Handles content-encoding (like gzip) automatically
-* Marks the original response body as used after transformation
-* Clones headers to the new response
+- Preserves the status code, headers, and other response properties
+- Transforms the body while maintaining streaming capabilities
+- Handles content-encoding (like gzip) automatically
+- Marks the original response body as used after transformation
+- Clones headers to the new response
 
 ## Error Handling
 
 The overload you called decides which channel an error takes. Timing never
 does. `transform()` itself throws for:
 
-* Invalid selector syntax in the `on()` method
-* Invalid input types (for example, passing a Symbol)
-* Body already used errors, and input bodies that have already failed or aborted
-* Anything a content handler raises on a `string` / `ArrayBuffer` input, since
+- Invalid selector syntax in the `on()` method
+- Invalid input types (for example, passing a Symbol)
+- Body already used errors, and input bodies that have already failed or aborted
+- Anything a content handler raises on a `string` / `ArrayBuffer` input, since
 those have to produce their result before `transform()` returns. The same goes
 for a handler that needs the event loop (see [Element Handlers](#element-handlers))
 
@@ -369,10 +370,10 @@ try {
 For a `Response` input, `transform()` returns before the rewrite finishes, so
 everything the rewrite discovers surfaces on the output body instead:
 
-* An error thrown by a content handler, or a rejected Promise one returned
-* Malformed or truncated input
-* Stream errors reading the input body
-* Memory allocation failures
+- An error thrown by a content handler, or a rejected Promise one returned
+- Malformed or truncated input
+- Stream errors reading the input body
+- Memory allocation failures
 
 ```ts
 try {
@@ -387,7 +388,7 @@ from that Promise reaches neither channel. Like any detached rejection, it goes
 to the process-global `unhandledRejection` path. Earlier versions of Bun could
 surface it from `transform()` itself.
 
-***
+---
 
 ## See also
 

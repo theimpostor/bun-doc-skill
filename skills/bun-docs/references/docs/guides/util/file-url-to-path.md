@@ -9,6 +9,6 @@ Bun.fileURLToPath("file:///path/to/file.txt");
 // => "/path/to/file.txt"
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils).
+See [Utils](/runtime/utils).

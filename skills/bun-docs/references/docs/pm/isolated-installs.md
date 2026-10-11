@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/isolated-installs
 
 Strict dependency isolation similar to pnpm's approach
 
+
 Bun provides an alternative package installation strategy called **isolated installs** that creates strict dependency isolation similar to pnpm's approach. This mode prevents phantom dependencies (packages importing dependencies they never declared) and makes builds reproducible and deterministic.
 
 Isolated installs are the default for **new** workspace/monorepo projects (with `configVersion = 1` in the lockfile). Existing projects continue using hoisted installs unless explicitly configured.
@@ -13,10 +14,10 @@ Isolated installs create a non-hoisted dependency structure where packages can o
 
 ### Key benefits
 
-* **Prevents phantom dependencies** — Packages cannot accidentally import dependencies they haven't declared
-* **Deterministic resolution** — Same dependency tree regardless of what else is installed
-* **Better for monorepos** — Workspace isolation prevents cross-contamination between packages
-* **Reproducible builds** — More predictable resolution behavior across environments
+- **Prevents phantom dependencies** — Packages cannot accidentally import dependencies they haven't declared
+- **Deterministic resolution** — Same dependency tree regardless of what else is installed
+- **Better for monorepos** — Workspace isolation prevents cross-contamination between packages
+- **Reproducible builds** — More predictable resolution behavior across environments
 
 ## Using isolated installs
 
@@ -48,10 +49,10 @@ The default linker strategy depends on your project's lockfile `configVersion`:
 
 | `configVersion` | Using workspaces? | Default Linker |
 | --------------- | ----------------- | -------------- |
-| `1`             | ✅                 | `isolated`     |
-| `1`             | ❌                 | `hoisted`      |
-| `0`             | ✅                 | `hoisted`      |
-| `0`             | ❌                 | `hoisted`      |
+| `1`             | ✅                | `isolated`     |
+| `1`             | ❌                | `hoisted`      |
+| `0`             | ✅                | `hoisted`      |
+| `0`             | ❌                | `hoisted`      |
 
 **New projects**: Default to `configVersion = 1`. In workspaces, v1 uses the isolated linker by default; otherwise it uses hoisted linking.
 
@@ -59,8 +60,8 @@ The default linker strategy depends on your project's lockfile `configVersion`:
 
 **Migrations from other package managers**:
 
-* From pnpm: `configVersion = 1` (using isolated installs in workspaces)
-* From npm or yarn: `configVersion = 0` (using hoisted installs)
+- From pnpm: `configVersion = 1` (using isolated installs in workspaces)
+- From npm or yarn: `configVersion = 0` (using hoisted installs)
 
 Override the default by passing the `--linker` flag or setting it in your configuration file.
 
@@ -87,31 +88,33 @@ node_modules/
 └── package-name -> .bun/package@1.0.0/node_modules/package  # Symlinks
 ```
 
+The part of a store directory name after `@` is the package's resolution. For a registry package, that is its version. For a folder, tarball, git, or GitHub dependency, Bun derives it from the path or URL (plus the commit), so it can be long. Bun writes at most 80 bytes of it: it cuts a longer resolution to at most 63 bytes and appends `+` and 16 hex digits derived from the full resolution. The path of a package inside the store is therefore at most `34 + 2 * <name length> + 80` characters longer than your project directory (17 more when the package has peer dependencies). This matters on Windows, where a path longer than 260 characters still works for Bun itself, but not as the working directory of the package's lifecycle scripts.
+
 ### Resolution algorithm
 
 1. **Central store** — Bun installs all packages in `node_modules/.bun/package@version/` directories
 2. **Symlinks** — Top-level `node_modules` contains symlinks pointing to the central store
 3. **Peer resolution** — Complex peer dependencies create specialized directory names
 4. **Deduplication** — Packages with identical package IDs and peer dependency sets are shared
-5. **Re-linking** — On later installs, Bun reuses existing store entries and re-points their symlinks if a dependency was re-resolved. Store entries that are no longer referenced stay until you run [`bun prune`](/docs/pm/cli/prune)
+5. **Re-linking** — On later installs, Bun reuses existing store entries and re-points their symlinks if a dependency was re-resolved. Store entries that are no longer referenced stay until you run [`bun prune`](/pm/cli/prune)
 
 ### Workspace handling
 
 In monorepos, Bun handles workspace dependencies specially:
 
-* **Workspace packages** — Symlinked directly to their source directories, not the store
-* **Workspace dependencies** — Can access other workspace packages in the monorepo
-* **External dependencies** — Installed in the isolated store
+- **Workspace packages** — Symlinked directly to their source directories, not the store
+- **Workspace dependencies** — Can access other workspace packages in the monorepo
+- **External dependencies** — Installed in the isolated store
 
 ## Comparison with hoisted installs
 
 | Aspect                    | Hoisted (npm/Yarn)                         | Isolated (pnpm-like)                    |
 | ------------------------- | ------------------------------------------ | --------------------------------------- |
 | **Dependency access**     | Packages can access any hoisted dependency | Packages only see declared dependencies |
-| **Phantom dependencies**  | ❌ Possible                                 | ✅ Prevented                             |
-| **Disk usage**            | ✅ Lower (shared installs)                  | ✅ Similar (uses symlinks)               |
-| **Determinism**           | ❌ Less deterministic                       | ✅ More deterministic                    |
-| **Node.js compatibility** | ✅ Standard behavior                        | ✅ Compatible via symlinks               |
+| **Phantom dependencies**  | ❌ Possible                                | ✅ Prevented                            |
+| **Disk usage**            | ✅ Lower (shared installs)                 | ✅ Similar (uses symlinks)              |
+| **Determinism**           | ❌ Less deterministic                      | ✅ More deterministic                   |
+| **Node.js compatibility** | ✅ Standard behavior                       | ✅ Compatible via symlinks              |
 | **Best for**              | Single projects, legacy code               | Monorepos, strict dependency management |
 
 ## Advanced features
@@ -130,7 +133,7 @@ The directory name includes both the package version and its peer dependency ver
 
 ### Strict resolution with `install.hoist = false`
 
-By default, Bun creates `node_modules/.bun/node_modules`, a fallback directory with a symlink to every installed package. Because this directory is an ancestor of every store entry, a package in the store can resolve dependencies it never declared. Set [`install.hoist = false`](/docs/runtime/bunfig#install-hoist) (or `hoist=false` in `.npmrc`, matching pnpm) to skip creating this directory. Undeclared imports then fail instead of depending on what else happens to be installed. One caveat, shared with pnpm: the root `node_modules` also sits above the store. As a result, packages linked there (your direct dependencies, `publicHoistPattern` matches, and workspace packages) stay resolvable from any store package:
+By default, Bun creates `node_modules/.bun/node_modules`, a fallback directory with a symlink to every installed package. Because this directory is an ancestor of every store entry, a package in the store can resolve dependencies it never declared. Set [`install.hoist = false`](/runtime/bunfig#install-hoist) (or `hoist=false` in `.npmrc`, matching pnpm) to skip creating this directory. Undeclared imports then fail instead of depending on what else happens to be installed. One caveat, shared with pnpm: the root `node_modules` also sits above the store. As a result, packages linked there (your direct dependencies, `publicHoistPattern` matches, and workspace packages) stay resolvable from any store package:
 
 **File:** `bunfig.toml`
 ```toml
@@ -139,19 +142,19 @@ linker = "isolated"
 hoist = false
 ```
 
-[`install.hoistPattern`](/docs/runtime/bunfig#install-hoistpattern) and [`install.publicHoistPattern`](/docs/runtime/bunfig#install-publichoistpattern) offer pattern-based control over the same fallback directory and the root `node_modules` respectively.
+[`install.hoistPattern`](/runtime/bunfig#install-hoistpattern) and [`install.publicHoistPattern`](/runtime/bunfig#install-publichoistpattern) offer pattern-based control over the same fallback directory and the root `node_modules` respectively.
 
 ### Global virtual store
 
-When [`install.globalStore`](/docs/runtime/bunfig#install-globalstore) is enabled, Bun materializes store entries once into a [global virtual store](/docs/pm/global-store) at `<cache>/links/`, and `node_modules/.bun/<pkg>@<ver>` is a symlink into it. Warm installs after `rm -rf node_modules` only create one symlink per package instead of copying every package's files again, which is roughly **7× faster** on a typical mid-size project. The global store is **off by default**; see the [global store docs](/docs/pm/global-store) for how to enable it, the full layout, benchmarks, and tradeoffs.
+When [`install.globalStore`](/runtime/bunfig#install-globalstore) is enabled, Bun materializes store entries once into a [global virtual store](/pm/global-store) at `<cache>/links/`, and `node_modules/.bun/<pkg>@<ver>` is a symlink into it. Warm installs after `rm -rf node_modules` only create one symlink per package instead of copying every package's files again, which is roughly **7× faster** on a typical mid-size project. The global store is **off by default**; see the [global store docs](/pm/global-store) for how to enable it, the full layout, benchmarks, and tradeoffs.
 
 ### Backend strategies
 
 When the global store is disabled (the default) or an entry isn't eligible for it, Bun materializes the entry under the project using one of:
 
-* **Clonefile** (macOS) — Copy-on-write filesystem clones
-* **Hardlink** (Linux/Windows) — Hardlinks to save disk space
-* **Copyfile** (fallback) — Full file copies when other methods aren't available
+- **Clonefile** (macOS) — Copy-on-write filesystem clones
+- **Hardlink** (Linux/Windows) — Hardlinks to save disk space
+- **Copyfile** (fallback) — Full file copies when other methods aren't available
 
 ### Debugging isolated installs
 
@@ -163,10 +166,10 @@ bun install --linker isolated --verbose
 
 The verbose output shows:
 
-* Store entry creation
-* Symlink operations
-* Peer dependency resolution
-* Deduplication decisions
+- Store entry creation
+- Symlink operations
+- Peer dependency resolution
+- Deduplication decisions
 
 ## Troubleshooting
 
@@ -174,9 +177,9 @@ The verbose output shows:
 
 Some packages may not work correctly with isolated installs due to:
 
-* **Hardcoded paths** — Packages that assume a flat `node_modules` structure
-* **Dynamic imports** — Runtime imports that don't follow Node.js resolution
-* **Build tools** — Tools that scan `node_modules` directly
+- **Hardcoded paths** — Packages that assume a flat `node_modules` structure
+- **Dynamic imports** — Runtime imports that don't follow Node.js resolution
+- **Build tools** — Tools that scan `node_modules` directly
 
 If you encounter issues, you can:
 
@@ -190,9 +193,9 @@ bun install --linker hoisted
 
 ### Performance considerations
 
-* **Install time** — May be slightly slower due to symlink operations
-* **Disk usage** — Similar to hoisted (uses symlinks, not file copies)
-* **Memory usage** — Higher during install due to complex peer resolution
+- **Install time** — May be slightly slower due to symlink operations
+- **Disk usage** — Similar to hoisted (uses symlinks, not file copies)
+- **Memory usage** — Higher during install due to complex peer resolution
 
 ## Migration guide
 
@@ -218,26 +221,26 @@ rm -rf node_modules pnpm-lock.yaml
 bun install --linker isolated
 ```
 
-The main difference is that Bun keeps its store inside the project's `node_modules/.bun/` by default, while pnpm uses a global store with symlinks. With [`install.globalStore`](#global-virtual-store) enabled, Bun uses a global store as well.
+The layouts are close: Bun hardlinks (clones on macOS) packages from its [global cache](/pm/global-cache) into a per-project store, `node_modules/.bun/`, and symlinks top-level `node_modules` entries into it. With [`install.globalStore`](#global-virtual-store) enabled, those store entries become symlinks into a global virtual store instead.
 
 ## When to use isolated installs
 
 **Use isolated installs when:**
 
-* Working in monorepos with multiple packages
-* Strict dependency management is required
-* Preventing phantom dependencies is important
-* Building libraries that need deterministic dependencies
+- Working in monorepos with multiple packages
+- Strict dependency management is required
+- Preventing phantom dependencies is important
+- Building libraries that need deterministic dependencies
 
 **Use hoisted installs when:**
 
-* Working with legacy code that assumes flat `node_modules`
-* Compatibility with existing build tools is required
-* Working in environments where symlinks aren't well supported
-* You prefer the traditional npm behavior
+- Working with legacy code that assumes flat `node_modules`
+- Compatibility with existing build tools is required
+- Working in environments where symlinks aren't well supported
+- You prefer the traditional npm behavior
 
 ## Related documentation
 
-* [Package manager > Workspaces](/docs/pm/workspaces) — Monorepo workspace management
-* [Package manager > Lockfile](/docs/pm/lockfile) — Understanding Bun's lockfile format
-* [CLI > install](/docs/pm/cli/install) — Complete `bun install` command reference
+- [Package manager > Workspaces](/pm/workspaces) — Monorepo workspace management
+- [Package manager > Lockfile](/pm/lockfile) — Understanding Bun's lockfile format
+- [CLI > install](/pm/cli/install) — Complete `bun install` command reference

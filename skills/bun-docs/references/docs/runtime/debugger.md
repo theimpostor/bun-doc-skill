@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/debugger
 
 Debug your Bun code with an interactive debugger using WebKit Inspector Protocol
 
+
 Bun speaks the [WebKit Inspector Protocol](https://github.com/oven-sh/bun/blob/main/packages/bun-inspector-protocol/src/protocol/jsc/index.d.ts), so you can debug your code with an interactive debugger. For demonstration purposes, consider the following web server.
 
 ## Debugging JavaScript and TypeScript
@@ -54,7 +55,7 @@ bun --inspect=localhost:4000 server.ts
 bun --inspect=localhost:4000/prefix server.ts
 ```
 
-***
+---
 
 ## Debuggers
 
@@ -93,19 +94,19 @@ The controls in the upper left of the Sources pane drive the program's execution
 
 What each button does:
 
-* *Continue script execution* — run until the next breakpoint or exception.
-* *Step over* — advance to the next line.
-* *Step into* — if the current statement contains a function call, enter the called function.
-* *Step out* — if the current statement is a function call, finish executing it, then return to the location where it was called.
+- _Continue script execution_ — run until the next breakpoint or exception.
+- _Step over_ — advance to the next line.
+- _Step into_ — if the current statement contains a function call, enter the called function.
+- _Step out_ — if the current statement is a function call, finish executing it, then return to the location where it was called.
 
 ![Bun debugger execution
 controls](https://github-production-user-asset-6210df.s3.amazonaws.com/3084745/261510346-6a94441c-75d3-413a-99a7-efa62365f83d.png)
 
 ### Visual Studio Code Debugger
 
-Visual Studio Code support for debugging Bun scripts is experimental. To use it, install the [Bun VSCode extension](/docs/guides/runtime/vscode-debugger).
+Visual Studio Code support for debugging Bun scripts is experimental. To use it, install the [Bun VSCode extension](/guides/runtime/vscode-debugger).
 
-***
+---
 
 ## Debugging Network Requests
 
@@ -196,7 +197,7 @@ await fetch("https://example.com", {
 [fetch] < Content-Length: 1256
 ```
 
-***
+---
 
 ## Stacktraces & sourcemaps
 
@@ -219,9 +220,9 @@ The output is a syntax-highlighted preview of the source code where the error oc
 ```ts
 1 | // Create an error
 2 | const err = new Error("Something went wrong");
-                ^
+                    ^
 error: Something went wrong
-      at file.js:2:13
+      at /path/to/file.js:2:17
 ```
 
 ### V8 Stack Traces

@@ -3,15 +3,16 @@ Source: https://bun.com/docs/runtime/xml
 
 Use Bun's built-in support for XML through both runtime APIs and bundler integration
 
+
 > Note: New in Bun v1.4
 
 In Bun, XML is a first-class citizen alongside JSON, TOML, YAML, and JSON5. You can:
 
-* Parse and stringify XML with `Bun.XML.parse` and `Bun.XML.stringify`
-* `import` & `require` XML files as modules at runtime (including hot reloading & watch mode support)
-* `import` & `require` XML files in frontend apps with Bun's bundler
+- Parse and stringify XML with `Bun.XML.parse` and `Bun.XML.stringify`
+- `import` & `require` XML files as modules at runtime (including hot reloading & watch mode support)
+- `import` & `require` XML files in frontend apps with Bun's bundler
 
-***
+---
 
 ## Runtime API
 
@@ -48,18 +49,18 @@ console.log(data);
 
 By default the result is a compact object keyed by element name — the `@attr` / `#text` convention most XML-to-object libraries use. It works like this:
 
-* The result has one key, the root element's name.
-* An element with no attributes and no child elements becomes its character data: a string, `""` when empty. `<paid/>` and `<paid></paid>` are the same thing in XML.
-* Any other element becomes an object. It has a `"@name"` key per attribute, then one key per distinct child element name and a `"#text"` key for the element's own text, in the order each first appears.
-* When a child element name occurs more than once in the element, its key holds an array in document order. Otherwise it holds the single value. See [One or many](#one-or-many).
-* `compact` chooses a structure; it does not change values. Bun returns text as written: leading, trailing and internal whitespace included, CDATA sections and entity references expanded, line ends normalized to `\n` — the same text the tree shape gives for that element. Because an element has one `"#text"`, Bun concatenates its text runs and leaves out whitespace-only runs that sit between child elements (the document's layout). If your documents are hand-formatted (`<name>\n  value\n</name>`), trim where you read.
-* All values are strings. Nothing is coerced to numbers, booleans, or `null`.
-* Names are kept as written, namespace prefix included (`"soap:Body"`); `xmlns` declarations are ordinary attributes.
-* Comments, processing instructions, the `<?xml …?>` declaration and the `<!DOCTYPE …>` are not represented.
+- The result has one key, the root element's name.
+- An element with no attributes and no child elements becomes its character data: a string, `""` when empty. `<paid/>` and `<paid></paid>` are the same thing in XML.
+- Any other element becomes an object. It has a `"@name"` key per attribute, then one key per distinct child element name and a `"#text"` key for the element's own text, in the order each first appears.
+- When a child element name occurs more than once in the element, its key holds an array in document order. Otherwise it holds the single value. See [One or many](#one-or-many).
+- `compact` chooses a structure; it does not change values. Bun returns text as written: leading, trailing and internal whitespace included, CDATA sections and entity references expanded, line ends normalized to `\n` — the same text the tree shape gives for that element. Because an element has one `"#text"`, Bun concatenates its text runs and leaves out whitespace-only runs that sit between child elements (the document's layout). If your documents are hand-formatted (`<name>\n  value\n</name>`), trim where you read.
+- All values are strings. Nothing is coerced to numbers, booleans, or `null`.
+- Names are kept as written, namespace prefix included (`"soap:Body"`); `xmlns` declarations are ordinary attributes.
+- Comments, processing instructions, the `<?xml …?>` declaration and the `<!DOCTYPE …>` are not represented.
 
 `@` and `#` cannot start an XML name, so attribute and text keys do not collide with child element keys.
 
-The compact shape is for *data*. It does not keep the relative order of differently named siblings, or where text sat relative to child elements:
+The compact shape is for _data_. It does not keep the relative order of differently named siblings, or where text sat relative to child elements:
 
 ```ts
 XML.parse(`<p>Hello <b>world</b>!</p>`);
@@ -177,7 +178,7 @@ The second parameter is reserved; pass `null` or `undefined`.
 
 For a value that `XML.parse` produced, in either shape, `XML.parse(XML.stringify(value))` gives back an equal value.
 
-***
+---
 
 ## Module Import
 
@@ -233,7 +234,7 @@ Use `with { type: "xml" }` to parse a file with another extension as XML:
 import feed from "./export.rss" with { type: "xml" };
 ```
 
-***
+---
 
 ## Hot Reloading with XML
 
@@ -255,7 +256,7 @@ Bun.serve({
 bun --hot server.ts
 ```
 
-***
+---
 
 ## Bundler Integration
 
@@ -267,9 +268,9 @@ bun build app.ts --outdir=dist
 
 Parsing at build time means:
 
-* Zero runtime XML parsing overhead in production
-* Smaller bundle sizes
-* Tree shaking of unused properties
+- Zero runtime XML parsing overhead in production
+- Smaller bundle sizes
+- Tree shaking of unused properties
 
 ### Dynamic Imports
 
@@ -279,20 +280,20 @@ You can import XML files dynamically:
 const { default: doc } = await import("./config.xml");
 ```
 
-***
+---
 
 ## Conformance
 
 Bun's XML parser is written in Rust and implements [XML 1.0 (Fifth Edition)](https://www.w3.org/TR/2008/REC-xml-20081126/) as a non-validating processor that does not read external entities:
 
-* The whole document, including the internal DTD subset, must be well-formed — anything else throws a `SyntaxError`.
-* The parser expands internal entities declared in the document, with expansion limits so "billion laughs" payloads fail instead of exhausting memory. It normalizes attribute values and applies attribute defaults declared in the internal subset.
-* The parser does not fetch or read external DTDs or external entities, so there is no XXE surface. In a document with no DTD, a reference to an undeclared entity is an error. When the DOCTYPE points at an external subset (or uses parameter entities) that could have declared the entity, the parser keeps the reference as written (` ` stays ` `), unless the document says `standalone="yes"`.
-* The parser validates nothing against the DTD. It does not resolve namespaces and keeps prefixed names verbatim.
+- The whole document, including the internal DTD subset, must be well-formed — anything else throws a `SyntaxError`.
+- The parser expands internal entities declared in the document, with expansion limits so "billion laughs" payloads fail instead of exhausting memory. It normalizes attribute values and applies attribute defaults declared in the internal subset.
+- The parser does not fetch or read external DTDs or external entities, so there is no XXE surface. In a document with no DTD, a reference to an undeclared entity is an error. When the DOCTYPE points at an external subset (or uses parameter entities) that could have declared the entity, the parser keeps the reference as written (` ` stays ` `), unless the document says `standalone="yes"`.
+- The parser validates nothing against the DTD. It does not resolve namespaces and keeps prefixed names verbatim.
 
 The parser is run against the [W3C XML Conformance Test Suite](https://www.w3.org/XML/Test/). All 1,679 cases that have a required outcome for this class of processor pass: the parser rejects not-well-formed documents and accepts well-formed ones. Where the suite gives a canonical output, the element tree of a well-formed document (processing instructions included) matches it byte for byte. The [translated test suite](https://github.com/oven-sh/bun/blob/main/test/js/bun/xml/xml-test-suite.test.ts) lists every case, including the ones whose outcome legitimately depends on not reading external entities.
 
-***
+---
 
 ## Performance
 

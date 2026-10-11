@@ -3,16 +3,17 @@ Source: https://bun.com/docs/runtime/markdown
 
 Parse and render Markdown with Bun's built-in Markdown API, supporting GFM extensions and custom rendering callbacks
 
+
 > Note
 **Unstable API** — This API is under active development and may change in future versions of Bun.
 
 Bun includes a fast, built-in Markdown parser written in Rust. It supports GitHub Flavored Markdown (GFM) extensions and provides three APIs:
 
-* `Bun.markdown.html()` — render Markdown to an HTML string
-* `Bun.markdown.render()` — render Markdown with custom callbacks for each element
-* `Bun.markdown.react()` — render Markdown to React JSX elements
+- `Bun.markdown.html()` — render Markdown to an HTML string
+- `Bun.markdown.render()` — render Markdown with custom callbacks for each element
+- `Bun.markdown.react()` — render Markdown to React JSX elements
 
-***
+---
 
 ## `Bun.markdown.html()`
 
@@ -97,7 +98,7 @@ Bun.markdown.html("## Hello World", { headings: { ids: true } });
 // '<h2 id="hello-world">Hello World</h2>\n'
 ```
 
-***
+---
 
 ## `Bun.markdown.render()`
 
@@ -144,11 +145,11 @@ Return a string to replace the element's rendering. Return `null` or `undefined`
 
 The `listItem` callback receives everything needed to render markers directly:
 
-* `index` — 0-based position within the parent list
-* `depth` — the parent list's nesting level (0 = top-level)
-* `ordered` — whether the parent list is ordered
-* `start` — the parent list's start number (only when `ordered` is true)
-* `checked` — task list state (only for `- [x]` / `- [ ]` items)
+- `index` — 0-based position within the parent list
+- `depth` — the parent list's nesting level (0 = top-level)
+- `ordered` — whether the parent list is ordered
+- `start` — the parent list's start number (only when `ordered` is true)
+- `checked` — task list state (only for `- [x]` / `- [ ]` items)
 
 ### Inline callbacks
 
@@ -267,7 +268,7 @@ const result = Bun.markdown.render(
 );
 ```
 
-***
+---
 
 ## `Bun.markdown.react()`
 

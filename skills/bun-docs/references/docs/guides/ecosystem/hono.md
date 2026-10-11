@@ -14,7 +14,7 @@ app.get("/", c => c.text("Hono!"));
 export default app;
 ```
 
-***
+---
 
 Use `create-hono` to get started with one of Hono's project templates. Select `bun` when prompted for a template.
 
@@ -39,7 +39,7 @@ cd myapp
 bun install
 ```
 
-***
+---
 
 Then start the dev server and visit [localhost:3000](http://localhost:3000).
 
@@ -47,6 +47,6 @@ Then start the dev server and visit [localhost:3000](http://localhost:3000).
 bun run dev
 ```
 
-***
+---
 
 Refer to Hono's [getting started with Bun](https://hono.dev/docs/getting-started/bun) guide.

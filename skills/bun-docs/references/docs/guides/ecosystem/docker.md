@@ -5,11 +5,11 @@ Source: https://bun.com/docs/guides/ecosystem/docker
 > Note
 This guide assumes you already have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
 
-[Docker](https://www.docker.com) is a platform for packaging and running an application as a lightweight, portable *container* that encapsulates all the necessary dependencies.
+[Docker](https://www.docker.com) is a platform for packaging and running an application as a lightweight, portable _container_ that encapsulates all the necessary dependencies.
 
-***
+---
 
-To *containerize* the application, define a `Dockerfile`. It lists the instructions to initialize the container, copy your local project files into it, install dependencies, and start the application.
+To _containerize_ the application, define a `Dockerfile`. It lists the instructions to initialize the container, copy your local project files into it, install dependencies, and start the application.
 
 **File:** `Dockerfile`
 ```docker
@@ -53,7 +53,7 @@ EXPOSE 3000/tcp
 ENTRYPOINT [ "bun", "run", "index.ts" ]
 ```
 
-***
+---
 
 Next, add a `.dockerignore` file. It uses a syntax similar to `.gitignore` and lists the files and directories to exclude from every stage of the Docker build. For example:
 
@@ -76,9 +76,9 @@ helm-charts
 coverage*
 ```
 
-***
+---
 
-Run `docker build` to convert this `Dockerfile` into a *Docker image*, a self-contained template containing all the dependencies and configuration required to run the application.
+Run `docker build` to convert this `Dockerfile` into a _Docker image_, a self-contained template containing all the dependencies and configuration required to run the application.
 
 The `-t` flag names the image, and `--pull` tells Docker to download the latest version of the base image (`oven/bun`). The initial build takes longer, since Docker downloads all the base images and dependencies.
 
@@ -104,11 +104,11 @@ docker build --pull -t bun-hello-world .
  => => naming to docker.io/library/bun-hello-world                                                                                       0.0s
 ```
 
-***
+---
 
-Now start a running *container* from the `bun-hello-world` image with `docker run`. The `-d` flag runs it in *detached* mode, and `-p 3000:3000` maps the container's port 3000 to port 3000 on your machine.
+Now start a running _container_ from the `bun-hello-world` image with `docker run`. The `-d` flag runs it in _detached_ mode, and `-p 3000:3000` maps the container's port 3000 to port 3000 on your machine.
 
-The `run` command prints the *container ID*.
+The `run` command prints the _container ID_.
 
 ```sh
 docker run -d -p 3000:3000 bun-hello-world
@@ -118,11 +118,11 @@ docker run -d -p 3000:3000 bun-hello-world
 7f03e212a15ede8644379bce11a13589f563d3909a9640446c5bbefce993678d
 ```
 
-***
+---
 
 The container is now running in the background. Visit [localhost:3000](http://localhost:3000). You should see your application's response.
 
-***
+---
 
 To stop the container, run `docker stop <container-id>`.
 
@@ -130,7 +130,7 @@ To stop the container, run `docker stop <container-id>`.
 docker stop 7f03e212a15ede8644379bce11a13589f563d3909a9640446c5bbefce993678d
 ```
 
-***
+---
 
 If you can't find the container ID, `docker ps` lists all running containers.
 
@@ -143,6 +143,6 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 7f03e212a15e        bun-hello-world     "bun run index.ts"       2 minutes ago       Up 2 minutes        0.0.0.0:3000->3000/tcp   flamboyant_cerf
 ```
 
-***
+---
 
 See the [Docker documentation](https://docs.docker.com/) for more advanced usage.

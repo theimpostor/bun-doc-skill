@@ -1,11 +1,11 @@
 ---
 name: bun-docs
-description: Consult Bun's official documentation snapshot for runtime APIs, `bun` CLI commands, `bunfig.toml`, package management, bundling, testing, deployment guides, and ecosystem integrations. Use this whenever the user asks how to do something with Bun, troubleshoot Bun-specific behavior, compare Bun to Node/npm, or wants Bun command or API guidance, even if they only mention a command like `bun install`, `bun test`, `bun build`, `bunx`, `Bun.serve`, or a Bun config option.
+description: Consult Bun's official documentation snapshot for runtime APIs, `bun` CLI commands, `bunfig.toml`, package management, bundling, type checking, testing, deployment guides, and ecosystem integrations. Use this whenever the user asks how to do something with Bun, troubleshoot Bun-specific behavior, compare Bun to Node/npm, or wants Bun command or API guidance, even if they only mention a command like `bun install`, `bun test`, `bun build`, `bun check`, `bunx`, `Bun.serve`, or a Bun config option.
 ---
 
 # Bun Docs
 
-Use this skill to answer Bun-specific questions from the bundled Bun documentation snapshot generated from `https://bun.sh/llms-full.txt`.
+Use this skill to answer Bun-specific questions from the bundled official documentation. Check `references/index.md` for the snapshot date, source, and Git ref when pinned to a release.
 
 ## What this skill is for
 
@@ -31,6 +31,9 @@ Use this skill to answer Bun-specific questions from the bundled Bun documentati
 - If the request is about `bun build`, executables, CSS, HTML imports, minification, macros, or plugins, start with the bundler section.
 - If the request is about parallel or isolated tests, lifecycle hooks, mocks, snapshots, coverage, or reporters, start with the test runner section.
 - If the request is about Bun's built-in support for XML, YAML, JSON5, JSONL, TOML, or Markdown, start with the runtime section.
+- If the request is about `bun check` or `--check` before running, building, or testing, open `references/docs/runtime/check.md`.
+- If the request is about `Bun.FetchSession`, connection pools, or fetch proxies, open `references/docs/runtime/networking/fetch.md`.
+- If the request is about `Bun.ModuleGraph`, open `references/docs/runtime/module-graph.md` and preserve its experimental status and lifecycle caveats.
 - If the request is a recipe-style question like deployment, framework setup, file conversion, or HTTP examples, start with the relevant guides section.
 
 ## Answering guidance
@@ -44,4 +47,5 @@ Use this skill to answer Bun-specific questions from the bundled Bun documentati
 
 - This skill uses a local snapshot of the Bun docs, not a live browse of bun.com.
 - If the user asks for the latest Bun behavior, release-specific changes, or something that seems newer than the snapshot, say that the reference may need refresh and verify online if tools allow.
-- If the user asks to refresh the snapshot, run `python scripts/refresh_references.py`.
+- To refresh from the live combined feed, run `python3 scripts/refresh_references.py` from this skill's directory.
+- For a specific release, run `python3 scripts/refresh_references.py --ref bun-vX.Y.Z`, replacing `X.Y.Z` with the requested version. This reads the official repository at that tag, including CLI snippets; the combined feed can lag new releases.

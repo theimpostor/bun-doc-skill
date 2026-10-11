@@ -12,7 +12,7 @@ const text = await file.text();
 // string
 ```
 
-***
+---
 
 Bun resolves relative paths from the current working directory.
 

@@ -3,11 +3,12 @@ Source: https://bun.com/docs/pm/filter
 
 Select packages by pattern in a monorepo using the --filter flag
 
+
 The `--filter` (or `-F`) flag selects packages in a monorepo by pattern. A pattern is a package name glob, a `./path` glob, a `{dir}` directory selector, or a `...` dependency relation.
 
 The flag works with `bun run`, `bun install`, `bun add`, `bun remove`, `bun update`, `bun outdated`, `bun prune`, and `bun pm licenses`. For package-manager commands, put the flag after the subcommand (`bun install --filter api`), since `bun --filter <pattern> <word>` runs `<word>` as a script.
 
-***
+---
 
 ## Matching
 
@@ -44,7 +45,7 @@ bun add zod --filter '...^ui'
 bun outdated --filter '{./packages/apps}'
 ```
 
-***
+---
 
 ## `bun install` and `bun outdated`
 
@@ -75,9 +76,9 @@ bun outdated --filter 'pkg-*'
 bun outdated --filter './'
 ```
 
-See [`bun install`](/docs/pm/cli/install) and [`bun outdated`](/docs/pm/cli/outdated).
+See [`bun install`](/pm/cli/install) and [`bun outdated`](/pm/cli/outdated).
 
-***
+---
 
 ## Running scripts with `--filter`
 
@@ -106,7 +107,7 @@ bun --filter '*' dev
 
 Both scripts run in parallel, and a terminal UI shows their respective outputs:
 
-<Frame>![Terminal Output](https://github.com/oven-sh/bun/assets/48869301/2a103e42-9921-4c33-948f-a1ad6e6bac71)</Frame>
+![Terminal Output](https://github.com/oven-sh/bun/assets/48869301/2a103e42-9921-4c33-948f-a1ad6e6bac71)
 
 The other pattern forms work the same way:
 
@@ -128,7 +129,7 @@ Only a `./path` pattern can select a `package.json` without a `name`. If no sele
 
 ### Running scripts in workspaces
 
-Filters respect your [workspace configuration](/docs/pm/workspaces): if your `package.json` specifies which packages are part of the workspace,
+Filters respect your [workspace configuration](/pm/workspaces): if your `package.json` specifies which packages are part of the workspace,
 `--filter` only matches those packages. In a workspace, `--filter` can also run scripts in packages located anywhere in the workspace:
 
 ```bash

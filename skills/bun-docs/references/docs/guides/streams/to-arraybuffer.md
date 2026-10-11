@@ -9,6 +9,6 @@ const stream = new ReadableStream();
 const buf = await Bun.readableStreamToArrayBuffer(stream);
 ```
 
-***
+---
 
-See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).
+See [Bun's other `ReadableStream` conversion functions](/runtime/utils#bun-readablestreamto).

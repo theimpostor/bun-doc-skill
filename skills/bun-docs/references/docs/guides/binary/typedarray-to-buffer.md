@@ -9,6 +9,6 @@ const arr: Uint8Array = ...
 const buf = Buffer.from(arr);
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

@@ -19,7 +19,7 @@ writer.flush();
 // continue writing & flushing
 ```
 
-***
+---
 
 The `.write()` method accepts strings or binary data.
 
@@ -30,11 +30,11 @@ writer.write(new Uint8Array([0, 255, 128]));
 writer.flush();
 ```
 
-***
+---
 
 The `FileSink` also auto-flushes when its internal buffer is full.
 
-***
+---
 
 When you're done writing, call `.end()` to flush the buffer and close the file.
 
@@ -42,6 +42,6 @@ When you're done writing, call `.end()` to flush the buffer and close the file.
 writer.end();
 ```
 
-***
+---
 
-Full documentation: [FileSink](/docs/runtime/file-io#incremental-writing-with-filesink).
+Full documentation: [FileSink](/runtime/file-io#incremental-writing-with-filesink).

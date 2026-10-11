@@ -11,6 +11,6 @@ const blob = await stream.blob();
 
 `Bun.readableStreamToBlob(stream)` does the same thing, but is deprecated in favor of `stream.blob()`.
 
-***
+---
 
-See [Bun's other `ReadableStream` conversion functions](/docs/runtime/utils#bun-readablestreamto).
+See [Bun's other `ReadableStream` conversion functions](/runtime/utils#bun-readablestreamto).

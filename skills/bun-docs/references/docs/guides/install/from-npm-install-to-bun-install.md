@@ -6,10 +6,10 @@ Source: https://bun.com/docs/guides/install/from-npm-install-to-bun-install
 
 To migrate from `npm install` to `bun install`, run `bun install` instead of `npm install`.
 
-* **Designed for Node.js & Bun**: `bun install` installs a Node.js compatible `node_modules` folder. You can use it in place of `npm install` for Node.js projects without any code changes and without using Bun's runtime.
-* **Automatically converts `package-lock.json`** to Bun's `bun.lock` lockfile format, preserving your existing resolved dependency versions. You can secretly use `bun install` in place of `npm install` at work without anyone noticing.
-* **`.npmrc` compatible**: `bun install` reads npm registry configuration from npm's `.npmrc`, so you can use the same configuration for both npm and Bun.
-* **Hardlinks**: On Windows and Linux, `bun install` uses hardlinks to save disk space and speed up installs.
+- **Designed for Node.js & Bun**: `bun install` installs a Node.js compatible `node_modules` folder. You can use it in place of `npm install` for Node.js projects without any code changes and without using Bun's runtime.
+- **Automatically converts `package-lock.json`** to Bun's `bun.lock` lockfile format, preserving your existing resolved dependency versions. You can secretly use `bun install` in place of `npm install` at work without anyone noticing.
+- **`.npmrc` compatible**: `bun install` reads npm registry configuration from npm's `.npmrc`, so you can use the same configuration for both npm and Bun.
+- **Hardlinks**: On Windows and Linux, `bun install` uses hardlinks to save disk space and speed up installs.
 
 ```bash
 # It only takes one command to migrate
@@ -25,7 +25,7 @@ bun i -d @types/bun
 bun rm @types/bun
 ```
 
-***
+---
 
 ## Run package.json scripts faster
 
@@ -53,7 +53,7 @@ bun run my-executable
 bun ./index.ts
 ```
 
-***
+---
 
 ## Workspaces? Yes.
 
@@ -69,7 +69,7 @@ In `package.json`, set `"workspaces"` to an array of relative paths.
 }
 ```
 
-***
+---
 
 ### Filter scripts by workspace name
 
@@ -81,7 +81,7 @@ bun --filter 'lib-*' my-script
 # npm run --workspace lib-foo --workspace lib-bar my-script
 ```
 
-***
+---
 
 ## Update dependencies
 
@@ -104,7 +104,7 @@ bun update @types/bun@1.3.3
 bun update --latest
 ```
 
-***
+---
 
 ### View outdated dependencies
 
@@ -142,7 +142,7 @@ bun outdated
 └────────────────────────────────────────┴─────────┴────────┴────────┘
 ```
 
-***
+---
 
 ## List installed packages
 
@@ -154,7 +154,7 @@ bun pm ls
 ```
 
 ```txt
-my-pkg node_modules (781)
+my-pkg node_modules (781 installed)
 ├── @types/node@20.16.5
 ├── @types/react@18.3.8
 ├── @types/react-dom@18.3.0
@@ -179,7 +179,7 @@ my-pkg node_modules
 ...
 ```
 
-***
+---
 
 ## Create a package tarball
 
@@ -198,7 +198,7 @@ Unpacked size: 0.41MB
 Packed size: 117.50KB
 ```
 
-***
+---
 
 ## Shebang
 
@@ -214,7 +214,7 @@ bun --bun my-script
 bun run --bun my-script
 ```
 
-***
+---
 
 ## Global installs
 

@@ -3,6 +3,7 @@ Source: https://bun.com/docs/bundler/minifier
 
 Reduce bundle sizes with Bun's JavaScript and TypeScript minifier
 
+
 Bun includes a fast JavaScript and TypeScript minifier. Depending on the codebase, it can reduce bundle sizes by 80% or more. It can also make output code run faster. The minifier performs dozens of optimizations including constant folding, dead code elimination, and syntax transformations. Unlike other minifiers, Bun's minifier makes `bun build` run faster since there's less code to print.
 
 ## CLI Usage
@@ -17,9 +18,9 @@ bun build ./index.ts --minify --outfile=out.js
 
 The `--minify` flag enables:
 
-* Whitespace minification
-* Syntax minification
-* Identifier minification
+- Whitespace minification
+- Syntax minification
+- Identifier minification
 
 ### Production mode
 
@@ -31,8 +32,8 @@ bun build ./index.ts --production --outfile=out.js
 
 The `--production` flag also:
 
-* Sets `process.env.NODE_ENV` to `production`
-* Enables the production-mode JSX import & transform
+- Sets `process.env.NODE_ENV` to `production`
+- Enables the production-mode JSX import & transform
 
 ### Granular control
 
@@ -749,22 +750,22 @@ function calculateSum(firstNumber, secondNumber) {
 
 **File:** `Output`
 ```js
-function a(b,c){const d=b+c;return d}
+function n(t,u){const c=t+u;return c}
 ```
 
 **Naming strategy:**
 
-* Most frequently used identifiers get the shortest names (a, b, c...)
-* Single letters: a-z (26 names)
-* Double letters: aa-zz (676 names)
-* Triple letters and beyond as needed
+- Most frequently used identifiers get the shortest names; Bun orders the alphabet by how often each character appears in the source, so the first names are usually letters like t, e and n rather than a, b, c
+- Single characters: a-z, A-Z and `_` (53 names; `$` alone is reserved)
+- Two characters: the second character can also be a digit (up to 3,456 names)
+- Three characters and beyond as needed
 
 **Preserved identifiers:**
 
-* JavaScript keywords and reserved words
-* Global identifiers
-* Named exports (to maintain API)
-* CommonJS names: `exports`, `module`
+- JavaScript keywords and reserved words
+- Global identifiers
+- Named exports (to maintain API)
+- CommonJS names: `exports`, `module`
 
 ### Whitespace removal
 
@@ -1334,18 +1335,18 @@ var t=()=>42,e=t();
 
 **Use `--minify` for:**
 
-* Production bundles
-* Reducing CDN bandwidth costs
-* Improving page load times
+- Production bundles
+- Reducing CDN bandwidth costs
+- Improving page load times
 
 **Use individual modes for:**
 
-* **`--minify-whitespace`:** Size reduction without semantic changes
-* **`--minify-syntax`:** Smaller output while keeping readable identifiers for debugging
-* **`--minify-identifiers`:** Maximum size reduction (combine with `--keep-names` for better stack traces)
+- **`--minify-whitespace`:** Size reduction without semantic changes
+- **`--minify-syntax`:** Smaller output while keeping readable identifiers for debugging
+- **`--minify-identifiers`:** Maximum size reduction (combine with `--keep-names` for better stack traces)
 
 **Avoid minification for:**
 
-* Development builds (harder to debug)
-* When you need readable error messages
-* Libraries where consumers may read the source
+- Development builds (harder to debug)
+- When you need readable error messages
+- Libraries where consumers may read the source

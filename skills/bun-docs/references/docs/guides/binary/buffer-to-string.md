@@ -10,7 +10,7 @@ const str = buf.toString();
 // => "hello"
 ```
 
-***
+---
 
 You can optionally specify an encoding and byte range.
 
@@ -20,6 +20,6 @@ const str = buf.toString("utf8", 0, 5);
 // => "hello"
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

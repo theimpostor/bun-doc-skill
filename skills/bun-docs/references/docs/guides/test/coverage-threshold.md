@@ -26,7 +26,7 @@ All files    |   50.00 |   66.67 |
  3 expect() calls
 ```
 
-***
+---
 
 To set a minimum coverage threshold, add the following to your `bunfig.toml`. A threshold of `0.9` requires that tests cover 90% of the lines and 90% of the functions of every file in the coverage report. Bun checks the threshold against each file, not against the `All files` average.
 
@@ -37,7 +37,7 @@ To set a minimum coverage threshold, add the following to your `bunfig.toml`. A 
 coverageThreshold = 0.9
 ```
 
-***
+---
 
 If your test suite does not meet this threshold, `bun test` exits with a non-zero exit code to signal a failure.
 
@@ -51,7 +51,7 @@ $ echo $?
 1 # this is the exit code of the previous command
 ```
 
-***
+---
 
 You can set different thresholds for line-level and function-level coverage.
 
@@ -62,6 +62,6 @@ You can set different thresholds for line-level and function-level coverage.
 coverageThreshold = { lines = 0.5, functions = 0.7 }
 ```
 
-***
+---
 
-See [Code coverage](/docs/test/code-coverage).
+See [Code coverage](/test/code-coverage).

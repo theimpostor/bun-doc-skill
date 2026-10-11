@@ -3,6 +3,7 @@ Source: https://bun.com/docs/bundler/html-static
 
 Build static sites, landing pages, and web applications with Bun's bundler
 
+
 Bun's bundler has first-class support for HTML. Build static sites, landing pages, and web applications with zero configuration: point Bun at your HTML file and it bundles the scripts, stylesheets, and assets the file references.
 
 **File:** `index.html`
@@ -34,14 +35,14 @@ Press h + Enter to show shortcuts
 
 With no configuration, Bun's development server provides:
 
-* **Automatic Bundling** - Bundles and serves your HTML, JavaScript, and CSS
-* **Multi-Entry Support** - Handles multiple HTML entry points and glob entry points
-* **Modern JavaScript** - TypeScript & JSX support by default
-* **Smart Configuration** - Reads `tsconfig.json` for paths, JSX options, and experimental decorators
-* **Plugins** - Plugin support, including TailwindCSS
-* **ESM & CommonJS** - Use ESM and CommonJS in your JavaScript, TypeScript, and JSX files
-* **CSS Bundling & Minification** - Bundles CSS from `<link>` tags and `@import` statements
-* **Asset Management** - Copies and hashes images and assets, and rewrites asset paths in JavaScript, CSS, and HTML
+- **Automatic Bundling** - Bundles and serves your HTML, JavaScript, and CSS
+- **Multi-Entry Support** - Handles multiple HTML entry points and glob entry points
+- **Modern JavaScript** - TypeScript & JSX support by default
+- **Smart Configuration** - Reads `tsconfig.json` for paths, JSX options, and experimental decorators
+- **Plugins** - Plugin support, including TailwindCSS
+- **ESM & CommonJS** - Use ESM and CommonJS in your JavaScript, TypeScript, and JSX files
+- **CSS Bundling & Minification** - Bundles CSS from `<link>` tags and `@import` statements
+- **Asset Management** - Copies and hashes images and assets, and rewrites asset paths in JavaScript, CSS, and HTML
 
 ## Single Page Apps (SPA)
 
@@ -94,8 +95,8 @@ Press h + Enter to show shortcuts
 
 This serves:
 
-* `index.html` at `/`
-* `about.html` at `/about`
+- `index.html` at `/`
+- `about.html` at `/about`
 
 ### Glob patterns
 
@@ -136,7 +137,7 @@ Press h + Enter to show shortcuts
 
 ## JavaScript, TypeScript, and JSX
 
-Bun's transpiler natively implements JavaScript, TypeScript, and JSX support. See [loaders](/docs/bundler/loaders).
+Bun's transpiler natively implements JavaScript, TypeScript, and JSX support. See [loaders](/bundler/loaders).
 
 > Note: Bun also uses the same transpiler at runtime.
 
@@ -146,7 +147,7 @@ You can use ESM and CommonJS in your JavaScript, TypeScript, and JSX files. Bun 
 
 There is no pre-build or separate optimization step. Bun does it all at the same time.
 
-See [module resolution](/docs/runtime/module-resolution).
+See [module resolution](/runtime/module-resolution).
 
 ## CSS
 
@@ -155,6 +156,7 @@ Bun's CSS parser is also natively implemented (about 70,000 lines of Rust).
 It's also a CSS bundler. You can use `@import` in your CSS files to import other CSS files.
 
 For example:
+
 
 **File:** `styles.css`
 ```css
@@ -171,6 +173,7 @@ body {
   background-color: red;
 }
 ```
+
 
 This outputs:
 
@@ -239,6 +242,7 @@ plugins = ["bun-plugin-tailwind"]
 Then, reference TailwindCSS in your HTML with a `<link>` tag, an `@import` in CSS, or an import in JavaScript.
 
 ### index.html
+
 **File:** `index.html`
 ```html
 <!-- Reference TailwindCSS in your HTML -->
@@ -246,16 +250,19 @@ Then, reference TailwindCSS in your HTML with a `<link>` tag, an `@import` in CS
 ```
 
 ### styles.css
+
 **File:** `styles.css`
 ```css
 @import "tailwindcss";
 ```
 
 ### app.ts
+
 **File:** `app.ts`
 ```ts
 import "tailwindcss";
 ```
+
 
 > Info: Only one of these is necessary, not all three.
 
@@ -281,6 +288,7 @@ process.env; env.FOO`.
 
 If an environment variable is not set, you may see runtime errors like `ReferenceError: process
 is not defined` in the browser.
+
 
 Then run the dev server:
 
@@ -318,6 +326,7 @@ await Bun.build({
   env: "PUBLIC_*",
 });
 ```
+
 
 ### Example
 
@@ -370,9 +379,9 @@ Bun's frontend dev server supports Automatic Workspace Folders in Chrome DevTool
 
 While the server is running:
 
-* `o + Enter` - Open in browser
-* `c + Enter` - Clear console
-* `q + Enter` (or `Ctrl+C`) - Quit server
+- `o + Enter` - Open in browser
+- `c + Enter` - Clear console
+- `q + Enter` (or `Ctrl+C`) - Quit server
 
 ## Build for Production
 
@@ -382,7 +391,6 @@ When you're ready to deploy, use `bun build` to create optimized production bund
 ```bash
 bun build ./index.html --minify --outdir=dist
 ```
-
 ### API
 **File:** `build.ts`
 ```ts
@@ -448,24 +456,24 @@ await Bun.build({
 
 Bun automatically handles all common web assets:
 
-* **Scripts** (`<script src>`) are run through Bun's JavaScript/TypeScript/JSX bundler
-* **Stylesheets** (`<link rel="stylesheet">`) are run through Bun's CSS parser & bundler
-* **Images** (`<img>`, `<picture>`) are copied and hashed
-* **Media** (`<video>`, `<audio>`, `<source>`) are copied and hashed
-* Any `<link>` tag with an `href` attribute pointing to a local file is rewritten to the new path, and hashed
+- **Scripts** (`<script src>`) are run through Bun's JavaScript/TypeScript/JSX bundler
+- **Stylesheets** (`<link rel="stylesheet">`) are run through Bun's CSS parser & bundler
+- **Images** (`<img>`, `<picture>`) are copied and hashed
+- **Media** (`<video>`, `<audio>`, `<source>`) are copied and hashed
+- Any `<link>` tag with an `href` attribute pointing to a local file is rewritten to the new path, and hashed
 
 Bun resolves all paths relative to your HTML file, so you can organize your project however you want.
 
 > Warning
 **This is a work in progress**
+- Need more plugins
+- Need more configuration options for things like asset handling
+- Need a way to configure CORS, headers, etc.
 
-* Need more plugins
-* Need more configuration options for things like asset handling
-* Need a way to configure CORS, headers, etc.
 
 ## How this works
 
-The dev server is a small wrapper around Bun's support for [HTML imports](/docs/bundler/fullstack) in JavaScript.
+The dev server is a small wrapper around Bun's support for [HTML imports](/bundler/fullstack) in JavaScript.
 
 ## Standalone HTML
 
@@ -475,8 +483,8 @@ You can bundle your entire frontend into a **single self-contained `.html` file*
 bun build --compile --target=browser ./index.html --outdir=dist
 ```
 
-Learn more in the [Standalone HTML docs](/docs/bundler/standalone-html).
+Learn more in the [Standalone HTML docs](/bundler/standalone-html).
 
 ## Adding a backend to your frontend
 
-To add a backend to your frontend, use the `routes` option in `Bun.serve`. See the [full-stack docs](/docs/bundler/fullstack).
+To add a backend to your frontend, use the `routes` option in `Bun.serve`. See the [full-stack docs](/bundler/fullstack).

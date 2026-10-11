@@ -10,10 +10,11 @@ This reference tree mirrors Bun's official docs and is intended to be read selec
 
 ## Snapshot
 
-- Requested URL: `https://bun.sh/llms-full.txt`
-- Resolved URL: `https://bun.sh/llms-full.txt`
-- Generated: `2026-08-24T21:40:38.805305+00:00`
-- Page count: `319`
+- Requested URL: `https://github.com/oven-sh/bun/tree/bun-v1.4.3/docs`
+- Resolved URL: `https://github.com/oven-sh/bun/tree/bun-v1.4.3/docs`
+- Git ref: `bun-v1.4.3`
+- Generated: `2026-10-11T19:12:51.307539+00:00`
+- Page count: `323`
 
 ## Sections
 
@@ -37,9 +38,9 @@ This reference tree mirrors Bun's official docs and is intended to be read selec
 - [Package Manager](sections/package-manager.md) - `13` pages. Use for Bun package-manager behavior like workspaces, lockfiles, global cache, npmrc, registries, and overrides.
 - [Package Manager CLI](sections/package-manager-cli.md) - `14` pages. Use for command-specific docs such as `bun add`, `bun install`, `bun update`, `bun dedupe`, `bun prune`, `bun audit`, and `bun publish`.
 - [Project](sections/project.md) - `6` pages. Use for Bun project contribution docs, roadmap, benchmarking, bindgen, and building Bun itself.
-- [Runtime](sections/runtime.md) - `50` pages. Use for Bun runtime APIs, `bunfig.toml`, file I/O, data formats such as XML and YAML, globals, compatibility, shell, plugins, workers, and built-in services.
+- [Runtime](sections/runtime.md) - `54` pages. Use for `bun check`, Bun runtime APIs, `bunfig.toml`, file I/O, data formats such as XML and YAML, globals, compatibility, shell, plugins, workers, `Bun.ModuleGraph`, and built-in services.
 - [Runtime HTTP](sections/runtime-http.md) - `7` pages. Use for `Bun.serve`, HTTP routing, TLS, metrics, error handling, cookies, and WebSockets.
-- [Runtime Networking](sections/runtime-networking.md) - `4` pages. Use for DNS, `fetch`, TCP, and UDP runtime docs.
+- [Runtime Networking](sections/runtime-networking.md) - `4` pages. Use for DNS, `fetch`, `Bun.FetchSession`, proxies, TCP, and UDP runtime docs.
 - [Runtime Templating](sections/runtime-templating.md) - `2` pages. Use for `bun create` and `bun init` templating docs.
 - [Test Runner](sections/test.md) - `13` pages. Use for core `bun test` documentation: writing tests, parallel and isolated runs, lifecycle hooks, mocks, snapshots, config, coverage, and reporters.
 

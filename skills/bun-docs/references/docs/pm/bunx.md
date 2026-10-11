@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/bunx
 
 Run packages from npm
 
+
 > Note: `bunx` is an alias for `bun x`. The `bunx` CLI is auto-installed when you install `bun`.
 
 Use `bunx` to auto-install and run packages from `npm`. It's Bun's equivalent of `npx` or `yarn dlx`.
@@ -15,7 +16,7 @@ bunx cowsay "Hello world!"
 ⚡️ **Speed** — With Bun's fast startup times, `bunx` is [roughly 100x
 faster](https://twitter.com/jarredsumner/status/1606163655527059458) than `npx` for locally installed packages.
 
-Packages can declare executables in the `"bin"` field of their `package.json`. These are known as *package executables* or *package binaries*.
+Packages can declare executables in the `"bin"` field of their `package.json`. These are known as _package executables_ or _package binaries_.
 
 **File:** `package.json`
 ```json
@@ -28,7 +29,7 @@ Packages can declare executables in the `"bin"` field of their `package.json`. T
 }
 ```
 
-These executables are commonly plain JavaScript files marked with a [shebang line](https://en.wikipedia.org/wiki/Shebang_(Unix)) naming the program that should run them. The following file runs with `node`.
+These executables are commonly plain JavaScript files marked with a [shebang line](<https://en.wikipedia.org/wiki/Shebang_(Unix)>) naming the program that should run them. The following file runs with `node`.
 
 **File:** `dist/index.js`
 ```js
@@ -43,7 +44,7 @@ Run these executables with `bunx`:
 bunx my-cli
 ```
 
-As with `npx`, `bunx` checks for a locally installed package first, then falls back to auto-installing it from `npm`. `bunx` stores installed packages in Bun's [global cache](/docs/pm/global-cache) for future use.
+As with `npx`, `bunx` checks for a locally installed package first, then falls back to auto-installing it from `npm`. `bunx` stores installed packages in Bun's [global cache](/pm/global-cache) for future use.
 
 ## Arguments and flags
 
@@ -53,7 +54,7 @@ To pass additional command-line flags and arguments through to the executable, p
 bunx my-cli --foo bar
 ```
 
-***
+---
 
 ## Shebangs
 
@@ -63,7 +64,7 @@ By default, Bun respects shebangs. If an executable is marked with `#!/usr/bin/e
 bunx --bun my-cli
 ```
 
-The `--bun` flag must occur *before* the executable name. `bunx` passes flags that appear *after* the name through to the executable.
+The `--bun` flag must occur _before_ the executable name. `bunx` passes flags that appear _after_ the name through to the executable.
 
 ```bash
 bunx --bun my-cli # good
@@ -86,7 +87,7 @@ To force a script to always run with Bun, give it a `bun` shebang.
 #!/usr/bin/env bun
 ```
 
-***
+---
 
 ## Usage
 
@@ -98,15 +99,31 @@ Execute an npm package executable (CLI). If the package isn't installed in `node
 
 ### Flags
 
-- (boolean) Force the command to run with Bun instead of Node.js, even if the executable contains a Node shebang (`#!/usr/bin/env node`)
+### `--bun`
 
-- (string) Specify package to install when binary name differs from package name
+Type: `boolean`
+Force the command to run with Bun instead of Node.js, even if the executable contains a Node shebang (`#!/usr/bin/env
+node`)
 
-- (boolean) Skip installation if package is not already installed
+### `-p, --package`
 
-- (boolean) Enable verbose output during installation
+Type: `string`
+Specify package to install when binary name differs from package name
 
-- (boolean) Suppress output during installation
+### `--no-install`
+
+Type: `boolean`
+Skip installation if package is not already installed
+
+### `--verbose`
+
+Type: `boolean`
+Enable verbose output during installation
+
+### `--silent`
+
+Type: `boolean`
+Suppress output during installation
 
 ### Examples
 

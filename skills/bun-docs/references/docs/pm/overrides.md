@@ -3,7 +3,8 @@ Source: https://bun.com/docs/pm/overrides
 
 Control metadependency versions with npm overrides and Yarn resolutions
 
-Bun supports npm's `"overrides"` and Yarn's `"resolutions"` in `package.json`. Both specify a version range for *metadependencies*, the dependencies of your dependencies.
+
+Bun supports npm's `"overrides"` and Yarn's `"resolutions"` in `package.json`. Both specify a version range for _metadependencies_, the dependencies of your dependencies.
 
 **File:** `package.json`
 ```json
@@ -18,7 +19,7 @@ Bun supports npm's `"overrides"` and Yarn's `"resolutions"` in `package.json`. B
 }
 ```
 
-By default, Bun installs the latest version of all dependencies and metadependencies, according to the ranges specified in each package's `package.json`. Say your project has one dependency, `foo`, which in turn depends on `bar`. That makes `bar` a *metadependency* of your project.
+By default, Bun installs the latest version of all dependencies and metadependencies, according to the ranges specified in each package's `package.json`. Say your project has one dependency, `foo`, which in turn depends on `bar`. That makes `bar` a _metadependency_ of your project.
 
 **File:** `package.json`
 ```json
@@ -41,7 +42,7 @@ node_modules
 
 If a security vulnerability is introduced in `bar@4.5.6`, you may want to pin `bar` to an older version that doesn't have it. That's what `"overrides"` and `"resolutions"` are for.
 
-***
+---
 
 ## `"overrides"`
 
@@ -81,7 +82,7 @@ Bun only reads overrides from the root `package.json`, not from workspace packag
 
 ## Values
 
-A value can be any dependency specifier, not only a version range. `npm:` swaps a package for a fork, and `catalog:` (or `catalog:<name>`) keeps the overridden version in sync with a [workspace catalog](/docs/pm/catalogs):
+A value can be any dependency specifier, not only a version range. `npm:` swaps a package for a fork, and `catalog:` (or `catalog:<name>`) keeps the overridden version in sync with a [workspace catalog](/pm/catalogs):
 
 **File:** `package.json`
 ```json
@@ -150,10 +151,10 @@ The key can carry a version selector so the rule only applies to dependents whos
 }
 ```
 
-Bun compares the selector with the range each dependent *declares*, not the resolved version. `"semver@<7.5.2"` applies to a dependent that declares `^7.3.0` (which could still pick `7.3.x`) but not to one that declares `^7.5.2`. Dependents using a dist-tag, `catalog:`, `workspace:`, git, or URL specifier never match a selector.
+Bun compares the selector with the range each dependent _declares_, not the resolved version. `"semver@<7.5.2"` applies to a dependent that declares `^7.3.0` (which could still pick `7.3.x`) but not to one that declares `^7.5.2`. Dependents using a dist-tag, `catalog:`, `workspace:`, git, or URL specifier never match a selector.
 
 ## Limitations
 
-* Bun supports only one parent level. It ignores `a>b>c`, `a/b/c`, and deeper object nesting with a warning.
-* Bun does not support pnpm's `"pkg@"` (empty selector) and `"-"` (remove dependency) forms, and skips them with a warning.
-* Bun writes a lockfile containing nested or version-scoped rules as `lockfileVersion` 3, which older versions of Bun cannot read.
+- Bun supports only one parent level. It ignores `a>b>c`, `a/b/c`, and deeper object nesting with a warning.
+- Bun does not support pnpm's `"pkg@"` (empty selector) and `"-"` (remove dependency) forms, and skips them with a warning.
+- Bun writes a lockfile containing nested or version-scoped rules as `lockfileVersion` 3, which older versions of Bun cannot read.

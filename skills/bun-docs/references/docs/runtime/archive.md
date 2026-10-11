@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/archive
 
 Create and extract tar archives with Bun's fast native implementation
 
+
 `Bun.Archive` is Bun's native API for tar archives. It creates archives from in-memory data, extracts archives to disk, and reads archive contents without extraction.
 
 ## Quickstart
@@ -56,10 +57,10 @@ const archive = new Bun.Archive({
 
 File contents can be:
 
-* **Strings** - Text content
-* **Blobs** - Binary data
-* **ArrayBufferViews** (such as `Uint8Array`) - Raw bytes
-* **ArrayBuffers** - Raw binary data
+- **Strings** - Text content
+- **Blobs** - Binary data
+- **ArrayBufferViews** (such as `Uint8Array`) - Raw bytes
+- **ArrayBuffers** - Raw binary data
 
 ```ts
 const data = "binary data";
@@ -194,10 +195,10 @@ for (const [path, file] of files) {
 
 Each `File` object includes:
 
-* `name` - The file path within the archive (always uses forward slashes `/` as separators)
-* `size` - File size in bytes
-* `lastModified` - Modification timestamp
-* Standard `Blob` methods such as `text()`, `arrayBuffer()`, and `stream()`
+- `name` - The file path within the archive (always uses forward slashes `/` as separators)
+- `size` - File size in bytes
+- `lastModified` - Modification timestamp
+- Standard `Blob` methods such as `text()`, `arrayBuffer()`, and `stream()`
 
 **Note**: `files()` loads file contents into memory. For large archives, use `extract()` to write directly to disk instead.
 
@@ -229,10 +230,10 @@ try {
 
 Common error scenarios:
 
-* **Corrupted/truncated archives** - `new Bun.Archive()` loads the archive data; Bun may defer errors until read/extract operations
-* **Permission denied** - `extract()` throws if the target directory is not writable
-* **Disk full** - `extract()` throws if there's insufficient space
-* **Invalid paths** - Operations throw for malformed file paths
+- **Corrupted/truncated archives** - `new Bun.Archive()` loads the archive data; Bun may defer errors until read/extract operations
+- **Permission denied** - `extract()` throws if the target directory is not writable
+- **Disk full** - `extract()` throws if there's insufficient space
+- **Invalid paths** - Operations throw for malformed file paths
 
 For additional security with untrusted archives, you can enumerate and validate paths before extraction:
 
@@ -283,16 +284,16 @@ const jsonFiles = await archive.files("**/*.json");
 const codeFiles = await archive.files(["**/*.ts", "**/*.js"]);
 ```
 
-Supported glob patterns (subset of [Bun.Glob](/docs/runtime/glob) syntax):
+Supported glob patterns (subset of [Bun.Glob](/runtime/glob) syntax):
 
-* `*` - Match any characters except `/`
-* `**` - Match any characters including `/`
-* `?` - Match single character
-* `[abc]` - Match character set
-* `{a,b}` - Match alternatives
-* `!pattern` - Exclude files matching pattern (negation). When you pass only negative patterns, Bun includes all files not matching them.
+- `*` - Match any characters except `/`
+- `**` - Match any characters including `/`
+- `?` - Match single character
+- `[abc]` - Match character set
+- `{a,b}` - Match alternatives
+- `!pattern` - Exclude files matching pattern (negation). When you pass only negative patterns, Bun includes all files not matching them.
 
-See [Bun.Glob](/docs/runtime/glob) for the full glob syntax including escaping and advanced patterns.
+See [Bun.Glob](/runtime/glob) for the full glob syntax including escaping and advanced patterns.
 
 ## Compression
 
@@ -315,9 +316,9 @@ const maxCompression = new Bun.Archive({ "hello.txt": "Hello, World!" }, { compr
 
 The `options` argument accepts:
 
-* No options or `undefined` - Uncompressed tar (default)
-* `{ compress: "gzip" }` - Enable gzip compression at level 6
-* `{ compress: "gzip", level: number }` - Gzip with custom level 1-12 (1 = fastest, 12 = smallest)
+- No options or `undefined` - Uncompressed tar (default)
+- `{ compress: "gzip" }` - Enable gzip compression at level 6
+- `{ compress: "gzip", level: number }` - Gzip with custom level 1-12 (1 = fastest, 12 = smallest)
 
 ## Examples
 

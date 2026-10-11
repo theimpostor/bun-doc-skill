@@ -9,12 +9,13 @@ This guide deploys a Bun HTTP server to AWS Lambda using a `Dockerfile`.
 > Note
 Before continuing, make sure you have:
 
-* A Bun application ready for deployment
-* An [AWS account](https://aws.amazon.com/)
-* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) installed and configured
-* [Docker](https://docs.docker.com/get-started/get-docker/) installed and added to your `PATH`
+- A Bun application ready for deployment
+- An [AWS account](https://aws.amazon.com/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) installed and configured
+- [Docker](https://docs.docker.com/get-started/get-docker/) installed and added to your `PATH`
 
-***
+
+---
 
 ### Create a new Dockerfile
 Create a new `Dockerfile` in the root of your project. This file contains the instructions to initialize the container, copy your local project files into it, install dependencies, and start the application.
@@ -54,7 +55,7 @@ Make sure that the start command corresponds to your application's entry point. 
 
 If your app doesn't have dependencies, you can omit the `COPY package.json bun.lock ./` and `RUN bun install --production --frozen-lockfile` lines. Bun doesn't write a `bun.lock` for a project with no dependencies.
 
-Create a new `.dockerignore` file in the root of your project. It lists the files and directories to *exclude* from the container image, such as `node_modules`. Excluding them keeps builds faster and smaller:
+Create a new `.dockerignore` file in the root of your project. It lists the files and directories to _exclude_ from the container image, such as `node_modules`. Excluding them keeps builds faster and smaller:
 
 **File:** `.dockerignore`
 ```docker
@@ -69,7 +70,6 @@ LICENSE
 .env
 # Any other files or directories you want to exclude
 ```
-
 ### Build the Docker image
 Make sure you're in the directory containing your `Dockerfile`, then build the Docker image. This example names the image `bun-lambda-demo` and tags it as `latest`.
 
@@ -77,20 +77,17 @@ Make sure you're in the directory containing your `Dockerfile`, then build the D
 # cd /path/to/your/app
 docker build --provenance=false --platform linux/amd64 -t bun-lambda-demo:latest .
 ```
-
 ### Create an ECR repository
 Before pushing the image, create an [ECR repository](https://aws.amazon.com/ecr/) to push it to.
 
 The following command:
-
-* Creates an ECR repository named `bun-lambda-demo` in the `us-east-1` region
-* Exports the repository URI as an environment variable. The export is optional, but it makes the next steps easier.
+- Creates an ECR repository named `bun-lambda-demo` in the `us-east-1` region
+- Exports the repository URI as an environment variable. The export is optional, but it makes the next steps easier.
 
 ```bash
 export ECR_URI=$(aws ecr create-repository --repository-name bun-lambda-demo --region us-east-1 --query 'repository.repositoryUri' --output text)
 echo $ECR_URI
 ```
-
 ```txt
 [id].dkr.ecr.us-east-1.amazonaws.com/bun-lambda-demo
 ```
@@ -111,7 +108,6 @@ Log in to the ECR repository:
 ```bash
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_URI
 ```
-
 ```txt
 Login Succeeded
 ```
@@ -122,6 +118,7 @@ If using a profile, use the `--profile` flag:
 ```bash
 aws ecr get-login-password --region us-east-1 --profile my-sso-app | docker login --username AWS --password-stdin $ECR_URI
 ```
+
 
 ### Tag and push the docker image to the ECR repository
 Make sure you're in the directory containing your `Dockerfile`, then tag the Docker image with the ECR repository URI.
@@ -135,49 +132,43 @@ Then, push the image to the ECR repository.
 ```bash
 docker push ${ECR_URI}:latest
 ```
-
 ### Create an AWS Lambda function
 Go to **AWS Console** > **Lambda** > [**Create Function**](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/create/function?intent=authorFromImage) > Select **Container image**
 
 > Warning: Make sure you've selected the right region. This URL defaults to `us-east-1`.
 
-<img alt="Create Function" />
+![Create Function](/images/guides/lambda1.png)
 
 Give the function a name, like `my-bun-function`.
-
 ### Select the container image
 Go to the **Container image URI** section and click **Browse images**. Select the image you pushed to the ECR repository.
 
-<img alt="Select Container Repository" />
+![Select Container Repository](/images/guides/lambda2.png)
 
 Then, select the `latest` image and click **Select image**.
 
-<img alt="Select Container Image" />
-
+![Select Container Image](/images/guides/lambda3.png)
 ### Configure the function
 To get a public URL for the function, go to **Additional configurations** > **Networking** > **Function URL**.
 
 Set this to **Enable**, with Auth Type **NONE**.
 
-<img alt="Set the Function URL" />
-
+![Set the Function URL](/images/guides/lambda4.png)
 ### Create the function
 Click **Create function** at the bottom of the page.
 
-<img alt="Create Function" />
+![Create Function](/images/guides/lambda6.png)
 
 ### Get the function URL
 Once the function is created, you're redirected to its page. The function URL is in the **"Function URL"** section.
 
-<img alt="Function URL" />
-
+![Function URL](/images/guides/lambda5.png)
 ### Test the function
 Your app is now live. To test the function, either go to the **Test** tab or call the function URL directly.
 
 ```bash
 curl -X GET https://[your-function-id].lambda-url.us-east-1.on.aws/
 ```
-
 ```txt
 Hello from Bun on Lambda!
 ```

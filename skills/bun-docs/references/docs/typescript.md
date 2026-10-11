@@ -3,6 +3,7 @@ Source: https://bun.com/docs/typescript
 
 Using TypeScript with Bun, including type definitions and compiler options
 
+
 To get TypeScript definitions for Bun's built-in APIs, install `@types/bun`.
 
 ```zsh
@@ -55,6 +56,14 @@ Running `bun init` in a new directory generates this `tsconfig.json` for you.
 bun init
 ```
 
+## Type checking
+
+Bun runs TypeScript files without checking their types. Use [`bun check`](/runtime/check) to type check your project.
+
+```sh
+bun check
+```
+
 ## TypeScript 6 and 7
 
-If you're using TypeScript 6.0 or later, you also need `"types": ["bun"]` in your `compilerOptions`. See [TypeScript 6 and 7](/docs/typescript-6).
+If you're using TypeScript 6.0 or later, you also need `"types": ["bun"]` in your `compilerOptions`. See [TypeScript 6 and 7](/typescript-6).

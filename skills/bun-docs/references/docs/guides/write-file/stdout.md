@@ -8,14 +8,14 @@ The `console.log` function writes to `stdout` and appends a line break to the pr
 console.log("Lorem ipsum");
 ```
 
-***
+---
 
-Bun also exposes `stdout` as a `BunFile` with the `Bun.stdout` property. Pass it as the destination to [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
+Bun also exposes `stdout` as a `BunFile` with the `Bun.stdout` property. Pass it as the destination to [`Bun.write()`](/runtime/file-io#writing-files-bun-write).
 
 ```ts
 await Bun.write(Bun.stdout, "Lorem ipsum");
 ```
 
-***
+---
 
-See [`Bun.write()`](/docs/runtime/file-io#writing-files-bun-write).
+See [`Bun.write()`](/runtime/file-io#writing-files-bun-write).

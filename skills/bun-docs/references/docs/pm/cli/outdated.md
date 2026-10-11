@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/cli/outdated
 
 Check for outdated dependencies
 
+
 `bun outdated` displays a table of the dependencies in your project that have newer versions available.
 
 ```sh
@@ -28,9 +29,9 @@ bun outdated
 
 The output table shows three version columns:
 
-* **Current**: The version currently installed
-* **Update**: The latest version that satisfies your package.json version range
-* **Latest**: The latest version published to the registry
+- **Current**: The version currently installed
+- **Update**: The latest version that satisfies your package.json version range
+- **Latest**: The latest version published to the registry
 
 ### Dependency Filters
 
@@ -126,7 +127,7 @@ bun outdated --filter='@monorepo/{types,cli}'
 
 ### Catalog Dependencies
 
-`bun outdated` also checks [catalog](/docs/pm/catalogs) dependencies defined in `package.json`:
+`bun outdated` also checks [catalog](/pm/catalogs) dependencies defined in `package.json`:
 
 ```sh
 bun outdated -r
@@ -170,7 +171,7 @@ bun outdated -r
 └────────────────────┴─────────┴─────────┴─────────┴────────────────────────────────┘
 ```
 
-***
+---
 
 ## CLI Usage
 
@@ -180,76 +181,170 @@ bun outdated <filter>
 
 ### General Options
 
-- (string) Specify path to config file (`bunfig.toml`)
+### `-c, --config`
 
-- (string) Set a specific cwd
+Type: `string`
+Specify path to config file (`bunfig.toml`)
 
-- (boolean) Print this help menu
+### `--cwd`
 
-- (string) Display outdated dependencies for each matching workspace
+Type: `string`
+Set a specific cwd
 
-- (boolean) Check outdated packages in all workspaces
+### `-h, --help`
+
+Type: `boolean`
+Print this help menu
+
+### `-F, --filter`
+
+Type: `string`
+Display outdated dependencies for each matching workspace
+
+### `-r, --recursive`
+
+Type: `boolean`
+Check outdated packages in all workspaces
 
 ### Output & Logging
 
-- (boolean) Don't log anything
+### `--silent`
 
-- (boolean) Excessively verbose logging
+Type: `boolean`
+Don't log anything
 
-- (boolean) Disable the progress bar
+### `--verbose`
 
-- (boolean) Don't print a summary
+Type: `boolean`
+Excessively verbose logging
+
+### `--no-progress`
+
+Type: `boolean`
+Disable the progress bar
+
+### `--no-summary`
+
+Type: `boolean`
+Don't print a summary
 
 ### Dependency Scope & Target
 
-- (boolean) Don't install devDependencies
+### `-p, --production`
 
-- (string) Exclude `dev`, `optional`, or `peer` dependencies from install
+Type: `boolean`
+Don't install devDependencies
 
-- (boolean) Install globally
+### `--omit`
+
+Type: `string`
+Exclude `dev`, `optional`, or `peer` dependencies from install
+
+### `-g, --global`
+
+Type: `boolean`
+Install globally
 
 ### Lockfile & Package.json
 
-- (boolean) Write a `yarn.lock` file (yarn v1)
+### `-y, --yarn`
 
-- (boolean) Don't update `package.json` or save a lockfile
+Type: `boolean`
+Write a `yarn.lock` file (yarn v1)
 
-- (boolean) Save to `package.json` (true by default)
+### `--no-save`
 
-- (boolean) Disallow changes to lockfile
+Type: `boolean`
+Don't update `package.json` or save a lockfile
 
-- (boolean) Save a text-based lockfile
+### `--save`
 
-- (boolean) Generate a lockfile without installing dependencies
+Type: `boolean`; Default: `true`
+Save to `package.json` (true by default)
 
-- (boolean) Add to `trustedDependencies` in the project's `package.json` and install the package(s)
+### `--frozen-lockfile`
+
+Type: `boolean`
+Disallow changes to lockfile
+
+### `--save-text-lockfile`
+
+Type: `boolean`
+Save a text-based lockfile
+
+### `--lockfile-only`
+
+Type: `boolean`
+Generate a lockfile without installing dependencies
+
+### `--trust`
+
+Type: `boolean`
+Add to `trustedDependencies` in the project's `package.json` and install the package(s)
 
 ### Network & Registry
 
-- (string) Provide a Certificate Authority signing certificate
+### `--ca`
 
-- (string) Same as `--ca`, but as a file path to the certificate
+Type: `string`
+Provide a Certificate Authority signing certificate
 
-- (string) Use a specific registry by default, overriding `.npmrc`, `bunfig.toml` and environment variables
+### `--cafile`
 
-- (number) Maximum number of concurrent network requests (default 48)
+Type: `string`
+Same as `--ca`, but as a file path to the certificate
+
+### `--registry`
+
+Type: `string`
+Use a specific registry by default, overriding `.npmrc`, `bunfig.toml` and environment variables
+
+### `--network-concurrency`
+
+Type: `number`; Default: `48`
+Maximum number of concurrent network requests (default 48)
 
 ### Caching
 
-- (string) Store & load cached data from a specific directory path
+### `--cache-dir`
 
-- (boolean) Ignore manifest cache entirely
+Type: `string`
+Store & load cached data from a specific directory path
+
+### `--no-cache`
+
+Type: `boolean`
+Ignore manifest cache entirely
 
 ### Execution Behavior
 
-- (boolean) Perform a dry run without making changes
+### `--dry-run`
 
-- (boolean) Always request the latest versions from the registry & reinstall all dependencies
+Type: `boolean`
+Has no effect. `bun outdated` is read-only
 
-- (boolean) Skip verifying integrity of newly downloaded packages
+### `-f, --force`
 
-- (boolean) Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
+Type: `boolean`
+Always request the latest versions from the registry & reinstall all dependencies
 
-- (string) Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
+### `--no-verify`
 
-- (number) Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)
+Type: `boolean`
+Skip verifying integrity of newly downloaded packages
+
+### `--ignore-scripts`
+
+Type: `boolean`
+Skip lifecycle scripts for all packages, including the project's `package.json` and trusted dependencies
+
+### `--backend`
+
+Type: `string`
+Platform-specific optimizations for installing dependencies. Possible values: `clonefile` (default on
+macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
+
+### `--concurrent-scripts`
+
+Type: `number`
+Maximum number of concurrent jobs for lifecycle scripts (default: 2x CPU cores)

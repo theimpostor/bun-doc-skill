@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/networking/dns
 
 Use Bun's DNS module to resolve DNS records
 
+
 Bun implements its own `dns` module and the `node:dns` module.
 
 ```ts
@@ -19,15 +20,15 @@ import { dns } from "bun";
 dns.prefetch("bun.com", 443);
 ```
 
-***
+---
 
 ## Choosing a resolver backend
 
 `Bun.dns.lookup()` accepts a `backend` option that selects the resolver implementation:
 
-* `"c-ares"`: the [c-ares](https://c-ares.org/) asynchronous resolver. It reads `/etc/resolv.conf` directly, so it does not consult NSS modules such as `systemd-resolved`. This backend is the default for `Bun.dns.lookup()` on Linux.
-* `"system"`: the platform's own resolver (the non-blocking system API on macOS, `getaddrinfo` on a thread pool everywhere else). This backend is the default on macOS, Windows, and Android.
-* `"getaddrinfo"` (alias `"libc"`): the POSIX `getaddrinfo(3)` function on a thread pool.
+- `"c-ares"`: the [c-ares](https://c-ares.org/) asynchronous resolver. It reads `/etc/resolv.conf` directly, so it does not consult NSS modules such as `systemd-resolved`. This backend is the default for `Bun.dns.lookup()` on Linux.
+- `"system"`: the platform's own resolver (the non-blocking system API on macOS, `getaddrinfo` on a thread pool everywhere else). This backend is the default on macOS, Windows, and Android.
+- `"getaddrinfo"` (alias `"libc"`): the POSIX `getaddrinfo(3)` function on a thread pool.
 
 ```ts
 import { dns } from "bun";
@@ -45,12 +46,12 @@ The cache holds up to 256 entries for a maximum of 30 seconds each. If a connect
 
 Bun uses this cache automatically in:
 
-* `bun install`
-* `fetch()`
-* `node:http` (client)
-* `Bun.connect`
-* `node:net`
-* `node:tls`
+- `bun install`
+- `fetch()`
+- `node:http` (client)
+- `Bun.connect`
+- `node:net`
+- `node:tls`
 
 ### When should I prefetch a DNS entry?
 

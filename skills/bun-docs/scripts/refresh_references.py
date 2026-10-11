@@ -8,15 +8,16 @@ import json
 import re
 import shutil
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 from urllib.request import Request, urlopen
 
 
 DEFAULT_URL = "https://bun.sh/llms-full.txt"
-SKIP_TAGS = {"Tabs", "CodeGroup", "Frame", "Steps", "Columns", "CardGroup"}
+SKIP_TAGS = {"Tabs", "CodeGroup", "Frame", "Steps", "Columns", "CardGroup", "AccordionGroup"}
 HEADING_TAGS = {"Tab", "Step", "Accordion", "Card"}
 ADMONITION_TAGS = {"Note", "Warning", "Info", "Tip", "Callout"}
 PARAM_TAG = "ParamField"
@@ -107,7 +108,7 @@ SECTION_INFO = {
     },
     "runtime": {
         "title": "Runtime",
-        "summary": "Use for Bun runtime APIs, `bunfig.toml`, file I/O, data formats such as XML and YAML, globals, compatibility, shell, plugins, workers, and built-in services.",
+        "summary": "Use for `bun check`, Bun runtime APIs, `bunfig.toml`, file I/O, data formats such as XML and YAML, globals, compatibility, shell, plugins, workers, `Bun.ModuleGraph`, and built-in services.",
     },
     "runtime-http": {
         "title": "Runtime HTTP",
@@ -115,7 +116,7 @@ SECTION_INFO = {
     },
     "runtime-networking": {
         "title": "Runtime Networking",
-        "summary": "Use for DNS, `fetch`, TCP, and UDP runtime docs.",
+        "summary": "Use for DNS, `fetch`, `Bun.FetchSession`, proxies, TCP, and UDP runtime docs.",
     },
     "runtime-templating": {
         "title": "Runtime Templating",
@@ -140,8 +141,83 @@ class Page:
 
 def fetch_text(url: str) -> tuple[str, str]:
     request = Request(url, headers={"User-Agent": "codex-bun-docs-skill/1.0"})
-    with urlopen(request) as response:
+    with urlopen(request, timeout=60) as response:
         return response.read().decode("utf-8"), response.geturl()
+
+
+def fetch_release_pages(ref: str) -> tuple[list[Page], str]:
+    """Read the docs at a Git ref when the site's combined feed lags a release."""
+    encoded_ref = quote(ref, safe="")
+    api_url = "https://api.github.com/repos/oven-sh/bun/git/trees/"
+    root = json.loads(fetch_text(api_url + encoded_ref)[0])
+    docs = next(entry for entry in root["tree"] if entry["path"] == "docs")
+    tree = json.loads(fetch_text(api_url + docs["sha"] + "?recursive=1")[0])
+    if tree.get("truncated"):
+        raise ValueError("GitHub returned an incomplete docs tree")
+    paths = sorted(
+        entry["path"] for entry in tree["tree"]
+        if entry["type"] == "blob" and entry["path"].endswith(".mdx")
+    )
+
+    def fetch_source(path: str) -> tuple[str, str]:
+        url = f"https://raw.githubusercontent.com/oven-sh/bun/{encoded_ref}/docs/{quote(path)}"
+        return path, fetch_text(url)[0]
+
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        sources = dict(executor.map(fetch_source, paths))
+    pages = [
+        page_from_mdx(path, source, sources)
+        for path, source in sources.items()
+        if not path.startswith("snippets/")
+    ]
+    return pages, f"https://github.com/oven-sh/bun/tree/{encoded_ref}/docs"
+
+
+def page_from_mdx(path: str, source: str, sources: dict[str, str]) -> Page:
+    frontmatter = re.match(r"\A---\n(.*?)\n---\n", source, re.DOTALL)
+    if not frontmatter:
+        raise ValueError(f"Missing frontmatter in {path}")
+
+    def field(name: str) -> str:
+        match = re.search(rf"^{name}:\s*(.+)$", frontmatter.group(1), re.MULTILINE)
+        if not match:
+            return ""
+        value = match.group(1).strip()
+        if value.startswith('"'):
+            return json.loads(value)
+        if value.startswith("'") and value.endswith("'"):
+            return value[1:-1].replace("''", "'")
+        return value
+
+    title = field("title") or field("name")
+    if not title:
+        raise ValueError(f"Missing title in {path}")
+    description = field("description")
+    body = source[frontmatter.end():]
+    imports = re.findall(
+        r'^import (\w+) from "(/snippets/[^\"]+\.mdx)";\s*$', body, re.MULTILINE
+    )
+    for name, snippet_path in imports:
+        body = re.sub(
+            rf'^import {name} from "{re.escape(snippet_path)}";\s*$',
+            "", body, flags=re.MULTILINE,
+        )
+        body = re.sub(
+            rf"<{name}\s*/>", lambda _match: sources[snippet_path.lstrip("/")], body
+        )
+    # This JSX widget is site navigation; the local section overviews replace it.
+    body = body.replace('import { GuidesList } from "/snippets/guides.jsx";', "")
+    body = body.replace("<GuidesList />", "Browse the guide categories in [the reference index](../../index.md).")
+    doc_path = str(Path(path).with_suffix(""))
+    source_url = f"https://bun.com/docs/{doc_path}"
+    return Page(
+        title=title,
+        source=source_url,
+        lines=[f"# {title}", f"Source: {source_url}", "", description, "", *body.splitlines()],
+        local_path=local_path_from_doc_path(doc_path),
+        section_key=section_key_from_doc_path(doc_path),
+        doc_path=doc_path,
+    )
 
 
 def find_page_starts(lines: list[str]) -> list[int]:
@@ -227,6 +303,9 @@ def clean_inline(text: str) -> str:
     cleaned = CONTROL_CHAR_RE.sub("", html.unescape(text))
     cleaned = re.sub(r"<code>(.*?)</code>", lambda match: f"`{match.group(1)}`", cleaned)
     cleaned = re.sub(r"</?span[^>]*>", "", cleaned)
+    cleaned = re.sub(r"<Badge\b[^>]*>(.*?)</Badge>", r"**\1**", cleaned)
+    cleaned = re.sub(r"</?Frame\b[^>]*>", "", cleaned)
+    cleaned = re.sub(r'<Image\b[^>]*\bsrc="([^"]+)"[^>]*/>', r"![Image](\1)", cleaned)
     cleaned = re.sub(r"<br\s*/?>", "<br>", cleaned)
     cleaned = re.sub(r"\\([`*_{}\[\]()#+\-.!|$])", r"\1", cleaned)
     return cleaned.strip()
@@ -318,8 +397,15 @@ def clean_page_lines(lines: list[str]) -> list[str]:
     block_tag: str | None = None
     block_lines: list[str] = []
     block_meta: dict[str, str] = {}
+    heading_lines: list[str] = []
 
     for raw_line in lines:
+        if heading_lines:
+            heading_lines.append(raw_line.strip())
+            if raw_line.strip() not in {">", "/>"}:
+                continue
+            raw_line = " ".join(heading_lines)
+            heading_lines = []
         lstripped = raw_line.lstrip()
         stripped = raw_line.strip()
         indent = len(raw_line) - len(lstripped)
@@ -364,6 +450,9 @@ def clean_page_lines(lines: list[str]) -> list[str]:
             output.append("")
             continue
 
+        if re.fullmatch(r"\{/\*.*?\*/\}", stripped):
+            continue
+
         inline_admonition = re.fullmatch(
             r"<(Note|Warning|Info|Tip|Callout)\b[^>]*>(.*)</\1>", stripped
         )
@@ -374,7 +463,11 @@ def clean_page_lines(lines: list[str]) -> list[str]:
             )
             continue
 
-        if stripped in {f"<{tag}>" for tag in SKIP_TAGS} | {f"</{tag}>" for tag in SKIP_TAGS}:
+        if re.fullmatch(rf"</?(?:{'|'.join(sorted(SKIP_TAGS))})(?:\s[^>]*)?>", stripped):
+            continue
+
+        if re.fullmatch(r"<(Tab|Step|Accordion|Card)\b[^>]*", stripped):
+            heading_lines = [stripped]
             continue
 
         heading_match = re.match(r"<(Tab|Step|Accordion|Card)\b.*?>", stripped)
@@ -397,6 +490,14 @@ def clean_page_lines(lines: list[str]) -> list[str]:
             continue
 
         if stripped in {f"</{tag}>" for tag in ADMONITION_TAGS}:
+            continue
+
+        named_param = re.fullmatch(r'<ParamField\b[^>]*\bpath="([^"]+)"[^>]*>', stripped)
+        if named_param:
+            output.append(f"### `{named_param.group(1)}`")
+            attributes = re.findall(r'\b(type|default)="([^"]*)"', stripped)
+            if attributes:
+                output.extend(["", "; ".join(f"{key.title()}: `{value}`" for key, value in attributes)])
             continue
 
         param_open = re.fullmatch(r'<ParamField(?: type="([^"]+)")?>', stripped)
@@ -488,6 +589,7 @@ def write_index_file(
     page_count: int,
     requested_url: str,
     resolved_url: str,
+    source_ref: str | None = None,
 ) -> None:
     lines = [
         "# Bun Docs Reference Index",
@@ -504,6 +606,7 @@ def write_index_file(
         "",
         f"- Requested URL: `{requested_url}`",
         f"- Resolved URL: `{resolved_url}`",
+        *([f"- Git ref: `{source_ref}`"] if source_ref else []),
         f"- Generated: `{datetime.now(timezone.utc).isoformat()}`",
         f"- Page count: `{page_count}`",
         "",
@@ -523,7 +626,8 @@ def write_index_file(
 
 
 def write_metadata_file(
-    references_dir: Path, pages: list[Page], requested_url: str, resolved_url: str
+    references_dir: Path, pages: list[Page], requested_url: str, resolved_url: str,
+    source_ref: str | None = None,
 ) -> None:
     metadata = {
         "requested_url": requested_url,
@@ -532,6 +636,8 @@ def write_metadata_file(
         "page_count": len(pages),
         "sections": sorted({page.section_key for page in pages}),
     }
+    if source_ref:
+        metadata["source_ref"] = source_ref
     (references_dir / "metadata.json").write_text(
         json.dumps(metadata, indent=2) + "\n", encoding="utf-8"
     )
@@ -547,29 +653,37 @@ def write_page_files(references_dir: Path, pages: list[Page]) -> None:
         destination.write_text("\n".join(cleaned) + "\n", encoding="utf-8")
 
 
-def build_references(url: str, references_dir: Path) -> None:
-    text, resolved_url = fetch_text(url)
-    pages = parse_pages(text)
+def build_references(url: str, references_dir: Path, ref: str | None = None) -> None:
+    if ref:
+        pages, resolved_url = fetch_release_pages(ref)
+        url = resolved_url
+    else:
+        text, resolved_url = fetch_text(url)
+        pages = parse_pages(text)
+    if not pages:
+        raise ValueError("No Bun documentation pages found; keeping existing references")
     ensure_clean_directory(references_dir / "docs")
     ensure_clean_directory(references_dir / "sections")
     write_page_files(references_dir, pages)
     section_index = write_section_files(references_dir, pages)
-    write_index_file(references_dir, section_index, len(pages), url, resolved_url)
-    write_metadata_file(references_dir, pages, url, resolved_url)
+    write_index_file(references_dir, section_index, len(pages), url, resolved_url, ref)
+    write_metadata_file(references_dir, pages, url, resolved_url, ref)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Download and clean Bun's llms-full docs into skill reference files."
+        description="Download and clean Bun docs from llms-full.txt or a Git ref."
     )
-    parser.add_argument("--url", default=DEFAULT_URL, help="Bun docs source URL")
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--url", default=DEFAULT_URL, help="Bun llms-full docs source URL")
+    source.add_argument("--ref", help="Bun Git ref to read docs from, e.g. bun-v1.4.3")
     parser.add_argument(
         "--references-dir",
         default=str(Path(__file__).resolve().parents[1] / "references"),
         help="Directory where cleaned references should be written",
     )
     args = parser.parse_args()
-    build_references(args.url, Path(args.references_dir))
+    build_references(args.url, Path(args.references_dir), args.ref)
 
 
 if __name__ == "__main__":

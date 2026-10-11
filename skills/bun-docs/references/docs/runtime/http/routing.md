@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/http/routing
 
 Define routes in `Bun.serve` using static paths, parameters, and wildcards
 
+
 Add routes to `Bun.serve()` with the `routes` property (static paths, parameters, and wildcards), or handle unmatched requests with the [`fetch`](#fetch-request-handler) method.
 
 `Bun.serve()`'s router builds on top of uWebSocket's [tree-based approach](https://github.com/oven-sh/bun/blob/0d1a00fa0f7830f8ecd99c027fce8096c9d459b6/packages/bun-uws/src/HttpRouter.h#L57-L64). The router adds [SIMD-accelerated route parameter decoding](https://github.com/oven-sh/bun/blob/main/src/jsc/bindings/decodeURIComponentSIMD.cpp#L21-L271) and [JavaScriptCore structure caching](https://github.com/oven-sh/bun/blob/main/src/jsc/bindings/ServerRouteList.cpp#L100-L101) to push the performance limits of what modern hardware allows.
@@ -74,7 +75,7 @@ serve({
 });
 ```
 
-***
+---
 
 ## Route precedence
 
@@ -97,7 +98,7 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 ## Type-safe route parameters
 
@@ -178,23 +179,24 @@ Bun.serve({
 
 **Static routes** (`new Response(await file.bytes())`) buffer content in memory at startup:
 
-* **Zero filesystem I/O** during requests - content served entirely from memory
-* **ETag support** - Automatically generates and validates ETags for caching
-* **If-None-Match** - Returns `304 Not Modified` when client ETag matches
-* **No 404 handling** - Missing files cause startup errors, not runtime 404s
-* **Memory usage** - Full file content stored in RAM
-* **Best for**: Small static assets, API responses, frequently accessed files
+- **Zero filesystem I/O** during requests - content served entirely from memory
+- **ETag support** - Automatically generates and validates ETags for caching
+- **If-None-Match** - Returns `304 Not Modified` when client ETag matches
+- **No 404 handling** - Missing files cause startup errors, not runtime 404s
+- **Memory usage** - Full file content stored in RAM
+- **Best for**: Small static assets, API responses, frequently accessed files
 
 **File routes** (`new Response(Bun.file(path))`) read from filesystem per request:
 
-* **Filesystem reads** on each request - checks file existence and reads content
-* **Built-in 404 handling** - Returns `404 Not Found` if file doesn't exist or becomes inaccessible
-* **Last-Modified support** - Uses file modification time for `If-Modified-Since` headers
-* **If-Modified-Since** - Returns `304 Not Modified` when file hasn't changed since client's cached version
-* **Range request support** - Automatically handles partial content requests with `Content-Range` headers
-* **Streaming transfers** - Uses buffered reader with backpressure handling for efficient memory usage
-* **Memory efficient** - Only buffers small chunks during transfer, not entire file
-* **Best for**: Large files, dynamic content, user uploads, files that change frequently
+- **Filesystem reads** on each request - checks file existence and reads content
+- **Built-in 404 handling** - Returns `404 Not Found` if file doesn't exist or becomes inaccessible
+- **Last-Modified support** - Uses file modification time for `If-Modified-Since` headers
+- **If-Modified-Since** - Returns `304 Not Modified` when file hasn't changed since client's cached version
+- **Range request support** - Automatically handles partial content requests with `Content-Range` headers
+- **If-Range** - Sends the full file instead of a `206` when the `If-Range` validator is not the response's strong `ETag` or its exact `Last-Modified`
+- **Streaming transfers** - Uses buffered reader with backpressure handling for efficient memory usage
+- **Memory efficient** - Only buffers small chunks during transfer, not entire file
+- **Best for**: Large files, dynamic content, user uploads, files that change frequently
 
 ### Directory routes
 
@@ -218,15 +220,15 @@ access-controlled content outside `dir` rather than relying on an overlapping ro
 
 Directory routes share the response path with file routes:
 
-* **Content-Type** is set from the file extension.
-* **Last-Modified** and a weak `ETag` (`W/"<size>-<mtime>"`) are sent on every response, and `If-Modified-Since` / `If-None-Match` are honored with `304 Not Modified`.
-* **Range requests** are supported with `Accept-Ranges: bytes` and `Content-Range`.
-* A request that resolves to a directory without a trailing `/` receives a `301` redirect to the trailing-slash URL. With the trailing slash, Bun serves `index.html` from that directory.
-* Missing files return `404`.
+- **Content-Type** is set from the file extension.
+- **Last-Modified** and a weak `ETag` (`W/"<size>-<mtime>"`) are sent on every response, and `If-Modified-Since` / `If-None-Match` are honored with `304 Not Modified`.
+- **Range requests** are supported with `Accept-Ranges: bytes` and `Content-Range`. `If-Range` is honored with the `Last-Modified` date. The `ETag` is weak, so it never matches `If-Range`, and the response is the full file.
+- A request that resolves to a directory without a trailing `/` receives a `301` redirect to the trailing-slash URL. With the trailing slash, Bun serves `index.html` from that directory.
+- Missing files return `404`.
 
 Pass `statCache: false` to disable the per-path `Last-Modified` cache (saves roughly 20 KB per route).
 
-***
+---
 
 ## Streaming files
 
@@ -264,7 +266,7 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 ## `fetch` request handler
 

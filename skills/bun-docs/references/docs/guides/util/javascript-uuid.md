@@ -9,7 +9,7 @@ crypto.randomUUID();
 // => "123e4567-e89b-42d3-a456-426614174000"
 ```
 
-***
+---
 
 Bun also provides `Bun.randomUUIDv7()`, which generates a [UUID v7](https://www.rfc-editor.org/rfc/rfc9562.html#name-uuid-version-7).
 
@@ -18,6 +18,6 @@ Bun.randomUUIDv7();
 // => "0196a000-bb12-7000-905e-8039f5d5b206"
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils).
+See [Utils](/runtime/utils).

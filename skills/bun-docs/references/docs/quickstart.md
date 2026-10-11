@@ -3,15 +3,17 @@ Source: https://bun.com/docs/quickstart
 
 Build your first app with Bun
 
+
 ## Overview
 
 Build a minimal HTTP server with `Bun.serve`, run it locally, then evolve it by installing a package.
 
-> Info: Prerequisites: Bun installed and available on your `PATH`. See [installation](/docs/installation) for setup.
+> Info: Prerequisites: Bun installed and available on your `PATH`. See [installation](/installation) for setup.
 
-***
+---
 
 ### Step 1
+
 Initialize a new project with `bun init`.
 
 ```bash
@@ -23,7 +25,6 @@ bun init my-app
 ```bash
 bun init my-app
 ```
-
 ```txt
 ✓ Select a project template: Blank
 
@@ -31,25 +32,26 @@ bun init my-app
 + CLAUDE.md
 + .cursor/rules/use-bun-instead-of-node-vite-npm-pnpm.mdc -> CLAUDE.md
 + index.ts
-+ tsconfig.json (for editor autocomplete)
++ tsconfig.json (for bun check and editor autocomplete)
 + README.md
 ```
 
 The new `my-app` directory contains a basic Bun app.
 
 ### Step 2
+
 Run `index.ts` with `bun run`.
 
 ```bash
 cd my-app
 bun run index.ts
 ```
-
 ```txt
 Hello via Bun!
 ```
 
 ### Step 3
+
 Replace the contents of `index.ts` with the following code:
 
 **File:** `index.ts`
@@ -69,7 +71,6 @@ Run `index.ts` again.
 ```bash
 bun run index.ts
 ```
-
 ```txt
 Listening on http://localhost:3000/
 ```
@@ -77,6 +78,7 @@ Listening on http://localhost:3000/
 Visit [`http://localhost:3000`](http://localhost:3000) to test the server. You should see a page that says `"Bun!"`.
 
 ### Seeing TypeScript errors on Bun?
+
 `bun init` installs Bun's TypeScript declarations and configures your `tsconfig.json`. If you're trying out Bun in an existing project, you may see a type error on the `Bun` global.
 
 To fix this, first install `@types/bun` as a dev dependency.
@@ -103,7 +105,9 @@ Then add the following to your `compilerOptions` in `tsconfig.json`:
 }
 ```
 
+
 ### Step 4
+
 Install the `figlet` package and its type declarations. Figlet is a utility for converting strings into ASCII art.
 
 ```bash
@@ -136,7 +140,6 @@ Run `index.ts` again.
 ```bash
 bun run index.ts
 ```
-
 ```txt
 Listening on http://localhost:3000/
 ```
@@ -152,6 +155,7 @@ ____              _
 ```
 
 ### Step 5
+
 Now add some HTML. Create a new file called `index.html`:
 
 **File:** `index.html`
@@ -195,16 +199,16 @@ Run `index.ts` again.
 ```bash
 bun run index.ts
 ```
-
 ```txt
 Listening on http://localhost:3000/
 ```
 
 Visit [`http://localhost:3000`](http://localhost:3000) to test the server. You should see the static HTML page.
 
+
 You've built an HTTP server with Bun and installed a package.
 
-***
+---
 
 ## Run a script
 
@@ -224,7 +228,7 @@ Bun can also execute `"scripts"` from your `package.json`. Add the following scr
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^6"
+    "typescript": "^7"
   }
 }
 ```

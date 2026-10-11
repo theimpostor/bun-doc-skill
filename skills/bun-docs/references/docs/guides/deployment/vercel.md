@@ -2,14 +2,14 @@
 Source: https://bun.com/docs/guides/deployment/vercel
 
 
-[Vercel](https://vercel.com/) is a cloud platform for building, deploying, and scaling apps. Vercel Functions can run on the Bun runtime, either behind a framework that Vercel supports or as a [`Bun.serve()`](/docs/runtime/http/server) server.
+[Vercel](https://vercel.com/) is a cloud platform for building, deploying, and scaling apps. Vercel Functions can run on the Bun runtime, either behind a framework that Vercel supports or as a [`Bun.serve()`](/runtime/http/server) server.
 
 > Warning
-The Bun runtime on Vercel is in Beta. Automatic source maps, bytecode caching, and request metrics for `node:http` and
-`node:https` are not supported yet (request metrics for `fetch` are). See [feature
+Automatic source maps, bytecode caching, and request metrics for `node:http` and `node:https` are not supported on the
+Bun runtime (request metrics for `fetch` are). See [feature
 support](https://vercel.com/docs/functions/runtimes/bun#feature-support) in the Vercel documentation.
 
-***
+---
 
 ### Configure Bun in vercel.json
 To run your Functions on Bun, add a [`bunVersion`](https://vercel.com/docs/project-configuration/vercel-json#bunversion) field to your `vercel.json` file:
@@ -17,11 +17,11 @@ To run your Functions on Bun, add a [`bunVersion`](https://vercel.com/docs/proje
 **File:** `vercel.json`
 ```json
 {
-	"bunVersion": "1.x"
+"bunVersion": "1.4.x"
 }
 ```
 
-The value must be `"1.x"`; Vercel manages the minor and patch versions.
+Vercel manages the patch version.
 
 For best results, match your local Bun version with the version Vercel uses.
 
@@ -31,29 +31,29 @@ Choose how requests reach your code.
 ### Bun.serve() for the whole app
 Vercel's Bun framework preset sends every request for the deployment to a single `Bun.serve()` server. Vercel uses the preset when the project sets `bunVersion`, has a `bun.lock` file, and has a server entrypoint at one of these paths:
 
-* `server.{js,cjs,mjs,ts,cts,mts}`
-* `src/server.{js,cjs,mjs,ts,cts,mts}`
+- `server.{js,cjs,mjs,ts,cts,mts}`
+- `src/server.{js,cjs,mjs,ts,cts,mts}`
 
 `bun install` creates `bun.lock` on Bun 1.2 or later. On older versions, run `bun install --save-text-lockfile`. The preset does not detect the binary `bun.lockb` format.
 
-Call `Bun.serve()` once while the module loads. Vercel detects that call and routes incoming requests to it. Vercel supports the `fetch`, [`routes`](/docs/runtime/http/routing), `error`, and `websocket` options:
+Call `Bun.serve()` once while the module loads. Vercel detects that call and routes incoming requests to it. Vercel supports the `fetch`, [`routes`](/runtime/http/routing), `error`, and `websocket` options:
 
 **File:** `server.ts`
 ```ts
 Bun.serve({
-	routes: {
-		"/health": () => Response.json({ status: "ok" }),
-	},
-	fetch() {
-		return new Response("Hello from Bun on Vercel");
-	},
+routes: {
+"/health": () => Response.json({ status: "ok" }),
+},
+fetch() {
+return new Response("Hello from Bun on Vercel");
+},
 });
 ```
 
 A minimal project is `package.json`, `bun.lock`, `server.ts`, and the `vercel.json` from the previous step. It doesn't need an `api/` directory or any routing configuration.
 
 > Note
-`port` and `hostname` only apply when you run the server locally; they don't configure the deployed endpoint. Unix sockets and [HTML imports](/docs/runtime/http/server#html-imports) in `routes` are not supported on Vercel.
+`port` and `hostname` only apply when you run the server locally; they don't configure the deployed endpoint. Unix sockets and [HTML imports](/runtime/http/server#html-imports) in `routes` are not supported on Vercel.
 
 To serve WebSocket connections, see the [Bun example in Vercel's WebSockets documentation](https://vercel.com/docs/functions/websockets#bun).
 
@@ -63,14 +63,14 @@ To add a Bun server to a project that also has a frontend, create `api/server.ts
 **File:** `api/server.ts`
 ```ts
 Bun.serve({
-	fetch(request) {
-		const url = new URL(request.url);
+fetch(request) {
+const url = new URL(request.url);
 
-		return Response.json({
-			message: "Hello from Bun on Vercel",
-			pathname: url.pathname,
-		});
-	},
+return Response.json({
+message: "Hello from Bun on Vercel",
+pathname: url.pathname,
+});
+},
 });
 ```
 
@@ -84,10 +84,10 @@ If you're deploying a **Next.js** project (including ISR), also update the `pack
 **File:** `package.json`
 ```json
 {
-	"scripts": {
-		"dev": "bun --bun next dev",
-		"build": "bun --bun next build"
-	}
+"scripts": {
+"dev": "bun --bun next dev",
+"build": "bun --bun next build"
+}
 }
 ```
 
@@ -120,17 +120,17 @@ To confirm your deployment uses Bun, log the Bun version:
 ```ts
 console.log("runtime", process.versions.bun);
 ```
-
 ```txt
-runtime 1.3.14
+runtime 1.4.0
 ```
 
 [See the Vercel Bun Runtime documentation for feature support →](https://vercel.com/docs/functions/runtimes/bun#feature-support)
 
-***
 
-* [Fluid compute](https://vercel.com/docs/fluid-compute): Both Bun and Node.js runtimes run on Fluid compute and support the same core Vercel Functions features.
-* [Middleware](https://vercel.com/docs/routing-middleware): To run Routing Middleware with Bun, set the runtime to `nodejs`:
+---
+
+- [Fluid compute](https://vercel.com/docs/fluid-compute): Both Bun and Node.js runtimes run on Fluid compute and support the same core Vercel Functions features.
+- [Middleware](https://vercel.com/docs/routing-middleware): To run Routing Middleware with Bun, set the runtime to `nodejs`:
 
 **File:** `middleware.ts`
 ```ts

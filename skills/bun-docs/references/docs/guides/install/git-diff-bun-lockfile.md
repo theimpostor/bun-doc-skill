@@ -5,9 +5,9 @@ Source: https://bun.com/docs/guides/install/git-diff-bun-lockfile
 > Note
 Bun v1.1.39 introduced `bun.lock`, a JSONC formatted lockfile. `bun.lock` is human-readable and git-diffable without
 configuration, at no cost to performance. In 1.2.0+ it is the default format for new projects. See [the lockfile
-docs](/docs/pm/lockfile#text-based-lockfile).
+docs](/pm/lockfile#text-based-lockfile).
 
-***
+---
 
 To teach `git` how to generate a human-readable diff of Bun's binary lockfile format (`.lockb`), add the following to your local or global `.gitattributes` file:
 
@@ -16,7 +16,7 @@ To teach `git` how to generate a human-readable diff of Bun's binary lockfile fo
 *.lockb binary diff=lockb
 ```
 
-***
+---
 
 Then add the following to your local git config:
 
@@ -25,7 +25,7 @@ git config diff.lockb.textconv bun
 git config diff.lockb.binary true
 ```
 
-***
+---
 
 To configure this for every repository, add the following to your global git config:
 
@@ -34,11 +34,11 @@ git config --global diff.lockb.textconv bun
 git config --global diff.lockb.binary true
 ```
 
-***
+---
 
 ## How this works
 
-* `textconv` tells git to run bun on the file before diffing
-* `binary` tells git to treat the file as binary (so it doesn't try to diff it line-by-line)
+- `textconv` tells git to run bun on the file before diffing
+- `binary` tells git to treat the file as binary (so it doesn't try to diff it line-by-line)
 
 Running Bun on the lockfile (`bun ./bun.lockb`) prints a human-readable version of it, which `git diff` then diffs.

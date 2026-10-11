@@ -11,6 +11,6 @@ const str = decoder.decode(arr);
 // => "hello"
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

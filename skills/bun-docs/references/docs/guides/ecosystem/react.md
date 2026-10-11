@@ -20,7 +20,7 @@ bun run build
 bun start
 ```
 
-***
+---
 
 ### Hot Reloading
 

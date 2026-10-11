@@ -8,7 +8,7 @@ Bun's package manager can install any publicly available tarball URL as a depend
 bun add zod@https://registry.npmjs.org/zod/-/zod-3.21.4.tgz
 ```
 
-***
+---
 
 This command downloads, extracts, and installs the tarball into your project's `node_modules` directory, and adds the following line to your `package.json`:
 
@@ -21,7 +21,7 @@ This command downloads, extracts, and installs the tarball into your project's `
 }
 ```
 
-***
+---
 
 You can now import `zod` as usual.
 
@@ -29,6 +29,6 @@ You can now import `zod` as usual.
 import { z } from "zod";
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

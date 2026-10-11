@@ -9,7 +9,7 @@ const buf = new ArrayBuffer(64);
 const blob = new Blob([buf]);
 ```
 
-***
+---
 
 By default the `type` of the resulting `Blob` is unset. Set it with the `type` option.
 
@@ -19,6 +19,6 @@ const blob = new Blob([buf], { type: "application/octet-stream" });
 blob.type; // => "application/octet-stream"
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

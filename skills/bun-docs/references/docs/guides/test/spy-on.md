@@ -17,7 +17,7 @@ const leo = {
 const spy = spyOn(leo, "sayHi");
 ```
 
-***
+---
 
 Once you've created the spy, use it in `expect` assertions about method calls.
 
@@ -41,6 +41,6 @@ test("turtles", () => {
 });
 ```
 
-***
+---
 
-See [Mocks](/docs/test/mocks).
+See [Mocks](/test/mocks).

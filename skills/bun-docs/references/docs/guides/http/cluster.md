@@ -3,6 +3,7 @@ Source: https://bun.com/docs/guides/http/cluster
 
 Run multiple HTTP servers concurrently with the "reusePort" option to share the same port across multiple processes
 
+
 To run multiple HTTP servers concurrently, use the `reusePort` option in `Bun.serve()`. It shares one port across multiple processes, and incoming requests are load balanced across them.
 
 **File:** `server.ts`
@@ -25,7 +26,7 @@ serve({
 });
 ```
 
-***
+---
 
 > Note
 **Linux only** — Windows and macOS ignore the `reusePort` option. This is an operating system limitation with
@@ -61,6 +62,6 @@ process.on("SIGINT", kill);
 process.on("exit", kill);
 ```
 
-***
+---
 
 Bun also implements the `node:cluster` module; `reusePort` is a faster but more limited alternative.

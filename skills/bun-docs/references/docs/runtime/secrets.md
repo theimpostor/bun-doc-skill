@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/secrets
 
 Use Bun's Secrets API to store and retrieve sensitive credentials securely
 
+
 Store and retrieve sensitive credentials securely using the operating system's native credential storage APIs.
 
 > Warning: This API is new and experimental. It may change in the future.
@@ -35,15 +36,15 @@ const response = await fetch("https://api.github.com/user", {
 console.log(`Logged in as ${(await response.json()).login}`);
 ```
 
-***
+---
 
 ## Overview
 
 `Bun.secrets` provides a cross-platform API for managing sensitive credentials that CLI tools and development applications typically store in plaintext files like `~/.npmrc`, `~/.aws/credentials`, or `.env`. It uses:
 
-* **macOS**: Keychain Services
-* **Linux**: libsecret (GNOME Keyring, KWallet, and other secret service daemons)
-* **Windows**: Windows Credential Manager
+- **macOS**: Keychain Services
+- **Linux**: libsecret (GNOME Keyring, KWallet, and other secret service daemons)
+- **Windows**: Windows Credential Manager
 
 All operations are asynchronous and non-blocking, running on Bun's threadpool.
 
@@ -51,7 +52,7 @@ All operations are asynchronous and non-blocking, running on Bun's threadpool.
 This API is mostly useful for local development tools. We may later add a `provider` option for production deployment
 secrets.
 
-***
+---
 
 ## API
 
@@ -74,12 +75,12 @@ const password = await Bun.secrets.get("my-app", "alice@example.com");
 
 **Parameters:**
 
-* `options.service` (string, required) - The service or application name
-* `options.name` (string, required) - The username or account identifier
+- `options.service` (string, required) - The service or application name
+- `options.name` (string, required) - The username or account identifier
 
 **Returns:**
 
-* `Promise<string | null>` - The stored password, or `null` if not found
+- `Promise<string | null>` - The stored password, or `null` if not found
 
 ### `Bun.secrets.set(options)`
 
@@ -97,14 +98,15 @@ await secrets.set({
 
 **Parameters:**
 
-* `options.service` (string, required) - The service or application name
-* `options.name` (string, required) - The username or account identifier
-* `options.value` (string, required) - The password or secret to store
+- `options.service` (string, required) - The service or application name
+- `options.name` (string, required) - The username or account identifier
+- `options.value` (string, required) - The password or secret to store
+- `options.persist` (`"local"` or `"enterprise"`, optional) - Windows only. Which computers can see the credential. Defaults to `"enterprise"`. See [Windows (Credential Manager)](#windows-credential-manager)
 
 **Notes:**
 
-* If a credential already exists for the given service/name combination, Bun replaces it
-* The operating system encrypts the stored value
+- If a credential already exists for the given service/name combination, Bun replaces it
+- The operating system encrypts the stored value
 
 ### `Bun.secrets.delete(options)`
 
@@ -120,14 +122,14 @@ const deleted = await Bun.secrets.delete({
 
 **Parameters:**
 
-* `options.service` (string, required) - The service or application name
-* `options.name` (string, required) - The username or account identifier
+- `options.service` (string, required) - The service or application name
+- `options.name` (string, required) - The username or account identifier
 
 **Returns:**
 
-* `Promise<boolean>` - `true` if a credential was deleted, `false` if not found
+- `Promise<boolean>` - `true` if a credential was deleted, `false` if not found
 
-***
+---
 
 ## Examples
 
@@ -235,30 +237,45 @@ await Bun.secrets.set({
 // The old password is replaced
 ```
 
-***
+---
 
 ## Platform Behavior
 
 ### macOS (Keychain)
 
-* Bun stores credentials in the user's login keychain
-* The keychain may prompt for access permission on first use
-* Credentials persist across system restarts
-* Accessible by the user who stored them
+- Bun stores credentials in the user's login keychain
+- The keychain may prompt for access permission on first use
+- Credentials persist across system restarts
+- Accessible by the user who stored them
 
 ### Linux (libsecret)
 
-* Requires a secret service daemon such as GNOME Keyring or KWallet
-* Bun stores credentials in the default collection
-* May prompt for unlock if the keyring is locked
-* The secret service must be running
+- Requires a secret service daemon such as GNOME Keyring or KWallet
+- Bun stores credentials in the default collection
+- May prompt for unlock if the keyring is locked
+- The secret service must be running
 
 ### Windows (Credential Manager)
 
-* Bun stores credentials in Windows Credential Manager
-* Visible in Control Panel → Credential Manager → Windows Credentials
-* Persisted with the `CRED_PERSIST_ENTERPRISE` flag, so they're scoped per user
-* Encrypted using Windows Data Protection API
+- Bun stores credentials in Windows Credential Manager
+- Visible in Control Panel → Credential Manager → Windows Credentials
+- Persisted with the `CRED_PERSIST_ENTERPRISE` flag by default, so they're scoped per user
+- Encrypted using Windows Data Protection API
+
+With `CRED_PERSIST_ENTERPRISE`, a user account that has roaming state, such as a roaming profile on a domain, also sees the credential on other computers. To keep a secret on the current computer, for example a refresh token that belongs to one device, pass `persist: "local"`. Bun then stores the credential with `CRED_PERSIST_LOCAL_MACHINE`.
+
+```typescript
+import { secrets } from "bun";
+
+await secrets.set({
+  service: "my-app",
+  name: "refresh-token",
+  value: "rt_xxxxxxxxxxxxxxxxxxxx",
+  persist: "local",
+});
+```
+
+Every `set()` replaces the whole entry, so the `persist` of the latest `set()` applies. macOS and Linux ignore `persist`.
 
 ## Security Considerations
 
@@ -270,29 +287,29 @@ await Bun.secrets.set({
 
 ## Limitations
 
-* Maximum password length varies by platform (typically 2048-4096 bytes)
-* Keep `service` and `name` reasonably short (under 256 characters)
-* Some special characters may need escaping depending on the platform
-* Requires appropriate system services:
-* Linux: Secret service daemon must be running
-* macOS: Keychain Access must be available
-* Windows: Credential Manager service must be enabled
+- Maximum password length varies by platform (typically 2048-4096 bytes)
+- Keep `service` and `name` reasonably short (under 256 characters)
+- Some special characters may need escaping depending on the platform
+- Requires appropriate system services:
+- Linux: Secret service daemon must be running
+- macOS: Keychain Access must be available
+- Windows: Credential Manager service must be enabled
 
-***
+---
 
 ## Comparison with Environment Variables
 
 Unlike environment variables, `Bun.secrets`:
 
-* ✅ Encrypts credentials at rest (thanks to the operating system)
-* ✅ Avoids exposing secrets in process memory dumps (Bun zeros the memory after it's no longer needed)
-* ✅ Survives application restarts
-* ✅ Can be updated without restarting the application
-* ✅ Provides user-level access control
-* ❌ Requires OS credential service
-* ❌ Not very useful for deployment secrets (use environment variables in production)
+- ✅ Encrypts credentials at rest (thanks to the operating system)
+- ✅ Avoids exposing secrets in process memory dumps (Bun zeros the memory after it's no longer needed)
+- ✅ Survives application restarts
+- ✅ Can be updated without restarting the application
+- ✅ Provides user-level access control
+- ❌ Requires OS credential service
+- ❌ Not very useful for deployment secrets (use environment variables in production)
 
-***
+---
 
 ## Best Practices
 
@@ -312,12 +329,12 @@ If you're building a CLI for external use, use a UTI (Uniform Type Identifier) f
 This API is slow; keep non-secret settings in a config file.
 
 3. **Use for local development tools**:
-* ✅ CLI tools (gh, npm, docker, kubectl)
-* ✅ Local development servers
-* ✅ Personal API keys for testing
-* ❌ Production servers (use proper secret management)
+- ✅ CLI tools (gh, npm, docker, kubectl)
+- ✅ Local development servers
+- ✅ Personal API keys for testing
+- ❌ Production servers (use proper secret management)
 
-***
+---
 
 ## TypeScript
 
@@ -330,7 +347,7 @@ namespace Bun {
 
   interface Secrets {
     get(options: SecretsOptions): Promise<string | null>;
-    set(options: SecretsOptions & { value: string }): Promise<void>;
+    set(options: SecretsOptions & { value: string; persist?: "local" | "enterprise" }): Promise<void>;
     delete(options: SecretsOptions): Promise<boolean>;
   }
 

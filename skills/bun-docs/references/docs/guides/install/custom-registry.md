@@ -17,9 +17,9 @@ registry = "https://registry.npmjs.org"
 # registry = "https://username:password@registry.npmjs.org"
 ```
 
-***
+---
 
-Your `bunfig.toml` can reference environment variables. `bun install` automatically loads environment variables from `.env.production.local`, `.env.local`, `.env.production`, and `.env`, regardless of `NODE_ENV`. It does not read `.env.development` or `.env.test`. See [Environment variables](/docs/runtime/environment-variables).
+Your `bunfig.toml` can reference environment variables. `bun install` automatically loads environment variables from `.env.production.local`, `.env.local`, `.env.production`, and `.env`, regardless of `NODE_ENV`. It does not read `.env.development` or `.env.test`. See [Environment variables](/runtime/environment-variables).
 
 **File:** `bunfig.toml`
 ```toml
@@ -27,6 +27,6 @@ Your `bunfig.toml` can reference environment variables. `bun install` automatica
 registry = { url = "https://registry.npmjs.org", token = "$npm_token" }
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

@@ -9,7 +9,7 @@ Access the current environment variables with `process.env`.
 process.env.API_TOKEN; // => "secret"
 ```
 
-***
+---
 
 Bun also exposes these variables as `Bun.env`, an alias of `process.env`.
 
@@ -18,7 +18,7 @@ Bun also exposes these variables as `Bun.env`, an alias of `process.env`.
 Bun.env.API_TOKEN; // => "secret"
 ```
 
-***
+---
 
 To print all currently-set environment variables, run `bun --print process.env`.
 
@@ -34,6 +34,6 @@ ProcessEnv {
 }
 ```
 
-***
+---
 
-See [Environment variables](/docs/runtime/environment-variables).
+See [Environment variables](/runtime/environment-variables).

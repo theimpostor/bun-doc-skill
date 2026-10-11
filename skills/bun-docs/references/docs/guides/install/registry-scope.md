@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/install/registry-scope
 
 
-You can configure private registries in [`.npmrc`](/docs/pm/npmrc) or [`bunfig.toml`](/docs/runtime/bunfig#install-registry). Both work; we recommend `bunfig.toml` for its Bun-specific options.
+You can configure private registries in [`.npmrc`](/pm/npmrc) or [`bunfig.toml`](/runtime/bunfig#install-registry). Both work; we recommend `bunfig.toml` for its Bun-specific options.
 
 To configure a registry for a particular npm scope:
 
@@ -25,9 +25,9 @@ To configure a registry for a particular npm scope:
 
 ```
 
-***
+---
 
-Your `bunfig.toml` can reference environment variables. `bun install` automatically loads environment variables from `.env.production.local`, `.env.local`, `.env.production`, and `.env`, regardless of `NODE_ENV`. It does not read `.env.development` or `.env.test`. See [Environment variables](/docs/runtime/environment-variables).
+Your `bunfig.toml` can reference environment variables. `bun install` automatically loads environment variables from `.env.production.local`, `.env.local`, `.env.production`, and `.env`, regardless of `NODE_ENV`. It does not read `.env.development` or `.env.test`. See [Environment variables](/runtime/environment-variables).
 
 **File:** `bunfig.toml`
 ```toml
@@ -35,6 +35,6 @@ Your `bunfig.toml` can reference environment variables. `bun install` automatica
 "@myorg3" = { token = "$npm_token", url = "https://registry.myorg.com/" }
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

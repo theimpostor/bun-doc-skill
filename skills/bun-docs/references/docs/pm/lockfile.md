@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/lockfile
 
 Bun's lockfile format and configuration
 
+
 `bun install` creates a lockfile called `bun.lock`.
 
 #### Should it be committed to git?
@@ -30,7 +31,8 @@ To install without creating a lockfile:
 bun install --no-save
 ```
 
-To write a Yarn lockfile *in addition* to `bun.lock`:
+To write a Yarn lockfile _in addition_ to `bun.lock`:
+
 
 ```bash
 bun install --yarn
@@ -44,6 +46,7 @@ bun install --yarn
 print = "yarn"
 ```
 
+
 #### Text-based lockfile
 
 Bun v1.2 changed the default lockfile format to the text-based `bun.lock`. To migrate an existing binary `bun.lockb`, run `bun install --save-text-lockfile --frozen-lockfile --lockfile-only` and delete `bun.lockb`.
@@ -54,9 +57,9 @@ For more on the format, see [the blog post](https://bun.com/blog/bun-lock-text-l
 
 When you run `bun install` in a project without a `bun.lock`, Bun automatically migrates existing lockfiles:
 
-* `yarn.lock` (v1)
-* `package-lock.json` (npm, `lockfileVersion` 2, 3 or 4)
-* `pnpm-lock.yaml` (pnpm)
+- `yarn.lock` (v1)
+- `package-lock.json` (npm, `lockfileVersion` 2, 3 or 4)
+- `pnpm-lock.yaml` (pnpm)
 
 Bun does not migrate a `package-lock.json` from npm 6 or older (`lockfileVersion` 1); it prints a warning and resolves from `package.json` instead.
 

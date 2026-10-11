@@ -12,12 +12,12 @@ import { rm } from "node:fs/promises";
 await rm("path/to/directory", { recursive: true, force: true });
 ```
 
-***
+---
 
 These options configure the deletion behavior:
 
-* `recursive: true` - Delete subdirectories and their contents
-* `force: true` - Don't throw errors if the directory doesn't exist
+- `recursive: true` - Delete subdirectories and their contents
+- `force: true` - Don't throw errors if the directory doesn't exist
 
 Omit `force` to get an error if the directory doesn't exist:
 
@@ -34,6 +34,6 @@ try {
 }
 ```
 
-***
+---
 
-See [File I/O](/docs/runtime/file-io) for more filesystem operations.
+See [File I/O](/runtime/file-io) for more filesystem operations.

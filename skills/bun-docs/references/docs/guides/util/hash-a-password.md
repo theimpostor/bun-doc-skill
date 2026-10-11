@@ -11,7 +11,7 @@ const hash = await Bun.password.hash(password);
 // => $argon2id$v=19$m=65536,t=2,p=1$tFq+9AVr1bfPxQdh6E8DQRhEXg/M/...
 ```
 
-***
+---
 
 By default, `Bun.password.hash()` uses the [Argon2id](https://en.wikipedia.org/wiki/Argon2) algorithm. Pass a second argument to use a different algorithm or configure the hashing parameters.
 
@@ -26,7 +26,7 @@ const argonHash = await Bun.password.hash(password, {
 });
 ```
 
-***
+---
 
 Bun also implements the [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) algorithm. Specify `algorithm: "bcrypt"` to use it.
 
@@ -38,7 +38,7 @@ const bcryptHash = await Bun.password.hash(password, {
 });
 ```
 
-***
+---
 
 Use `Bun.password.verify()` to verify a password. The hash stores the algorithm and its parameters, so you don't need to specify them again.
 
@@ -50,6 +50,6 @@ const isMatch = await Bun.password.verify(password, hash);
 // => true
 ```
 
-***
+---
 
-See [`Bun.password`](/docs/runtime/hashing#bun-password).
+See [`Bun.password`](/runtime/hashing#bun-password).

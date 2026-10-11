@@ -9,7 +9,7 @@ To implement an SSE endpoint in Bun, return a `Response` whose body is a streami
 > Note
 `Bun.serve` closes idle connections after **10 seconds** by default. A quiet SSE stream counts as idle, so the
 examples below call `server.timeout(req, 0)` to disable the timeout for the stream. See
-[`idleTimeout`](/docs/runtime/http/server#idletimeout) for details.
+[`idleTimeout`](/runtime/http/server#idletimeout) for details.
 
 ## Using an async generator
 

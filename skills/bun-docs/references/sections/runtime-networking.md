@@ -1,6 +1,6 @@
 # Runtime Networking
 
-Use for DNS, `fetch`, TCP, and UDP runtime docs.
+Use for DNS, `fetch`, `Bun.FetchSession`, proxies, TCP, and UDP runtime docs.
 
 Use this file to pick the most relevant Bun doc page before opening the page itself.
 

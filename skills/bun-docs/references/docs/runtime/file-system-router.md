@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/file-system-router
 
 Bun provides a fast API for resolving routes against file-system paths
 
+
 This API is intended primarily for library authors. It supports only Next.js-style file-system routing.
 
 ## Next.js-style

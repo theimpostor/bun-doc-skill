@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/networking/tcp
 
 Use Bun's native TCP API to implement performance-sensitive systems like database clients, game servers, or anything that needs to communicate over TCP (instead of HTTP)
 
+
 Bun's TCP API is low-level, intended for library authors and advanced use cases.
 
 ## Start a server (`Bun.listen()`)
@@ -25,6 +26,7 @@ Bun.listen({
 ```
 
 ### An API designed for speed
+
 In Bun, you declare one set of handlers per server instead of assigning callbacks to each socket, as with Node.js `EventEmitters` or the web-standard `WebSocket` API.
 
 **File:** `server.ts`
@@ -43,6 +45,7 @@ Bun.listen({
 ```
 
 For performance-sensitive servers, assigning listeners to each socket can cause significant garbage collector pressure and increase memory usage. By contrast, Bun only allocates one handler function for each event and shares it among all sockets. This is a small optimization, but it adds up.
+
 
 Attach contextual data to a socket in the `open` handler.
 
@@ -82,7 +85,7 @@ Bun.listen({
 });
 ```
 
-The `key` and `cert` fields expect the *contents* of your TLS key and certificate. This can be a string, `BunFile`, `TypedArray`, `Buffer`, or an array of these.
+The `key` and `cert` fields expect the _contents_ of your TLS key and certificate. This can be a string, `BunFile`, `TypedArray`, `Buffer`, or an array of these.
 
 **File:** `server.ts`
 ```ts
@@ -113,7 +116,7 @@ server.stop(true);
 server.unref();
 ```
 
-***
+---
 
 ## Create a connection (`Bun.connect()`)
 
@@ -151,11 +154,12 @@ const socket = await Bun.connect({
 });
 ```
 
-***
+---
 
 ## Hot reloading
 
 You can hot reload both TCP servers and sockets with new handlers.
+
 
 **File:** `server.ts`
 ```ts
@@ -186,7 +190,8 @@ socket.reload({
 });
 ```
 
-***
+
+---
 
 ## Buffering
 

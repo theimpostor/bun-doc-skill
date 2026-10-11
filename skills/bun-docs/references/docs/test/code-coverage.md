@@ -3,6 +3,7 @@ Source: https://bun.com/docs/test/code-coverage
 
 Use Bun's built-in code coverage reporting to track test coverage and find untested code
 
+
 Bun's test runner has built-in code coverage reporting. Use it to see how much of your codebase your tests cover and to find untested code.
 
 ## Enabling Coverage
@@ -69,10 +70,10 @@ coverageThreshold = 0.9
 ```toml
 [test]
 # To set different thresholds for lines and functions
-coverageThreshold = { lines = 0.9, functions = 0.9, statements = 0.9 }
+coverageThreshold = { lines = 0.9, functions = 0.9 }
 ```
 
-Setting any of these thresholds causes the test run to fail if coverage is below the threshold.
+Setting either key makes `bun test --coverage` exit with a non-zero exit code when line or function coverage is below its threshold; a key you omit keeps the `0.9` default. Bun accepts a `statements` key but does not currently enforce it. Outside `--parallel`, the check only runs when the `text` reporter is enabled (the default); a run with only `--coverage-reporter=lcov` currently exits 0 regardless of the threshold.
 
 ## Coverage Reporters
 
@@ -111,10 +112,10 @@ bun test --coverage --coverage-reporter=lcov
 
 Tools and services that read the LCOV format include:
 
-* **Code editors**: VS Code extensions can show coverage inline
-* **CI/CD services**: GitHub Actions, GitLab CI, CircleCI
-* **Coverage services**: Codecov, Coveralls
-* **IDEs**: WebStorm, IntelliJ IDEA
+- **Code editors**: VS Code extensions can show coverage inline
+- **CI/CD services**: GitHub Actions, GitLab CI, CircleCI
+- **Coverage services**: Codecov, Coveralls
+- **IDEs**: WebStorm, IntelliJ IDEA
 
 #### Using LCOV with GitHub Actions
 
@@ -222,10 +223,10 @@ transpilation process.
 
 By default, coverage reports:
 
-* **Exclude** `node_modules` directories
-* **Exclude** files loaded with non-JS/TS loaders (for example `.css`, `.txt`) unless you specify a custom JS loader
-* **Exclude** test files themselves (include them with `coverageSkipTestFiles = false`)
-* Can exclude additional files with `coveragePathIgnorePatterns`
+- **Exclude** `node_modules` directories
+- **Exclude** files loaded with non-JS/TS loaders (for example `.css`, `.txt`) unless you specify a custom JS loader
+- **Exclude** test files themselves (include them with `coverageSkipTestFiles = false`)
+- Can exclude additional files with `coveragePathIgnorePatterns`
 
 ## Advanced Configuration
 
@@ -318,16 +319,16 @@ All files    |   85.71 |   90.48 |
 -------------|---------|---------|-------------------
 ```
 
-* **% Funcs**: Percentage of functions called during tests
-* **% Lines**: Percentage of executable lines run during tests
-* **Uncovered Line #s**: Line numbers that were never executed
+- **% Funcs**: Percentage of functions called during tests
+- **% Lines**: Percentage of executable lines run during tests
+- **Uncovered Line #s**: Line numbers that were never executed
 
 ### What to Aim For
 
-* **80%+ overall coverage**: Generally considered good
-* **90%+ critical paths**: Important business logic should be well-tested
-* **100% utility functions**: Pure functions and utilities can be tested completely
-* **Lower coverage for UI components**: Often acceptable as they may require integration tests
+- **80%+ overall coverage**: Generally considered good
+- **90%+ critical paths**: Important business logic should be well-tested
+- **100% utility functions**: Pure functions and utilities can be tested completely
+- **Lower coverage for UI components**: Often acceptable as they may require integration tests
 
 ## Best Practices
 
@@ -377,11 +378,11 @@ bun test --coverage src/critical-module.ts
 
 Coverage is only one metric. Also consider:
 
-* **Code review quality**
-* **Integration test coverage**
-* **Error handling tests**
-* **Performance tests**
-* **Type safety**
+- **Code review quality**
+- **Integration test coverage**
+- **Error handling tests**
+- **Performance tests**
+- **Type safety**
 
 ## Troubleshooting
 

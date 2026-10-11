@@ -11,6 +11,6 @@ Bun.which("notfound"); // => null
 Bun.which("bun"); // => "/home/user/.bun/bin/bun"
 ```
 
-***
+---
 
-See [`Bun.which`](/docs/runtime/utils#bun-which).
+See [`Bun.which`](/runtime/utils#bun-which).

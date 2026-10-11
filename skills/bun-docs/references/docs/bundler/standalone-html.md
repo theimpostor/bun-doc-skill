@@ -3,6 +3,7 @@ Source: https://bun.com/docs/bundler/standalone-html
 
 Bundle a single-page app into a single self-contained .html file with no external dependencies
 
+
 Bun can bundle your entire frontend into a **single `.html` file** with zero external dependencies. JavaScript, TypeScript, JSX, CSS, images, fonts, videos, WASM: Bun inlines everything into one file.
 
 ```bash
@@ -15,11 +16,11 @@ The output is a self-contained HTML document: no relative paths, no external fil
 
 The output is a single `.html` file you can put anywhere:
 
-* **Upload it to S3** or any static file host — no directory structure to maintain, one file
-* **Double-click it from your desktop** — it opens in the browser and works offline, no localhost server needed
-* **Embed it in your webview** — no relative files to deal with
-* **Insert it in an `<iframe>`** — embed interactive content in another page with a single file URL
-* **Serve it from anywhere** — any HTTP server, CDN, or file share
+- **Upload it to S3** or any static file host — no directory structure to maintain, one file
+- **Double-click it from your desktop** — it opens in the browser and works offline, no localhost server needed
+- **Embed it in your webview** — no relative files to deal with
+- **Insert it in an `<iframe>`** — embed interactive content in another page with a single file URL
+- **Serve it from anywhere** — any HTTP server, CDN, or file share
 
 There's nothing to install, no `node_modules` to deploy, no build artifacts to coordinate, no relative paths to think about.
 
@@ -32,6 +33,7 @@ Standalone HTML output is a plain `.html` file: not an archive, not a folder. Bu
 You can distribute the page the same way you'd distribute a PDF: a single file you can move, copy, upload, or share without worrying about broken paths or missing assets.
 
 ## Quick start
+
 
 **File:** `index.html`
 ```html
@@ -67,6 +69,7 @@ body {
   background: #f5f5f5;
 }
 ```
+
 
 ```bash
 bun build --compile --target=browser ./index.html --outdir=dist
@@ -108,6 +111,7 @@ React apps need no extra configuration: Bun transpiles JSX and resolves npm pack
 ```bash
 bun install react react-dom
 ```
+
 
 **File:** `index.html`
 ```html
@@ -154,6 +158,7 @@ export function Counter() {
 }
 ```
 
+
 ```bash
 bun build --compile --target=browser ./index.html --outdir=dist
 ```
@@ -167,6 +172,7 @@ Install the plugin and reference Tailwind in your HTML or CSS:
 ```bash
 bun install --dev bun-plugin-tailwind
 ```
+
 
 **File:** `index.html`
 ```html
@@ -198,6 +204,7 @@ function App() {
 
 createRoot(document.getElementById("root")!).render(<App />);
 ```
+
 
 Build with the plugin using the JavaScript API:
 
@@ -308,6 +315,6 @@ Bun replaces references to `process.env.API_URL` in your JavaScript with the lit
 
 ## Limitations
 
-* **Code splitting** is not supported — `--splitting` cannot be used with `--compile --target=browser`
-* **Large assets** increase file size since they're base64-encoded (33% overhead vs the raw binary)
-* **External URLs** (CDN links, absolute URLs) stay as-is: Bun inlines only relative paths
+- **Code splitting** is not supported — `--splitting` cannot be used with `--compile --target=browser`
+- **Large assets** increase file size since they're base64-encoded (33% overhead vs the raw binary)
+- **External URLs** (CDN links, absolute URLs) stay as-is: Bun inlines only relative paths

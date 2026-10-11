@@ -3,13 +3,14 @@ Source: https://bun.com/docs/runtime/ffi
 
 Use Bun's FFI module to efficiently call native libraries from JavaScript
 
+
 > Warning
 `bun:ffi` is **experimental**, with known bugs and limitations. Do not rely on it in production. The most stable way
-to interact with native code from Bun is to write a [Node-API module](/docs/runtime/node-api).
+to interact with native code from Bun is to write a [Node-API module](/runtime/node-api).
 
 Use the built-in `bun:ffi` module to efficiently call native libraries from JavaScript. It works with any language that supports the C ABI, including Zig, Rust, C/C++, C#, Nim, and Kotlin.
 
-***
+---
 
 ## dlopen usage (`bun:ffi`)
 
@@ -40,17 +41,17 @@ const {
 console.log(`SQLite 3 version: ${sqlite3_libversion()}`);
 ```
 
-***
+---
 
 ## Performance
 
 According to [our benchmark](https://github.com/oven-sh/bun/tree/main/bench/ffi), `bun:ffi` is roughly 2-6x faster than Node.js FFI through `Node-API`.
 
-<Image />
+![Image](/images/ffi.png)
 
-Bun's JavaScript engine (JavaScriptCore) implements `dlopen`, `linkSymbols`, `CFunction`, and `JSCallback` natively. Argument conversion, arity handling, and result boxing happen in-engine. Hot call sites compile down through the DFG/FTL JIT tiers into direct native calls with no per-argument JavaScript shim. Bun embeds [TinyCC](https://github.com/TinyCC/tinycc), a small and fast C compiler, only for [`cc()`](/docs/runtime/c-compiler), which compiles C source you provide at runtime.
+Bun's JavaScript engine (JavaScriptCore) implements `dlopen`, `linkSymbols`, `CFunction`, and `JSCallback` natively. Argument conversion, arity handling, and result boxing happen in-engine. Hot call sites compile down through the DFG/FTL JIT tiers into direct native calls with no per-argument JavaScript shim. Bun embeds [TinyCC](https://github.com/TinyCC/tinycc), a small and fast C compiler, only for [`cc()`](/runtime/c-compiler), which compiles C source you provide at runtime.
 
-***
+---
 
 ## Usage
 
@@ -123,32 +124,32 @@ clang++ -shared -fPIC add.cpp -o libadd.so
 clang++ -dynamiclib add.cpp -o libadd.dylib
 ```
 
-***
+---
 
 ## FFI types
 
 The following `FFIType` values are supported.
 
-| `FFIType`      | C Type                | Aliases                         |
-| -------------- | --------------------- | ------------------------------- |
-| buffer         | `char*`               |                                 |
-| cstring        | `char*`               |                                 |
-| function       | `(void*)(*)()`        | `fn`, `callback`                |
-| ptr            | `void*`               | `pointer`, `void*`, `char*`     |
-| i8             | `int8_t`              | `int8_t`                        |
-| i16            | `int16_t`             | `int16_t`                       |
-| i32            | `int32_t`             | `int32_t`, `int`                |
-| i64            | `int64_t`             | `int64_t`                       |
+| `FFIType`     | C Type                | Aliases                         |
+| ------------- | --------------------- | ------------------------------- |
+| buffer        | `char*`               |                                 |
+| cstring       | `char*`               |                                 |
+| function      | `(void*)(*)()`        | `fn`, `callback`                |
+| ptr           | `void*`               | `pointer`, `void*`, `char*`     |
+| i8            | `int8_t`              | `int8_t`                        |
+| i16           | `int16_t`             | `int16_t`                       |
+| i32           | `int32_t`             | `int32_t`, `int`                |
+| i64           | `int64_t`             | `int64_t`, `isize`              |
 | i64_fast      | `int64_t`             |                                 |
-| u8             | `uint8_t`             | `uint8_t`                       |
-| u16            | `uint16_t`            | `uint16_t`                      |
-| u32            | `uint32_t`            | `uint32_t`                      |
-| u64            | `uint64_t`            | `uint64_t`, `usize`             |
+| u8            | `uint8_t`             | `uint8_t`                       |
+| u16           | `uint16_t`            | `uint16_t`                      |
+| u32           | `uint32_t`            | `uint32_t`                      |
+| u64           | `uint64_t`            | `uint64_t`, `usize`             |
 | u64_fast      | `uint64_t`            |                                 |
-| f32            | `float`               | `float`                         |
-| f64            | `double`              | `double`                        |
-| bool           | `bool`                |                                 |
-| char           | `char`                |                                 |
+| f32           | `float`               | `float`                         |
+| f64           | `double`              | `double`                        |
+| bool          | `bool`                |                                 |
+| char          | `char`                |                                 |
 | napi_env      | `napi_env`            | `cc()` only                     |
 | napi_value    | `napi_value`          | `cc()` only                     |
 | buffer_length | `uint64_t` / `size_t` | engine-native only (not `cc()`) |
@@ -174,13 +175,13 @@ const chunk = new TextEncoder().encode("hello");
 write_all(1, chunk, chunk); // buf and len both come from `chunk`
 ```
 
-`napi_env` and `napi_value` are only valid in [`cc()`](/docs/runtime/c-compiler) source. There, the
+`napi_env` and `napi_value` are only valid in [`cc()`](/runtime/c-compiler) source. There, the
 compiled trampoline fills in a `napi_env` parameter with the module's environment; the JavaScript
 argument passed at that position is a placeholder and is ignored. `napi_value` passes the
 JavaScript value through unchanged. Using either type in a `dlopen`, `linkSymbols`, `JSCallback`,
 or `CFunction` descriptor throws a `TypeError`.
 
-***
+---
 
 ## Strings
 
@@ -189,15 +190,16 @@ JavaScript strings and C-like strings are different, and that complicates using 
 ### How are JavaScript strings and C strings different?
 JavaScript strings:
 
-* UTF16 (2 bytes per letter) or potentially latin1, depending on the JavaScript engine & what characters are used
-* `length` stored separately
-* Immutable
+- UTF16 (2 bytes per letter) or potentially latin1, depending on the JavaScript engine & what characters are used
+- `length` stored separately
+- Immutable
 
 C strings:
 
-* UTF8 (1 byte per letter), usually
-* The length is not stored. Instead, the string is null-terminated: its length is the index of the first `\0`
-* Mutable
+- UTF8 (1 byte per letter), usually
+- The length is not stored. Instead, the string is null-terminated: its length is the index of the first `\0`
+- Mutable
+
 
 To solve this, `bun:ffi` exports `CString`, which reads a UTF-8 C string at a pointer and returns a plain JavaScript string:
 
@@ -236,13 +238,13 @@ symbols.puts("Hello, world!"); // args: ["cstring"] — pass the string directly
 **Lifetime of a `cstring` return.** The pointer is whatever the C function returned: memory
 owned by the native side (a static, a buffer it manages, or heap it allocated). The engine copies
 nothing on return, and the JavaScript string is cloned out of that memory. The one aliasing case is
-a C function that hands back a pointer *derived from a `cstring` argument you passed as a JavaScript
-string*. The engine transcodes that argument into its call-scoped buffer, so treat such a returned
+a C function that hands back a pointer _derived from a `cstring` argument you passed as a JavaScript
+string_. The engine transcodes that argument into its call-scoped buffer, so treat such a returned
 pointer as valid only until your next FFI call reuses that buffer (the usual C rule for functions
 that return their input). Clone it (via the returned string, or `new CString`) rather than holding
 the raw address.
 
-***
+---
 
 ## Function pointers
 
@@ -297,7 +299,7 @@ const lib = linkSymbols({
 const [major, minor, patch] = [lib.symbols.getMajor(), lib.symbols.getMinor(), lib.symbols.getPatch()];
 ```
 
-***
+---
 
 ## Callbacks
 
@@ -339,7 +341,7 @@ When you're done with a `JSCallback`, call `close()` to free the memory.
 
 `JSCallback` has experimental support for thread-safe callbacks. You need this if you pass a callback function into a different thread from the one that created it. Enable it with the optional `threadsafe` parameter.
 
-Thread-safe callbacks can be invoked from **any thread** — including threads spawned by your native library that Bun is not otherwise aware of. The engine copies the C arguments on the calling thread and marshals the invocation onto the JavaScript thread. There it converts the arguments (64-bit integers and pointers arrive as exact BigInts) and runs your function. Because the invocation is asynchronous from C's point of view, the value returned to the C caller is unspecified. You may declare a non-`void` `returns` (the example below uses `"bool"`), but the C side must treat a thread-safe callback as returning `void` and ignore its return value.
+Thread-safe callbacks can be invoked from **any thread** — including threads spawned by your native library that Bun is not otherwise aware of. The engine copies the C arguments on the calling thread and marshals the invocation onto the JavaScript thread. There it converts the arguments exactly as for an ordinary callback (`i64`/`u64`/`usize` arguments arrive as BigInts; pointers arrive as numbers) and runs your function. Because the invocation is asynchronous from C's point of view, the value returned to the C caller is unspecified. You may declare a non-`void` `returns` (the example below uses `"bool"`), but the C side must treat a thread-safe callback as returning `void` and ignore its return value.
 
 ```ts
 const searchIterator = new JSCallback((ptr, length) => /hello/.test(new CString(ptr, 0, Number(length))), {
@@ -370,18 +372,21 @@ setOnResolve(onResolve.ptr);
 setOnResolve(onResolve);
 ```
 
-***
+
+---
 
 ## Pointers
 
-Bun represents [pointers](https://en.wikipedia.org/wiki/Pointer_(computer_programming)) as a `number` in JavaScript.
+Bun represents [pointers](<https://en.wikipedia.org/wiki/Pointer_(computer_programming)>) as a `number` in JavaScript.
 
 ### How does a 64 bit pointer fit in a JavaScript number?
+
 64-bit processors support up to [52 bits of addressable space](https://en.wikipedia.org/wiki/64-bit_computing#Limits_of_processors). [JavaScript numbers](https://en.wikipedia.org/wiki/Double-precision_floating-point_format#IEEE_754_double-precision_binary_floating-point_format:_binary64) support 53 bits of usable space, which leaves 1 bit of extra space.
 
 **Why not `BigInt`?** `BigInt` is slower. JavaScript engines allocate `BigInt`s separately, so they can't fit into a regular JavaScript value. If you pass a `BigInt` to a function, Bun converts it to a `number`.
 
-**Windows Note**: The Windows API type HANDLE does not represent a virtual address, and using `ptr` for it does *not* work as expected. Use `u64` to safely represent HANDLE values.
+**Windows Note**: The Windows API type HANDLE does not represent a virtual address, and using `ptr` for it does _not_ work as expected. Use `u64` to safely represent HANDLE values.
+
 
 To convert from a `TypedArray` to a pointer:
 
@@ -457,7 +462,7 @@ To track when a `TypedArray` is no longer in use from JavaScript, use a [Finaliz
 
 #### From C, Rust, Zig, etc
 
-To track when a `TypedArray` is no longer in use from C or FFI, pass a callback and an optional context pointer to `toArrayBuffer` or `toBuffer`. Bun calls the callback later, once the garbage collector frees the underlying `ArrayBuffer` JavaScript object.
+To track when a `TypedArray` is no longer in use from C or FFI, pass a callback and an optional context pointer to `toArrayBuffer` or `toBuffer`. Bun calls the callback later, once the garbage collector frees the underlying `ArrayBuffer` JavaScript object. The callback may run on a garbage-collector thread rather than the JavaScript thread, so it must not call back into JavaScript or assume thread-local state.
 
 The expected signature is the same as in [JavaScriptCore's C API](https://developer.apple.com/documentation/javascriptcore/jstypedarraybytesdeallocator?language=objc):
 
@@ -535,6 +540,7 @@ const out = encode_png(
 The [auto-generated wrapper](https://github.com/oven-sh/bun/blob/6a65631cbdcae75bfa1e64323a6ad613a922cd1a/src/bun.js/ffi.exports.js#L180-L182) converts the `TypedArray` to a pointer.
 
 ### Hardmode
+
 If you don't want the automatic conversion, or you want a pointer to a specific byte offset within the `TypedArray`, get the pointer to the `TypedArray` directly:
 
 ```ts
@@ -564,6 +570,7 @@ const out = encode_png(
   128,
 );
 ```
+
 
 ### Reading pointers
 

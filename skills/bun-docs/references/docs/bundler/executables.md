@@ -3,13 +3,13 @@ Source: https://bun.com/docs/bundler/executables
 
 Generate standalone executables from TypeScript or JavaScript files with Bun
 
+
 Bun's bundler implements a `--compile` flag for generating a standalone binary from a TypeScript or JavaScript file.
 
 ### CLI
 ```bash
 bun build ./cli.ts --compile --outfile mycli
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -38,7 +38,7 @@ Hello world!
 
 Bun bundles all imported files and packages into the executable, along with a copy of the Bun runtime. All built-in Bun and Node.js APIs are supported.
 
-***
+---
 
 ## Cross-compile to other platforms
 
@@ -49,19 +49,11 @@ To build for Linux x64 (most servers):
 ### CLI
 ```bash
 bun build --compile --target=bun-linux-x64 ./index.ts --outfile myapp
-
-# To support CPUs from before 2013, use the baseline version (nehalem)
-bun build --compile --target=bun-linux-x64-baseline ./index.ts --outfile myapp
-
-# To explicitly only support CPUs from 2013 and later, use the modern version (haswell)
-# modern is faster, but baseline is more compatible.
-bun build --compile --target=bun-linux-x64-modern ./index.ts --outfile myapp
 ```
 
 ### JavaScript
 **File:** `build.ts`
 ```ts
-// Standard Linux x64
 await Bun.build({
   entrypoints: ["./index.ts"],
   compile: {
@@ -69,25 +61,8 @@ await Bun.build({
     outfile: "./myapp",
   },
 });
-
-// Baseline (pre-2013 CPUs)
-await Bun.build({
-  entrypoints: ["./index.ts"],
-  compile: {
-    target: "bun-linux-x64-baseline",
-    outfile: "./myapp",
-  },
-});
-
-// Modern (2013+ CPUs, faster)
-await Bun.build({
-  entrypoints: ["./index.ts"],
-  compile: {
-    target: "bun-linux-x64-modern",
-    outfile: "./myapp",
-  },
-});
 ```
+
 
 To build for Linux ARM64 (for example, Graviton or Raspberry Pi):
 
@@ -96,7 +71,6 @@ To build for Linux ARM64 (for example, Graviton or Raspberry Pi):
 # Note: the default architecture is x64 if no architecture is specified.
 bun build --compile --target=bun-linux-arm64 ./index.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -115,19 +89,12 @@ To build for Windows x64:
 ```bash
 bun build --compile --target=bun-windows-x64 ./path/to/my/app.ts --outfile myapp
 
-# To support CPUs from before 2013, use the baseline version (nehalem)
-bun build --compile --target=bun-windows-x64-baseline ./path/to/my/app.ts --outfile myapp
-
-# To explicitly only support CPUs from 2013 and later, use the modern version (haswell)
-bun build --compile --target=bun-windows-x64-modern ./path/to/my/app.ts --outfile myapp
-
 # note: if no .exe extension is provided, Bun adds it automatically for Windows executables
 ```
 
 ### JavaScript
 **File:** `build.ts`
 ```ts
-// Standard Windows x64
 await Bun.build({
   entrypoints: ["./path/to/my/app.ts"],
   compile: {
@@ -135,16 +102,8 @@ await Bun.build({
     outfile: "./myapp", // .exe added automatically
   },
 });
-
-// Baseline or modern variants
-await Bun.build({
-  entrypoints: ["./path/to/my/app.ts"],
-  compile: {
-    target: "bun-windows-x64-baseline",
-    outfile: "./myapp",
-  },
-});
 ```
+
 
 To build for Windows arm64:
 
@@ -167,13 +126,13 @@ await Bun.build({
 });
 ```
 
+
 To build for macOS arm64:
 
 ### CLI
 ```bash
 bun build --compile --target=bun-darwin-arm64 ./path/to/my/app.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -192,7 +151,6 @@ To build for macOS x64:
 ```bash
 bun build --compile --target=bun-darwin-x64 ./path/to/my/app.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -209,24 +167,23 @@ await Bun.build({
 
 The segments of the `--target` value can appear in any order, as long as they're delimited by `-`.
 
-| --target             | Operating System | Architecture | Modern | Baseline | Libc  |
-| -------------------- | ---------------- | ------------ | ------ | -------- | ----- |
-| bun-linux-x64        | Linux            | x64          | ✅      | ✅        | glibc |
-| bun-linux-arm64      | Linux            | arm64        | ✅      | N/A      | glibc |
-| bun-windows-x64      | Windows          | x64          | ✅      | ✅        | -     |
-| bun-windows-arm64    | Windows          | arm64        | ✅      | N/A      | -     |
-| bun-darwin-x64       | macOS            | x64          | ✅      | ✅        | -     |
-| bun-darwin-arm64     | macOS            | arm64        | ✅      | N/A      | -     |
-| bun-linux-x64-musl   | Linux            | x64          | ✅      | ✅        | musl  |
-| bun-linux-arm64-musl | Linux            | arm64        | ✅      | N/A      | musl  |
+| --target             | Operating System | Architecture | Libc  |
+| -------------------- | ---------------- | ------------ | ----- |
+| bun-linux-x64        | Linux            | x64          | glibc |
+| bun-linux-arm64      | Linux            | arm64        | glibc |
+| bun-windows-x64      | Windows          | x64          | -     |
+| bun-windows-arm64    | Windows          | arm64        | -     |
+| bun-darwin-x64       | macOS            | x64          | -     |
+| bun-darwin-arm64     | macOS            | arm64        | -     |
+| bun-linux-x64-musl   | Linux            | x64          | musl  |
+| bun-linux-arm64-musl | Linux            | arm64        | musl  |
 
-> Warning
-On x64 platforms, Bun uses SIMD optimizations that require a CPU with AVX2 instructions. The `-baseline` build of Bun
-is for older CPUs without them. The Bun installer detects which version to use, but when cross-compiling you might not
-know the target CPU. This mostly matters on Windows x64 and Linux x64, rarely on Darwin x64. If you or your users see
-`"Illegal instruction"` errors, you might need to use the baseline version.
+> Note
+On x64, Bun ships a single binary that targets Nehalem (SSE4.2) and selects AVX2/AVX-512 code paths at runtime. The
+`-baseline` and `-modern` target suffixes are still accepted for backward compatibility and resolve to the same
+binary; you do not need to pick one based on the destination CPU.
 
-***
+---
 
 ## Build-time constants
 
@@ -236,7 +193,6 @@ Use the `--define` flag to inject build-time constants into your executable, suc
 ```bash
 bun build --compile --define BUILD_VERSION='"1.2.3"' --define BUILD_TIME='"2024-01-15T10:30:00Z"' src/cli.ts --outfile mycli
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -254,9 +210,9 @@ await Bun.build({
 
 Bun inlines these constants into the binary at build time, so they cost nothing at runtime and enable dead code elimination.
 
-> Note: For more examples and patterns, see the [Build-time constants guide](/docs/guides/runtime/build-time-constants).
+> Note: For more examples and patterns, see the [Build-time constants guide](/guides/runtime/build-time-constants).
 
-***
+---
 
 ## Deploying to production
 
@@ -272,7 +228,6 @@ When deploying to production, we recommend the following:
 ```bash
 bun build --compile --minify --sourcemap ./path/to/my/app.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -294,7 +249,6 @@ To improve startup time, enable bytecode compilation:
 ```bash
 bun build --compile --minify --sourcemap --bytecode ./path/to/my/app.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -325,7 +279,97 @@ The `--sourcemap` argument embeds a sourcemap compressed with zstd, so that erro
 
 The `--bytecode` argument enables bytecode compilation. Every time you run JavaScript code in Bun, JavaScriptCore (the engine) compiles your source code into bytecode. `--bytecode` moves that parsing work from runtime to bundle time, which shortens startup.
 
-***
+With `--bytecode`, JavaScriptCore's build-time optimization passes also run over the generated bytecode; `--no-optimize-bytecode` (`optimize: { bytecode: false }` in `Bun.build`) skips them.
+
+### Profile-guided bytecode layout
+
+`--bytecode-order` is profile-guided optimization (PGO) for `--bytecode`. Run your executable once to record which functions it uses, then build again with that profile. Bun places the bytecode the run used together at the front of the file, so the executable reads and decodes less of itself: it starts faster and uses less memory.
+
+In one large CLI application, cold start went from 1.0s to 0.53s and memory at startup dropped by 40 MB.
+
+```sh
+# 1. Build
+bun build --compile --bytecode ./cli.ts --outfile myapp
+
+# 2. Run it the way your users do. The profile is written on exit.
+BUN_BYTECODE_ORDER_OUT=myapp.order ./myapp --help
+
+# 3. Build again with the profile
+bun build --compile --bytecode --bytecode-order=myapp.order ./cli.ts --outfile myapp
+```
+
+In CI, record the profile and use it in the same job:
+
+**File:** `.github/workflows/release.yml`
+```yaml
+name: Release
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+
+      - name: Build
+        run: bun build --compile --bytecode ./cli.ts --outfile myapp
+
+      - name: Record a profile
+        run: ./myapp --help
+        env:
+          BUN_BYTECODE_ORDER_OUT: myapp.order
+
+      - name: Build with the profile
+        run: bun build --compile --bytecode --bytecode-order=myapp.order ./cli.ts --outfile myapp
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: myapp
+          path: myapp
+```
+
+With `Bun.build`:
+
+**File:** `build.ts`
+```ts
+await Bun.build({
+  entrypoints: ["./cli.ts"],
+  bytecode: true,
+  compile: { outfile: "./myapp", bytecodeOrder: "./myapp.order" },
+});
+```
+
+- **Profiles keep working as your code changes.** Functions are matched by a hash of their syntax, not by name or position, so a profile from last week's build still applies. Commit it or cache it if recording on every build is inconvenient. Functions that changed since the recording are placed right after the recorded ones.
+- **One profile works for every `--target`.**
+- **Several profiles** cover several ways of starting the app: `--bytecode-order=interactive.order,oneshot.order`. List the most common one first.
+- **Only the layout changes.** The program behaves the same, and builds stay reproducible. The profile contains hashes, not source code.
+- `%p` in `BUN_BYTECODE_ORDER_OUT` becomes the process id. `Worker` threads are recorded too.
+- `bytecodeOrderStats()` from `bun:jsc` reports how many loaded functions the profile covered (`hot`) or missed (`cold`). A growing share of `cold` means it is time to record again.
+
+### JIT policy
+
+Code that only runs during startup rarely pays back the time the JIT spends compiling it. `--compile-jit-policy <n>` (`compile: { jitPolicy: n }` in `Bun.build`) starts the executable with JavaScriptCore's tier-up thresholds multiplied by `n`, so startup code stays in the interpreter longer. The default, `1`, is the normal JIT policy. The scale stays in effect until the program calls `Bun.unsafe.setJITPolicy(1)`, which it should do once it is interactive:
+
+**File:** `build.ts`
+```ts
+await Bun.build({
+  entrypoints: ["./app.ts"],
+  compile: { outfile: "./myapp", jitPolicy: 8 },
+  bytecode: true,
+});
+```
+
+**File:** `app.ts`
+```ts
+await renderFirstScreen();
+Bun.unsafe.setJITPolicy(1); // back to the normal JIT policy
+```
+
+---
 
 ## Embedding runtime arguments
 
@@ -335,7 +379,6 @@ The `--bytecode` argument enables bytecode compilation. Every time you run JavaS
 ```bash
 bun build --compile --compile-exec-argv="--smol --user-agent=MyBot" ./app.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -369,14 +412,14 @@ BUN_OPTIONS="--heap-prof-md" ./myapp
 BUN_OPTIONS="--smol --cpu-prof-md" ./myapp
 ```
 
-***
+---
 
 ## Automatic config loading
 
 Standalone executables can automatically load configuration files from the directory where they are run. By default:
 
-* **`tsconfig.json`** and **`package.json`** loading is **disabled** — these are typically only needed at development time, and the bundler already uses them when compiling
-* **`.env`** and **`bunfig.toml`** loading is **enabled** — these often contain runtime configuration that may vary per deployment
+- **`tsconfig.json`** and **`package.json`** loading is **disabled** — these are typically only needed at development time, and the bundler already uses them when compiling
+- **`.env`** and **`bunfig.toml`** loading is **enabled** — these often contain runtime configuration that may vary per deployment
 
 > Note
 In a future version of Bun, `.env` and `bunfig.toml` may also be disabled by default for more deterministic behavior.
@@ -430,7 +473,8 @@ await Bun.build({
 });
 ```
 
-***
+
+---
 
 ## Act as the Bun CLI
 
@@ -475,13 +519,14 @@ Checked 63 installs across 64 packages (no changes) [5.00ms]
 
 CLI tools built on top of Bun can use this to install packages, bundle dependencies, or run other files without downloading a separate binary or installing Bun.
 
-***
+---
 
 ## Full-stack executables
 
 > Note: New in Bun v1.2.17
 
 The `--compile` flag can create a standalone executable that contains both server and client code, which suits full-stack applications. When you import an HTML file in your server code, Bun bundles the frontend assets (JavaScript, CSS, and so on) and embeds them into the executable.
+
 
 **File:** `server.ts`
 ```ts
@@ -525,13 +570,13 @@ body {
 }
 ```
 
+
 To build this into a single executable:
 
 ### CLI
 ```bash
 bun build --compile ./server.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -545,10 +590,10 @@ await Bun.build({
 
 This creates a self-contained binary that includes:
 
-* Your server code
-* The Bun runtime
-* All frontend assets (HTML, CSS, JavaScript)
-* Any npm packages used by your server
+- Your server code
+- The Bun runtime
+- All frontend assets (HTML, CSS, JavaScript)
+- Any npm packages used by your server
 
 The result is a single file you can deploy anywhere without installing Node.js, Bun, or any dependencies:
 
@@ -558,9 +603,9 @@ The result is a single file you can deploy anywhere without installing Node.js, 
 
 Bun serves the frontend assets with the correct MIME types and cache headers. Bun replaces the HTML import with a manifest object that `Bun.serve` uses to serve the pre-bundled assets.
 
-For more on building full-stack applications, see the [full-stack guide](/docs/bundler/fullstack).
+For more on building full-stack applications, see the [full-stack guide](/bundler/fullstack).
 
-***
+---
 
 ## Worker
 
@@ -570,7 +615,6 @@ To use workers in a standalone executable, add the worker's entrypoint to the bu
 ```bash
 bun build --compile ./index.ts ./my-worker.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -600,7 +644,7 @@ We may eventually detect statically-known paths in `new Worker(path)` and bundle
 
 If you use a relative path to a file not included in the standalone executable, Bun loads that path from disk relative to the process's current working directory, and errors if it doesn't exist.
 
-***
+---
 
 ## SQLite
 
@@ -622,7 +666,7 @@ cd /home/me/Desktop
 ./hello
 ```
 
-***
+---
 
 ## Embed assets & files
 
@@ -726,10 +770,12 @@ import styles from "./styles.css" with { type: "file" };
 import { file, serve } from "bun";
 
 serve({
+  // Inside the compiled executable, file() on an embedded path returns an
+  // in-memory Blob, which routes only accepts wrapped in a Response.
   routes: {
-    "/favicon.ico": file(favicon),
-    "/logo.png": file(logo),
-    "/styles.css": file(styles),
+    "/favicon.ico": new Response(file(favicon)),
+    "/logo.png": new Response(file(logo)),
+    "/styles.css": new Response(file(styles)),
   },
   fetch(req) {
     return new Response("Not found", { status: 404 });
@@ -769,6 +815,20 @@ const wasmModule = await WebAssembly.instantiate(wasmBytes);
 // Read binary font data
 const fontData = await file(fontPath).bytes();
 ```
+
+### Embed text as a string
+
+Use the `text` loader when you want the contents of a file as a string. `.txt` files use it by default. For other extensions, add `with { type: "text" }` or pass `--loader .md:text`.
+
+**File:** `index.ts`
+```ts
+import notes from "./notes.txt";
+import readme from "./README.md" with { type: "text" };
+
+console.log(notes); // the contents of notes.txt
+```
+
+In a compiled executable the text is stored once, in the form the JavaScript engine uses for strings (one byte per character for ASCII text, UTF-16 otherwise). The runtime hands the string back without a copy, so a large text import costs its size in the binary and no extra copy on the heap. A text import is a module, not a file: `Bun.embeddedFiles` does not list it. Use `with { type: "file" }` when you need a file path instead.
 
 ### Embed SQLite databases
 
@@ -817,7 +877,6 @@ Use `--asset` (or `compile.assets` in the JavaScript API) to embed a file or dir
 ```bash
 bun build --compile ./index.ts --asset ./public --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -846,7 +905,7 @@ const html = await Bun.file(path.join(publicDir, "index.html")).text();
 
 Pass `--asset` multiple times to embed several directories (for example `--asset ./client --asset ./prerendered` for a SvelteKit build). Bun embeds only regular files; it skips symlinks and empty subdirectories inside the tree.
 
-You can also embed individual files via the `with { type: "file" }` import attribute or by adding them as extra entry points. Bun renames imported assets according to `--asset-naming` (default `[name]-[hash].[ext]`):
+You can also embed individual files via the `with { type: "file" }` import attribute or, for files that use the `file` loader (images, fonts, and so on) as well as `.wasm` and `.node` files, by adding them as extra entry points. Bun renames imported assets according to `--asset-naming` (default `[name]-[hash].[ext]`):
 
 ```ts
 import icon from "./public/assets/icon.png" with { type: "file" };
@@ -931,7 +990,6 @@ By default, Bun appends a content hash to the name of each embedded file, which 
 ```bash
 bun build --compile --asset-naming="[name].[ext]" ./index.ts
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -946,7 +1004,7 @@ await Bun.build({
 });
 ```
 
-***
+---
 
 ## Minification
 
@@ -956,7 +1014,6 @@ To trim down the size of the executable, enable minification:
 ```bash
 bun build --compile --minify ./index.ts --outfile myapp
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -982,9 +1039,10 @@ await Bun.build({
 });
 ```
 
+
 This uses Bun's minifier to reduce the code size. Overall though, Bun's binary is still way too big and we need to make it smaller.
 
-***
+---
 
 ## Windows-specific flags
 
@@ -1022,18 +1080,18 @@ await Bun.build({
 
 Available Windows options:
 
-* `icon` - Path to `.ico` file for the executable icon
-* `hideConsole` - Disable the background terminal (for GUI apps)
-* `title` - Application title in file properties
-* `publisher` - Publisher name in file properties
-* `version` - Version string in file properties
-* `description` - Description in file properties
-* `copyright` - Copyright notice in file properties
+- `icon` - Path to `.ico` file for the executable icon
+- `hideConsole` - Disable the background terminal (for GUI apps)
+- `title` - Application title in file properties
+- `publisher` - Publisher name in file properties
+- `version` - Version string in file properties
+- `description` - Description in file properties
+- `copyright` - Copyright notice in file properties
 
 > Warning
 Except for `hideConsole`, you can't use these flags when cross-compiling because they depend on Windows APIs.
 
-***
+---
 
 ## Code signing on macOS
 
@@ -1081,7 +1139,7 @@ codesign -vvv --verify ./myapp
 
 > Warning: Codesign support requires Bun v1.2.4 or newer.
 
-***
+---
 
 ## Code splitting
 
@@ -1091,7 +1149,6 @@ Standalone executables support code splitting. Use `--compile` with `--splitting
 ```bash
 bun build --compile --splitting ./src/entry.ts --outfile ./build/entry
 ```
-
 ### JavaScript
 **File:** `build.ts`
 ```ts
@@ -1102,6 +1159,7 @@ await Bun.build({
   outdir: "./build",
 });
 ```
+
 
 **File:** `src/entry.ts`
 ```ts
@@ -1117,6 +1175,7 @@ export function hello() {
 }
 ```
 
+
 ```bash
 ./build/entry
 ```
@@ -1126,7 +1185,7 @@ Entrypoint loaded
 Lazy module loaded
 ```
 
-***
+---
 
 ## Using plugins
 
@@ -1170,21 +1229,21 @@ console.log(`Running in ${config.environment} mode`);
 console.log(`API endpoint: ${config.apiUrl}`);
 ```
 
-Plugins can perform any transformation: compile YAML/TOML configs, inline SQL queries, generate type-safe API clients, or preprocess templates. See the [plugin documentation](/docs/bundler/plugins).
+Plugins can perform any transformation: compile YAML/TOML configs, inline SQL queries, generate type-safe API clients, or preprocess templates. See the [plugin documentation](/bundler/plugins).
 
-***
+---
 
 ## Unsupported CLI arguments
 
 The `--compile` flag does not support the following flags:
 
-* `--outdir` — use `outfile` instead.
-* `--public-path`
-* `--target=node`
-* `--target=browser` (without HTML entrypoints — see [Standalone HTML](/docs/bundler/standalone-html) for `--compile --target=browser` with `.html` files)
-* `--no-bundle` - Bun always bundles everything into the executable.
+- `--outdir` — use `outfile` instead.
+- `--public-path`
+- `--target=node`
+- `--target=browser` (without HTML entrypoints — see [Standalone HTML](/bundler/standalone-html) for `--compile --target=browser` with `.html` files)
+- `--no-bundle` - Bun always bundles everything into the executable.
 
-***
+---
 
 ## API reference
 
@@ -1208,6 +1267,8 @@ interface CompileBuildOptions {
   autoloadPackageJson?: boolean; // Load package.json (default: false)
   autoloadDotenv?: boolean; // Load .env files (default: true)
   autoloadBunfig?: boolean; // Load bunfig.toml (default: true)
+  bytecodeOrder?: string | string[] | false | null; // Order file(s) to lay the bytecode out by (requires bytecode: true)
+  jitPolicy?: number; // JIT tier-up threshold scale at startup (default: 1 = normal)
   windows?: {
     icon?: string; // Path to .ico file
     hideConsole?: boolean; // Hide console window
@@ -1236,25 +1297,24 @@ compile: {
 }
 ```
 
+Without `outfile`, the executable is named after the entrypoint and written to `outdir`, or to the current working directory when there is no `outdir`. This matches `bun build --compile`.
+
 ### Supported targets
 
 **File:** `Bun.Build.CompileTarget`
 ```ts
 type CompileTarget =
   | "bun-darwin-x64"
-  | "bun-darwin-x64-baseline"
   | "bun-darwin-arm64"
   | "bun-linux-x64"
-  | "bun-linux-x64-baseline"
-  | "bun-linux-x64-modern"
   | "bun-linux-arm64"
   | "bun-linux-x64-musl"
   | "bun-linux-x64-baseline-musl"
   | "bun-linux-arm64-musl"
   | "bun-windows-x64"
-  | "bun-windows-x64-baseline"
-  | "bun-windows-x64-modern"
   | "bun-windows-arm64";
+// The "-baseline" and "-modern" suffixes are accepted for backward
+// compatibility and resolve to the same x64 binary.
 ```
 
 ### Complete example

@@ -2,14 +2,14 @@
 Source: https://bun.com/docs/guides/process/argv
 
 
-The *argument vector* is the list of arguments passed to the program when it is run. It is available as `Bun.argv`.
+The _argument vector_ is the list of arguments passed to the program when it is run. It is available as `Bun.argv`.
 
 **File:** `cli.ts`
 ```ts
 console.log(Bun.argv);
 ```
 
-***
+---
 
 Running this file with arguments results in the following:
 
@@ -21,7 +21,7 @@ bun run cli.ts --flag1 --flag2 value
 [ "/path/to/bun", "/path/to/cli.ts", "--flag1", "--flag2", "value" ]
 ```
 
-***
+---
 
 To parse `argv` into a more useful format, use `util.parseArgs`.
 
@@ -47,7 +47,7 @@ console.log(values);
 console.log(positionals);
 ```
 
-***
+---
 
 Running `cli.ts` with the same arguments prints the parsed values.
 

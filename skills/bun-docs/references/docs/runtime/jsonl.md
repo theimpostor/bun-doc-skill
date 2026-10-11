@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/jsonl
 
 Parse newline-delimited JSON (JSONL) with Bun's built-in streaming parser
 
+
 Bun has built-in support for parsing [JSONL](https://jsonlines.org/) (newline-delimited JSON), where each line is a separate JSON value. The parser is implemented in C++ using JavaScriptCore's optimized JSON parser and supports streaming.
 
 ```ts
@@ -10,7 +11,7 @@ const results = Bun.JSONL.parse('{"name":"Alice"}\n{"name":"Bob"}\n');
 // [{ name: "Alice" }, { name: "Bob" }]
 ```
 
-***
+---
 
 ## `Bun.JSONL.parse()`
 
@@ -51,7 +52,7 @@ try {
 }
 ```
 
-***
+---
 
 ## `Bun.JSONL.parseChunk()`
 
@@ -166,7 +167,7 @@ console.log(result.error); // SyntaxError
 console.log(result.read); // 7 — position up to last successful parse
 ```
 
-***
+---
 
 ## Supported value types
 
@@ -178,11 +179,11 @@ const values = Bun.JSONL.parse(input);
 // [42, "hello", true, null, [1, 2, 3], { key: "value" }]
 ```
 
-***
+---
 
 ## Performance notes
 
-* **ASCII fast path**: Bun parses pure ASCII input directly without copying, using a zero-allocation `StringView`.
-* **UTF-8 support**: Bun decodes non-ASCII `Uint8Array` input to UTF-16.
-* **BOM handling**: Bun automatically skips a UTF-8 BOM (`0xEF 0xBB 0xBF`) at the start of a `Uint8Array`.
-* **Pre-built object shape**: The result object from `parseChunk` uses a cached structure for fast property access.
+- **ASCII fast path**: Bun parses pure ASCII input directly without copying, using a zero-allocation `StringView`.
+- **UTF-8 support**: Bun decodes non-ASCII `Uint8Array` input to UTF-16.
+- **BOM handling**: Bun automatically skips a UTF-8 BOM (`0xEF 0xBB 0xBF`) at the start of a `Uint8Array`.
+- **Pre-built object shape**: The result object from `parseChunk` uses a cached structure for fast property access.

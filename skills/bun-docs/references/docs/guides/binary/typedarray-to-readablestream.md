@@ -14,7 +14,7 @@ const stream = new ReadableStream({
 });
 ```
 
-***
+---
 
 To stream the data in smaller chunks, first create a `Blob` instance from the `Uint8Array`, then use [`Blob.stream()`](https://developer.mozilla.org/en-US/docs/Web/API/Blob/stream) to create a `ReadableStream`.
 
@@ -24,7 +24,7 @@ const blob = new Blob([arr]);
 const stream = blob.stream();
 ```
 
-***
+---
 
 Pass a number to `.stream()` to set the chunk size.
 
@@ -36,6 +36,6 @@ const blob = new Blob([arr]);
 const stream = blob.stream(1024);
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

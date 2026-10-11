@@ -9,12 +9,13 @@ This guide deploys a Bun HTTP server to DigitalOcean using a `Dockerfile`.
 > Note
 Before continuing, make sure you have:
 
-* A Bun application ready for deployment
-* A [DigitalOcean account](https://www.digitalocean.com/)
-* [DigitalOcean CLI](https://docs.digitalocean.com/reference/doctl/how-to/install/#step-1-install-doctl) installed and configured
-* [Docker](https://docs.docker.com/get-started/get-docker/) installed and added to your `PATH`
+- A Bun application ready for deployment
+- A [DigitalOcean account](https://www.digitalocean.com/)
+- [DigitalOcean CLI](https://docs.digitalocean.com/reference/doctl/how-to/install/#step-1-install-doctl) installed and configured
+- [Docker](https://docs.docker.com/get-started/get-docker/) installed and added to your `PATH`
 
-***
+
+---
 
 ### Create a new DigitalOcean Container Registry
 Create a new Container Registry to store the Docker image.
@@ -22,24 +23,23 @@ Create a new Container Registry to store the Docker image.
 ### Through the DigitalOcean dashboard
 In the DigitalOcean dashboard, go to [**Container Registry**](https://cloud.digitalocean.com/registry), and enter the details for the new registry.
 
-<img alt="DigitalOcean registry dashboard" />
+![DigitalOcean registry dashboard](/images/guides/digitalocean-7.png)
 
 Make sure the details are correct, then click **Create Registry**.
-
 ### Through the DigitalOcean CLI
+
 ```bash
 doctl registry create bun-digitalocean-demo
 ```
-
 ```txt
 Name                     Endpoint                                           Region slug
 bun-digitalocean-demo    registry.digitalocean.com/bun-digitalocean-demo    sfo2
 ```
 
+
 You should see the new registry in the [**DigitalOcean registry dashboard**](https://cloud.digitalocean.com/registry):
 
-<img alt="DigitalOcean registry dashboard" />
-
+![DigitalOcean registry dashboard](/images/guides/digitalocean-1.png)
 ### Create a new Dockerfile
 Create a new `Dockerfile` in the root of your project. This file contains the instructions to initialize the container, copy your local project files into it, install dependencies, and start the application.
 
@@ -72,7 +72,7 @@ Make sure that the start command corresponds to your application's entry point. 
 
 If your app doesn't have dependencies, you can omit the `COPY package.json bun.lock ./` and `RUN bun install --production --frozen-lockfile` lines. Bun doesn't write a `bun.lock` for a project with no dependencies.
 
-Create a new `.dockerignore` file in the root of your project. It lists the files and directories to *exclude* from the container image, such as `node_modules`. Excluding them keeps builds faster and smaller:
+Create a new `.dockerignore` file in the root of your project. It lists the files and directories to _exclude_ from the container image, such as `node_modules`. Excluding them keeps builds faster and smaller:
 
 **File:** `.dockerignore`
 ```docker
@@ -87,14 +87,12 @@ LICENSE
 .env
 # Any other files or directories you want to exclude
 ```
-
 ### Authenticate Docker with DigitalOcean registry
 Before building and pushing the Docker image, authenticate Docker with the DigitalOcean Container Registry:
 
 ```bash
 doctl registry login
 ```
-
 ```txt
 Logging Docker in to registry.digitalocean.com
 Notice: Login valid for 30 days. Use the --expiry-seconds flag to set a shorter expiration or --never-expire for no expiration.
@@ -102,7 +100,6 @@ Notice: Login valid for 30 days. Use the --expiry-seconds flag to set a shorter 
 
 > Note
 This command authenticates Docker with DigitalOcean's registry using your DigitalOcean credentials. Without this step, the build and push command fails with a 401 authentication error.
-
 ### Build and push the Docker image to the DigitalOcean registry
 Make sure you're in the directory containing your `Dockerfile`, then build and push the Docker image to the DigitalOcean registry in one command:
 
@@ -115,22 +112,20 @@ If you're building on an ARM Mac (M1/M2), you must use `docker buildx` with `--p
 
 Once the image is pushed, you should see it in the [**DigitalOcean registry dashboard**](https://cloud.digitalocean.com/registry):
 
-<img alt="DigitalOcean registry dashboard" />
-
+![DigitalOcean registry dashboard](/images/guides/digitalocean-2.png)
 ### Create a new DigitalOcean App Platform project
 In the DigitalOcean dashboard, go to [**App Platform**](https://cloud.digitalocean.com/apps) > **Create App**. You can create a project directly from the container image.
 
-<img alt="DigitalOcean App Platform project dashboard" />
+![DigitalOcean App Platform project dashboard](/images/guides/digitalocean-3.png)
 
 Make sure the details are correct, then click **Next**.
 
-<img alt="DigitalOcean App Platform service dashboard" />
+![DigitalOcean App Platform service dashboard](/images/guides/digitalocean-4.png)
 
 Review and configure resource settings, then click **Create app**.
 
-<img alt="DigitalOcean App Platform service dashboard" />
-
+![DigitalOcean App Platform service dashboard](/images/guides/digitalocean-6.png)
 ### Visit your live application
 Your app is now live. Once the app is created, you should see it in the App Platform dashboard with its public URL.
 
-<img alt="DigitalOcean App Platform app dashboard" />
+![DigitalOcean App Platform app dashboard](/images/guides/digitalocean-5.png)

@@ -8,20 +8,20 @@ Pass `--define` to `bun build` or `bun build --compile` to inject build-time con
 bun build --compile --define BUILD_VERSION='"1.2.3"' --define BUILD_TIME='"2024-01-15T10:30:00Z"' src/index.ts --outfile myapp
 ```
 
-***
+---
 
 ## Why use build-time constants?
 
 Bun embeds build-time constants directly into your compiled code, making them:
 
-* **Zero runtime overhead** - No environment variable lookups or file reads
-* **Immutable** - Values are baked into the binary at compile time
-* **Optimizable** - Dead code elimination can remove unused branches
-* **Secure** - No external dependencies or configuration files to manage
+- **Zero runtime overhead** - No environment variable lookups or file reads
+- **Immutable** - Values are baked into the binary at compile time
+- **Optimizable** - Dead code elimination can remove unused branches
+- **Secure** - No external dependencies or configuration files to manage
 
 Build-time constants are similar to `gcc -D` or `#define` in C/C++, but for JavaScript/TypeScript.
 
-***
+---
 
 ## Basic usage
 
@@ -54,13 +54,14 @@ await Bun.build({
 });
 ```
 
-***
+---
 
 ## Common use cases
 
 ### Version information
 
 Embed version and build metadata directly into your executable:
+
 
 **File:** `src/version.ts`
 ```ts
@@ -86,6 +87,7 @@ bun build --compile \
   --define GIT_COMMIT='"abc123"' \
   src/cli.ts --outfile mycli
 ```
+
 
 ### Feature flags
 
@@ -139,7 +141,7 @@ const response = await fetch(CONFIG.apiUrl, {
 bun build --compile --define 'CONFIG={"apiUrl":"https://api.example.com","timeout":5000,"retries":3}' src/app.ts --outfile app
 ```
 
-***
+---
 
 ## Advanced patterns
 
@@ -195,7 +197,7 @@ await Bun.build({
 console.log(`Built with version ${version.trim()}`);
 ```
 
-***
+---
 
 ## Important considerations
 
@@ -282,10 +284,10 @@ bun build --compile --target=bun-darwin-x64 --define PLATFORM='"darwin"' src/app
 bun build --compile --target=bun-windows-x64 --define PLATFORM='"windows"' src/app.ts --outfile app-windows.exe
 ```
 
-***
+---
 
 ## Related
 
-* [Define constants at runtime](/docs/guides/runtime/define-constant) - Using `--define` with `bun run`
-* [Building executables](/docs/bundler/executables) - Complete guide to `bun build --compile`
-* [Bundler API](/docs/bundler) - Full bundler documentation including `define` option
+- [Define constants at runtime](/guides/runtime/define-constant) - Using `--define` with `bun run`
+- [Building executables](/bundler/executables) - Complete guide to `bun build --compile`
+- [Bundler API](/bundler) - Full bundler documentation including `define` option

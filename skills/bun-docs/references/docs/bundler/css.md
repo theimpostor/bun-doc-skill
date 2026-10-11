@@ -3,12 +3,13 @@ Source: https://bun.com/docs/bundler/css
 
 Bun's bundler has built-in support for CSS with modern features
 
+
 Bun's bundler has built-in support for CSS with the following features:
 
-* Transpiling modern/future features to work on all browsers (including vendor prefixing)
-* Minification
-* CSS Modules
-* Tailwind (through a native bundler plugin)
+- Transpiling modern/future features to work on all browsers (including vendor prefixing)
+- Minification
+- CSS Modules
+- Tailwind (through a native bundler plugin)
 
 ## Transpiling
 
@@ -22,11 +23,11 @@ Bun's CSS parser and bundler is a direct port of LightningCSS, with a bundling a
 
 By default, Bun's CSS bundler targets the following browsers:
 
-* Edge 80+
-* Firefox 78+
-* Chrome 80+
-* Safari 14+
-* Opera 67+
+- Edge 80+
+- Firefox 78+
+- Chrome 80+
+- Safari 14+
+- Opera 67+
 
 ## Syntax Lowering
 
@@ -618,9 +619,9 @@ The converted selectors keep the specificity and behavior of the original.
 
 CSS includes the following math functions:
 
-* Standard math functions: `round()`, `mod()`, `rem()`, `abs()`, `sign()`
-* Trigonometric functions: `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `atan2()`
-* Exponential functions: `pow()`, `sqrt()`, `exp()`, `log()`, `hypot()`
+- Standard math functions: `round()`, `mod()`, `rem()`, `abs()`, `sign()`
+- Trigonometric functions: `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `atan2()`
+- Exponential functions: `pow()`, `sqrt()`, `exp()`, `log()`, `hypot()`
 
 **File:** `styles.css`
 ```css
@@ -903,10 +904,10 @@ The expanded stack includes system fonts for macOS/iOS, Windows, Android, and Li
 
 Bun's bundler also supports CSS modules, with the following features:
 
-* Detecting CSS module files (`.module.css`) with no configuration
-* Composition (`composes` property)
-* Importing CSS modules into JSX/TSX
-* Warnings/errors for invalid usages of CSS modules
+- Detecting CSS module files (`.module.css`) with no configuration
+- Composition (`composes` property)
+- Importing CSS modules into JSX/TSX
+- Warnings/errors for invalid usages of CSS modules
 
 A CSS module is a CSS file (with the `.module.css` extension) where all class names and animations are scoped to the file. This helps you avoid class name collisions, as CSS declarations are globally scoped by default.
 
@@ -1008,10 +1009,12 @@ This is the same as writing:
 Two rules apply when using `composes`:
 
 > Info
+
 **Composition Rules:**
 
-* A `composes` property must come before any regular CSS properties or declarations
-* You can only use `composes` on a simple selector with a single class name
+- A `composes` property must come before any regular CSS properties or declarations
+- You can only use `composes` on a simple selector with a single class name
+
 
 **File:** `styles.module.css`
 ```css

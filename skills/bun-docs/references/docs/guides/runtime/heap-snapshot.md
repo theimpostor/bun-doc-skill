@@ -13,7 +13,7 @@ const snapshotPath = v8.writeHeapSnapshot();
 console.log(`Heap snapshot written to: ${snapshotPath}`);
 ```
 
-***
+---
 
 ## Inspect memory in Chrome DevTools
 
@@ -24,4 +24,4 @@ To view V8 heap snapshots in Chrome DevTools:
 3. Click the "Load" button (folder icon)
 4. Select your `.heapsnapshot` file
 
-<img alt="Chrome DevTools Memory Tab" />
+![Chrome DevTools Memory Tab](/images/chrome-devtools-memory.png)

@@ -4,9 +4,10 @@ Source: https://bun.com/docs/guides/ecosystem/gel
 
 Gel (formerly EdgeDB) is a graph-relational database built on Postgres. It provides a declarative schema language, migrations system, and object-oriented query language. It also supports raw SQL queries. It solves object-relational mapping at the database layer, so your application code doesn't need an ORM library.
 
-***
+---
 
 First, [install Gel](https://docs.geldata.com/learn/installation) if you haven't already.
+
 
 **File:** `Linux/macOS`
 ```sh
@@ -23,7 +24,8 @@ irm https://www.geldata.com/ps1 | iex
 brew install geldata/tap/gel-cli
 ```
 
-***
+
+---
 
 Use `bun init` to create a fresh project.
 
@@ -33,7 +35,7 @@ cd my-gel-app
 bun init -y
 ```
 
-***
+---
 
 Initialize a Gel instance for the project with the Gel CLI. The `gel project init` command creates a `gel.toml` file in the project root.
 
@@ -63,7 +65,7 @@ Project initialized.
 To connect to my_gel_app, run `gel`
 ```
 
-***
+---
 
 To check that the database is running, open a REPL and run a query.
 
@@ -82,7 +84,7 @@ Then run `\quit` to exit the REPL.
 my_gel_app:main> \quit
 ```
 
-***
+---
 
 Next, define a schema. The `gel project init` command already created a `dbschema/default.gel` file to hold it.
 
@@ -95,7 +97,7 @@ dbschema
 └── migrations
 ```
 
-***
+---
 
 Open that file and paste the following contents.
 
@@ -109,7 +111,7 @@ module default {
 };
 ```
 
-***
+---
 
 Then generate and apply an initial migration.
 
@@ -131,7 +133,7 @@ Applying m1uwekrn4ni4qs7ul7hfar4xemm5kkxlpswolcoyqj3xdhweomwjrq (00001-m1uwekr.e
 ... applied
 ```
 
-***
+---
 
 With the schema applied, query the database with Gel's JavaScript client library. Install the client library and Gel's codegen CLI, then create a `seed.ts` file.
 
@@ -141,7 +143,7 @@ bun add -D @gel/generate
 touch seed.ts
 ```
 
-***
+---
 
 Paste the following code into `seed.ts`.
 
@@ -175,7 +177,7 @@ console.log(`Seeding complete.`);
 process.exit();
 ```
 
-***
+---
 
 Then run this file with Bun.
 
@@ -187,7 +189,7 @@ bun run seed.ts
 Seeding complete.
 ```
 
-***
+---
 
 Gel implements several code generation tools for TypeScript. To write typesafe queries against the seeded database, generate the EdgeQL query builder with `@gel/generate`.
 
@@ -213,7 +215,7 @@ the query builder directory? The following line will be added:
 > y
 ```
 
-***
+---
 
 In `index.ts`, import the generated query builder from `./dbschema/edgeql-js` and write a select query.
 
@@ -235,7 +237,7 @@ console.log(results);
 results; // { title: string, releaseYear: number | null }[]
 ```
 
-***
+---
 
 Run the file with Bun to see the movies you inserted.
 
@@ -258,6 +260,6 @@ bun run index.ts
 ]
 ```
 
-***
+---
 
 See the [Gel docs](https://docs.geldata.com/).

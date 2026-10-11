@@ -83,7 +83,7 @@ bun create qwik
 
 ```
 
-***
+---
 
 Run `bun run dev` to start the development server.
 
@@ -101,12 +101,12 @@ VITE v7.3.1   ssr   ready in 433 ms
 ➜  press h + enter to show help
 ```
 
-***
+---
 
 Open [http://localhost:5173](http://localhost:5173) in your browser to see the result. Qwik hot-reloads your app as you edit your source files.
 
-<Frame>![Qwik screenshot](https://github.com/oven-sh/bun/assets/3084745/ec35f2f7-03dd-4c90-851e-fb4ad150bb28)</Frame>
+![Qwik screenshot](https://github.com/oven-sh/bun/assets/3084745/ec35f2f7-03dd-4c90-851e-fb4ad150bb28)
 
-***
+---
 
 See the [Qwik docs](https://qwik.dev/docs/getting-started/) to learn more.

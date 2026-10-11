@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/networking/fetch
 
 Send HTTP requests with Bun's fetch API
 
+
 Bun implements the WHATWG `fetch` standard, with some extensions to meet the needs of server-side JavaScript.
 
 Bun also implements `node:http`, but we generally recommend `fetch` instead.
@@ -75,6 +76,40 @@ const response = await fetch("http://example.com", {
 
 Bun sends the `headers` directly to the proxy in `CONNECT` requests (for HTTPS targets) or in the proxy request (for HTTP targets). If you provide a `Proxy-Authorization` header, it overrides any credentials in the proxy URL.
 
+Without a `proxy` option, Bun reads `HTTP_PROXY`, `HTTPS_PROXY` and `ALL_PROXY` (upper or lower case) each time `fetch` runs, so changes to `process.env` apply to the next request. Bun uses `ALL_PROXY`, for `http:` and `https:` URLs alike, when the scheme-specific variable is unset. It ignores a value that names another kind of proxy, such as `socks5://`. curl reads `ALL_PROXY` too; Node.js does not. A request with the `unix` option never uses the proxy environment.
+
+`no_proxy` lists hosts that bypass the proxy. Bun reads `NO_PROXY` when `no_proxy` is unset or empty, as curl and Node.js do. Entries are separated by commas or whitespace.
+
+| Entry                                          | Matches                          |
+| ---------------------------------------------- | -------------------------------- |
+| `*`                                            | every host                       |
+| `example.com`, `.example.com`, `*.example.com` | `example.com` and its subdomains |
+| `127.0.0.1`, `::1`, `[::1]`                    | that IP address                  |
+| `10.0.0.0/8`, `fd00::/8`                       | every IP address in the block    |
+| `example.com:8080`                             | the host, on that port only      |
+
+`NO_PROXY` also applies to an explicit `proxy`. Set `respectNoProxy: false` to send the request through the proxy regardless, and `proxy: false` to connect directly regardless of the environment:
+
+```ts
+await fetch("https://example.com", {
+  proxy: { url: "http://proxy.com", respectNoProxy: false },
+});
+
+await fetch("https://example.com", { proxy: false });
+```
+
+When the proxy answers `CONNECT` with anything but a 2xx status, `fetch` rejects with an `ERR_PROXY_TUNNEL` error. The error carries the proxy's `status`, `statusText` and `headers`.
+
+```ts
+try {
+  await fetch("https://example.com", { proxy: "http://proxy.com" });
+} catch (error) {
+  if (error.code === "ERR_PROXY_TUNNEL") {
+    console.log(error.status, error.headers.get("proxy-authenticate"));
+  }
+}
+```
+
 ### Custom headers
 
 To set custom headers, pass an object with the `headers` property set to an object.
@@ -98,16 +133,18 @@ const response = await fetch("http://example.com", {
 });
 ```
 
+Bun sends credentials in the URL (`https://user:password@example.com/`) as a `Basic` `Authorization` header, unless the request sets an `Authorization` header itself. Node.js's `fetch` rejects such a URL instead. The `path` of a connection error leaves the credentials out.
+
 ### Response bodies
 
 To read the response body, use one of the following methods:
 
-* `response.text(): Promise<string>`: Returns a promise that resolves with the response body as a string.
-* `response.json(): Promise<any>`: Returns a promise that resolves with the response body as a JSON object.
-* `response.formData(): Promise<FormData>`: Returns a promise that resolves with the response body as a `FormData` object.
-* `response.bytes(): Promise<Uint8Array>`: Returns a promise that resolves with the response body as a `Uint8Array`.
-* `response.arrayBuffer(): Promise<ArrayBuffer>`: Returns a promise that resolves with the response body as an `ArrayBuffer`.
-* `response.blob(): Promise<Blob>`: Returns a promise that resolves with the response body as a `Blob`.
+- `response.text(): Promise<string>`: Returns a promise that resolves with the response body as a string.
+- `response.json(): Promise<any>`: Returns a promise that resolves with the response body as a JSON object.
+- `response.formData(): Promise<FormData>`: Returns a promise that resolves with the response body as a `FormData` object.
+- `response.bytes(): Promise<Uint8Array>`: Returns a promise that resolves with the response body as a `Uint8Array`.
+- `response.arrayBuffer(): Promise<ArrayBuffer>`: Returns a promise that resolves with the response body as an `ArrayBuffer`.
+- `response.blob(): Promise<Blob>`: Returns a promise that resolves with the response body as a `Blob`.
 
 #### Streaming response bodies
 
@@ -154,15 +191,15 @@ const response = await fetch("http://example.com", {
 
 When using streams with HTTP(S):
 
-* Bun streams the data directly to the network without buffering the entire body in memory
-* If the connection is lost, Bun cancels the stream
-* Bun sets the `Content-Length` header automatically only when the stream has a known size
+- Bun streams the data directly to the network without buffering the entire body in memory
+- If the connection is lost, Bun cancels the stream
+- Bun sets the `Content-Length` header automatically only when the stream has a known size
 
 When using streams with S3:
 
-* For PUT/POST requests, Bun automatically uses multipart upload
-* Bun consumes the stream in chunks and uploads the chunks in parallel
-* You can monitor progress through the S3 options
+- For PUT/POST requests, Bun automatically uses multipart upload
+- Bun consumes the stream in chunks and uploads the chunks in parallel
+- You can monitor progress through the S3 options
 
 ### Fetching a URL with a timeout
 
@@ -231,7 +268,13 @@ await fetch("https://example.com", {
 });
 ```
 
-This option is similar to the one in Node's `tls` module.
+This option is similar to the one in Node's `tls` module. Bun calls it after the certificate chain verifies. With `rejectUnauthorized: false` Bun still calls it and ignores what it returns.
+
+The function replaces Bun's own hostname check. Return `undefined` to approve the certificate. To reject it, return an `Error` or throw one: the `fetch()` promise rejects with that error. As in Node, any other truthy return value also fails the request. An object is the rejection reason as it is. A `Promise`, or a primitive such as `true`, gives an `ERR_INVALID_RETURN_VALUE` error, so an `async` function approves no certificate. Every falsy return value approves the certificate, as in Node, so `false` does not reject it. For that reason the TypeScript type allows only `undefined` and `Error`.
+
+`checkServerIdentity` must be a function. `null` and `undefined` mean no function. For any other value, `fetch()` rejects with an `ERR_INVALID_ARG_TYPE` error.
+
+A request that passes its own `checkServerIdentity` opens a connection of its own and closes it afterwards, so that another request's function never vouches for it. To verify once per connection and reuse the connection, put the function on a [`Bun.FetchSession`](#fetch-sessions).
 
 #### Disable TLS validation
 
@@ -289,7 +332,7 @@ const response = await fetch("s3://my-bucket/path/to/object", {
 
 Only PUT and POST methods support request bodies when using S3. For uploads, Bun automatically uses multipart upload for streaming bodies.
 
-See the [S3](/docs/runtime/s3) documentation.
+See the [S3](/runtime/s3) documentation.
 
 #### File URLs - `file://`
 
@@ -299,6 +342,8 @@ You can fetch local files using the `file:` protocol:
 const response = await fetch("file:///path/to/file.txt");
 const text = await response.text();
 ```
+
+The URL's host must be empty or `localhost`. `fetch("file://other.host/path")` rejects with `ERR_INVALID_FILE_URL_HOST`.
 
 On Windows, Bun normalizes paths automatically:
 
@@ -331,17 +376,18 @@ const response = await fetch(url);
 
 Bun's fetch implementation includes several specific error cases:
 
-* Using a request body with GET/HEAD methods throws an error (which is expected for the fetch API)
-* Using the `proxy` and `unix` options together throws an error
-* TLS certificate validation failures when `rejectUnauthorized` is true (or undefined)
-* S3 operations may throw specific errors related to authentication or permissions
+- Using a request body with GET/HEAD methods throws an error (which is expected for the fetch API)
+- Using the `proxy` and `unix` options together throws an error
+- Connection failures reject with a `TypeError` whose `code` is the socket error (`ECONNREFUSED`, `ECONNRESET`, `ETIMEDOUT`, `ENOTFOUND`, ...). The message starts with the code.
+- TLS certificate validation failures when `rejectUnauthorized` is true (or undefined)
+- S3 operations may throw specific errors related to authentication or permissions
 
 ### Content-Type handling
 
 Bun automatically sets the `Content-Type` header for request bodies when not explicitly provided:
 
-* For `Blob` objects, uses the blob's `type`
-* For `FormData`, sets appropriate multipart boundary
+- For `Blob` objects, uses the blob's `type`
+- For `FormData`, sets appropriate multipart boundary
 
 ## Debugging
 
@@ -400,7 +446,7 @@ dns.prefetch("bun.com");
 
 By default, Bun caches and deduplicates DNS queries in-memory for up to 30 seconds. `dns.getCacheStats()` returns the cache stats.
 
-See [DNS caching](/docs/runtime/networking/dns).
+See [DNS caching](/runtime/networking/dns).
 
 ### Preconnect to a host
 
@@ -428,12 +474,67 @@ bun --fetch-preconnect https://bun.com ./my-script.ts
 
 Bun automatically reuses connections to the same host. This is called **connection pooling**, and it can significantly reduce the time spent establishing connections.
 
+#### Fetch sessions
+
+A `Bun.FetchSession` holds connection settings and owns a keep-alive pool. `session.fetch` is `fetch` with that session, and it is bound, so it works wherever a `fetch` function is accepted (`new SomeClient({ fetch: session.fetch })`). It has no `preconnect`. `fetch(url, { session })` does the same through the global `fetch`. Bun never shares a connection between two sessions, or between a session and plain `fetch`.
+
+```ts
+const session = new Bun.FetchSession({
+  tls: { ca: await Bun.file("corp-ca.pem").text() },
+  proxy: { url: "http://proxy.internal:8080", respectNoProxy: false },
+  keepAlive: { idleTimeout: 30, maxIdleSockets: 8 },
+});
+
+const response = await session.fetch("https://example.com");
+session.close(); // closes the idle connections
+```
+
+| Option      | Description                                                                                                                                                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tls`       | The same options as `fetch`'s `tls`. `checkServerIdentity` runs once per connection.                                                                                                                                      |
+| `proxy`     | The same values as `fetch`'s `proxy`, including `false`.                                                                                                                                                                  |
+| `keepAlive` | `false` closes each connection after its response. `idleTimeout` is in seconds (default 300). `maxIdleSockets` caps the idle connections per kind (plain, TLS, Unix socket). Neither limit applies to HTTP/3 connections. |
+| `unix`      | A Unix socket path.                                                                                                                                                                                                       |
+
+An option given on the request takes precedence over the session's, `proxy: false` included. A request's `tls` replaces the session's `tls` as a whole.
+
+The constructor throws for a `proxy` or a `tls.checkServerIdentity` that it cannot use, such as `proxy: 8080`, a `proxy` object without a `url`, or a `checkServerIdentity` that is not a function. For `proxy`, only `undefined`, `null` and `""` mean no option. On a request, `fetch` ignores such a `proxy` (`true` throws), and the request keeps the proxy of its session or of the environment.
+
+Bun rounds `idleTimeout` up to its socket timer, which moves in 4 second steps up to four minutes and in whole minutes beyond that. A connection is never closed before `idleTimeout`, and it can stay open for up to two steps longer. The longest `idleTimeout` is 238 minutes. A larger value means 238 minutes.
+
+Without `maxIdleSockets` a session has no limit of its own. The idle connections of all sessions and of plain `fetch` share one bounded pool per kind. When that pool is full, Bun closes the longest-idle connection in it, whichever session it belongs to. A `maxIdleSockets` above the size of the pool has no effect.
+
+#### Connecting to a specific address
+
+To send a request for a hostname to an address you resolved and checked yourself, put the address in the URL and name the origin in the `Host` header and in `tls.serverName`. Bun dials the address, sends `Host` (as `:authority` over HTTP/2), uses `serverName` for SNI, and verifies the certificate against `serverName`.
+
+```ts
+import { lookup } from "node:dns/promises";
+
+const { address, family } = await lookup("example.com");
+if (isPrivateAddress(address)) throw new Error(`refusing to connect to ${address}`);
+
+const response = await fetch(`https://${family === 6 ? `[${address}]` : address}/webhook`, {
+  headers: { Host: "example.com" },
+  tls: { serverName: "example.com" },
+  proxy: false,
+  redirect: "manual",
+});
+```
+
+- Pass `proxy: false`. Otherwise Bun judges the environment's proxy and `NO_PROXY` against the address in the URL, not against the hostname. Decide whether the hostname needs a proxy before you resolve it.
+- Follow redirects yourself (`redirect: "manual"`): `Host` and `serverName` describe this origin only, and a relative `Location` resolves against the address.
+- A name with several addresses has no fallback here. Try each address yourself.
+- Bun sends `Host` as given. Include the port when it is not the scheme's default. A plain `http://` URL needs only `Host`.
+- `tls.serverName` works with HTTP/1.1 and HTTP/2. `protocol: "http3"` rejects it.
+- Each distinct `serverName` has its own TLS context and keep-alive pool. Bun caches up to 60 of them.
+
 #### Simultaneous connection limit
 
 By default, Bun limits the number of simultaneous `fetch` requests to 256, for two reasons:
 
-* It improves overall system stability. Operating systems have an upper limit on the number of simultaneous open TCP sockets, usually in the low thousands. Nearing this limit causes your entire computer to behave strangely. Applications hang and crash.
-* It encourages HTTP Keep-Alive connection reuse. For short-lived HTTP requests, the slowest step is often the initial connection setup. Reusing connections can save a lot of time.
+- It improves overall system stability. Operating systems have an upper limit on the number of simultaneous open TCP sockets, usually in the low thousands. Nearing this limit causes your entire computer to behave strangely. Applications hang and crash.
+- It encourages HTTP Keep-Alive connection reuse. For short-lived HTTP requests, the slowest step is often the initial connection setup. Reusing connections can save a lot of time.
 
 When the limit is exceeded, Bun queues requests and sends them as soon as the next request ends.
 
@@ -449,12 +550,12 @@ The max value for this limit is 65,535. The maximum port number is 65,535, so it
 
 The fastest way to read the response body is to use one of these methods:
 
-* `response.text(): Promise<string>`
-* `response.json(): Promise<any>`
-* `response.formData(): Promise<FormData>`
-* `response.bytes(): Promise<Uint8Array>`
-* `response.arrayBuffer(): Promise<ArrayBuffer>`
-* `response.blob(): Promise<Blob>`
+- `response.text(): Promise<string>`
+- `response.json(): Promise<any>`
+- `response.formData(): Promise<FormData>`
+- `response.bytes(): Promise<Uint8Array>`
+- `response.arrayBuffer(): Promise<ArrayBuffer>`
+- `response.blob(): Promise<Blob>`
 
 You can also use `Bun.write` to write the response body to a file on disk:
 
@@ -466,13 +567,13 @@ await write("output.txt", response);
 
 ### Implementation details
 
-* Connection pooling is enabled by default. You can disable it per-request with `keepalive: false` or the `"Connection: close"` header.
-* Bun optimizes large file uploads using the operating system's `sendfile` syscall under specific conditions:
-* The file must be larger than 32KB
-* The request must not be using a proxy or the `compress` option
-* On macOS, only regular files (not pipes, sockets, or devices) can use `sendfile`
-* When these conditions aren't met, or when using S3/streaming uploads, Bun falls back to reading the file into memory
-* Bun only uses this optimization for HTTP (not HTTPS) requests, where the file can be sent directly from the kernel to the network stack; Bun does not use it on Windows
-* S3 operations automatically handle signing requests and merging authentication headers
+- Connection pooling is enabled by default. You can disable it per-request with `keepalive: false` or the `"Connection: close"` header.
+- Bun optimizes large file uploads using the operating system's `sendfile` syscall under specific conditions:
+- The file must be larger than 32KB
+- The request must not be using a proxy or the `compress` option
+- On macOS, only regular files (not pipes, sockets, or devices) can use `sendfile`
+- When these conditions aren't met, or when using S3/streaming uploads, Bun falls back to reading the file into memory
+- Bun only uses this optimization for HTTP (not HTTPS) requests, where the file can be sent directly from the kernel to the network stack; Bun does not use it on Windows
+- S3 operations automatically handle signing requests and merging authentication headers
 
 Many of these features are Bun-specific extensions to the standard fetch API.

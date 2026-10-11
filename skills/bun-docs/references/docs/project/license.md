@@ -3,6 +3,7 @@ Source: https://bun.com/docs/project/license
 
 License for Bun
 
+
 Bun itself is MIT-licensed.
 
 ## JavaScriptCore
@@ -11,11 +12,11 @@ Bun statically links JavaScriptCore (and WebKit), which is LGPL-2 licensed. WebC
 
 > (1) If you statically link against an LGPL'd library, you must also provide your application in an object (not necessarily source) format, so that a user has the opportunity to modify the library and relink the application.
 
-Bun's patched version of WebKit lives at [https://github.com/oven-sh/webkit](https://github.com/oven-sh/webkit). To relink Bun with changes:
+Bun's patched version of WebKit lives at https://github.com/oven-sh/webkit. To relink Bun with changes:
 
-* `git clone https://github.com/oven-sh/WebKit vendor/WebKit`
-* `bun sync-webkit-source` (checks out the version pinned in `WEBKIT_VERSION` in `scripts/build/deps/webkit.ts`)
-* `bun run build:local`
+- `git clone https://github.com/oven-sh/WebKit vendor/WebKit`
+- `bun sync-webkit-source` (checks out the version pinned in `WEBKIT_VERSION` in `scripts/build/deps/webkit.ts`)
+- `bun run build:local`
 
 `bun run build:local` compiles JavaScriptCore, compiles Bun's `.cpp` bindings for JavaScriptCore (the object files that use JavaScriptCore), and outputs a new `bun` binary with your changes.
 
@@ -29,7 +30,7 @@ Bun statically links these libraries:
 | [`brotli`](https://github.com/google/brotli)                                                                                                     | MIT                                                                                          |
 | [`libarchive`](https://github.com/libarchive/libarchive)                                                                                         | [several licenses](https://github.com/libarchive/libarchive/blob/master/COPYING)             |
 | [`lol-html`](https://github.com/cloudflare/lol-html/tree/master/c-api)                                                                           | BSD 3-Clause                                                                                 |
-| [`ls-hpack`](https://github.com/litespeedtech/ls-hpack)                                                                                          | MIT                                                                                          |
+| [`ls-hpack`](https://github.com/litespeedtech/ls-hpack)                                                                                          | MIT (bundled xxhash is BSD 2-Clause)                                                         |
 | [`ls-qpack`](https://github.com/litespeedtech/ls-qpack)                                                                                          | MIT                                                                                          |
 | [`lsquic`](https://github.com/litespeedtech/lsquic)                                                                                              | MIT (portions derived from Chromium proto-quic, BSD 3-Clause)                                |
 | [`mimalloc`](https://github.com/microsoft/mimalloc)                                                                                              | MIT                                                                                          |
@@ -45,7 +46,7 @@ Bun statically links these libraries:
 | [`libuv`](https://github.com/libuv/libuv) (on Windows)                                                                                           | MIT                                                                                          |
 | [`libdeflate`](https://github.com/ebiggers/libdeflate)                                                                                           | MIT                                                                                          |
 | [`libjpeg-turbo`](https://github.com/libjpeg-turbo/libjpeg-turbo)                                                                                | BSD 3-Clause / IJG / zlib                                                                    |
-| [`libspng`](https://github.com/randy408/libspng)                                                                                                 | BSD 2-Clause                                                                                 |
+| [`libspng`](https://github.com/randy408/libspng)                                                                                                 | BSD 2-Clause (portions derived from libpng, PNG Reference Library License v2)                |
 | [`libwebp`](https://github.com/webmproject/libwebp)                                                                                              | BSD 3-Clause                                                                                 |
 | [`highway`](https://github.com/google/highway)                                                                                                   | Apache 2.0                                                                                   |
 | [`HdrHistogram_c`](https://github.com/HdrHistogram/HdrHistogram_c)                                                                               | dual-licensed under CC0 1.0 or the BSD 2-Clause License                                      |
@@ -85,6 +86,6 @@ For compatibility, Bun embeds the following packages into its binary and injects
 
 ## Additional credits
 
-* Bun's JS transpiler and Node.js module resolver source code is a port of [@evanw](https://github.com/evanw)’s [esbuild](https://github.com/evanw/esbuild) project.
-* Bun's CSS parser source code is derived from the [Lightning CSS](https://github.com/parcel-bundler/lightningcss) and [Servo](https://github.com/servo/servo) projects.
-* Credit to [@kipply](https://github.com/kipply) for the name "Bun".
+- Bun's JS transpiler and Node.js module resolver source code is a port of [@evanw](https://github.com/evanw)’s [esbuild](https://github.com/evanw/esbuild) project.
+- Bun's CSS parser source code is derived from the [Lightning CSS](https://github.com/parcel-bundler/lightningcss) and [Servo](https://github.com/servo/servo) projects.
+- Credit to [@kipply](https://github.com/kipply) for the name "Bun".

@@ -9,7 +9,7 @@ bun add zod --dev
 bun add zod -d # shorthand
 ```
 
-***
+---
 
 This adds the package to `devDependencies` in `package.json`.
 
@@ -21,6 +21,6 @@ This adds the package to `devDependencies` in `package.json`.
 }
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

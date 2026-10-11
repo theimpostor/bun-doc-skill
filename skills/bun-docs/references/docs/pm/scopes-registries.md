@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/scopes-registries
 
 Configure private registries and scoped packages
 
+
 The default registry is `registry.npmjs.org`. To change it globally, set it in `bunfig.toml`:
 
 **File:** `bunfig.toml`
@@ -34,4 +35,4 @@ To configure a private registry scoped to a particular organization:
 
 ### `.npmrc`
 
-Bun also reads [`.npmrc`](/docs/pm/npmrc) files.
+Bun also reads [`.npmrc`](/pm/npmrc) files.

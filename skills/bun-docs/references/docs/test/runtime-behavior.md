@@ -3,6 +3,7 @@ Source: https://bun.com/docs/test/runtime-behavior
 
 Learn about Bun test's runtime integration, environment variables, timeouts, and error handling
 
+
 `bun test` is deeply integrated with Bun's runtime. This integration is part of what makes `bun test` fast.
 
 ## Environment Variables
@@ -91,7 +92,7 @@ test("test without timeout", async () => {
 
 ### Unhandled Errors
 
-`bun test` tracks unhandled promise rejections and errors that occur between tests. If any occur, the final exit code is non-zero, even if all tests pass.
+`bun test` tracks unhandled promise rejections and errors that occur between tests. If any occur, `bun test` exits with a non-zero code even when no test failed. In both examples below the error happens while the file is being loaded, so the file's tests are not run at all.
 
 This helps catch errors in asynchronous code that might otherwise go unnoticed:
 
@@ -100,22 +101,20 @@ This helps catch errors in asynchronous code that might otherwise go unnoticed:
 import { test, expect } from "bun:test";
 
 test("test 1", () => {
-  // This test passes
   expect(true).toBe(true);
 });
 
 // This error happens outside any test
-setTimeout(() => {
+queueMicrotask(() => {
   throw new Error("Unhandled error");
-}, 0);
+});
 
 test("test 2", () => {
-  // This test also passes
   expect(true).toBe(true);
 });
 
-// The test run will still fail with a non-zero exit code
-// because of the unhandled error
+// bun test reports this as "Unhandled error between tests", does not run
+// this file's tests (0 pass, 1 error), and exits with code 1
 ```
 
 ### Promise Rejections
@@ -126,11 +125,12 @@ The test runner also catches unhandled promise rejections:
 ```ts
 import { test, expect } from "bun:test";
 
-test("passing test", () => {
+test("test 1", () => {
   expect(1).toBe(1);
 });
 
-// This will cause the test run to fail
+// bun test reports this as "Unhandled error between tests", does not run
+// this file's tests, and exits with code 1
 Promise.reject(new Error("Unhandled rejection"));
 ```
 
@@ -261,8 +261,8 @@ import { test, it, describe, expect, beforeAll, beforeEach, afterAll, afterEach,
 
 `bun test` uses standard exit codes:
 
-* `0`: All tests passed, no unhandled errors
-* `1`: Test failures or unhandled errors occurred
+- `0`: All tests passed, no unhandled errors
+- `1`: Test failures or unhandled errors occurred
 
 ### Signal Handling
 
@@ -299,15 +299,15 @@ if (process.env.CI) {
 
 The test runner runs all tests in a single process by default. This provides:
 
-* **Faster startup** - No need to spawn multiple processes
-* **Shared memory** - Efficient resource usage
-* **Simpler debugging** - All tests in one process
+- **Faster startup** - No need to spawn multiple processes
+- **Shared memory** - Efficient resource usage
+- **Simpler debugging** - All tests in one process
 
 However, this means:
 
-* Tests share global state (use lifecycle hooks to clean up)
-* One test crash can affect others
-* No true parallelization of individual tests
+- Tests share global state (use lifecycle hooks to clean up)
+- One test crash can affect others
+- No true parallelization of individual tests
 
 ### Memory Management
 

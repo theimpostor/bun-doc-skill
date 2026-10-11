@@ -3,21 +3,27 @@ Source: https://bun.com/docs/runtime/http/error-handling
 
 Learn how to handle errors in Bun's development server
 
-To activate development mode, set `development: true`.
+
+`Bun.serve()` runs in development mode by default. It is turned off when `NODE_ENV=production` is set or when you pass `development: false`.
 
 **File:** `server.ts`
 ```ts
 Bun.serve({
-  development: true,
+  development: false,
   fetch(req) {
     throw new Error("woops!");
   },
 });
 ```
 
-In development mode, Bun surfaces errors in-browser with a built-in error page.
+In development mode, when a request handler throws and no `error` handler returns a response, Bun responds with a built-in error page that includes the error message, stack trace, source code around each frame, and file paths. This is meant for debugging locally.
 
-<img alt="Bun's built-in 500 page" />
+![Bun's built-in 500 page](/images/exception_page.png)
+
+> Warning
+The development error page sends source code and file paths to whoever made the request. Set `NODE_ENV=production` (or
+`development: false`) when deploying so uncaught errors return a plain `500` instead. The `--production` flag does not
+turn it off: `bun build` and `bun install` have that flag, and `bun run` ignores it.
 
 ### `error` callback
 
@@ -38,4 +44,4 @@ Bun.serve({
 });
 ```
 
-> Info: [Learn more about debugging in Bun](/docs/runtime/debugger)
+> Info: [Learn more about debugging in Bun](/runtime/debugger)

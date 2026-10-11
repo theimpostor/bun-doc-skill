@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/http/tls
 
 Enable TLS in Bun.serve
 
+
 Bun's TLS support is built in, powered by [BoringSSL](https://boringssl.googlesource.com/boringssl). To enable TLS, pass both `key` and `cert`.
 
 ```ts
@@ -14,7 +15,7 @@ Bun.serve({
 });
 ```
 
-The `key` and `cert` fields expect the *contents* of your TLS key and certificate, *not a path to it*. Each can be a string, `BunFile`, `TypedArray`, `Buffer`, or an array of those.
+The `key` and `cert` fields expect the _contents_ of your TLS key and certificate, _not a path to it_. Each can be a string, `BunFile`, `TypedArray`, `Buffer`, or an array of those. Bun uses only the last key/cert pair in an array; to serve several certificates, pass an array of `tls` objects, each with a `serverName` (see [SNI](#server-name-indication-sni) below).
 
 ```ts
 Bun.serve({
@@ -67,7 +68,7 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 ## Server name indication (SNI)
 

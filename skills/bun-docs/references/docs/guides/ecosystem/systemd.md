@@ -4,16 +4,16 @@ Source: https://bun.com/docs/guides/ecosystem/systemd
 
 [systemd](https://systemd.io) is an init system and service manager for Linux. It manages the startup and control of system processes and services.
 
-***
+---
 
-To run a Bun application as a daemon with **systemd**, create a *service file* in `/etc/systemd/system/`.
+To run a Bun application as a daemon with **systemd**, create a _service file_ in `/etc/systemd/system/`.
 
 ```sh
 cd /etc/systemd/system
 touch my-app.service
 ```
 
-***
+---
 
 Here is a typical service file that runs an application on system start. Use it as a template for your own service. Replace `YOUR_USER` with the name of the user to run the application as. To run as `root`, replace `YOUR_USER` with `root` and `/home/YOUR_USER` with `/root` (root's home directory). For security reasons, we don't recommend running as `root`.
 
@@ -48,7 +48,7 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-***
+---
 
 If your application starts a webserver, non-`root` users cannot listen on ports 80 or 443 by default. To allow Bun to listen on these ports when run by a non-`root` user, use the following command. The command requires `sudo` permissions. This step isn't necessary when running as `root`.
 
@@ -58,23 +58,23 @@ setcap CAP_NET_BIND_SERVICE=+eip /home/YOUR_USER/.bun/bin/bun
 
 The command attaches the capability to the `bun` binary itself. Replacing the binary, for example with `bun upgrade`, removes the capability. Re-run the command after upgrading. Alternatively, add `AmbientCapabilities=CAP_NET_BIND_SERVICE` to the `[Service]` section of the service file instead.
 
-***
+---
 
-With the service file configured, *enable* the service. Once enabled, it starts automatically on reboot. Enabling the service requires `sudo` permissions.
+With the service file configured, _enable_ the service. Once enabled, it starts automatically on reboot. Enabling the service requires `sudo` permissions.
 
 ```bash
 systemctl enable my-app
 ```
 
-***
+---
 
-To start the service without rebooting, *start* it manually.
+To start the service without rebooting, _start_ it manually.
 
 ```bash
 systemctl start my-app
 ```
 
-***
+---
 
 Check the status of your application with `systemctl status`. If the app started successfully, the output looks like this:
 
@@ -94,7 +94,7 @@ systemctl status my-app
              └─309641 /home/YOUR_USER/.bun/bin/bun run index.ts
 ```
 
-***
+---
 
 To update the service, edit the service file, then reload the daemon.
 
@@ -102,7 +102,7 @@ To update the service, edit the service file, then reload the daemon.
 systemctl daemon-reload
 ```
 
-***
+---
 
 For a complete guide to service unit configuration, see the [systemd.service documentation](https://www.freedesktop.org/software/systemd/man/systemd.service.html). Or use this cheatsheet of common commands:
 

@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/node-api
 
 Use Bun's Node-API module to build native add-ons to Node.js
 
+
 Node-API is an interface for building native add-ons to Node.js. Bun implements this interface from scratch, so most existing Node-API extensions work with Bun out of the box.
 
 As in Node.js, you can `require()` `.node` files (Node-API modules) directly.

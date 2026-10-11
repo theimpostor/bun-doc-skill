@@ -4,15 +4,15 @@ Source: https://bun.com/docs/guides/test/testing-library
 
 You can use [Testing Library](https://testing-library.com/) with Bun's test runner.
 
-***
+---
 
-First, install [Happy DOM](https://github.com/capricorn86/happy-dom) (see [Bun's Happy DOM guide](/docs/guides/test/happy-dom)).
+First, install [Happy DOM](https://github.com/capricorn86/happy-dom) (see [Bun's Happy DOM guide](/guides/test/happy-dom)).
 
 ```sh
 bun add -D @happy-dom/global-registrator
 ```
 
-***
+---
 
 Next, install the Testing Library packages you plan to use, plus `@testing-library/jest-dom` for the matchers used later. For React:
 
@@ -20,7 +20,7 @@ Next, install the Testing Library packages you plan to use, plus `@testing-libra
 bun add -D @testing-library/react @testing-library/dom @testing-library/jest-dom
 ```
 
-***
+---
 
 Next, create preload scripts for Happy DOM and for Testing Library.
 
@@ -31,7 +31,7 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator";
 GlobalRegistrator.register();
 ```
 
-***
+---
 
 For Testing Library, extend Bun's `expect` function with Testing Library's matchers. Optionally, run cleanup after each test to better match the behavior of test runners like Jest.
 
@@ -49,7 +49,7 @@ afterEach(() => {
 });
 ```
 
-***
+---
 
 Next, add these preload scripts to your `bunfig.toml`. If you combine them into a single preload script, load the `@testing-library/*` packages with `await import()` after `GlobalRegistrator.register()`. Bun evaluates a static `import` before `register()` runs, and `screen` queries then throw.
 
@@ -59,7 +59,7 @@ Next, add these preload scripts to your `bunfig.toml`. If you combine them into 
 preload = ["./happydom.ts", "./testing-library.ts"]
 ```
 
-***
+---
 
 If you use TypeScript, you also need declaration merging so the new matcher types show up in your editor. Create a type declaration file that extends `Matchers`.
 
@@ -74,7 +74,7 @@ declare module "bun:test" {
 }
 ```
 
-***
+---
 
 Now you can use Testing Library in your tests.
 
@@ -91,6 +91,6 @@ test("Can use Testing Library", () => {
 });
 ```
 
-***
+---
 
-See the [Testing Library docs](https://testing-library.com/), the [Happy DOM repo](https://github.com/capricorn86/happy-dom), and [DOM testing](/docs/test/dom).
+See the [Testing Library docs](https://testing-library.com/), the [Happy DOM repo](https://github.com/capricorn86/happy-dom), and [DOM testing](/test/dom).

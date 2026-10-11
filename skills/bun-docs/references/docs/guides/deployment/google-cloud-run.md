@@ -9,13 +9,15 @@ This guide deploys a Bun HTTP server to Google Cloud Run using a `Dockerfile`.
 > Note
 Before continuing, make sure you have:
 
-* A Bun application ready for deployment
-* A [Google Cloud account](https://cloud.google.com/) with billing enabled
-* [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) installed and configured
+- A Bun application ready for deployment
+- A [Google Cloud account](https://cloud.google.com/) with billing enabled
+- [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) installed and configured
 
-***
+
+---
 
 ### Initialize `gcloud` by selecting or creating a project
+
 Make sure that you've initialized the Google Cloud CLI. `gcloud init` logs you in and prompts you to either select an existing project or create a new one.
 
 For more help with the Google Cloud CLI, see the [official documentation](https://docs.cloud.google.com/sdk/gcloud/reference/init).
@@ -96,6 +98,7 @@ These commands enable Cloud Run (`run.googleapis.com`) and Cloud Build (`cloudbu
 
 The IAM binding grants the Compute Engine service account (`$PROJECT_NUMBER-compute@developer.gserviceaccount.com`) permission to build and deploy images on your behalf.
 
+
 ### Add a Dockerfile
 Create a new `Dockerfile` in the root of your project. This file contains the instructions to initialize the container, copy your local project files into it, install dependencies, and start the application.
 
@@ -122,7 +125,8 @@ Make sure that the start command corresponds to your application's entry point. 
 
 If your app doesn't have dependencies, you can omit the `COPY package.json bun.lock ./` and `RUN bun install --production --frozen-lockfile` lines. Bun doesn't write a `bun.lock` for a project with no dependencies.
 
-Create a new `.dockerignore` file in the root of your project. It lists the files and directories to *exclude* from the container image, such as `node_modules`. Excluding them keeps builds faster and smaller:
+
+Create a new `.dockerignore` file in the root of your project. It lists the files and directories to _exclude_ from the container image, such as `node_modules`. Excluding them keeps builds faster and smaller:
 
 **File:** `.dockerignore`
 ```docker
@@ -167,6 +171,7 @@ Service URL: https://my-bun-app-....us-west1.run.app
 ```
 
 ### Visit your live application
+
 Your Bun application is now live.
 
 Visit the Service URL (`https://my-bun-app-....us-west1.run.app`) to confirm everything works as expected.

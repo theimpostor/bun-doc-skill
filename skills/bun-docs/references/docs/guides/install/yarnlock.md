@@ -5,9 +5,9 @@ Source: https://bun.com/docs/guides/install/yarnlock
 > Note
 Bun v1.1.39 introduced `bun.lock`, a JSONC-formatted lockfile. It is human-readable and git-diffable without
 configuration, at no cost to performance. In 1.2.0+ it is the default format for new projects. See [the lockfile
-docs](/docs/pm/lockfile#text-based-lockfile).
+docs](/pm/lockfile#text-based-lockfile).
 
-***
+---
 
 Use the `--yarn` flag to generate a Yarn-compatible `yarn.lock` file (in addition to `bun.lock{b}`).
 
@@ -15,7 +15,7 @@ Use the `--yarn` flag to generate a Yarn-compatible `yarn.lock` file (in additio
 bun install --yarn
 ```
 
-***
+---
 
 To set this as the default behavior, add the following to your `bunfig.toml` file.
 
@@ -25,7 +25,7 @@ To set this as the default behavior, add the following to your `bunfig.toml` fil
 print = "yarn"
 ```
 
-***
+---
 
 To print a Yarn lockfile to your console without writing it to disk, "run" your `bun.lockb` with `bun`.
 
@@ -44,6 +44,6 @@ abab@^2.0.6:
   integrity sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvH...
 ```
 
-***
+---
 
-See [`bun install`](/docs/pm/cli/install).
+See [`bun install`](/pm/cli/install).

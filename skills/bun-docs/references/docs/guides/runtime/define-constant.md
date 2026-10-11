@@ -9,7 +9,7 @@ bun --define process.env.NODE_ENV="'production'" src/index.ts # Runtime
 bun build --define process.env.NODE_ENV="'production'" src/index.ts # Build
 ```
 
-***
+---
 
 Bun uses these statically-known values for dead code elimination and other optimizations.
 
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "production") {
 }
 ```
 
-***
+---
 
 Before the code reaches the JavaScript engine, Bun replaces `process.env.NODE_ENV` with `"production"`.
 
@@ -33,7 +33,7 @@ if ("production" === "production") {
 }
 ```
 
-***
+---
 
 Bun's optimizing transpiler also does basic constant folding.
 
@@ -45,7 +45,7 @@ if (true) {
 }
 ```
 
-***
+---
 
 To also collapse the surrounding `if` scaffolding down to the following output, pass `--minify-syntax` (also enabled by `--minify`):
 
@@ -57,7 +57,7 @@ bun build --define process.env.NODE_ENV="'production'" --minify-syntax src/index
 console.log("Production mode");
 ```
 
-***
+---
 
 ## What types of values are supported?
 

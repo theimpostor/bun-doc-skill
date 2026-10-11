@@ -9,22 +9,22 @@ Bun includes a default allowlist of popular packages whose `postinstall` scripts
 list](https://github.com/oven-sh/bun/blob/main/src/install/default-trusted-dependencies.txt). The allowlist only
 applies to packages installed from npm. For packages from other sources (such as `file:`, `link:`, `git:`, or
 `github:` dependencies), you must explicitly add them to `trustedDependencies`. Defining `trustedDependencies` in your
-`package.json` [*replaces* this default list](/docs/pm/lifecycle#behavior-of-the-trusteddependencies-field) rather than
+`package.json` [_replaces_ this default list](/pm/lifecycle#behavior-of-the-trusteddependencies-field) rather than
 extending it, so also list any packages from the default list whose lifecycle scripts you still need.
 
-***
+---
 
 If you see one of the following errors, you are probably using a package that needs its `postinstall` script to work:
 
-* `error: could not determine executable to run for package`
-* `ENOEXEC` (`Exec format error`)
+- `error: could not determine executable to run for package`
+- `ENOEXEC` (`Exec format error`)
 
-***
+---
 
 To allow Bun to execute lifecycle scripts for a specific package, add the package to `trustedDependencies` in your `package.json`. You can do this automatically by running `bun pm trust <pkg>`.
 
 > Note
-Listing a package in `trustedDependencies` only allows lifecycle scripts for that specific package, *not* the
+Listing a package in `trustedDependencies` only allows lifecycle scripts for that specific package, _not_ the
 dependencies of that dependency.
 
 **File:** `package.json`
@@ -36,7 +36,7 @@ dependencies of that dependency.
 }
 ```
 
-***
+---
 
 Once you add the package to `trustedDependencies`, run a fresh install. Bun re-installs your dependencies and runs the package's lifecycle scripts. (`bun pm trust` runs them immediately, so you can skip the extra install.)
 
@@ -45,6 +45,6 @@ rm -rf node_modules
 bun install
 ```
 
-***
+---
 
-See [trusted dependencies](/docs/pm/lifecycle).
+See [trusted dependencies](/pm/lifecycle).

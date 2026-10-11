@@ -12,11 +12,11 @@ await fetch("https://example.com", {
 });
 ```
 
-***
+---
 
 The `proxy` option can be a URL string, a `URL` instance, or an object with `url` (a string or a `URL`) and optional `headers`. The URL can include the username and password if the proxy requires authentication. It can be `http://` or `https://`.
 
-***
+---
 
 ## Custom proxy headers
 
@@ -39,7 +39,7 @@ The `headers` property accepts a plain object or a `Headers` instance. Bun sends
 
 If you provide a `Proxy-Authorization` header, it overrides any credentials in the proxy URL.
 
-***
+---
 
 ## Environment variables
 
@@ -47,4 +47,13 @@ To use the same proxy for all requests, set the `$HTTP_PROXY` and `$HTTPS_PROXY`
 
 ```sh
 HTTP_PROXY=https://username:password@proxy.example.com:8080 HTTPS_PROXY=https://username:password@proxy.example.com:8080 bun run index.ts
+```
+
+`$ALL_PROXY` applies to both kinds of URL when the scheme-specific variable is unset. `$NO_PROXY` lists the hosts that bypass the proxy. See [Proxying requests](/runtime/networking/fetch#proxying-requests) for the syntax.
+
+To ignore these variables for one request, pass `proxy: false`:
+
+**File:** `direct.ts`
+```ts
+await fetch("https://example.com", { proxy: false });
 ```

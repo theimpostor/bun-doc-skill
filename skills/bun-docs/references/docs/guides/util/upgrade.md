@@ -12,7 +12,7 @@ bun upgrade
 
 > Note: To see the current version of Bun, run `bun --version`.
 
-***
+---
 
 ## Verify the upgrade
 
@@ -27,7 +27,7 @@ bun --revision
 # Output: 1.x.y+abc123def
 ```
 
-***
+---
 
 ## Upgrade to canary builds
 
@@ -39,7 +39,7 @@ bun upgrade --canary
 
 > Warning: Canary builds are not recommended for production use. They may contain bugs or breaking changes.
 
-***
+---
 
 ## Switch back to stable
 
@@ -49,7 +49,7 @@ If you're on a canary build and want to return to the latest stable release:
 bun upgrade --stable
 ```
 
-***
+---
 
 ## Install a specific version
 
@@ -59,14 +59,13 @@ To install a specific version of Bun, use the install script with a version tag:
 ```bash
 curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.3"
 ```
-
 ### Windows
 **File:** `PowerShell`
 ```powershell
 iex "& {$(irm https://bun.sh/install.ps1)} -Version 1.3.3"
 ```
 
-***
+---
 
 ## Package manager users
 
@@ -79,9 +78,10 @@ Use `brew upgrade bun` instead.
 **Scoop users** <br>
 Use `scoop update bun` instead.
 
-***
+
+---
 
 ## See also
 
-* [Installation](/docs/installation) — Install Bun for the first time
-* [Update packages](/docs/pm/cli/update) — Update dependencies to latest versions
+- [Installation](/installation) — Install Bun for the first time
+- [Update packages](/pm/cli/update) — Update dependencies to latest versions

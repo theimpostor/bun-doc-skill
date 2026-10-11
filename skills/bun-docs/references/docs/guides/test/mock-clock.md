@@ -18,9 +18,9 @@ test("party like it's 1999", () => {
 });
 ```
 
-***
+---
 
-Call `setSystemTime` in a [lifecycle hook](/docs/test/lifecycle) like `beforeAll` to give your tests a deterministic "fake clock".
+Call `setSystemTime` in a [lifecycle hook](/test/lifecycle) like `beforeAll` to give your tests a deterministic "fake clock".
 
 ```ts
 import { test, expect, beforeAll, setSystemTime } from "bun:test";
@@ -33,7 +33,7 @@ beforeAll(() => {
 // tests...
 ```
 
-***
+---
 
 To reset the system clock to the actual time, call `setSystemTime` with no arguments.
 
@@ -43,6 +43,6 @@ import { test, expect, beforeAll, setSystemTime } from "bun:test";
 setSystemTime(); // reset to actual time
 ```
 
-***
+---
 
-See [Dates and times](/docs/test/dates-times).
+See [Dates and times](/test/dates-times).

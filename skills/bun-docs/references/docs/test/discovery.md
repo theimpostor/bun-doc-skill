@@ -3,24 +3,25 @@ Source: https://bun.com/docs/test/discovery
 
 Learn how Bun's test runner discovers and filters test files in your project
 
+
 `bun test` decides which files to run as tests by matching their paths against a set of patterns.
 
 ## Default Discovery Logic
 
 By default, `bun test` recursively searches the project directory for files that match these patterns:
 
-* `*.test.{js|jsx|ts|tsx|mjs|cjs|mts|cts}` - Files ending with `.test.js`, `.test.jsx`, `.test.ts`, `.test.tsx`, `.test.mjs`, `.test.cjs`, `.test.mts`, or `.test.cts`
-* `*_test.{js|jsx|ts|tsx|mjs|cjs|mts|cts}` - Files ending with `_test.js`, `_test.jsx`, `_test.ts`, `_test.tsx`, `_test.mjs`, `_test.cjs`, `_test.mts`, or `_test.cts`
-* `*.spec.{js|jsx|ts|tsx|mjs|cjs|mts|cts}` - Files ending with `.spec.js`, `.spec.jsx`, `.spec.ts`, `.spec.tsx`, `.spec.mjs`, `.spec.cjs`, `.spec.mts`, or `.spec.cts`
-* `*_spec.{js|jsx|ts|tsx|mjs|cjs|mts|cts}` - Files ending with `_spec.js`, `_spec.jsx`, `_spec.ts`, `_spec.tsx`, `_spec.mjs`, `_spec.cjs`, `_spec.mts`, or `_spec.cts`
+- `*.test.{js|jsx|ts|tsx|mjs|cjs|mts|cts}` - Files ending with `.test.js`, `.test.jsx`, `.test.ts`, `.test.tsx`, `.test.mjs`, `.test.cjs`, `.test.mts`, or `.test.cts`
+- `*_test.{js|jsx|ts|tsx|mjs|cjs|mts|cts}` - Files ending with `_test.js`, `_test.jsx`, `_test.ts`, `_test.tsx`, `_test.mjs`, `_test.cjs`, `_test.mts`, or `_test.cts`
+- `*.spec.{js|jsx|ts|tsx|mjs|cjs|mts|cts}` - Files ending with `.spec.js`, `.spec.jsx`, `.spec.ts`, `.spec.tsx`, `.spec.mjs`, `.spec.cjs`, `.spec.mts`, or `.spec.cts`
+- `*_spec.{js|jsx|ts|tsx|mjs|cjs|mts|cts}` - Files ending with `_spec.js`, `_spec.jsx`, `_spec.ts`, `_spec.tsx`, `_spec.mjs`, `_spec.cjs`, `_spec.mts`, or `_spec.cts`
 
 ## Exclusions
 
 By default, `bun test` ignores:
 
-* `node_modules` directories
-* Hidden directories (those starting with a period `.`)
-* Files that don't have JavaScript-like extensions (based on available [loaders](/docs/bundler/loaders))
+- `node_modules` directories
+- Hidden directories (those starting with a period `.`)
+- Files that don't have JavaScript-like extensions (based on available [loaders](/bundler/loaders))
 
 ## Customizing Test Discovery
 
@@ -88,5 +89,5 @@ root = "src"  # Only scan for tests in the src directory
 
 Tests run in the following order:
 
-1. Test files run sequentially, or across worker processes with [`--parallel`](/docs/test/parallel)
+1. Test files run sequentially, or across worker processes with [`--parallel`](/test/parallel)
 2. Within each file, tests run sequentially in definition order

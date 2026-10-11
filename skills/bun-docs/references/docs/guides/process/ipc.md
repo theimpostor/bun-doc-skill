@@ -2,7 +2,7 @@
 Source: https://bun.com/docs/guides/process/ipc
 
 
-Use [`Bun.spawn()`](/docs/runtime/child-process) to spawn a child process. When spawning a second `bun` process, you can open a direct inter-process communication (IPC) channel between the two processes.
+Use [`Bun.spawn()`](/runtime/child-process) to spawn a child process. When spawning a second `bun` process, you can open a direct inter-process communication (IPC) channel between the two processes.
 
 > Note
 To communicate with a Node.js process, set `serialization: "json"` in `Bun.spawn`. Use `process.execPath` to get a
@@ -19,7 +19,7 @@ const child = Bun.spawn(["bun", "child.ts"], {
 });
 ```
 
-***
+---
 
 The parent process sends messages to the subprocess with the `.send()` method on the returned `Subprocess` instance. The `ipc` handler also receives the subprocess as its second argument.
 
@@ -37,7 +37,7 @@ const childProc = Bun.spawn(["bun", "child.ts"], {
 childProc.send("I am your father"); // The parent can send messages to the child as well
 ```
 
-***
+---
 
 The child process sends messages to its parent with `process.send()` and receives messages with `process.on("message")`. This is the same API used for `child_process.fork()` in Node.js.
 
@@ -52,7 +52,7 @@ process.on("message", message => {
 });
 ```
 
-***
+---
 
 By default, Bun serializes messages with the JSC `serialize` API. This API supports everything [`structuredClone` supports](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm), including strings, typed arrays, and objects. The API does not support transferring ownership of objects.
 
@@ -65,6 +65,6 @@ process.send("Hello from child as string");
 process.send({ message: "Hello from child as object" });
 ```
 
-***
+---
 
-See [Child processes](/docs/runtime/child-process).
+See [Child processes](/runtime/child-process).

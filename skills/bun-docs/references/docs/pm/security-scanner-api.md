@@ -4,7 +4,7 @@ Source: https://bun.com/docs/pm/security-scanner-api
 
 Bun's package manager can scan packages before installing them, to catch supply chain attacks and known vulnerabilities.
 
-***
+---
 
 ## Quick Start
 
@@ -18,28 +18,28 @@ scanner = "@oven/bun-security-scanner" # example name, replace with your scanner
 
 With a scanner configured, Bun:
 
-* Scans all packages before installation
-* Displays security warnings and advisories
-* Cancels installation if the scanner finds fatal advisories
+- Scans all packages before installation
+- Displays security warnings and advisories
+- Cancels installation if the scanner finds fatal advisories
 
-***
+---
 
 ## How It Works
 
 Security scanners analyze packages during `bun install`, `bun add`, and other package operations. They can detect:
 
-* Known security vulnerabilities (CVEs)
-* Malicious packages
-* License compliance issues
+- Known security vulnerabilities (CVEs)
+- Malicious packages
+- License compliance issues
 
 ### Security Levels
 
 Scanners report issues at two severity levels:
 
-* **`fatal`** - Installation stops immediately, exits with non-zero code
-* **`warn`** - In interactive terminals, prompts to continue; in CI, exits immediately
+- **`fatal`** - Installation stops immediately, exits with non-zero code
+- **`warn`** - In interactive terminals, prompts to continue; in CI, exits immediately
 
-***
+---
 
 ## Using Pre-built Scanners
 
@@ -89,6 +89,6 @@ For a complete example with tests and CI setup, see the official template:
 
 ## Related
 
-* [Configuration (bunfig.toml)](/docs/runtime/bunfig#install-security-scanner)
-* [Package Manager](/docs/pm/cli/install)
-* [Security Scanner Template](https://github.com/oven-sh/security-scanner-template)
+- [Configuration (bunfig.toml)](/runtime/bunfig#install-security-scanner)
+- [Package Manager](/pm/cli/install)
+- [Security Scanner Template](https://github.com/oven-sh/security-scanner-template)

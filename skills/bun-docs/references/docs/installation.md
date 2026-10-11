@@ -3,6 +3,7 @@ Source: https://bun.com/docs/installation
 
 Install Bun with npm, Homebrew, Docker, or the official script.
 
+
 ## Overview
 
 Bun ships as a single, dependency-free executable. Install it with the install script, a package manager, or Docker on macOS, Linux, and Windows.
@@ -12,6 +13,7 @@ Bun ships as a single, dependency-free executable. Install it with the install s
 ## Installation
 
 ### macOS & Linux
+
 **File:** `curl`
 ```bash
 curl -fsSL https://bun.com/install | bash
@@ -19,6 +21,7 @@ curl -fsSL https://bun.com/install | bash
 
 > Note
 **Linux users:** You need the `unzip` package to install Bun (`sudo apt install unzip`). We recommend kernel version 5.6 or higher. Bun runs on kernels as old as 3.10 (RHEL 7) with graceful degradation of newer syscalls. Use `uname -r` to check your kernel version.
+
 
 ### Windows
 **File:** `PowerShell`
@@ -29,9 +32,12 @@ powershell -c "irm bun.sh/install.ps1|iex"
 > Warning
 Bun requires Windows 10 version 1809 or later.
 
+
 For support and discussion, join the **#windows** channel on the [Discord](https://bun.com/discord).
 
+
 ### Package Managers
+
 **File:** `npm`
 ```bash
 npm install -g bun # the last `npm` command you'll ever need
@@ -46,6 +52,7 @@ brew install oven-sh/bun/bun
 ```bash
 scoop install bun
 ```
+
 
 ### Docker
 Bun provides a Docker image that supports both Linux x64 and arm64.
@@ -67,6 +74,7 @@ docker pull oven/bun:slim
 docker pull oven/bun:distroless
 docker pull oven/bun:alpine
 ```
+
 
 To check that Bun was installed successfully, open a new terminal window and run:
 
@@ -90,15 +98,13 @@ directory (`~/.bun/bin`) to your `PATH`.
 echo $SHELL
 # /bin/zsh  or /bin/bash or /bin/fish
 ```
-
 ### Open your shell configuration file
-* For bash: `~/.bashrc`
-* For zsh: `~/.zshrc`
-* For fish: `~/.config/fish/config.fish`
+- For bash: `~/.bashrc`
+- For zsh: `~/.zshrc`
+- For fish: `~/.config/fish/config.fish`
 
 ### Add the Bun directory to PATH
 Add these lines to your configuration file:
-
 ```bash
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
@@ -108,7 +114,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 ```bash
 source ~/.bashrc  # or ~/.zshrc
 ```
-
 ### Windows
 ### Determine if the bun binary is properly installed
 ```bash
@@ -132,7 +137,8 @@ Restart your terminal and test with `bun --version`.
 bun --version
 ```
 
-***
+
+---
 
 ## Upgrading
 
@@ -149,7 +155,8 @@ To avoid conflicts with Homebrew, use `brew upgrade bun` instead.
 **Scoop users** <br>
 To avoid conflicts with Scoop, use `scoop update bun` instead.
 
-***
+
+---
 
 ## Canary Builds
 
@@ -167,7 +174,7 @@ bun upgrade --stable
 
 Use a canary build to test new features and bug fixes before they reach a stable release. To help the Bun team fix bugs faster, canary builds automatically upload crash reports.
 
-***
+---
 
 ## Installing Older Versions
 
@@ -188,7 +195,8 @@ On Windows, pass the version number to the PowerShell install script:
 iex "& {$(irm https://bun.com/install.ps1)} -Version 1.3.3"
 ```
 
-***
+
+---
 
 ## Direct Downloads
 
@@ -198,78 +206,52 @@ To download Bun binaries directly, visit the [releases page on GitHub](https://g
 
 ### Linux x64
 Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-linux-x64.zip`
-Standard Linux x64 binary
-
-### Linux x64 Baseline
-Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-linux-x64-baseline.zip`
-For older CPUs without AVX2
-
-### Windows x64
-Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-windows-x64.zip`
-Standard Windows binary
-
-### Windows x64 Baseline
-Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-windows-x64-baseline.zip`
-For older CPUs without AVX2
-
-### Windows ARM64
-Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-windows-aarch64.zip`
-Windows on ARM (Snapdragon, etc.)
-
-### macOS ARM64
-Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-darwin-aarch64.zip`
-Apple Silicon (M1/M2/M3)
-
-### macOS x64
-Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-darwin-x64.zip`
-Intel Macs
-
+glibc, Nehalem or newer
 ### Linux ARM64
 Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-linux-aarch64.zip`
 ARM64 Linux systems
+### Windows x64
+Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-windows-x64.zip`
+Nehalem or newer
+### Windows ARM64
+Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-windows-aarch64.zip`
+Windows on ARM (Snapdragon, etc.)
+### macOS ARM64
+Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-darwin-aarch64.zip`
+Apple Silicon (M1/M2/M3)
+### macOS x64
+Link: `https://github.com/oven-sh/bun/releases/latest/download/bun-darwin-x64.zip`
+Intel Macs
 
 ### Musl Binaries
 
 For distributions without `glibc` (Alpine Linux, Void Linux):
 
-* [Linux x64 musl](https://github.com/oven-sh/bun/releases/latest/download/bun-linux-x64-musl.zip)
-* [Linux x64 musl baseline](https://github.com/oven-sh/bun/releases/latest/download/bun-linux-x64-musl-baseline.zip)
-* [Linux ARM64 musl](https://github.com/oven-sh/bun/releases/latest/download/bun-linux-aarch64-musl.zip)
+- [Linux x64 musl](https://github.com/oven-sh/bun/releases/latest/download/bun-linux-x64-musl.zip)
+- [Linux ARM64 musl](https://github.com/oven-sh/bun/releases/latest/download/bun-linux-aarch64-musl.zip)
 
 > Note
 Bun's glibc binaries require glibc 2.17 or newer. If you encounter an error like `bun:
 /lib/x86_64-linux-gnu/libc.so.6: version GLIBC_... not found`, try using the musl binary. Bun's install script
 automatically chooses the correct binary for your system.
 
-***
+---
 
 ## CPU Requirements
 
-CPU requirements depend on which binary you're using:
-
-### Standard Builds
-**x64 binaries** target the Haswell CPU architecture (AVX and AVX2 instructions required)
+Bun ships a single x64 binary per platform. It targets the Nehalem microarchitecture (SSE4.2) and selects AVX2/AVX-512
+code paths at runtime when the CPU supports them, so there is no separate "baseline" download to choose.
 
 | Platform | Intel Requirement               | AMD Requirement    |
 | -------- | ------------------------------- | ------------------ |
-| x64      | Haswell (4th gen Core) or newer | Excavator or newer |
-
-### Baseline Builds
-**x64-baseline binaries** target the Nehalem architecture for older CPUs
-
-| Platform     | Intel Requirement               | AMD Requirement    |
-| ------------ | ------------------------------- | ------------------ |
-| x64-baseline | Nehalem (1st gen Core) or newer | Bulldozer or newer |
-
-> Warning
-Baseline builds are slower than regular builds. Use them only if you encounter an "Illegal
-Instruction" error.
+| x64      | Nehalem (1st gen Core) or newer | Bulldozer or newer |
 
 > Note
-Bun does not support CPUs older than the baseline target, which requires the SSE4.2 extension. Bun requires macOS 13.0
-or later.
+Bun does not support x64 CPUs without the SSE4.2 extension. Bun requires macOS 13.0 or later. The `-baseline` release
+assets and `@oven/bun-*-x64-baseline` npm packages are kept as aliases of the single x64 binary for backward
+compatibility with older install scripts.
 
-***
+---
 
 ## Uninstall
 
@@ -291,12 +273,10 @@ powershell -c ~\.bun\uninstall.ps1
 ```bash
 npm uninstall -g bun
 ```
-
 **File:** `Homebrew`
 ```bash
 brew uninstall bun
 ```
-
 **File:** `Scoop`
 ```bash
 scoop uninstall bun

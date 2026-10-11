@@ -3,19 +3,20 @@ Source: https://bun.com/docs/runtime/yaml
 
 Use Bun's built-in support for YAML files through both runtime APIs and bundler integration
 
+
 In Bun, YAML is a first-class citizen alongside JSON and TOML. You can:
 
-* Parse YAML strings with `Bun.YAML.parse`
-* `import` & `require` YAML files as modules at runtime (including hot reloading & watch mode support)
-* `import` & `require` YAML files in frontend apps with Bun's bundler
+- Parse YAML strings with `Bun.YAML.parse`
+- `import` & `require` YAML files as modules at runtime (including hot reloading & watch mode support)
+- `import` & `require` YAML files in frontend apps with Bun's bundler
 
-***
+---
 
 ## Conformance
 
 Bun's YAML parser, written in Rust, passes the official YAML test suite and covers the vast majority of real-world use cases.
 
-***
+---
 
 ## Runtime API
 
@@ -72,13 +73,13 @@ console.log(docs);
 
 Bun's YAML parser supports the YAML 1.2 specification, including:
 
-* **Scalars**: strings, numbers, booleans, null values
-* **Collections**: sequences (arrays) and mappings (objects)
-* **Anchors and Aliases**: reusable nodes with `&` and `*`. Aliased collections share identity. An alias may refer to a collection that contains it, so `Bun.YAML.parse` can return cyclic objects. YAML imported as a module cannot be cyclic.
-* **Tags**: type hints like `!!str`, `!!int`, `!!float`, `!!bool`, `!!null`
-* **Multi-line strings**: literal (`|`) and folded (`>`) scalars
-* **Comments**: using `#`
-* **Directives**: `%YAML` and `%TAG`
+- **Scalars**: strings, numbers, booleans, null values
+- **Collections**: sequences (arrays) and mappings (objects)
+- **Anchors and Aliases**: reusable nodes with `&` and `*`. Aliased collections share identity. An alias may refer to a collection that contains it, so `Bun.YAML.parse` can return cyclic objects. YAML imported as a module cannot be cyclic.
+- **Tags**: type hints like `!!str`, `!!int`, `!!float`, `!!bool`, `!!null`
+- **Multi-line strings**: literal (`|`) and folded (`>`) scalars
+- **Comments**: using `#`
+- **Directives**: `%YAML` and `%TAG`
 
 ```ts
 const yaml = `
@@ -121,7 +122,7 @@ try {
 }
 ```
 
-***
+---
 
 ## Module Import
 
@@ -198,7 +199,7 @@ const { database, redis } = require("./config.yaml");
 console.log(database.port); // 5432
 ```
 
-***
+---
 
 ## Hot Reloading with YAML
 
@@ -248,7 +249,7 @@ bun --hot server.ts
 
 Now when you modify `config.yaml`, the running application picks up the change: you can adjust settings or toggle feature flags during development without restarting.
 
-***
+---
 
 ## Configuration Management
 
@@ -453,9 +454,9 @@ bun build app.ts --outdir=dist
 
 Parsing at build time means:
 
-* No runtime YAML parsing overhead in production
-* Smaller bundle sizes
-* Tree shaking of unused configuration (named imports)
+- No runtime YAML parsing overhead in production
+- Smaller bundle sizes
+- Tree shaking of unused configuration (named imports)
 
 ### Dynamic Imports
 

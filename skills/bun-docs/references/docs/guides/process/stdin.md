@@ -14,7 +14,7 @@ for await (const line of console) {
 }
 ```
 
-***
+---
 
 Running this file starts a never-ending interactive prompt that echoes whatever you type.
 
@@ -29,7 +29,7 @@ Type something: hello again
 You typed: hello again
 ```
 
-***
+---
 
 Bun also exposes `stdin` as a `BunFile`, `Bun.stdin`. Use it to incrementally read large inputs piped into the `bun` process.
 
@@ -45,7 +45,7 @@ for await (const chunk of Bun.stdin.stream()) {
 }
 ```
 
-***
+---
 
 Running `stdin.ts` prints whatever is piped into it.
 
@@ -57,6 +57,6 @@ echo "hello" | bun run stdin.ts
 Chunk: hello
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils) for more utilities.
+See [Utils](/runtime/utils) for more utilities.

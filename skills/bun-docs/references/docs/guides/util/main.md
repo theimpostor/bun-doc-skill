@@ -4,6 +4,7 @@ Source: https://bun.com/docs/guides/util/main
 
 The `Bun.main` property contains the absolute path to the current entrypoint.
 
+
 **File:** `foo.ts`
 ```ts
 console.log(Bun.main);
@@ -14,7 +15,8 @@ console.log(Bun.main);
 import "./foo.ts";
 ```
 
-***
+
+---
 
 The printed path is the file executed with `bun run`.
 
@@ -34,6 +36,6 @@ bun run foo.ts
 /path/to/foo.ts
 ```
 
-***
+---
 
-See [Utils](/docs/runtime/utils).
+See [Utils](/runtime/utils).

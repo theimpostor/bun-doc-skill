@@ -4,9 +4,9 @@ Source: https://bun.com/docs/guides/ecosystem/vite
 
 > Note
 You can use Vite with Bun, but many projects get faster builds & drop hundreds of dependencies by switching to [HTML
-imports](/docs/bundler/fullstack).
+imports](/bundler/fullstack).
 
-***
+---
 
 Vite works with Bun with no extra configuration. Get started with one of Vite's templates.
 
@@ -30,7 +30,7 @@ bun create vite my-app
 ◇  Scaffolding project in /path/to/my-app...
 ```
 
-***
+---
 
 Then `cd` into the project directory and install dependencies.
 
@@ -39,17 +39,17 @@ cd my-app
 bun install
 ```
 
-***
+---
 
 Start the development server with the `vite` CLI using `bunx`.
 
-The `--bun` flag tells Bun to run Vite's CLI using `bun` instead of `node`. By default, Bun respects Vite's `#!/usr/bin/env node` [shebang line](https://en.wikipedia.org/wiki/Shebang_(Unix)).
+The `--bun` flag tells Bun to run Vite's CLI using `bun` instead of `node`. By default, Bun respects Vite's `#!/usr/bin/env node` [shebang line](<https://en.wikipedia.org/wiki/Shebang_(Unix)>).
 
 ```bash
 bunx --bun vite
 ```
 
-***
+---
 
 To simplify this command, update the `"dev"` script in `package.json` to the following.
 
@@ -65,7 +65,7 @@ To simplify this command, update the `"dev"` script in `package.json` to the fol
   // ...
 ```
 
-***
+---
 
 Now you can start the development server with `bun run dev`.
 
@@ -73,7 +73,7 @@ Now you can start the development server with `bun run dev`.
 bun run dev
 ```
 
-***
+---
 
 Build your app for production.
 
@@ -81,6 +81,6 @@ Build your app for production.
 bunx --bun vite build
 ```
 
-***
+---
 
 For more information, see the [Vite documentation](https://vite.dev/guide/).

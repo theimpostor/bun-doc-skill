@@ -3,6 +3,7 @@ Source: https://bun.com/docs/runtime/repl
 
 An interactive JavaScript and TypeScript REPL with syntax highlighting, history, and tab completion
 
+
 `bun repl` starts an interactive Read-Eval-Print Loop (REPL) for evaluating JavaScript and TypeScript expressions. Use it to test code snippets, explore APIs, and debug.
 
 ```sh
@@ -21,19 +22,19 @@ undefined
 'Hello, Bun!'
 ```
 
-***
+---
 
 ## Features
 
-* **TypeScript & JSX** — Write TypeScript and JSX directly. Bun transpiles everything on the fly.
-* **Top-level `await`** — Await promises directly at the prompt without wrapping in an async function.
-* **Syntax highlighting** — The REPL highlights input as you type.
-* **Persistent history** — The REPL saves history to `~/.bun_repl_history`. History persists across sessions.
-* **Tab completion** — Press `Tab` to complete property names and REPL commands.
-* **Multi-line input** — Unclosed brackets, braces, and parentheses automatically continue on the next line.
-* **Node.js globals** — `require`, `module`, `__dirname`, and `__filename` are available, resolved relative to your current working directory.
+- **TypeScript & JSX** — Write TypeScript and JSX directly. Bun transpiles everything on the fly.
+- **Top-level `await`** — Await promises directly at the prompt without wrapping in an async function.
+- **Syntax highlighting** — The REPL highlights input as you type.
+- **Persistent history** — The REPL saves history to `~/.bun_repl_history`. History persists across sessions.
+- **Tab completion** — Press `Tab` to complete property names and REPL commands.
+- **Multi-line input** — Unclosed brackets, braces, and parentheses automatically continue on the next line.
+- **Node.js globals** — `require`, `module`, `__dirname`, and `__filename` are available, resolved relative to your current working directory.
 
-***
+---
 
 ## Special variables
 
@@ -55,7 +56,7 @@ SyntaxError: JSON Parse error: Unexpected identifier "oops"
 SyntaxError: JSON Parse error: Unexpected identifier "oops"
 ```
 
-***
+---
 
 ## Top-level `await`
 
@@ -70,7 +71,7 @@ undefined
 200
 ```
 
-***
+---
 
 ## Importing modules
 
@@ -87,7 +88,7 @@ undefined
 
 Declarations persist for the rest of the session. Unlike in regular scripts, you can redeclare `const`/`let` across evaluations, so you can re-run `import` and `require` statements while iterating.
 
-***
+---
 
 ## Multi-line input
 
@@ -104,7 +105,7 @@ undefined
 
 For longer multi-line entries, use `.editor` to enter editor mode, which buffers all input until you press `Ctrl+D`.
 
-***
+---
 
 ## REPL commands
 
@@ -122,7 +123,7 @@ Type `.help` at the prompt to see all available REPL commands.
 | `.break`   | Cancel the current multi-line input                                                              |
 | `.history` | Print the command history                                                                        |
 
-***
+---
 
 ## Keybindings
 
@@ -144,7 +145,7 @@ The REPL supports Emacs-style line editing.
 | `Tab`               | Auto-complete                                            |
 | `Ctrl+C`            | Cancel current input (press twice on empty line to exit) |
 
-***
+---
 
 ## History
 
@@ -156,7 +157,7 @@ To export your history to a different file, use `.save`:
 > .save ./my-session.txt
 ```
 
-***
+---
 
 ## Non-interactive mode
 

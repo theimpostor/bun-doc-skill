@@ -4,18 +4,18 @@ Source: https://bun.com/docs/guides/install/azure-artifacts
 
 > Note
 [Azure
-Artifacts'](https://learn.microsoft.com/en-us/azure/devops/artifacts/npm/npmrc?view=azure-devops\&tabs=windows%2Cclassic)
+Artifacts'](https://learn.microsoft.com/en-us/azure/devops/artifacts/npm/npmrc?view=azure-devops&tabs=windows%2Cclassic)
 instructions for `.npmrc` say to base64 encode the password. Do not do this in `bunfig.toml` or `NPM_CONFIG_REGISTRY`
-as shown below; Bun base64 encodes the password for you. Bun also reads [`.npmrc`](/docs/pm/npmrc) files, and there
+as shown below; Bun base64 encodes the password for you. Bun also reads [`.npmrc`](/pm/npmrc) files, and there
 `_password` must stay base64 encoded, as in Azure's instructions.
 
 [Azure Artifacts](https://azure.microsoft.com/en-us/products/devops/artifacts) is a package management system for Azure DevOps. You can use it to host your own private npm registry, along with other types of packages.
 
-***
+---
 
 ### Configure with bunfig.toml
 
-***
+---
 
 To use Azure Artifacts with `bun install`, add a `bunfig.toml` file to your project with the following contents. Replace `my-azure-devops-org` with the name of your Azure DevOps organization and `my-feed` with the name of your feed. If the feed is project-scoped, the URL also includes the project name: `https://pkgs.dev.azure.com/my-azure-devops-org/my-project/_packaging/my-feed/npm/registry/`. The `username` can be any non-empty string.
 
@@ -28,20 +28,20 @@ username = "my-azure-artifacts-user"
 password = "$NPM_PASSWORD"
 ```
 
-***
+---
 
-Then assign your Azure Personal Access Token to the `NPM_PASSWORD` environment variable. Bun [automatically reads](/docs/runtime/environment-variables) `.env` files, so create a file called `.env` in your project root. Don't base64 encode the token; Bun does that for you.
+Then assign your Azure Personal Access Token to the `NPM_PASSWORD` environment variable. Bun [automatically reads](/runtime/environment-variables) `.env` files, so create a file called `.env` in your project root. Don't base64 encode the token; Bun does that for you.
 
 **File:** `.env`
 ```ini
 NPM_PASSWORD=<paste token here>
 ```
 
-***
+---
 
 ### Configure with environment variables
 
-***
+---
 
 To configure Azure Artifacts without `bunfig.toml`, set the `NPM_CONFIG_REGISTRY` environment variable. Append `:username=<USERNAME>` and `:_password=<PASSWORD>` to the URL, as shown below. Replace `<USERNAME>` and `<PASSWORD>` with your own values.
 
@@ -49,19 +49,19 @@ To configure Azure Artifacts without `bunfig.toml`, set the `NPM_CONFIG_REGISTRY
 NPM_CONFIG_REGISTRY=https://pkgs.dev.azure.com/my-azure-devops-org/_packaging/my-feed/npm/registry/:username=<USERNAME>:_password=<PASSWORD>
 ```
 
-***
+---
 
 ### Don't base64 encode the password
 
-***
+---
 
-[Azure Artifacts'](https://learn.microsoft.com/en-us/azure/devops/artifacts/npm/npmrc?view=azure-devops\&tabs=windows%2Cclassic) instructions for `.npmrc` say to base64 encode the password. Do not do this in `bunfig.toml` or `NPM_CONFIG_REGISTRY`; Bun base64 encodes the password for you. Bun also reads [`.npmrc`](/docs/pm/npmrc) files, and there `_password` must stay base64 encoded, as in Azure's instructions.
+[Azure Artifacts'](https://learn.microsoft.com/en-us/azure/devops/artifacts/npm/npmrc?view=azure-devops&tabs=windows%2Cclassic) instructions for `.npmrc` say to base64 encode the password. Do not do this in `bunfig.toml` or `NPM_CONFIG_REGISTRY`; Bun base64 encodes the password for you. Bun also reads [`.npmrc`](/pm/npmrc) files, and there `_password` must stay base64 encoded, as in Azure's instructions.
 
 > Note
 Azure DevOps personal access tokens are 84 characters long. A base64-encoded one is 112 characters long and does not
 end with `=`.
 
-***
+---
 
 To decode a base64-encoded password, open your browser console and run:
 
@@ -70,7 +70,7 @@ To decode a base64-encoded password, open your browser console and run:
 atob("<base64-encoded password>");
 ```
 
-***
+---
 
 Alternatively, use the `base64` command line tool, though the password may end up in your shell history:
 

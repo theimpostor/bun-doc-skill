@@ -9,7 +9,7 @@ Install `react` and `react-dom`:
 bun add react react-dom
 ```
 
-***
+---
 
 To render a React component to an HTML stream server-side (SSR):
 
@@ -28,7 +28,7 @@ function Component(props: { message: string }) {
 const stream = await renderToReadableStream(<Component message="Hello from server!" />);
 ```
 
-***
+---
 
 Combine this with `Bun.serve()` to get an SSR HTTP server:
 
@@ -44,6 +44,6 @@ Bun.serve({
 });
 ```
 
-***
+---
 
 React `19` and later include an [SSR optimization](https://github.com/react/react/pull/25597) that takes advantage of Bun's "direct" `ReadableStream` implementation. If you run into an error like `export named 'renderToReadableStream' not found`, install version `19` of `react` and `react-dom`, or import from `react-dom/server.browser` instead of `react-dom/server`. See [react/react#28941](https://github.com/react/react/issues/28941) for details.

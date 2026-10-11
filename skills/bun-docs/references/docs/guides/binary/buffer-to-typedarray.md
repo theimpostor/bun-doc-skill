@@ -9,6 +9,6 @@ const buf = Buffer.alloc(64);
 buf instanceof Uint8Array; // => true
 ```
 
-***
+---
 
-See [Binary Data](/docs/runtime/binary-data#conversion).
+See [Binary Data](/runtime/binary-data#conversion).

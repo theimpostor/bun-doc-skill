@@ -3,9 +3,11 @@ Source: https://bun.com/docs/pm/global-cache
 
 How Bun stores and manages packages in its global cache
 
+
 Bun stores every package downloaded from the registry in a global cache at `~/.bun/install/cache`, or the path set by the `BUN_INSTALL_CACHE_DIR` environment variable. Packages live in subdirectories named like `${name}@${version}`, so Bun can cache multiple versions of a package.
 
 ### Configuring cache behavior
+
 **File:** `bunfig.toml`
 ```toml
 [install.cache]
@@ -20,7 +22,8 @@ disable = false
 disableManifest = false
 ```
 
-***
+
+---
 
 ## Minimizing re-downloads
 
@@ -33,13 +36,14 @@ When the `node_modules` folder exists, before installing, Bun checks that `node_
 
 If a package is missing or has a version incompatible with the `package.json`, Bun checks for a compatible module in the cache. If the cache has one, Bun installs it into `node_modules`. Otherwise, Bun downloads the package from the registry, then installs it.
 
-***
+
+---
 
 ## Fast copying
 
 Once a package is downloaded into the cache, Bun still needs to copy those files into `node_modules`. It uses the fastest syscalls available for this: hardlinks on Linux and Windows, `clonefile` on macOS.
 
-***
+---
 
 ## Saving disk space
 
@@ -50,11 +54,11 @@ The same applies on macOS, with a caveat. There Bun uses `clonefile`, which is c
 ### Installation strategies
 Configure this with the `--backend` flag, which all of Bun's package management commands respect.
 
-* **`hardlink`**: Default on Linux and Windows.
-* **`clonefile`**: Default on macOS.
-* **`clonefile_each_dir`**: Similar to `clonefile`, except it clones each file individually per directory. It is only available on macOS and tends to perform slower than `clonefile`.
-* **`copyfile`**: The fallback used when any of the above fail. It is the slowest option. On macOS, it uses `fcopyfile()`; on Linux it uses `copy_file_range()`.
-* **`symlink`**: Used only for `file:` dependencies. To prevent infinite loops, it skips symlinking the `node_modules` folder.
+- **`hardlink`**: Default on Linux and Windows.
+- **`clonefile`**: Default on macOS.
+- **`clonefile_each_dir`**: Similar to `clonefile`, except it clones each file individually per directory. It is only available on macOS and tends to perform slower than `clonefile`.
+- **`copyfile`**: The fallback used when any of the above fail. It is the slowest option. On macOS, it uses `fcopyfile()`; on Linux it uses `copy_file_range()`.
+- **`symlink`**: Symlinks each file instead of copying it. Only hoisted installs use it: `--backend=symlink` applies it to every package (macOS and Linux; Windows ignores the flag); without the flag, Bun uses it only for `file:` dependencies outside the project directory (for example `file:../foo`) and for transitive `file:` dependencies.
 
 If you install with `--backend=symlink`, Node.js doesn't resolve node_modules of dependencies unless each dependency has its own `node_modules` folder or you pass `--preserve-symlinks` to `node`. See [Node.js documentation on `--preserve-symlinks`](https://nodejs.org/api/cli.html#--preserve-symlinks).
 

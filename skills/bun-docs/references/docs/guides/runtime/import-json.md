@@ -16,7 +16,7 @@ Bun natively supports `.json` imports.
 }
 ```
 
-***
+---
 
 Import the file like any other source file.
 
@@ -29,7 +29,7 @@ data.version; // => "1.0.0"
 data.author.name; // => "John Dough"
 ```
 
-***
+---
 
 Bun also supports [Import Attributes](https://github.com/tc39/proposal-import-attributes/) and [JSON modules](https://github.com/tc39/proposal-json-modules) syntax.
 
@@ -42,6 +42,6 @@ data.version; // => "1.0.0"
 data.author.name; // => "John Dough"
 ```
 
-***
+---
 
-See [TypeScript](/docs/runtime/typescript) for more on using TypeScript with Bun.
+See [TypeScript](/runtime/typescript) for more on using TypeScript with Bun.

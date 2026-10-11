@@ -11,7 +11,7 @@ const file = Bun.file(path);
 const stream = file.stream();
 ```
 
-***
+---
 
 The stream is an [async iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols), so you can read its chunks with `for await`.
 
@@ -21,6 +21,6 @@ for await (const chunk of stream) {
 }
 ```
 
-***
+---
 
-See [Streams](/docs/runtime/streams) for more on working with streams in Bun.
+See [Streams](/runtime/streams) for more on working with streams in Bun.

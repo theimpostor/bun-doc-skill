@@ -3,6 +3,7 @@ Source: https://bun.com/docs/pm/cli/audit
 
 Check your installed packages for known security vulnerabilities
 
+
 Run the command in a project with a `bun.lock` file:
 
 ```bash
@@ -95,16 +96,16 @@ Fixed 2 vulnerabilities in 2 packages
 5 vulnerabilities remaining
 ```
 
-* **blocked by a dependent's range** — no safe version fits a dependent's declared range. If the range is in your own `package.json` or catalog, `bun audit fix --latest` gets past it. Otherwise, update the dependent or add an [`overrides`](/docs/pm/overrides) entry.
-* **no published version fixes** — every published version is vulnerable. Replace the package, or silence the advisory with the printed `--ignore` command.
-* If no newer version is safe but an older one is, Bun downgrades and marks the row `(downgrade)`.
-* Bun still installs a safe version newer than `--minimum-release-age` and marks the row `(newer than --minimum-release-age)`.
-* Bun upgrades patched dependencies (`patchedDependencies`) like any other package. Re-create the patch afterwards with `bun patch`.
-* After installing, Bun re-audits the new lockfile. The `remaining` count and exit code reflect that second audit, so they match what a follow-up `bun audit` would report.
-* `--dry-run` prints the plan without installing.
-* `--json` prints a single JSON object describing the plan and result (`fixes`, `blocked`, `unfixable`, `unmatched`, `unaudited`, `vulnerableAfterInstall`, `fixed`, `remaining`, `dryRun`). Pass `--ignore-scripts` if lifecycle scripts might write to stdout.
-* A [security scanner](/docs/pm/security-scanner-api) configured in `bunfig.toml` runs on the packages about to be installed, as with `bun update`.
-* Bun rejects `--prod`, `--frozen-lockfile`, and `--no-save` since they prevent writing `bun.lock`.
+- **blocked by a dependent's range** — no safe version fits a dependent's declared range. If the range is in your own `package.json` or catalog, `bun audit fix --latest` gets past it. Otherwise, update the dependent or add an [`overrides`](/pm/overrides) entry.
+- **no published version fixes** — every published version is vulnerable. Replace the package, or silence the advisory with the printed `--ignore` command.
+- If no newer version is safe but an older one is, Bun downgrades and marks the row `(downgrade)`.
+- Bun still installs a safe version newer than `--minimum-release-age` and marks the row `(newer than --minimum-release-age)`.
+- Bun upgrades patched dependencies (`patchedDependencies`) like any other package. Re-create the patch afterwards with `bun patch`.
+- After installing, Bun re-audits the new lockfile. The `remaining` count and exit code reflect that second audit, so they match what a follow-up `bun audit` would report.
+- `--dry-run` prints the plan without installing.
+- `--json` prints a single JSON object describing the plan and result (`fixes`, `blocked`, `unfixable`, `unmatched`, `unaudited`, `vulnerableAfterInstall`, `fixed`, `remaining`, `dryRun`). Pass `--ignore-scripts` if lifecycle scripts might write to stdout.
+- A [security scanner](/pm/security-scanner-api) configured in `bunfig.toml` runs on the packages about to be installed, as with `bun update`.
+- Bun rejects `--prod`, `--frozen-lockfile`, and `--no-save` since they prevent writing `bun.lock`.
 
 ### `bun audit fix --latest`
 

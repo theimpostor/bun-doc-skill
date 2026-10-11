@@ -3,6 +3,7 @@ Source: https://bun.com/docs/bundler/bytecode
 
 Speed up JavaScript execution with bytecode caching in Bun's bundler
 
+
 Bytecode caching is a build-time optimization that improves startup time by pre-compiling your JavaScript to bytecode. For example, when compiling TypeScript's `tsc` with bytecode enabled, startup time improves by **2x**.
 
 ## Usage
@@ -17,8 +18,8 @@ bun build ./index.ts --target=bun --bytecode --outdir=./dist
 
 The build writes two files:
 
-* `dist/index.js` - Your bundled JavaScript (CommonJS)
-* `dist/index.js.jsc` - The bytecode cache file
+- `dist/index.js` - Your bundled JavaScript (CommonJS)
+- `dist/index.js.jsc` - The bytecode cache file
 
 At runtime, Bun automatically detects and uses the `.jsc` file:
 
@@ -46,6 +47,20 @@ ESM bytecode requires `--compile` because Bun embeds module metadata (import/exp
 
 Without `--compile`, ESM bytecode would still require parsing the source to analyze module dependencies, which defeats the purpose of bytecode caching.
 
+### Limiting bytecode depth
+
+By default, Bun compiles every function in the bundle to bytecode, including functions nested inside other functions. Use `--bytecode-depth` (a non-negative integer) to compile only the top `N` levels of nesting. Functions past that limit are compiled from source when they are first called.
+
+```bash
+# Only the top-level code of each module, no nested functions
+bun build ./index.ts --target=bun --bytecode --bytecode-depth=0 --outdir=./dist
+
+# Top-level code and the functions it declares directly
+bun build ./index.ts --target=bun --bytecode --bytecode-depth=1 --outdir=./dist
+```
+
+A lower depth makes the `.jsc` file smaller. The trade-off is that deeply nested functions are parsed at runtime instead of ahead of time. The same option is available as `bytecodeDepth` in `Bun.build`.
+
 ### Combining with other optimizations
 
 Combine bytecode with minification and source maps:
@@ -54,9 +69,9 @@ Combine bytecode with minification and source maps:
 bun build --compile --bytecode --minify --sourcemap ./cli.ts --outfile=mycli
 ```
 
-* `--minify` reduces code size before generating bytecode (less code -> less bytecode)
-* `--sourcemap` preserves error reporting (errors still point to original source)
-* `--bytecode` eliminates parsing overhead
+- `--minify` reduces code size before generating bytecode (less code -> less bytecode)
+- `--sourcemap` preserves error reporting (errors still point to original source)
+- `--bytecode` eliminates parsing overhead
 
 ## Performance impact
 
@@ -64,7 +79,7 @@ The performance improvement scales with your codebase size:
 
 | Application size          | Typical startup improvement |
 | ------------------------- | --------------------------- |
-| Small CLI (\< 100 KB)     | 1.5-2x faster               |
+| Small CLI (< 100 KB)      | 1.5-2x faster               |
 | Medium-large app (> 5 MB) | 2-4x faster                 |
 
 Larger applications benefit more because they have more code to parse.
@@ -75,31 +90,31 @@ Larger applications benefit more because they have more code to parse.
 
 #### CLI tools
 
-* Invoked frequently (linters, formatters, git hooks)
-* Startup time is the entire user experience
-* Users notice the difference between 90ms and 45ms startup
-* Example: TypeScript compiler, Prettier, ESLint
+- Invoked frequently (linters, formatters, git hooks)
+- Startup time is the entire user experience
+- Users notice the difference between 90ms and 45ms startup
+- Example: TypeScript compiler, Prettier, ESLint
 
 #### Build tools and task runners
 
-* Run hundreds or thousands of times during development
-* Milliseconds saved per run compound quickly
-* Developer experience improvement
-* Example: Build scripts, test runners, code generators
+- Run hundreds or thousands of times during development
+- Milliseconds saved per run compound quickly
+- Developer experience improvement
+- Example: Build scripts, test runners, code generators
 
 #### Standalone executables
 
-* Distributed to users who care about snappy performance
-* Single-file distribution is convenient
-* File size less important than startup time
-* Example: CLIs distributed via npm or as binaries
+- Distributed to users who care about snappy performance
+- Single-file distribution is convenient
+- File size less important than startup time
+- Example: CLIs distributed via npm or as binaries
 
 ### Skip it for:
 
-* ❌ **Small scripts**
-* ❌ **Code that runs once**
-* ❌ **Development builds**
-* ❌ **Size-constrained environments**
+- ❌ **Small scripts**
+- ❌ **Code that runs once**
+- ❌ **Development builds**
+- ❌ **Size-constrained environments**
 
 ## Limitations
 
@@ -122,8 +137,8 @@ If bytecode doesn't match the current Bun version, Bun ignores it and falls back
 
 Bytecode doesn't replace your JavaScript. You must deploy both files:
 
-* The `.js` file (your bundled source code)
-* The `.jsc` file (the bytecode cache)
+- The `.js` file (your bundled source code)
+- The `.jsc` file (the bytecode cache)
 
 At runtime:
 
@@ -219,9 +234,9 @@ Several cache-miss lines are normal: Bun doesn't bytecode-cache the JavaScript i
 
 **File size too large**: This is expected. Consider:
 
-* Using `--minify` to reduce code size before bytecode generation
-* Compressing `.jsc` files for network transfer (gzip/brotli)
-* Evaluating whether the startup gain is worth the size increase
+- Using `--minify` to reduce code size before bytecode generation
+- Compressing `.jsc` files for network transfer (gzip/brotli)
+- Evaluating whether the startup gain is worth the size increase
 
 ## What is bytecode?
 
@@ -264,48 +279,48 @@ A `.jsc` file contains a serialized bytecode structure.
 
 **Header section** (validated on every load):
 
-* **Cache version**: A hash tied to the JavaScriptCore framework version. This ensures bytecode generated with one version of Bun only runs with that exact version.
-* **Code block type tag**: Identifies whether this is a Program, Module, Eval, or Function code block.
+- **Cache version**: A hash tied to the JavaScriptCore framework version. This ensures bytecode generated with one version of Bun only runs with that exact version.
+- **Code block type tag**: Identifies whether this is a Program, Module, Eval, or Function code block.
 
 **SourceCodeKey** (validates bytecode matches source):
 
-* **Source code hash**: A hash of the original JavaScript source code. Bun verifies this matches before using the bytecode.
-* **Source code length**: The exact length of the source, for additional validation.
-* **Compilation flags**: Compilation context such as strict mode, script vs. module, and eval context type. The same source compiled with different flags produces different bytecode.
+- **Source code hash**: A hash of the original JavaScript source code. Bun verifies this matches before using the bytecode.
+- **Source code length**: The exact length of the source, for additional validation.
+- **Compilation flags**: Compilation context such as strict mode, script vs. module, and eval context type. The same source compiled with different flags produces different bytecode.
 
 **Bytecode instructions**:
 
-* **Instruction stream**: The bytecode opcodes - the compiled representation of your JavaScript, stored as a variable-length sequence of instructions.
-* **Metadata table**: Each opcode has associated metadata such as profiling counters, type hints, and execution counts (even if not yet populated).
-* **Jump targets**: Pre-computed addresses for control flow (if/else, loops, switch statements).
-* **Switch tables**: Optimized lookup tables for switch statements.
+- **Instruction stream**: The bytecode opcodes - the compiled representation of your JavaScript, stored as a variable-length sequence of instructions.
+- **Metadata table**: Each opcode has associated metadata such as profiling counters, type hints, and execution counts (even if not yet populated).
+- **Jump targets**: Pre-computed addresses for control flow (if/else, loops, switch statements).
+- **Switch tables**: Optimized lookup tables for switch statements.
 
 **Constants and identifiers**:
 
-* **Constant pool**: All literal values in your code - numbers, strings, booleans, null, undefined. These are stored as JavaScript values (JSValues) so they don't need to be parsed from source at runtime.
-* **Identifier table**: All variable and function names used in the code. Stored as deduplicated strings.
-* **Source code representation markers**: Flags indicating how constants should be represented (as integers, doubles, big ints, etc.).
+- **Constant pool**: All literal values in your code - numbers, strings, booleans, null, undefined. These are stored as JavaScript values (JSValues) so they don't need to be parsed from source at runtime.
+- **Identifier table**: All variable and function names used in the code. Stored as deduplicated strings.
+- **Source code representation markers**: Flags indicating how constants should be represented (as integers, doubles, big ints, etc.).
 
 **Function metadata** (for each function in your code):
 
-* **Register allocation**: How many registers (local variables) the function needs - `thisRegister`, `scopeRegister`, `numVars`, `numCalleeLocals`, `numParameters`.
-* **Code features**: A bitmask of function characteristics: is it a constructor? an arrow function? does it use `super`? does it have tail calls? These affect how the engine executes the function.
-* **Lexically scoped features**: Strict mode and other lexical context.
-* **Parse mode**: The mode in which the function was parsed (normal, async, generator, async generator).
+- **Register allocation**: How many registers (local variables) the function needs - `thisRegister`, `scopeRegister`, `numVars`, `numCalleeLocals`, `numParameters`.
+- **Code features**: A bitmask of function characteristics: is it a constructor? an arrow function? does it use `super`? does it have tail calls? These affect how the engine executes the function.
+- **Lexically scoped features**: Strict mode and other lexical context.
+- **Parse mode**: The mode in which the function was parsed (normal, async, generator, async generator).
 
 **Nested structures**:
 
-* **Function declarations and expressions**: Each nested function gets its own bytecode block, recursively. A file with 100 functions has 100 separate bytecode blocks, all nested in the structure.
-* **Exception handlers**: Try/catch/finally blocks with their boundaries and handler addresses pre-computed.
-* **Expression info**: Maps bytecode positions back to source code locations for error reporting and debugging.
+- **Function declarations and expressions**: Each nested function gets its own bytecode block, recursively. A file with 100 functions has 100 separate bytecode blocks, all nested in the structure.
+- **Exception handlers**: Try/catch/finally blocks with their boundaries and handler addresses pre-computed.
+- **Expression info**: Maps bytecode positions back to source code locations for error reporting and debugging.
 
 ### What bytecode does NOT contain
 
 **Bytecode does not embed your source code**. Instead:
 
-* The JavaScript source is stored separately (in the `.js` file)
-* The bytecode only stores a hash and length of the source
-* At load time, Bun validates the bytecode matches the current source code
+- The JavaScript source is stored separately (in the `.js` file)
+- The bytecode only stores a hash and length of the source
+- At load time, Bun validates the bytecode matches the current source code
 
 This is why you need to deploy both the `.js` and `.jsc` files: the `.jsc` file is useless without its corresponding `.js` file.
 
@@ -324,13 +339,13 @@ const sum = arr.reduce((a, b) => a + b, 0);
 
 Compiles to bytecode that:
 
-* Loads the `arr` variable
-* Gets the `reduce` property
-* Creates the arrow function (which itself has bytecode)
-* Loads the initial value `0`
-* Sets up the call with the right number of arguments
-* Performs the call
-* Stores the result in `sum`
+- Loads the `arr` variable
+- Gets the `reduce` property
+- Creates the arrow function (which itself has bytecode)
+- Loads the initial value `0`
+- Sets up the call with the right number of arguments
+- Performs the call
+- Stores the result in `sum`
 
 Each of these steps is a separate bytecode instruction with its own metadata.
 
@@ -340,21 +355,21 @@ Every string literal, number, property name - everything gets stored in the cons
 **Per-function metadata**:
 Each function - even small one-line functions - gets its own complete metadata:
 
-* Register allocation info
-* Code features bitmask
-* Parse mode
-* Exception handlers
-* Expression info for debugging
+- Register allocation info
+- Code features bitmask
+- Parse mode
+- Exception handlers
+- Expression info for debugging
 
 A file with 1,000 small functions has 1,000 sets of metadata.
 
 **Profiling data structures**:
-Even though profiling data isn't populated yet, the *structures* to hold profiling data are allocated. This includes:
+Even though profiling data isn't populated yet, the _structures_ to hold profiling data are allocated. This includes:
 
-* Value profile slots (tracking what types flow through each operation)
-* Array profile slots (tracking array access patterns)
-* Binary arithmetic profile slots (tracking number types in math operations)
-* Unary arithmetic profile slots
+- Value profile slots (tracking what types flow through each operation)
+- Array profile slots (tracking array access patterns)
+- Binary arithmetic profile slots (tracking number types in math operations)
+- Unary arithmetic profile slots
 
 These take up space even when empty.
 
@@ -369,9 +384,9 @@ Bytecode compresses well with gzip/brotli (60-70% compression). The repetitive s
 **Minification first**:
 Using `--minify` before bytecode generation helps:
 
-* Shorter identifiers → smaller identifier table
-* Dead code elimination → less bytecode generated
-* Constant folding → fewer constants in the pool
+- Shorter identifiers → smaller identifier table
+- Dead code elimination → less bytecode generated
+- Constant folding → fewer constants in the pool
 
 **The tradeoff**:
 You're trading 2-8x larger files for 2-4x faster startup. For CLIs, this is usually worth it. For long-running servers where a few megabytes of disk space don't matter, it's even less of an issue.
@@ -382,9 +397,9 @@ You're trading 2-8x larger files for 2-4x faster startup. For CLIs, this is usua
 
 Bytecode is **architecture-independent**. You can:
 
-* Build on macOS ARM64, deploy to Linux x64
-* Build on Linux x64, deploy to AWS Lambda ARM64
-* Build on Windows x64, deploy to macOS ARM64
+- Build on macOS ARM64, deploy to Linux x64
+- Build on Linux x64, deploy to AWS Lambda ARM64
+- Build on Windows x64, deploy to macOS ARM64
 
 The bytecode contains abstract instructions that work on any architecture. Architecture-specific optimizations happen during JIT compilation at runtime, not in the cached bytecode.
 
@@ -414,17 +429,17 @@ JavaScriptCore distinguishes between "unlinked" and "linked" bytecode. This sepa
 
 The bytecode saved in `.jsc` files is **unlinked bytecode**. It contains:
 
-* The compiled bytecode instructions
-* Structural information about the code
-* Constants and identifiers
-* Control flow information
+- The compiled bytecode instructions
+- Structural information about the code
+- Constants and identifiers
+- Control flow information
 
 But it **doesn't** contain:
 
-* Pointers to actual runtime objects
-* JIT-compiled machine code
-* Profiling data from previous runs
-* Call link information (which functions call which)
+- Pointers to actual runtime objects
+- JIT-compiled machine code
+- Profiling data from previous runs
+- Call link information (which functions call which)
 
 Unlinked bytecode is **immutable and shareable**. Multiple executions of the same code can all reference the same unlinked bytecode.
 
@@ -432,10 +447,10 @@ Unlinked bytecode is **immutable and shareable**. Multiple executions of the sam
 
 When Bun runs bytecode, it "links" it - creating a runtime wrapper that adds:
 
-* **Call link information**: As your code runs, the engine learns which functions call which and optimizes those call sites.
-* **Profiling data**: The engine tracks how many times each instruction executes, what types of values flow through the code, array access patterns, etc.
-* **JIT compilation state**: References to baseline JIT or optimizing JIT (DFG/FTL) compiled versions of hot code.
-* **Runtime objects**: Pointers to actual JavaScript objects, prototypes, scopes, etc.
+- **Call link information**: As your code runs, the engine learns which functions call which and optimizes those call sites.
+- **Profiling data**: The engine tracks how many times each instruction executes, what types of values flow through the code, array access patterns, etc.
+- **JIT compilation state**: References to baseline JIT or optimizing JIT (DFG/FTL) compiled versions of hot code.
+- **Runtime objects**: Pointers to actual JavaScript objects, prototypes, scopes, etc.
 
 Bun creates this linked representation fresh every time you run your code. This separation allows:
 

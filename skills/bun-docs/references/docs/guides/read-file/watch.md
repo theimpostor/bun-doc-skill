@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/read-file/watch
 
 Bun implements the `node:fs` module, including the `fs.watch` function for listening for file system changes.
 
-The following code listens for changes to files in the current directory. By default the watch is *shallow*: it does not detect changes to files in subdirectories.
+The following code listens for changes to files in the current directory. By default the watch is _shallow_: it does not detect changes to files in subdirectories.
 
 ```ts
 import { watch } from "fs";
@@ -14,7 +14,7 @@ const watcher = watch(import.meta.dir, (event, filename) => {
 });
 ```
 
-***
+---
 
 To listen for changes in subdirectories, pass the `recursive: true` option to `fs.watch`.
 
@@ -26,7 +26,7 @@ const watcher = watch(import.meta.dir, { recursive: true }, (event, relativePath
 });
 ```
 
-***
+---
 
 With the `node:fs/promises` module, you can listen for changes with `for await...of` instead of a callback.
 
@@ -39,7 +39,7 @@ for await (const event of watcher) {
 }
 ```
 
-***
+---
 
 To stop listening for changes, call `watcher.close()`. It's common to do this when the process receives a `SIGINT` signal, such as when the user presses Ctrl-C.
 
@@ -59,6 +59,6 @@ process.on("SIGINT", () => {
 });
 ```
 
-***
+---
 
 See the [Node.js documentation](https://nodejs.org/api/fs.html#fswatchfilename-options-listener) for `fs.watch`.

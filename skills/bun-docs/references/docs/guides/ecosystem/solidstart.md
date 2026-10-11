@@ -29,7 +29,7 @@ bun create solid my-app --solidstart --ts
 ├────────────────────────╯
 ```
 
-***
+---
 
 Install the dependencies.
 
@@ -55,6 +55,6 @@ $ vite dev
 
 Open [localhost:3000](http://localhost:3000). The development server automatically hot-reloads changes you make to `src/routes/index.tsx`.
 
-***
+---
 
 See the [SolidStart docs](https://docs.solidjs.com/solid-start) to learn more.

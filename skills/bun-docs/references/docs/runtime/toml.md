@@ -3,13 +3,14 @@ Source: https://bun.com/docs/runtime/toml
 
 Use Bun's built-in support for TOML files through both runtime APIs and bundler integration
 
+
 In Bun, TOML is a first-class citizen alongside JSON, JSON5, and YAML. You can:
 
-* Parse TOML strings with `Bun.TOML.parse`
-* `import` & `require` TOML files as modules at runtime (including hot reloading & watch mode support)
-* `import` & `require` TOML files in frontend apps with Bun's bundler
+- Parse TOML strings with `Bun.TOML.parse`
+- `import` & `require` TOML files as modules at runtime (including hot reloading & watch mode support)
+- `import` & `require` TOML files in frontend apps with Bun's bundler
 
-***
+---
 
 ## Runtime API
 
@@ -47,16 +48,16 @@ console.log(data);
 
 Bun's TOML parser implements the full [TOML v1.1.0 specification](https://github.com/toml-lang/toml/releases/tag/1.1.0) and passes the complete official [toml-test](https://github.com/toml-lang/toml-test) conformance suite.
 
-* **Strings**: basic (`"..."`) and literal (`'...'`), including multi-line, with all escapes (`\uHHHH`, `\UHHHHHHHH`, and TOML 1.1's `\xHH` and `\e`)
-* **Integers**: decimal, hex (`0x`), octal (`0o`), and binary (`0b`). Integers outside ±(2^53 - 1) throw, because a JavaScript number cannot represent them losslessly
-* **Floats**: including `inf` and `nan`
-* **Booleans**: `true` and `false`
-* **Date/times**: returned as [Temporal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal) objects — offset date-time as `Temporal.Instant`, local date-time as `Temporal.PlainDateTime`, local date as `Temporal.PlainDate`, and local time as `Temporal.PlainTime`
-* **Arrays**: including mixed types and nested arrays
-* **Tables**: standard (`[table]`) and inline (`{ key = "value" }`), including TOML 1.1 multi-line inline tables
-* **Array of tables**: `[[array]]`
-* **Dotted keys**: `a.b.c = "value"`
-* **Comments**: using `#`
+- **Strings**: basic (`"..."`) and literal (`'...'`), including multi-line, with all escapes (`\uHHHH`, `\UHHHHHHHH`, and TOML 1.1's `\xHH` and `\e`)
+- **Integers**: decimal, hex (`0x`), octal (`0o`), and binary (`0b`). Integers outside ±(2^53 - 1) throw, because a JavaScript number cannot represent them losslessly
+- **Floats**: including `inf` and `nan`
+- **Booleans**: `true` and `false`
+- **Date/times**: returned as [Temporal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal) objects — offset date-time as `Temporal.Instant`, local date-time as `Temporal.PlainDateTime`, local date as `Temporal.PlainDate`, and local time as `Temporal.PlainTime`
+- **Arrays**: including mixed types and nested arrays
+- **Tables**: standard (`[table]`) and inline (`{ key = "value" }`), including TOML 1.1 multi-line inline tables
+- **Array of tables**: `[[array]]`
+- **Dotted keys**: `a.b.c = "value"`
+- **Comments**: using `#`
 
 ```ts
 const data = Bun.TOML.parse(`
@@ -152,7 +153,7 @@ function, and symbol properties are skipped (inside arrays they throw,
 since TOML arrays cannot have holes), and passing one of those as the
 top-level value returns `undefined`, as `JSON.stringify` does.
 
-***
+---
 
 ## Module Import
 
@@ -238,7 +239,7 @@ const { database, redis } = require("./config.toml");
 console.log(database.port); // 5432
 ```
 
-***
+---
 
 ## Hot Reloading with TOML
 
@@ -279,7 +280,7 @@ Run with hot reloading:
 bun --hot server.ts
 ```
 
-***
+---
 
 ## Bundler Integration
 
@@ -291,9 +292,9 @@ bun build app.ts --outdir=dist
 
 This means:
 
-* Zero runtime TOML parsing overhead in production
-* Smaller bundle sizes
-* Tree shaking of unused properties (named imports)
+- Zero runtime TOML parsing overhead in production
+- Smaller bundle sizes
+- Tree shaking of unused properties (named imports)
 
 ### Dynamic Imports
 
