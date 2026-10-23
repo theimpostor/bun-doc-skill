@@ -1,0 +1,51 @@
+# promise/valid-params
+Source: https://bun.com/docs/lint/rules/promise/valid-params
+
+Require the right number of arguments for `Promise` methods
+
+
+`Promise` methods don't complain about extra or missing arguments. `Promise.all(a, b)` ignores `b`, and rejects unless `a` is iterable. `promise.catch()` without a handler catches nothing.
+
+| Method | Arguments |
+| --- | --- |
+| `Promise.resolve`, `Promise.reject` | 0 or 1 |
+| `Promise.all`, `Promise.allSettled`, `Promise.any`, `Promise.race` | 1 |
+| `then` | 1 or 2 |
+| `catch`, `finally` | 1 |
+
+A `then`, `catch` or `finally` method on something that clearly isn't a promise, such as an object literal or `new Parser()`, isn't reported.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"promise/valid-params" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const results = Promise.all(loadUser(), loadOrders());
+```
+
+```js
+save(draft).then().catch();
+```
+
+Not reported:
+
+```js
+const results = Promise.all([loadUser(), loadOrders()]);
+
+save(draft).then(notify, retry).catch(showError);
+
+const parser = new Parser();
+parser.then();
+```

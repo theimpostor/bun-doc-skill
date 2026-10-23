@@ -1,0 +1,47 @@
+# unicorn/no-unnecessary-await
+Source: https://bun.com/docs/lint/rules/unicorn/no-unnecessary-await
+
+Disallow `await` on a value that cannot be a promise
+
+
+`await` on something that isn't a promise gives you back the same value one tick later. It usually means the `await` is in the wrong place, like on an array of promises instead of `Promise.all()`, or on a function instead of its call.
+
+The rule doesn't use types. It reports literals, arrays, template strings, functions, classes, JSX, another `await`, and the results of operators such as `+`, `!` and `typeof`. A variable, a call or an object literal could be a promise, so those aren't reported.
+
+`--fix` doesn't change the code. Even on a plain value, `await` pauses the function until the caller and the queued microtasks have run, and some code uses `await null` for exactly that. `--fix-dangerously` removes the `await`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/no-unnecessary-await" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+async function load(ids) {
+  const users = await [fetchUser(ids[0]), fetchUser(ids[1])];
+  const retries = await 3;
+  const total = await (users.length + retries);
+  return total;
+}
+```
+
+Not reported:
+
+```js
+async function load(ids) {
+  const users = await Promise.all([fetchUser(ids[0]), fetchUser(ids[1])]);
+  const retries = 3;
+  const settings = await (cached || fetchSettings());
+  return users.length + retries + settings.extra;
+}
+```

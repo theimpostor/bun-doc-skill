@@ -1,0 +1,93 @@
+# no-duplicate-imports
+Source: https://bun.com/docs/lint/rules/eslint/no-duplicate-imports
+
+Disallow importing from the same module more than once in a file
+
+
+Two `import` statements for the same module split one list of names over two places. You have to find both to know what the file takes from that module, and the next person who adds a name has to pick one.
+
+Only statements that can be merged are reported. `import * as path` and `import { join }` can't be written as one statement, so they're allowed side by side.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-duplicate-imports" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-duplicate-imports" = ["error", {
+  includeExports = false,
+  allowSeparateTypeImports = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { writeFile } from "node:fs/promises";
+```
+
+Not reported:
+
+```js
+import { readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+```
+
+```js
+import * as path from "node:path";
+import { join } from "node:path";
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `includeExports` | `false` | Also look at `export ... from` statements. |
+| `allowSeparateTypeImports` | `false` | Allow an `import type` statement next to a normal import from the same module. |
+
+With `includeExports`, an `export ... from` is reported if the file already imports or exports from that module:
+
+```js
+import { parse } from "./parser.js";
+export { tokenize } from "./parser.js";
+```
+
+`export * from` can't be merged with a named import, so it's still allowed:
+
+```js
+import { parse } from "./parser.js";
+export * from "./parser.js";
+```
+
+Without `allowSeparateTypeImports`, types and values from one module belong in one statement:
+
+```ts
+import type { User } from "./user";
+import { loadUser } from "./user";
+```
+
+```ts
+import { loadUser, type User } from "./user";
+```
+
+With it, the two statements are allowed:
+
+```ts
+import type { User } from "./user";
+import { loadUser } from "./user";
+```

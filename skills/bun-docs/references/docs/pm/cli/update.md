@@ -29,14 +29,19 @@ Updated packages appear in the install summary as `↑ name old → new`, with `
 
 - `^1.1.0` → `^1.2.0`, `~1.1.0` → `~1.1.5`. Bun preserves the operator. With [`install.exact`](/runtime/bunfig#install-exact) or `--exact`, Bun writes an exact version instead.
 - Exact pins, dist-tags (`"latest"`, `"next"`), and other range forms (`*`, `1.x`, `>=1.0.0`) are left as written; only `bun.lock` moves. `--latest` rewrites them.
-- Bun never rewrites `catalog:` references; it updates the catalog entry in the root `package.json` instead.
+- A `peerDependencies` range is never replaced by an exact version, nor is a catalog entry that a `catalog:` peer uses. `bun update --latest` without names leaves a range written in `peerDependencies` that already allows the latest version. It still rewrites a catalog entry.
+- Bun never rewrites `catalog:` references; it updates the catalog entry in the root `package.json` instead. An entry that no `catalog:` dependency uses stays as written.
 - `--no-save` updates `node_modules` only, leaving `package.json` and `bun.lock` untouched.
 
 ### What is held back
 
 - Bun never widens ranges. A package that depends on `foo@^1.0.0` never gets `foo@2.x`.
+- A package that an [`overrides`](/pm/overrides) rule sets stays on the version the rule selects. `--latest` does not move it.
+- A transitive dependency that shares the copy your own `package.json` entry resolves to (in the root or in a workspace) stays on that copy and moves with it. With `@types/node: ~20` in your `package.json`, the `@types/node: *` that `@types/ws` declares keeps using your `~20` copy instead of nesting the newest major under `@types/ws`. Bun updates a transitive range on its own when it rejects the version your entry moves to, or when you removed the entry.
+- Bun does not add a version that another one covers. Two dependencies declaring `foo@^1` and `foo@*` share one `1.x` copy, as on `bun install`. Versions already in `bun.lock` and your own `package.json` entries are never moved to save a copy.
 - Versions in `patchedDependencies` stay put as long as their range allows. Bun reports them as `kept name@version (patched, v1.2.3 available)`. `--latest` and [`bun audit fix`](/pm/cli/audit#bun-audit-fix) do move them; re-create the patch with [`bun patch`](/pm/cli/patch) afterwards.
 - If a registry request for a transitive package fails, that package keeps its locked version and Bun prints a warning. A failed request for a direct dependency is an error.
+- An optional dependency on a git repository, a GitHub repository, or a tarball keeps its locked package when Bun cannot fetch that source. Bun prints `warn: name@version was not checked for updates`. This does not apply to a dependency that an [`overrides`](/pm/overrides) rule or a catalog sets. If you pass the `package.json` key of the dependency, or if `--prod` or `--depth 0` selects it, `bun update` exits with code 1 and writes nothing.
 
 ## `--interactive`
 
@@ -154,6 +159,18 @@ bun update -D '@types/*'
 bun update -i --prod
 ```
 
+## `--depth 0`
+
+By default, `bun update` also moves transitive dependencies to the newest version their dependents' ranges allow. `--depth 0` updates only the `package.json` entries of the workspace you run it in and keeps every transitive dependency at the version recorded in `bun.lock`, like `pnpm update --depth 0`. A transitive dependency still moves when the updated direct dependency declares a range that its locked version no longer satisfies.
+
+It combines with names, patterns, `--dev`, `--prod`, `--no-optional`, `--latest`, `--recursive`, and `--filter`. Only `0` is accepted as a depth.
+
+```sh
+bun update --depth 0
+bun update --depth 0 --latest
+bun update --depth 0 -r
+```
+
 ## `--global`
 
 `bun update -g` updates packages installed with `bun add -g`:
@@ -229,6 +246,11 @@ Only update `dependencies` and `optionalDependencies`. Aliases: `-P`,{" "}
 Type: `boolean`
 Don't update `optionalDependencies`
 
+### `--depth`
+
+Type: `number`
+Only `0` is accepted: update direct dependencies and keep transitive dependencies at their locked versions
+
 ### `--global`
 
 Type: `boolean`
@@ -283,6 +305,11 @@ Provide a Certificate Authority signing certificate
 Type: `string`
 Same as `--ca`, but as a file path to the certificate
 
+### `--use-system-ca`
+
+Type: `boolean`
+Use the system's trusted certificate authorities
+
 ### `--registry`
 
 Type: `string`
@@ -290,8 +317,8 @@ Use a specific registry by default, overriding `.npmrc`, `bunfig.toml` and envir
 
 ### `--network-concurrency`
 
-Type: `number`; Default: `48`
-Maximum number of concurrent network requests (default 48)
+Type: `number`; Default: `64`
+Maximum number of concurrent network requests (default 64)
 
 ### Caching
 
@@ -367,13 +394,23 @@ Specify path to config file (`bunfig.toml`). Alias: `-c`
 ### `--dry-run`
 
 Type: `boolean`
-Resolve updates but don't install packages, update `package.json`, or save a lockfile (the project's own
-lifecycle scripts still run)
+Resolve updates but don't install packages, update `package.json`, save a lockfile, or run the project's
+lifecycle scripts
 
 ### `--cwd`
 
 Type: `string`
 Set a specific cwd
+
+### `--env-file`
+
+Type: `string`
+Load environment variables from the specified file(s)
+
+### `--no-env-file`
+
+Type: `boolean`
+Disable automatic loading of .env files
 
 ### `--help`
 

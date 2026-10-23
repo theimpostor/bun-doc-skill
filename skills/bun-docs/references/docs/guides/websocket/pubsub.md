@@ -4,7 +4,7 @@ Source: https://bun.com/docs/guides/websocket/pubsub
 
 Bun's server-side `WebSocket` API includes native pub-sub. Subscribe a socket to a set of named channels with `socket.subscribe(<name>)`; publish a message to a channel with `server.publish(<name>, <message>)`.
 
-This code snippet implements a single-channel chat server.
+This code snippet implements a single-channel chat server. It identifies users with a cookie, so a real server should [check the `Origin` header](/runtime/http/websockets#contextual-data) before calling `server.upgrade()`.
 
 **File:** `server.ts`
 ```ts
@@ -33,7 +33,6 @@ const server = Bun.serve({
     close(ws) {
       const msg = `${ws.data.username} has left the chat`;
       server.publish("the-group-chat", msg);
-      ws.unsubscribe("the-group-chat");
     },
   },
 });

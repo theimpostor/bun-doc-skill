@@ -1,0 +1,102 @@
+# no-extra-boolean-cast
+Source: https://bun.com/docs/lint/rules/eslint/no-extra-boolean-cast
+
+Disallow `!!` and `Boolean()` where the value is converted to a boolean anyway
+
+
+The test of an `if`, a loop or a `? :`, the operand of `!`, and the argument of `Boolean()` are already converted to a boolean. Writing `!!value` or `Boolean(value)` there converts twice and gives the same result.
+
+`--fix` removes the cast. In a TypeScript file, it leaves the test of an `if` or a `? :` alone if the file shows that the value is a function, a promise or an enum member. TypeScript rejects `if (callback)` when `callback` is always defined, and `if (!!callback)` is how people tell it they mean it. `--fix-dangerously` removes those casts too.
+
+This rule is on by default.
+
+
+## Configure
+
+On by default as a warning. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-extra-boolean-cast" = "off" # or "error"
+```
+
+Every option, set to its default. The ones that are commented out are unset by default.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-extra-boolean-cast" = ["warn", {
+  enforceForInnerExpressions = false,
+  # enforceForLogicalOperands = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+if (!!user) {
+  greet(user);
+}
+
+const label = Boolean(count) ? "some" : "none";
+const isEmpty = !Boolean(items.length);
+```
+
+Not reported:
+
+```js
+if (user) {
+  greet(user);
+}
+
+const label = count ? "some" : "none";
+const isEmpty = !items.length;
+```
+
+When you store or return the value, the cast does something, so it's allowed:
+
+```js
+const isActive = !!user.active;
+const hasItems = Boolean(items.length);
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `enforceForInnerExpressions` | `false` | Also look inside `||`, `&&`, `??`, `? :` and comma expressions that are used as a test. |
+| `enforceForLogicalOperands` | `false` | The same, for `||` and `&&` only. |
+
+Set one or the other. A config with both is rejected.
+
+By default only the outermost expression of a test is checked:
+
+```js
+if (!!user || guest) {
+  greet();
+}
+```
+
+```js
+if (!!user || guest) {
+  greet();
+}
+```
+
+`enforceForLogicalOperands` reports that one too. The two differ on the other operators:
+
+```js
+if (loggedIn ? !!user : guest) {
+  greet();
+}
+```
+
+```js
+if (loggedIn ? !!user : guest) {
+  greet();
+}
+```

@@ -1,0 +1,51 @@
+# import/no-mutable-exports
+Source: https://bun.com/docs/lint/rules/import/no-mutable-exports
+
+Disallow exporting a variable declared with `let` or `var`
+
+
+An import is a live view of the exported variable. If the module assigns to an exported `let`, the value changes in every file that imported it, and nothing at the import tells you that. Code that copied the value keeps the old one, and code that reads it again gets the new one.
+
+The variable is reported whether you export it where it's declared or later, with `export { count }` or `export default count`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/no-mutable-exports" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+export let count = 0;
+
+export function increment() {
+  count += 1;
+}
+```
+
+```js
+let count = 0;
+
+export { count };
+```
+
+Not reported:
+
+```js
+let count = 0;
+
+export const getCount = () => count;
+
+export function increment() {
+  count += 1;
+}
+```

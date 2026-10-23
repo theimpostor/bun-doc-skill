@@ -1,0 +1,70 @@
+# bun/fast-check-no-unseeded-random
+Source: https://bun.com/docs/lint/rules/bun/fast-check-no-unseeded-random
+
+Disallow `Math.random()` and `fc.sample()` inside a fast-check property
+
+
+fast-check draws every input of a property from one seed. When a property fails, it prints the seed so you can run the same inputs again, and it shrinks the inputs to the smallest ones that still fail.
+
+A value from `Math.random()` or `fc.sample()` inside the function you pass to `fc.property()` or `fc.asyncProperty()` doesn't come from that seed. It's different on every run, so the failure can't be replayed or shrunk. Make the value a parameter of the property instead.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun/fast-check-no-unseeded-random" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import fc from "fast-check";
+import { pad } from "./text";
+
+fc.assert(
+  fc.property(fc.string(), text => {
+    const width = Math.floor(Math.random() * 80);
+    return pad(text, width).length >= width;
+  }),
+);
+```
+
+```ts
+import { assert, integer, property, sample, string } from "fast-check";
+import { pad } from "./text";
+
+assert(
+  property(string(), text => {
+    const [width] = sample(integer({ min: 0, max: 80 }), 1);
+    return pad(text, width).length >= width;
+  }),
+);
+```
+
+Not reported:
+
+```ts
+import fc from "fast-check";
+import { pad } from "./text";
+
+fc.assert(
+  fc.property(fc.string(), fc.integer({ min: 0, max: 80 }), (text, width) => {
+    return pad(text, width).length >= width;
+  }),
+);
+```
+
+`fc.sample()` outside a property is fine:
+
+```ts
+import fc from "fast-check";
+
+console.log(fc.sample(fc.emailAddress(), 5));
+```

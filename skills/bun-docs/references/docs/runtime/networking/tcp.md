@@ -104,9 +104,7 @@ Bun.listen({
 
 **File:** `server.ts`
 ```ts
-const server = Bun.listen({
-  /* config*/
-});
+const server = Bun.listen({/* config*/});
 
 // stop listening
 // parameter determines whether active connections are closed
@@ -163,9 +161,7 @@ You can hot reload both TCP servers and sockets with new handlers.
 
 **File:** `server.ts`
 ```ts
-const server = Bun.listen({
-  /* config */
-});
+const server = Bun.listen({/* config */});
 
 // reloads handlers for all active server-side sockets
 server.reload({
@@ -179,9 +175,7 @@ server.reload({
 
 **File:** `client.ts`
 ```ts
-const socket = await Bun.connect({
-  /* config */
-});
+const socket = await Bun.connect({/* config */});
 
 socket.reload({
   data() {

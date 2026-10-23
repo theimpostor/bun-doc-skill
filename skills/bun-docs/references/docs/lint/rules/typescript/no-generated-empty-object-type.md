@@ -1,0 +1,60 @@
+# @typescript-eslint/no-generated-empty-object-type
+Source: https://bun.com/docs/lint/rules/typescript/no-generated-empty-object-type
+
+Disallow type operations that produce the `{}` type
+
+
+`Omit`, `Pick`, `NonNullable` and other type helpers can resolve to `{}`. That type accepts every value except `null` and `undefined`, so `0` and `""` pass. The type looks like it describes an object, but it checks almost nothing.
+
+Check the keys you pass to the helper. For an object with no properties, write `Record<string, never>`.
+
+The rule looks at generic types with type arguments and at intersections. A `{}` that you write yourself is reported by `@typescript-eslint/no-empty-object-type`, not by this rule.
+
+
+## Configure
+
+Off by default. This rule needs types, so turning it on makes `bun lint` type check your code first.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/no-generated-empty-object-type" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+type User = { name: string };
+
+type Rest = Omit<User, "name">;
+
+const rest: Rest = 42; // no type error
+```
+
+```ts
+type User = { name: string };
+
+type Value = NonNullable<unknown>;
+type Rest = Omit<User, "name"> & {};
+```
+
+Not reported:
+
+```ts
+type User = { name: string; email: string };
+
+type Contact = Omit<User, "name">;
+type NoFields = Record<string, never>;
+type Empty = {};
+```
+
+A type that depends on a type parameter isn't reported, because the result isn't known yet:
+
+```ts
+function update<T extends object, K extends keyof T>(target: T, rest: Omit<T, K>) {
+  Object.assign(target, rest);
+}
+```

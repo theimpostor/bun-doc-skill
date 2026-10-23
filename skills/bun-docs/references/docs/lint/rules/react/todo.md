@@ -1,0 +1,101 @@
+# react-hooks/todo
+Source: https://bun.com/docs/lint/rules/react/todo
+
+Report valid syntax that the React Compiler does not support yet
+
+
+The React Compiler doesn't handle all of JavaScript yet. When it finds something it can't handle in a component or hook, it skips that function. The code is valid and still works, but it gets no automatic memoization. Turn this rule on to find those components.
+
+Some of what it reports:
+
+- `try` with `finally`, and `throw` inside `try`
+- `var`
+- `??=`, `||=` and `&&=`
+- `count++` on a variable that a nested function also uses
+- `this`, class expressions, and getters in object literals
+- BigInt literals, tagged templates with `${}`, dynamic `import()`
+- `for await`, and `for (;;)` without a condition
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react-hooks/todo" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+function Report({ load }) {
+  let rows = [];
+  try {
+    rows = load();
+  } finally {
+    log("loaded");
+  }
+  return <Table rows={rows} />;
+}
+```
+
+```jsx
+function Report(props) {
+  let rows = props.rows;
+  rows ??= [];
+  return <Table rows={rows} />;
+}
+```
+
+```jsx
+function Report({ rows }) {
+  let clicks = 0;
+  const onClick = () => {
+    clicks++;
+  };
+  return <Table rows={rows} onClick={onClick} />;
+}
+```
+
+Not reported:
+
+```jsx
+function Report({ load }) {
+  let rows = [];
+  try {
+    rows = load();
+  } catch (error) {
+    rows = [];
+  }
+  log("loaded");
+  return <Table rows={rows} />;
+}
+```
+
+```jsx
+function Report(props) {
+  const rows = props.rows ?? [];
+  return <Table rows={rows} />;
+}
+```
+
+A function that's neither a component nor a hook is never compiled, so it can use anything:
+
+```jsx
+function loadRows(load) {
+  try {
+    return load();
+  } finally {
+    log("loaded");
+  }
+}
+```
+
+## When not to use it
+
+If you don't use the React Compiler, there's nothing to fix here. Even if you do, rewriting working code is only worth it for components that are slow to render.

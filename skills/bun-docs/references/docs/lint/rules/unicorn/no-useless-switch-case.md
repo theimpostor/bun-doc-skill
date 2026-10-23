@@ -1,0 +1,69 @@
+# unicorn/no-useless-switch-case
+Source: https://bun.com/docs/lint/rules/unicorn/no-useless-switch-case
+
+Disallow empty `case` clauses that fall through to the last `default`
+
+
+An empty `case` right before a final `default` runs the same code as `default`. The value gets there anyway, so the `case` does nothing.
+
+`--fix-suggestions` removes the `case`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/no-useless-switch-case" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+switch (status) {
+  case "active":
+    show(user);
+    break;
+  case "banned":
+  default:
+    hide(user);
+}
+```
+
+Not reported:
+
+```js
+switch (status) {
+  case "active":
+    show(user);
+    break;
+  default:
+    hide(user);
+}
+```
+
+A `case` with its own code is fine, even if it falls through. So are empty cases that share code with another `case`:
+
+```js
+switch (status) {
+  case "banned":
+    log(user);
+  default:
+    hide(user);
+}
+
+switch (status) {
+  case "banned":
+  case "deleted":
+    hide(user);
+}
+```
+
+## When not to use it
+
+Listing a value next to `default` can show that you thought of it. If you write cases like that on purpose, turn the rule off.

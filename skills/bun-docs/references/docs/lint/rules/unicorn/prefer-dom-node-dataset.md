@@ -1,0 +1,58 @@
+# unicorn/prefer-dom-node-dataset
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-dom-node-dataset
+
+Require `.dataset` instead of the attribute methods for `data-*` attributes
+
+
+Every `data-*` attribute on an element is also a property of `element.dataset`, with the name in camel case. For example, `data-user-id` is `dataset.userId`. Reading and writing a property is shorter than calling `getAttribute()`, `setAttribute()`, `hasAttribute()` or `removeAttribute()` with a string.
+
+`--fix` rewrites `setAttribute()`, `removeAttribute()` and `hasAttribute()` if the file shows that the object is a DOM node: `document.body`, `document.createElement()`, `document.querySelector()` and the like, or a variable that's declared with one of these and never assigned again. The elements of `HTMLRewriter` and of XML libraries have the same methods and no `dataset`.
+
+`--fix-dangerously` rewrites the other calls, and `getAttribute()`, which gives `null` for a missing attribute where `dataset` gives `undefined`. No flag rewrites `setAttribute()` or `removeAttribute()` unless the call is a standalone statement.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-dom-node-dataset" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+element.setAttribute("data-user-id", user.id);
+const id = element.getAttribute("data-user-id");
+
+if (element.hasAttribute("data-user-id")) {
+  element.removeAttribute("data-user-id");
+}
+```
+
+Not reported:
+
+```js
+element.dataset.userId = user.id;
+const id = element.dataset.userId;
+
+if (Object.hasOwn(element.dataset, "userId")) {
+  delete element.dataset.userId;
+}
+```
+
+Other attributes aren't reported. Neither is an awaited `getAttribute()`, because that's most likely a Playwright locator, not a DOM element:
+
+```js
+element.setAttribute("aria-label", label);
+const id = await page.locator(".user").getAttribute("data-user-id");
+```
+
+## When not to use it
+
+For a missing attribute, `getAttribute()` returns `null` and `dataset` gives `undefined`. Check comparisons with `null` before you apply the fix.

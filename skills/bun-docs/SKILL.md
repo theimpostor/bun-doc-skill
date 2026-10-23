@@ -1,6 +1,6 @@
 ---
 name: bun-docs
-description: Consult Bun's official documentation snapshot for runtime APIs, `bun` CLI commands, `bunfig.toml`, package management, bundling, type checking, testing, deployment guides, and ecosystem integrations. Use this whenever the user asks how to do something with Bun, troubleshoot Bun-specific behavior, compare Bun to Node/npm, or wants Bun command or API guidance, even if they only mention a command like `bun install`, `bun test`, `bun build`, `bun check`, `bunx`, `Bun.serve`, or a Bun config option.
+description: Consult Bun's official documentation snapshot for runtime APIs, `bun` CLI commands, `bunfig.toml`, package management, bundling, type checking, formatting, linting, testing, deployment guides, and ecosystem integrations. Use this whenever the user asks how to do something with Bun, troubleshoot Bun-specific behavior, compare Bun to Node/npm, or wants Bun command or API guidance, even if they only mention a command like `bun install`, `bun test`, `bun build`, `bun check`, `bun fmt`, `bun lint`, `bunx`, `Bun.serve`, or a Bun config option.
 ---
 
 # Bun Docs
@@ -32,6 +32,8 @@ Use this skill to answer Bun-specific questions from the bundled official docume
 - If the request is about parallel or isolated tests, lifecycle hooks, mocks, snapshots, coverage, or reporters, start with the test runner section.
 - If the request is about Bun's built-in support for XML, YAML, JSON5, JSONL, TOML, or Markdown, start with the runtime section.
 - If the request is about `bun check` or `--check` before running, building, or testing, open `references/docs/runtime/check.md`.
+- If the request is about `bun fmt` or formatter configuration, open `references/docs/format/index.md`; for Prettier or oxfmt migration, start with `references/sections/guides-format.md`.
+- If the request is about `bun lint`, open `references/docs/lint/index.md` and preserve its documented canary-only status. For a specific rule, search `references/sections/lint.md` by rule name rather than reading the entire rule catalog. For ESLint or oxlint migration, start with `references/sections/guides-lint.md`.
 - If the request is about `Bun.FetchSession`, connection pools, or fetch proxies, open `references/docs/runtime/networking/fetch.md`.
 - If the request is about `Bun.ModuleGraph`, open `references/docs/runtime/module-graph.md` and preserve its experimental status and lifecycle caveats.
 - If the request is a recipe-style question like deployment, framework setup, file conversion, or HTTP examples, start with the relevant guides section.

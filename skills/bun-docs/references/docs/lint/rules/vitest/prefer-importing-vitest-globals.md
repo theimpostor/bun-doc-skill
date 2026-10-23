@@ -1,0 +1,61 @@
+# vitest/prefer-importing-vitest-globals
+Source: https://bun.com/docs/lint/rules/vitest/prefer-importing-vitest-globals
+
+Require `describe`, `test`, `expect` and `vi` to be imported from `vitest`
+
+
+With `globals: true` in the Vitest config, `describe`, `test`, `expect`, `vi` and the hooks exist without an import. A file that relies on that fails with a `ReferenceError` as soon as the setting is off, and nothing in the file says where the names come from.
+
+A file gets one report for all the names it uses.
+
+`--fix` adds the import, or adds the names to the import from `vitest` that's already there. A new import goes below what has to stay first: a `#!` line, comments about the file like `// @ts-nocheck`, `/// <reference>` or a license, directives like `"use strict"`, and a header comment with an empty line after it. It goes above the comments that touch the first statement, which are about that statement.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"vitest/prefer-importing-vitest-globals" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+describe("cart", () => {
+  test("starts empty", () => {
+    expect(cart.items).toHaveLength(0);
+  });
+});
+```
+
+Not reported:
+
+```ts
+import { describe, expect, test } from "vitest";
+
+describe("cart", () => {
+  test("starts empty", () => {
+    expect(cart.items).toHaveLength(0);
+  });
+});
+```
+
+A name that the file imports from another package, or declares itself, isn't a global:
+
+```ts
+import { expect, test } from "@playwright/test";
+
+test("starts empty", async ({ page }) => {
+  await expect(page.getByRole("listitem")).toHaveCount(0);
+});
+```
+
+## When not to use it
+
+Turn it off for files that use the globals of another test runner with the same names.

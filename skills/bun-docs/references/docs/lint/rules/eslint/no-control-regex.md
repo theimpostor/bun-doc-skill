@@ -1,0 +1,60 @@
+# no-control-regex
+Source: https://bun.com/docs/lint/rules/eslint/no-control-regex
+
+Disallow control characters in regular expressions
+
+
+The characters U+0000 to U+001F are invisible and rarely appear in text you want to match. When one shows up in a regular expression, it's often a typo in an escape, such as `\x0C` where you meant `\xC0`.
+
+The rule reports a raw control character and the escapes `\x0A`, `\u000A` and, with the `u` or `v` flag, `\u{A}`. It checks regular expression literals and strings passed to `RegExp`. Named escapes such as `\t`, `\n` and `\cJ` are allowed.
+
+This rule is on by default.
+
+
+## Configure
+
+On by default as a warning. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-control-regex" = "off" # or "error"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const lineBreak = /\x0A/;
+
+const separator = new RegExp("\x1F");
+```
+
+Not reported:
+
+```js
+const lineBreak = /\n/;
+
+const space = /\x20/;
+```
+
+In a string, `"\n"` is the raw character by the time `RegExp` sees it. Escape the backslash:
+
+```js
+const lineBreak = new RegExp("\n");
+```
+
+```js
+const lineBreak = new RegExp("\\n");
+```
+
+## When not to use it
+
+Some formats are built on control characters. Terminal color codes start with `\x1B`, so a pattern that strips them needs to contain it. Disable the rule for that line:
+
+```js
+// eslint-disable-next-line no-control-regex
+const colorCodes = /\x1B\[[0-9;]*m/g;
+```

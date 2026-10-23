@@ -1,0 +1,49 @@
+# bun:test/prefer-mock-promise-shorthand
+Source: https://bun.com/docs/lint/rules/bun-test/prefer-mock-promise-shorthand
+
+Require `mockResolvedValue()` and `mockRejectedValue()` for mocks that return a promise
+
+
+`mockReturnValue(Promise.resolve(user))` and `mockImplementation(() => Promise.resolve(user))` do the same thing as `mockResolvedValue(user)` with more code. The same goes for `Promise.reject()` and `mockRejectedValue()`, and for the `Once` version of each method.
+
+`--fix` rewrites the call.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun:test/prefer-mock-promise-shorthand" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { mock } from "bun:test";
+
+const fetchUser = mock().mockReturnValue(Promise.resolve({ name: "Ada" }));
+const saveUser = mock().mockImplementationOnce(() => Promise.reject(new Error("offline")));
+```
+
+Not reported:
+
+```ts
+import { mock } from "bun:test";
+
+const fetchUser = mock().mockResolvedValue({ name: "Ada" });
+const saveUser = mock().mockRejectedValueOnce(new Error("offline"));
+```
+
+An implementation that takes parameters is allowed, because its result can depend on them:
+
+```ts
+import { mock } from "bun:test";
+
+const fetchUser = mock().mockImplementation((id: number) => Promise.resolve({ id }));
+```

@@ -1,0 +1,87 @@
+# react/jsx-filename-extension
+Source: https://bun.com/docs/lint/rules/react/jsx-filename-extension
+
+Restrict the file extensions that may contain JSX
+
+
+If JSX can be in any file, you can't tell from a file's name whether it holds components, and tools that pick a parser by extension have to treat every file as JSX. By default the rule only allows JSX in `.jsx` files.
+
+The rule only reports the first JSX element in the file.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-filename-extension" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-filename-extension" = ["error", {
+  extensions = [".jsx"],
+  allow = "always", # "always" or "as-needed"
+  ignoreFilesWithoutCode = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+export function Button({ label }) {
+  return <button>{label}</button>;
+}
+```
+
+Not reported:
+
+```jsx
+export function Button({ label }) {
+  return <button>{label}</button>;
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `extensions` | `[".jsx"]` | The extensions that can contain JSX, each with its dot. |
+| `allow` | `"always"` | With `"as-needed"`, also report a file that has one of these extensions but no JSX. |
+| `ignoreFilesWithoutCode` | `false` | With `"as-needed"`, don't report a file that has no code at all. |
+
+A TypeScript project needs `.tsx` in the list:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-filename-extension" = ["error", { extensions = [".jsx", ".tsx"] }]
+```
+
+```tsx
+export function Button({ label }: { label: string }) {
+  return <button>{label}</button>;
+}
+```
+
+With `"as-needed"`, a `.jsx` file without JSX is reported:
+
+```jsx
+export function formatPrice(cents) {
+  return (cents / 100).toFixed(2);
+}
+```
+
+With `ignoreFilesWithoutCode`, a file that only has comments isn't:
+
+```jsx
+// Nothing here yet.
+```

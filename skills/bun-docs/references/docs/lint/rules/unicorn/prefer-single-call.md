@@ -1,0 +1,86 @@
+# unicorn/prefer-single-call
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-single-call
+
+Require one call instead of several in a row to `push()`, `unshift()`, `classList.add()` and the like
+
+
+`push()`, `unshift()`, `classList.add()`, `classList.remove()` and `importScripts()` take any number of arguments. Two calls in a row on the same object do the same thing as one call, with more lines.
+
+`--fix` merges two `push()` or `unshift()` calls if the file shows that the object is an array: a variable that's declared with `[]`, `new Array()`, `Array.from()` or `Array.of()` and never assigned again. Other objects have a `push()` too. The second argument of a stream's `push()` is the encoding. The arguments have to be plain values, because `rows.push(nextId())` can depend on the `push()` before it. It merges two `importScripts()` calls if the arguments are strings.
+
+`--fix-dangerously` merges the other calls as well. No flag merges them when there's a comment between them, or when one of the second call's arguments reads the object, as in `items.push(items.length)`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-single-call" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-single-call" = ["error", {
+  ignore = [], # list of strings
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+errors.push("name is required");
+errors.push("email is not valid");
+
+queue.unshift(second);
+queue.unshift(first);
+
+button.classList.add("active");
+button.classList.add("large");
+
+importScripts("parser.js");
+importScripts("worker-utils.js");
+```
+
+Not reported:
+
+```js
+errors.push("name is required", "email is not valid");
+
+queue.unshift(first, second);
+
+button.classList.add("active", "large");
+
+importScripts("parser.js", "worker-utils.js");
+```
+
+`push()` on a stream is a different method that takes one chunk. `push()` and `unshift()` are never reported on `stream`, `this`, `this.stream`, `process.stdin`, `process.stdout` and `process.stderr`:
+
+```js
+stream.push(header);
+stream.push(body);
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `ignore` | `[]` | More `push()` and `unshift()` calls to allow, written the way they appear in the code, like `"readable.push"`. |
+
+```js
+readable.push(header);
+readable.push(body);
+```
+
+```js
+readable.push(header);
+readable.push(body);
+```

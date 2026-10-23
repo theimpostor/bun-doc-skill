@@ -1,0 +1,121 @@
+# react/jsx-indent
+Source: https://bun.com/docs/lint/rules/react/jsx-indent
+
+Enforce consistent indentation of JSX elements and their children
+
+
+Indentation shows which JSX element is inside which. A child at the wrong depth looks like its parent's sibling. The rule checks every tag, `{...}` child and line of text that starts a line. The default is 4 spaces for each level.
+
+The rule doesn't check props. Use `react/jsx-indent-props` for those.
+
+`--fix` corrects the indentation.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-indent" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+const page = (
+    <main>
+      <Header />
+            <p>Welcome</p>
+    </main>
+);
+```
+
+Not reported:
+
+```jsx
+const page = (
+    <main>
+        <Header />
+        <p>Welcome</p>
+    </main>
+);
+```
+
+## Options
+
+The first option is the number of spaces for each level, or `"tab"` for one tab. The second is an object.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-indent" = ["error", 2, { checkAttributes = true }]
+```
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| a number or `"tab"` | `4` | The indentation for one level. |
+| `checkAttributes` | `false` | Also check the closing `)}` of a prop's value that takes several lines. It must line up with the prop's name. |
+| `indentLogicalExpressions` | `false` | Require an element on its own line after `&&`, `||` or `??` to be indented one level. Without it, both ways are allowed. |
+
+The examples below use `2`.
+
+With `checkAttributes`:
+
+```jsx
+const page = (
+  <Layout
+    header={(
+      <Header />
+      )}
+  />
+);
+```
+
+```jsx
+const page = (
+  <Layout
+    header={(
+      <Header />
+    )}
+  />
+);
+```
+
+Without `indentLogicalExpressions`, both of these are allowed:
+
+```jsx
+const page = (
+  <main>
+    {open &&
+    <Menu />
+    }
+    {closed &&
+      <Hint />
+    }
+  </main>
+);
+```
+
+With it, only the second one is:
+
+```jsx
+const page = (
+  <main>
+    {open &&
+    <Menu />
+    }
+    {closed &&
+      <Hint />
+    }
+  </main>
+);
+```
+
+## When not to use it
+
+If `bun fmt` or another formatter lays out your code, it already decides the indentation.

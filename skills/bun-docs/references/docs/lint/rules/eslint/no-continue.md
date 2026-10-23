@@ -1,0 +1,48 @@
+# no-continue
+Source: https://bun.com/docs/lint/rules/eslint/no-continue
+
+Disallow `continue` statements
+
+
+`continue` jumps to the next iteration from the middle of the loop body. In a long loop, you have to find every `continue` to know which lines run for which items. An `if` around the rest of the body shows that in the structure of the code.
+
+`continue` with a label is reported too.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-continue" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+for (const user of users) {
+  if (!user.active) {
+    continue;
+  }
+  notify(user);
+}
+```
+
+Not reported:
+
+```js
+for (const user of users) {
+  if (user.active) {
+    notify(user);
+  }
+}
+```
+
+## When not to use it
+
+A `continue` at the top of a loop works like an early return and saves a level of indentation. If you prefer that style, leave this rule off.

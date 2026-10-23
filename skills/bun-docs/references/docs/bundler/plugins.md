@@ -46,20 +46,7 @@ type PluginBuilder = {
 };
 
 type Loader =
-  | "js"
-  | "jsx"
-  | "ts"
-  | "tsx"
-  | "json"
-  | "jsonc"
-  | "toml"
-  | "yaml"
-  | "file"
-  | "napi"
-  | "wasm"
-  | "text"
-  | "css"
-  | "html";
+  "js" | "jsx" | "ts" | "tsx" | "json" | "jsonc" | "toml" | "yaml" | "file" | "napi" | "wasm" | "text" | "css" | "html";
 ```
 
 ## Usage

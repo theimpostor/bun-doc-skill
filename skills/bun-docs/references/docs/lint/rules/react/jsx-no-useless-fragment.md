@@ -1,0 +1,102 @@
+# react/jsx-no-useless-fragment
+Source: https://bun.com/docs/lint/rules/react/jsx-no-useless-fragment
+
+Disallow fragments that wrap a single child or sit directly in an HTML element
+
+
+A fragment groups several children where only one value fits, such as a `return`. Around a single child it groups nothing. As a direct child of an HTML element it isn't needed either, because you could write its children there without it.
+
+`<Fragment>` and `<React.Fragment>` count the same as `<>`. With a `key` they're never reported, because the key needs an element to sit on.
+
+`--fix` removes the fragment where that's safe.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-no-useless-fragment" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-no-useless-fragment" = ["error", {
+  allowExpressions = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+function Avatar({ user }) {
+  return (
+    <>
+      <img src={user.photo} alt={user.name} />
+    </>
+  );
+}
+```
+
+```jsx
+const card = (
+  <section>
+    <>
+      <h2>{title}</h2>
+      <p>{summary}</p>
+    </>
+  </section>
+);
+```
+
+Not reported:
+
+```jsx
+function Avatar({ user }) {
+  return <img src={user.photo} alt={user.name} />;
+}
+
+function Card({ title, summary }) {
+  return (
+    <>
+      <h2>{title}</h2>
+      <p>{summary}</p>
+    </>
+  );
+}
+
+const names = users.map(user => <Fragment key={user.id}>{user.name}</Fragment>);
+```
+
+Two kinds of single child are allowed, because the fragment turns them into a React element: a function call in braces, and text if the fragment isn't itself a child in JSX.
+
+```jsx
+const label = <>Loading</>;
+const rows = <>{renderRows()}</>;
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `allowExpressions` | `false` | Allow a fragment around a single expression in braces. |
+
+```jsx
+function Slot({ children }) {
+  return <>{children}</>;
+}
+```
+
+```jsx
+function Slot({ children }) {
+  return <>{children}</>;
+}
+```

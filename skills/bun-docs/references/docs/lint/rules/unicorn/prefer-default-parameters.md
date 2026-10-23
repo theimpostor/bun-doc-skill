@@ -1,0 +1,65 @@
+# unicorn/prefer-default-parameters
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-default-parameters
+
+Require default parameters instead of reassigning a parameter in the function body
+
+
+A fallback written as `name = name || "stranger"` is hidden in the function body. A default parameter puts it in the signature, where callers and editors can see it.
+
+The rule reports `||`, `??`, `||=` and `??=` when the fallback is a literal and the parameter is the last one. It reports nothing if an earlier statement in the function could have a side effect, such as a function call.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-default-parameters" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+function greet(name) {
+  name = name || "stranger";
+  return `Hello, ${name}`;
+}
+```
+
+```js
+function connect(host, port) {
+  const actualPort = port ?? 8080;
+  return open(host, actualPort);
+}
+```
+
+Not reported:
+
+```js
+function greet(name = "stranger") {
+  return `Hello, ${name}`;
+}
+
+function connect(host, port = 8080) {
+  return open(host, port);
+}
+```
+
+A parameter that isn't the last one and a fallback that isn't a literal are left alone:
+
+```js
+function connect(host, port) {
+  host = host || "localhost";
+  port = port || defaultPort();
+  return open(host, port);
+}
+```
+
+## When not to use it
+
+A default parameter only applies to `undefined`. `||` also replaces `0`, `""`, `false` and `null`, and `??` also replaces `null`. If callers pass those values and rely on the fallback, keep the reassignment.

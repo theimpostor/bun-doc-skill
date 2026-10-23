@@ -1,0 +1,78 @@
+# @typescript-eslint/consistent-type-definitions
+Source: https://bun.com/docs/lint/rules/typescript/consistent-type-definitions
+
+Require either `interface` or `type` for object types, consistently
+
+
+You can declare an object's shape with `interface User { ... }` or with `type User = { ... }`. For most code the two work the same. This rule picks one. By default it's `interface`.
+
+The rule only reports a `type` that's an object type. You can't write unions, functions, and other types as an `interface`.
+
+`--fix` rewrites the declaration to the other form. A type alias can't be declared twice, so an interface whose name is declared again in the file is reported but not fixed. Other files add to an interface in a declaration file, a `namespace` or a `declare module` block, so only `--fix-dangerously` rewrites those.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/consistent-type-definitions" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+# "interface" or "type"
+"@typescript-eslint/consistent-type-definitions" = ["error", "interface"]
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+type User = {
+  name: string;
+  email: string;
+};
+```
+
+Not reported:
+
+```ts
+interface User {
+  name: string;
+  email: string;
+}
+
+type Id = string | number;
+type Handler = (user: User) => void;
+```
+
+## Options
+
+| Option | What it does |
+| --- | --- |
+| `"interface"` (default) | Report `type User = { ... }`. |
+| `"type"` | Report every `interface`. |
+
+```ts
+interface User {
+  name: string;
+}
+```
+
+```ts
+type User = {
+  name: string;
+};
+```
+
+## When not to use it
+
+The two differ in a few ways. Two `interface` declarations with the same name merge, which is how you add to a global type such as `Window`. You can pass a `type` where a `Record<string, unknown>` is expected, but not an `interface`. If your code depends on both, leave this rule off.

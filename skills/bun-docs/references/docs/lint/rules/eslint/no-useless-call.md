@@ -1,0 +1,44 @@
+# no-useless-call
+Source: https://bun.com/docs/lint/rules/eslint/no-useless-call
+
+Disallow `.call()` and `.apply()` where a normal call does the same
+
+
+`.call()` and `.apply()` exist to choose what `this` is. If `this` ends up the same as in a normal call, they only make the call harder to read.
+
+A call is reported when a plain function gets `null` or `undefined` as `this`, or when a method gets the object it's read from. `.apply()` is only reported when its second argument is an array literal.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-useless-call" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+format.call(undefined, value, locale);
+format.apply(null, [value, locale]);
+logger.write.call(logger, message);
+```
+
+Not reported:
+
+```js
+format(value, locale);
+logger.write(message);
+
+// `this` is a different object
+logger.write.call(otherLogger, message);
+
+// the arguments are not known here
+format.apply(undefined, args);
+```

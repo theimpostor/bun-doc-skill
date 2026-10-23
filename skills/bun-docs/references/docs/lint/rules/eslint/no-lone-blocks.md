@@ -1,0 +1,79 @@
+# no-lone-blocks
+Source: https://bun.com/docs/lint/rules/eslint/no-lone-blocks
+
+Disallow blocks that do nothing
+
+
+Braces that aren't the body of an `if`, a loop or a function only do something if they contain a `let`, `const` or `class` declaration, or a `function` declaration in strict mode. Those are scoped to the block. Otherwise the braces change nothing. They're often left over after a condition was deleted, so a reader wonders what's missing.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-lone-blocks" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+{
+  loadConfig();
+}
+
+function start() {
+  connect();
+  {
+    listen();
+  }
+}
+```
+
+Not reported:
+
+```js
+loadConfig();
+
+function start() {
+  connect();
+  listen();
+}
+```
+
+Not reported, because `started` only exists inside the braces:
+
+```js
+{
+  const started = Date.now();
+  loadConfig();
+  console.log(Date.now() - started);
+}
+```
+
+Braces around all the statements in a `case` are fine too:
+
+```js
+switch (event.type) {
+  case "open": {
+    open(event.id);
+    break;
+  }
+}
+```
+
+A block that's the only thing in a function or in another block is reported even if it declares something. The braces around it already limit the scope:
+
+```js
+function start() {
+  {
+    const port = 3000;
+    listen(port);
+  }
+}
+```

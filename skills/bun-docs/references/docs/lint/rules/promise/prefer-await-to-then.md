@@ -1,0 +1,94 @@
+# promise/prefer-await-to-then
+Source: https://bun.com/docs/lint/rules/promise/prefer-await-to-then
+
+Require `await` instead of `then()`, `catch()` and `finally()`
+
+
+A chain of `then()` callbacks puts each step in its own function, so steps can't share variables, and loops, early returns and `try`/`catch` don't work across them. With `await`, the same code is ordinary statements.
+
+Not reported:
+
+- the call that a `return` statement returns, as in `return load().then(parse)`
+- a chain inside an `await` or `yield` expression, unless you set `strict`
+- a `then`, `catch` or `finally` method on something that clearly isn't a promise, such as an object literal or `new Parser()`
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"promise/prefer-await-to-then" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"promise/prefer-await-to-then" = ["error", {
+  strict = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+function showUser(id) {
+  fetchUser(id)
+    .then(user => render(user))
+    .catch(err => showError(err));
+}
+```
+
+Not reported:
+
+```js
+async function showUser(id) {
+  try {
+    render(await fetchUser(id));
+  } catch (err) {
+    showError(err);
+  }
+}
+
+function loadConfig(path) {
+  return readFile(path, "utf8").then(JSON.parse);
+}
+
+const parser = new Parser();
+parser.then(render);
+```
+
+In a longer chain, `return` only exempts the last call. Here the `then()` is reported:
+
+```js
+function loadConfig(path) {
+  return readFile(path, "utf8").then(JSON.parse).catch(useDefaults);
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `strict` | `false` | Also report `then()`, `catch()` and `finally()` inside an `await` or `yield` expression. |
+
+```js
+async function findUser(id) {
+  const user = await fetchUser(id).catch(() => null);
+  return user ?? guest;
+}
+```
+
+```js
+async function findUser(id) {
+  const user = await fetchUser(id).catch(() => null);
+  return user ?? guest;
+}
+```

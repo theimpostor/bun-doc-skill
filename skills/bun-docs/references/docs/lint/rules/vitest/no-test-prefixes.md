@@ -1,0 +1,65 @@
+# vitest/no-test-prefixes
+Source: https://bun.com/docs/lint/rules/vitest/no-test-prefixes
+
+Require `.only` and `.skip` instead of the `f` and `x` prefixes
+
+
+`fit`, `fdescribe`, `xit`, `xtest` and `xdescribe` are Jest's short names for `it.only`, `describe.only`, `it.skip`, `test.skip` and `describe.skip`. Vitest doesn't export them, so a test file that you moved over from Jest needs to use the long names.
+
+`--fix` rewrites the short name to the long one. It doesn't change your imports. It leaves a call alone if a variable around it has the long name.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"vitest/no-test-prefixes" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { expect } from "vitest";
+
+fit("adds", () => {
+  expect(1 + 1).toBe(2);
+});
+
+xtest("subtracts", () => {
+  expect(3 - 1).toBe(2);
+});
+
+xdescribe("division", () => {});
+```
+
+Not reported:
+
+```ts
+import { describe, expect, it, test } from "vitest";
+
+it.only("adds", () => {
+  expect(1 + 1).toBe(2);
+});
+
+test.skip("subtracts", () => {
+  expect(3 - 1).toBe(2);
+});
+
+describe.skip("division", () => {});
+```
+
+`xit.each` is reported too, and `--fix` turns it into `it.skip.each`:
+
+```ts
+import { expect } from "vitest";
+
+xit.each([1, 2, 3])("%i is positive", n => {
+  expect(n).toBeGreaterThan(0);
+});
+```

@@ -1,0 +1,75 @@
+# unicorn/no-immediate-mutation
+Source: https://bun.com/docs/lint/rules/unicorn/no-immediate-mutation
+
+Disallow changing an array, object, `Set`, or `Map` in the statement right after creating it
+
+
+If you create a value on one line and fill it on the next, you're using two statements to say one thing. Put everything in the initializer, so you can read the whole value in one place.
+
+The rule looks at the statement right after the one that creates the value:
+
+| Created with | Reported next |
+| --- | --- |
+| An array literal | `.push()`, `.unshift()` |
+| An object literal | Assigning a property, `Object.assign()` |
+| `new Set()`, `new WeakSet()` | `.add()` |
+| `new Map()`, `new WeakMap()` | `.set()` |
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/no-immediate-mutation" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const fruits = ["apple", "pear"];
+fruits.push("plum");
+
+const user = { name: "Ada" };
+user.role = "admin";
+```
+
+```js
+const seen = new Set(["apple"]);
+seen.add("pear");
+
+const prices = new Map([["apple", 1]]);
+prices.set("pear", 2);
+```
+
+Not reported:
+
+```js
+const fruits = ["apple", "pear", "plum"];
+const user = { name: "Ada", role: "admin" };
+const seen = new Set(["apple", "pear"]);
+const prices = new Map([
+  ["apple", 1],
+  ["pear", 2],
+]);
+```
+
+A change that reads the variable itself can't move into the initializer, so it's allowed:
+
+```js
+const fruits = ["apple", "pear"];
+fruits.push(fruits.length);
+```
+
+A change that comes after another statement is allowed too:
+
+```js
+const fruits = ["apple", "pear"];
+console.log(fruits);
+fruits.push("plum");
+```

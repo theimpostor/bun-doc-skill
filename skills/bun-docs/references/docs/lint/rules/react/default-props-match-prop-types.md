@@ -1,0 +1,85 @@
+# react/default-props-match-prop-types
+Source: https://bun.com/docs/lint/rules/react/default-props-match-prop-types
+
+Require every entry of `defaultProps` to have a prop type that is not required
+
+
+A default for a required prop is a contradiction. Either the caller must pass the prop and the default is dead code, or the prop is optional and its type is wrong. A default for a prop that isn't declared at all is often a typo or a leftover from a rename.
+
+The prop types can be `propTypes` or a TypeScript type. A component that doesn't declare prop types isn't checked.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/default-props-match-prop-types" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/default-props-match-prop-types" = ["error", {
+  allowRequiredDefaults = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+function Greeting({ name, greeting }) {
+  return <p>{greeting}, {name}</p>;
+}
+Greeting.propTypes = {
+  name: PropTypes.string.isRequired,
+  greeting: PropTypes.string,
+};
+Greeting.defaultProps = {
+  name: "friend", // required, so never used
+  greting: "Hello", // no such prop
+};
+```
+
+```tsx
+function Greeting(props: { name: string; greeting?: string }) {
+  return <p>{props.greeting}, {props.name}</p>;
+}
+Greeting.defaultProps = { name: "friend" };
+```
+
+Not reported:
+
+```jsx
+function Greeting({ name, greeting }) {
+  return <p>{greeting}, {name}</p>;
+}
+Greeting.propTypes = {
+  name: PropTypes.string.isRequired,
+  greeting: PropTypes.string,
+};
+Greeting.defaultProps = {
+  greeting: "Hello",
+};
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `allowRequiredDefaults` | `false` | Allow a default for a required prop. A default without a prop type is still reported. |
+
+```jsx
+function Greeting({ name }) {
+  return <p>Hello, {name}</p>;
+}
+Greeting.propTypes = { name: PropTypes.string.isRequired };
+Greeting.defaultProps = { name: "friend" };
+```

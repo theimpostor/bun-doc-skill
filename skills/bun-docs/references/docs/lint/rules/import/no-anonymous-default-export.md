@@ -1,0 +1,95 @@
+# import/no-anonymous-default-export
+Source: https://bun.com/docs/lint/rules/import/no-anonymous-default-export
+
+Disallow default exports that have no name
+
+
+You can't search for a default export that has no name, and each importing file makes up its own name for it. An anonymous function or class also shows up without a useful name in stack traces and dev tools. Give the value a name first, then export it.
+
+Functions, classes, arrow functions, objects, arrays, literals and `new` expressions are reported. The result of a call, as in `export default defineConfig({})`, is allowed by default.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/no-anonymous-default-export" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/no-anonymous-default-export" = ["error", {
+  allowAnonymousFunction = false,
+  allowAnonymousClass = false,
+  allowArrowFunction = false,
+  allowObject = false,
+  allowArray = false,
+  allowLiteral = false,
+  allowNew = false,
+  allowCallExpression = true,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+export default function () {
+  return "ok";
+}
+```
+
+```js
+export default items => items.length;
+```
+
+```js
+export default { port: 3000 };
+```
+
+Not reported:
+
+```js
+export default function status() {
+  return "ok";
+}
+```
+
+```js
+const config = { port: 3000 };
+
+export default config;
+```
+
+```js
+export default defineConfig({ port: 3000 });
+```
+
+## Options
+
+| Option | Default | What it allows |
+| --- | --- | --- |
+| `allowAnonymousFunction` | `false` | `export default function () {}` |
+| `allowAnonymousClass` | `false` | `export default class {}` |
+| `allowArrowFunction` | `false` | `export default () => {}` |
+| `allowObject` | `false` | `export default { port: 3000 }` |
+| `allowArray` | `false` | `export default [1, 2]` |
+| `allowLiteral` | `false` | `export default 42`, strings, template literals, regular expressions, `true`, `null` |
+| `allowNew` | `false` | `export default new Server()` |
+| `allowCallExpression` | `true` | `export default createServer()` |
+
+```js
+export default { port: 3000 };
+```
+
+```js
+export default defineConfig({ port: 3000 });
+```

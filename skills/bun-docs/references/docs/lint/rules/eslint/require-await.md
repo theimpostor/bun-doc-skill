@@ -1,0 +1,60 @@
+# require-await
+Source: https://bun.com/docs/lint/rules/eslint/require-await
+
+Disallow async functions that never use `await`
+
+
+An `async` function with no `await` does nothing asynchronous, but it still wraps its result in a promise, so every caller has to await it. Often the `await` was removed in a refactor and the `async` stayed, or an `await` is missing.
+
+`for await` and `await using` count as awaiting. Functions with an empty body and async generators aren't reported. An `await` in a nested function doesn't count for the outer one.
+
+The report comes with a suggestion that removes `async`. Callers then get the value and not a promise, so only `--fix-dangerously` applies it, not `--fix-suggestions`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"require-await" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+async function getUser(id) {
+  return cache.get(id);
+}
+```
+
+Not reported:
+
+```js
+function getUser(id) {
+  return cache.get(id);
+}
+
+async function loadUser(id) {
+  const response = await fetch(`/users/${id}`);
+  return response.json();
+}
+```
+
+The `await` here belongs to the callback, so `saveAll` is reported:
+
+```js
+async function saveAll(items) {
+  items.forEach(async (item) => {
+    await save(item);
+  });
+}
+```
+
+## When not to use it
+
+An `async` function turns a thrown error into a rejected promise. If a function needs to return a promise to fit an interface, and you rely on `async` for that, turn the rule off for it.

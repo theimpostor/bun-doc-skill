@@ -1,0 +1,89 @@
+# consistent-this
+Source: https://bun.com/docs/lint/rules/eslint/consistent-this
+
+Enforce one name for variables that hold `this`
+
+
+Code that saves `this` for a nested function calls the variable `that`, `self`, `me` or `vm`. If you use one name everywhere, you know what the variable holds without looking up its declaration.
+
+The rule reports `this` assigned to any other name. It also reports the chosen name when it holds something other than `this`. The default name is `that`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"consistent-this" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"consistent-this" = ["error", "that"]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+function Timer() {
+  const self = this;
+  setInterval(function () {
+    self.tick();
+  }, 1000);
+}
+```
+
+```js
+const that = document.body;
+```
+
+Not reported:
+
+```js
+function Timer() {
+  const that = this;
+  setInterval(function () {
+    that.tick();
+  }, 1000);
+}
+```
+
+Destructuring isn't an alias, so it's allowed:
+
+```js
+function Timer() {
+  const { interval, tick } = this;
+  setInterval(tick, interval);
+}
+```
+
+## Options
+
+The options are one or more names you allow:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+consistent-this = ["error", "self", "vm"]
+```
+
+```js
+function Timer() {
+  const self = this;
+  setInterval(function () {
+    self.tick();
+  }, 1000);
+}
+```
+
+## When not to use it
+
+An arrow function uses the surrounding code's `this`, so new code rarely needs an alias at all.

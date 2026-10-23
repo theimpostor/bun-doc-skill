@@ -1,0 +1,67 @@
+# @next/next/no-async-client-component
+Source: https://bun.com/docs/lint/rules/nextjs/no-async-client-component
+
+Disallow `async` components in files that start with `"use client"`
+
+
+React doesn't support `async` components on the client. Only Server Components can be `async`. An `async` client component gets a new promise on every render, so it suspends again and again and React logs an error.
+
+The rule only looks at the default export of a file with a `"use client"` directive. It reports an `async` function, or an `async` arrow function assigned to a variable, if the name starts with a capital letter.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@next/next/no-async-client-component" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+"use client";
+
+export default async function Profile({ id }) {
+  const user = await fetchUser(id);
+  return <h1>{user.name}</h1>;
+}
+```
+
+```jsx
+"use client";
+
+const Profile = async ({ id }) => {
+  const user = await fetchUser(id);
+  return <h1>{user.name}</h1>;
+};
+
+export default Profile;
+```
+
+Not reported:
+
+```jsx
+"use client";
+
+import { use } from "react";
+
+export default function Profile({ userPromise }) {
+  const user = use(userPromise);
+  return <h1>{user.name}</h1>;
+}
+```
+
+Without the directive, the file is a Server Component, and `async` is fine:
+
+```jsx
+export default async function Profile({ id }) {
+  const user = await fetchUser(id);
+  return <h1>{user.name}</h1>;
+}
+```

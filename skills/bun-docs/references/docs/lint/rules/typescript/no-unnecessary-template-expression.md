@@ -1,0 +1,66 @@
+# @typescript-eslint/no-unnecessary-template-expression
+Source: https://bun.com/docs/lint/rules/typescript/no-unnecessary-template-expression
+
+Disallow `${}` in a template literal where plain text or the value itself does the same
+
+
+A template literal that holds nothing but one string, like `` `${name}` ``, is that string. A literal inside `${}`, like `` `${"px"}` ``, can be written as plain text. In both cases the `${}` makes the reader look for a conversion that doesn't happen.
+
+The rule reports a template that's only one `${}` with a string in it, and any `${}` that holds a string, number, bigint, boolean, regular expression or template literal, `null`, `undefined`, `NaN` or `Infinity`. Template literal types are checked too. Tagged templates aren't.
+
+`--fix` removes the `${}`. It leaves `` `${name}` `` alone if `name` is a parameter, or if the result is assigned back to `name`. That's how code turns whatever a caller passed into a string, and the type only says what the caller promised. `--fix-dangerously` removes those too.
+
+
+## Configure
+
+Off by default. This rule needs types, so turning it on makes `bun lint` type check your code first.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/no-unnecessary-template-expression" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+function describe(name: string, width: number) {
+  const title = `${name}`;
+  const size = `${width}${"px"}`;
+  const retries = `retries: ${3}`;
+  return [title, size, retries];
+}
+
+type Size = `${number}${"px"}`;
+```
+
+Not reported:
+
+```ts
+function describe(name: string, width: number) {
+  const title = name;
+  const size = `${width}px`;
+  const retries = "retries: 3";
+  return [title, size, retries];
+}
+
+type Size = `${number}px`;
+```
+
+A template that turns another type into a string does real work:
+
+```ts
+function toText(count: number) {
+  return `${count}`;
+}
+```
+
+Spaces at the end of a line are easy to miss and editors often strip them, so `${" "}` before a line break is allowed:
+
+```ts
+const usage = `Usage:${" "}
+  save <file>`;
+```

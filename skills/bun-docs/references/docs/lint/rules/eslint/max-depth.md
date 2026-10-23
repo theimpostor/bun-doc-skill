@@ -1,0 +1,98 @@
+# max-depth
+Source: https://bun.com/docs/lint/rules/eslint/max-depth
+
+Enforce a maximum depth that blocks can be nested
+
+
+To understand a line that sits five blocks deep, you have to keep every condition and loop around it in your head. This rule reports any statement nested deeper than the maximum, which is 4 by default.
+
+`if`, `switch`, `try`, `for`, `while`, `do` and `with` each add one level. Every function starts again at zero.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"max-depth" = "error" # or "warn"
+```
+
+Every option, set to its default. The ones that are commented out are unset by default.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"max-depth" = ["error", {
+  max = 4,
+  # maximum = <number>,
+}]
+```
+
+
+## Examples
+
+With a maximum of 2, this is reported:
+
+```js
+function notify(users) {
+  for (const user of users) {
+    if (user.active) {
+      if (user.email) {
+        send(user.email);
+      }
+    }
+  }
+}
+```
+
+Not reported:
+
+```js
+function notify(users) {
+  for (const user of users) {
+    if (user.active && user.email) {
+      send(user.email);
+    }
+  }
+}
+```
+
+An `else if` is as deep as the `if` it continues. This passes with a maximum of 1:
+
+```js
+if (size < 10) {
+  small();
+} else if (size < 100) {
+  medium();
+} else {
+  large();
+}
+```
+
+So does this, because the inner `if` is the first level of the callback:
+
+```js
+if (ready) {
+  items.forEach((item) => {
+    if (item.done) {
+      archive(item);
+    }
+  });
+}
+```
+
+## Options
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+max-depth = ["error", 3]
+```
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `max` | `4` | The deepest level allowed. `maximum` is an older name for it. |
+
+A number alone is short for `{ "max": number }`.

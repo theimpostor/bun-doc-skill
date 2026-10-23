@@ -1,0 +1,40 @@
+# jsx-a11y/role-supports-aria-props
+Source: https://bun.com/docs/lint/rules/jsx-a11y/role-supports-aria-props
+
+Disallow `aria-*` attributes that the element's role does not support
+
+
+Each ARIA role supports a fixed set of `aria-*` attributes. A link can't be checked and a list can't be expanded. A screen reader ignores an attribute that doesn't fit the role, or announces something that makes no sense, so the user never hears the state you meant to tell them.
+
+The rule reads the role from the `role` attribute. Without one, it uses the role the element has by default: `link` for `<a href>`, `list` for `<ul>`, `heading` for `<h1>`. An element or a component that has no role either way, such as a plain `<div>`, isn't reported.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jsx-a11y/role-supports-aria-props" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+const filter = <a href="/sale" aria-checked={onSale}>On sale</a>;
+const items = <ul aria-expanded={isOpen} />;
+const save = <div role="button" aria-required="true" />;
+```
+
+Not reported:
+
+```jsx
+const filter = <div role="checkbox" aria-checked={onSale} tabIndex={0}>On sale</div>;
+const toggle = <button aria-expanded={isOpen}>Items</button>;
+const items = <ul aria-label="Items" />;
+const panel = <div aria-expanded={isOpen} />;
+```

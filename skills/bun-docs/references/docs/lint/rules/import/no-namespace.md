@@ -1,0 +1,63 @@
+# import/no-namespace
+Source: https://bun.com/docs/lint/rules/import/no-namespace
+
+Disallow `import * as name` in favor of named imports
+
+
+`import * as utils` doesn't tell you which exports a file uses. You have to search for every `utils.` to find out. A typo such as `utils.clmap` is only `undefined` at runtime, while a named import of a name that doesn't exist is an error when the module loads.
+
+`--fix` turns the namespace into named imports if it's only used as `utils.name`. A name that already means something else where it's used is imported as `utils_name`. If you pass the namespace object itself around, or never use it, `--fix` leaves it alone.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/no-namespace" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/no-namespace" = ["error", {
+  ignore = [], # list of strings
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+import * as utils from "./utils";
+
+const width = utils.clamp(utils.sum(sizes), 0, 100);
+```
+
+Not reported:
+
+```js
+import { clamp, sum } from "./utils";
+
+const width = clamp(sum(sizes), 0, 100);
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `ignore` | `[]` | Globs for import paths you can import as a namespace. A glob without a `/` is matched against the last part of the path. |
+
+```js
+import * as styles from "./components/button.module.css";
+```
+
+```js
+import * as utils from "./utils";
+```

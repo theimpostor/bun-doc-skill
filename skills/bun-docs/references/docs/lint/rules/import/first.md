@@ -1,0 +1,77 @@
+# import/first
+Source: https://bun.com/docs/lint/rules/import/first
+
+Require all imports to come before every other statement in the file
+
+
+Imports are hoisted. The imported modules load and run before any line of the file that imports them, no matter where the `import` is written. An import below other code looks like it runs later, but it doesn't.
+
+Directives such as `"use client"` can come before the imports.
+
+`--fix` moves the imports to the top, after the ones that are already there. If there are none, they go below what has to stay first: a `#!` line, comments about the file like `// @ts-nocheck` or a license, directives like `"use client"`, and a header comment with an empty line after it. The comments above and beside an import move with it, and the comments that touch the first statement stay with that statement.
+
+An import has no fix if moving it would change the program. That's the case in code without semicolons if the line after the import starts with `[`, `(`, `+`, `-`, `/`, `<` or a backtick, because it would continue the line before the import. It's also the case below an `export .. from`, because the modules would run in another order.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/first" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+# "absolute-first" or "disable-absolute-first"
+"import/first" = ["error", "disable-absolute-first"]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+import { loadConfig } from "./config.js";
+
+loadConfig(); // runs after "./server.js" has loaded, not before
+
+import { startServer } from "./server.js";
+
+startServer();
+```
+
+Not reported:
+
+```js
+"use client";
+
+import { loadConfig } from "./config.js";
+import { startServer } from "./server.js";
+
+loadConfig();
+startServer();
+```
+
+## Options
+
+| Option | What it does |
+| --- | --- |
+| `"disable-absolute-first"` (default) | Imports can be in any order. |
+| `"absolute-first"` | Also report an import of a package, or any path that doesn't start with `.`, after a relative import. |
+
+```js
+import { loadConfig } from "./config.js";
+import express from "express";
+```
+
+```js
+import express from "express";
+import { loadConfig } from "./config.js";
+```

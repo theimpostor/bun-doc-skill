@@ -1,0 +1,113 @@
+# jest/prefer-ending-with-an-expect
+Source: https://bun.com/docs/lint/rules/jest/prefer-ending-with-an-expect
+
+Require the last statement of a test to be an assertion
+
+
+Anything a test does after its last assertion isn't checked. If the test ends with a click, a request or a save, that step can do the wrong thing and the test still passes.
+
+The last statement in the test must be a call to `expect`, with or without `await`. A test with an empty body is reported. So is one that ends with an `if`, a loop or a `return`, even if there's an `expect` inside.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jest/prefer-ending-with-an-expect" = "error" # or "warn"
+```
+
+Every option, set to its default. The ones that are commented out are unset by default.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jest/prefer-ending-with-an-expect" = ["error", {
+  # assertFunctionNames = <list of strings>,
+  additionalTestBlockFunctions = [],
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { expect, test } from "@jest/globals";
+
+test("renames the user", async () => {
+  const user = await createUser("Ada");
+  expect(user.name).toBe("Ada");
+  await user.rename("Grace");
+});
+```
+
+```ts
+import { expect, test } from "@jest/globals";
+
+test("loads the user", () => {
+  return expect(loadUser(1)).resolves.toBeDefined();
+});
+```
+
+Not reported:
+
+```ts
+import { expect, test } from "@jest/globals";
+
+test("renames the user", async () => {
+  const user = await createUser("Ada");
+  await user.rename("Grace");
+  expect(user.name).toBe("Grace");
+});
+
+test("loads the user", async () => {
+  await expect(loadUser(1)).resolves.toBeDefined();
+});
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `assertFunctionNames` | any name that contains `expect` | The calls that count as an assertion, in addition to `expect` itself. |
+| `additionalTestBlockFunctions` | `[]` | Other functions to check like `test`. It only works for names that Jest defines, such as `describe`. Your own wrappers around `test` aren't checked. |
+
+By default, a helper or a method with `expect` in its name counts:
+
+```ts
+import { test } from "@jest/globals";
+
+test("has a valid user", () => {
+  expectValidUser(loadUser(1));
+});
+
+test("responds with 200", async () => {
+  await request(app).get("/users").expect(200);
+});
+```
+
+With `assertFunctionNames`, only `expect` and the names in the list count. A name can be a dotted path. `*` matches any letters and digits in one part of the path, and `**` matches one or more parts.
+
+```ts
+import { test } from "@jest/globals";
+
+test("has a valid user", () => {
+  assertValidUser(loadUser(1));
+});
+
+test("responds with 200", async () => {
+  await request(app).get("/users").expect(200);
+});
+```
+
+```ts
+import { test } from "@jest/globals";
+
+test("has a valid user", () => {
+  expectValidUser(loadUser(1));
+});
+```

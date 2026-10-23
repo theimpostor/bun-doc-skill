@@ -1,0 +1,91 @@
+# @typescript-eslint/no-invalid-this
+Source: https://bun.com/docs/lint/rules/typescript/no-invalid-this
+
+Disallow `this` where its value is `undefined`
+
+
+In a module, `this` is `undefined` at the top level and in a plain function that's called without an object. Reading `this.label` there throws a `TypeError`. The usual cause is a callback written with `function` inside a method. It doesn't get the method's `this`.
+
+`this` is fine in methods, class fields, constructors, and arrow functions inside them. It's also fine in a function that declares a `this` parameter, and in a function that gets its `this` from `.bind()`, `.call()` or `.apply()`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/no-invalid-this" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/no-invalid-this" = ["error", {
+  capIsConstructor = true,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+export const button = {
+  label: "Save",
+  onClick() {
+    setTimeout(function () {
+      console.log(this.label);
+    }, 100);
+  },
+};
+```
+
+Not reported:
+
+```ts
+export const button = {
+  label: "Save",
+  onClick() {
+    setTimeout(() => {
+      console.log(this.label);
+    }, 100);
+  },
+};
+```
+
+```ts
+interface Button {
+  label: string;
+}
+
+function describe(this: Button) {
+  return this.label;
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `capIsConstructor` | `true` | Treat a function with a name that starts with a capital letter as a constructor, where `this` is fine. |
+
+```ts
+export function Timer() {
+  this.startedAt = Date.now();
+}
+```
+
+```ts
+export function Timer() {
+  this.startedAt = Date.now();
+}
+```
+
+## When not to use it
+
+With `strict` or `noImplicitThis` in `tsconfig.json`, TypeScript already rejects a `this` that has no type, which covers most of these reports.

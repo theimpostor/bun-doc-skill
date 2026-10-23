@@ -1,0 +1,69 @@
+# json/no-unsafe-values
+Source: https://bun.com/docs/lint/rules/json/no-unsafe-values
+
+Disallow JSON values that are unsafe for interchange
+
+
+JSON puts no limit on how large or how precise a number is, but most programs read numbers into 64-bit floats. A number that doesn't fit silently changes when the file is read. This rule reports:
+
+- a number that's too large and becomes `Infinity`
+- a number that's too small and becomes `0`
+- an integer outside the safe range, above 9007199254740991 or below -9007199254740991, which may be rounded to a nearby integer
+- a subnormal number, which has fewer digits of precision than it's written with
+- a string with a lone surrogate, which can't be encoded as UTF-8
+
+
+## Configure
+
+Off by default. It needs an ESLint config that says which files are in the language:
+
+
+**File:** `eslint.config.js`
+```js
+import json from "@eslint/json";
+
+export default [
+  {
+    files: ["**/*.json"],
+    plugins: { json },
+    language: "json/json",
+    rules: { "json/no-unsafe-values": "error" },
+  },
+];
+```
+
+It also works with `json/jsonc` and `json/json5`.
+
+
+## Examples
+
+Reported:
+
+
+```json
+{
+  "large": 1e400,
+  "small": 1e-400,
+  "id": 9007199254740993,
+  "subnormal": 2.2250738585072009e-308
+}
+```
+
+
+```json
+{
+  "emoji": "\ud83d"
+}
+```
+
+Not reported:
+
+
+```json
+{
+  "large": 1e300,
+  "zero": 0.0,
+  "id": "9007199254740993",
+  "emoji": "\ud83d\ude00"
+}
+```

@@ -1,0 +1,61 @@
+# unicorn/prefer-module
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-module
+
+Require ES modules instead of CommonJS
+
+
+`require`, `module`, `exports`, `__filename` and `__dirname` are CommonJS. In an ES module, Node.js throws a `ReferenceError` for them, and bundlers can't tree-shake a `require()` the way they do an `import`.
+
+The rule reports those five globals. It also reports the `"use strict"` directive, because an ES module is always strict.
+
+Files that end in `.cjs` aren't checked.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-module" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+"use strict";
+
+const path = require("path");
+
+module.exports = path.join(__dirname, "config.json");
+```
+
+Not reported:
+
+```js
+import path from "node:path";
+
+export default path.join(import.meta.dirname, "config.json");
+```
+
+A local variable with one of those names isn't reported:
+
+```js
+export function load(require) {
+  return require("./plugin.js");
+}
+```
+
+Nothing is reported in a `.cjs` file:
+
+```js
+module.exports = require("./defaults.json");
+```
+
+## When not to use it
+
+Turn it off in a package that's still CommonJS, or name the CommonJS files `.cjs`.

@@ -1,0 +1,77 @@
+# no-shadow-restricted-names
+Source: https://bun.com/docs/lint/rules/eslint/no-shadow-restricted-names
+
+Disallow variables named `undefined`, `NaN`, `Infinity`, `eval`, `arguments` or `globalThis`
+
+
+`undefined`, `NaN` and `Infinity` look like keywords, but they're ordinary globals, so a variable or a parameter can take their name. After `const undefined = "none"`, every `value === undefined` in that scope compares with `"none"`.
+
+The rule reports variables, parameters, functions, classes and imports with one of these names.
+
+This rule is on by default.
+
+
+## Configure
+
+On by default as a warning. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-shadow-restricted-names" = "off" # or "error"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-shadow-restricted-names" = ["warn", {
+  reportGlobalThis = true,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const undefined = "none";
+
+function toNumber(text, NaN) {
+  return text === "" ? NaN : Number(text);
+}
+```
+
+Not reported:
+
+```js
+const missing = "none";
+
+function toNumber(text, fallback) {
+  return text === "" ? fallback : Number(text);
+}
+```
+
+A variable named `undefined` that never gets a value is allowed, because it's the same as the global:
+
+```js
+var undefined;
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `reportGlobalThis` | `true` | Also report `globalThis`. |
+
+If your project has an ESLint config and ESLint 9 or older installed, the default is `false`, as it is there.
+
+```js
+const globalThis = window;
+```
+
+```js
+const globalThis = window;
+```

@@ -1,0 +1,54 @@
+# unicorn/prefer-reflect-apply
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-reflect-apply
+
+Require `Reflect.apply()` instead of `Function.prototype.apply()`
+
+
+`handler.apply(this, arguments)` looks up `apply` on `handler`, and any function can have its own `apply` property that does something else. The safe spelling is `Function.prototype.apply.call(handler, this, arguments)`, which is hard to read. `Reflect.apply(handler, this, arguments)` always calls the function and is shorter.
+
+The rule only reports a call when it can tell it's `Function.prototype.apply`. That means the first argument is `this` or `null`, and the second is an array literal or `arguments`.
+
+`--fix` doesn't change the code. `--fix-suggestions` rewrites the call.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-reflect-apply" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+function logged() {
+  console.log("called");
+  return handler.apply(this, arguments);
+}
+
+Function.prototype.apply.call(handler, null, [event]);
+```
+
+Not reported:
+
+```js
+function logged() {
+  console.log("called");
+  return Reflect.apply(handler, this, arguments);
+}
+
+Reflect.apply(handler, null, [event]);
+```
+
+With other arguments, it could be a different method named `apply`, so these aren't reported:
+
+```js
+patch.apply(document, changes);
+handler.apply(this, args);
+```

@@ -1,0 +1,104 @@
+# react/prefer-function-component
+Source: https://bun.com/docs/lint/rules/react/prefer-function-component
+
+Require function components instead of class components
+
+
+Hooks only work in function components, so a class component can't share logic with the rest of a codebase that uses hooks. This rule reports every class that extends `Component` or `PureComponent`, and every other class with a method that contains JSX.
+
+An error boundary is allowed by default, because React has no way to write one as a function.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/prefer-function-component" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/prefer-function-component" = ["error", {
+  allowErrorBoundary = true,
+  allowJsxUtilityClass = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+class Counter extends React.Component {
+  state = { count: 0 };
+  render() {
+    return <button onClick={() => this.setState({ count: this.state.count + 1 })}>{this.state.count}</button>;
+  }
+}
+```
+
+Not reported:
+
+```jsx
+function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+
+class ErrorBoundary extends React.Component {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? <p>Something went wrong</p> : this.props.children;
+  }
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `allowErrorBoundary` | `true` | Allow a class with `componentDidCatch` or `static getDerivedStateFromError`. |
+| `allowJsxUtilityClass` | `false` | Allow a class that has JSX in its methods but doesn't extend `Component` or `PureComponent`. |
+
+Reported with `allowErrorBoundary: false`:
+
+```jsx
+class ErrorBoundary extends React.Component {
+  componentDidCatch(error) {
+    report(error);
+  }
+  render() {
+    return this.props.children;
+  }
+}
+```
+
+This class is reported by default:
+
+```jsx
+class Columns {
+  renderName(user) {
+    return <b>{user.name}</b>;
+  }
+}
+```
+
+Not reported with `allowJsxUtilityClass: true`:
+
+```jsx
+class Columns {
+  renderName(user) {
+    return <b>{user.name}</b>;
+  }
+}
+```

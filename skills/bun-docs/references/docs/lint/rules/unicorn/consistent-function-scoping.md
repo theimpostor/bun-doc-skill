@@ -1,0 +1,115 @@
+# unicorn/consistent-function-scoping
+Source: https://bun.com/docs/lint/rules/unicorn/consistent-function-scoping
+
+Require functions that use nothing from the enclosing function to be moved out of it
+
+
+A function written inside another function is created again every time the outer one runs. It also looks like it depends on something local. If it doesn't use any variable from the function around it, move it out. Then it's created once, and the reader can see that it stands alone.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/consistent-function-scoping" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/consistent-function-scoping" = ["error", {
+  checkArrowFunctions = true,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+export function totalPrice(items) {
+  function withTax(price) {
+    return price * 1.2;
+  }
+
+  return items.reduce((sum, item) => sum + withTax(item.price), 0);
+}
+```
+
+Not reported:
+
+```js
+function withTax(price) {
+  return price * 1.2;
+}
+
+export function totalPrice(items) {
+  return items.reduce((sum, item) => sum + withTax(item.price), 0);
+}
+```
+
+This one needs to stay where it is, because it reads `rate`:
+
+```js
+export function totalPrice(items, rate) {
+  function withTax(price) {
+    return price * rate;
+  }
+
+  return items.reduce((sum, item) => sum + withTax(item.price), 0);
+}
+```
+
+So does an arrow function that uses `this` from the function around it:
+
+```js
+export class Timer {
+  start() {
+    const tick = () => this.update();
+    setInterval(tick, 1000);
+  }
+}
+```
+
+These aren't checked at all: a function that's returned or passed straight to a call, a function in a React hook's callback, and a function declaration directly in an immediately invoked function.
+
+```js
+export function createCounter() {
+  return function next(count) {
+    return count + 1;
+  };
+}
+
+export function useTitle(title) {
+  useEffect(() => {
+    const trim = text => text.trim();
+    document.title = trim(title);
+  }, [title]);
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `checkArrowFunctions` | `true` | Also check arrow functions. Set it to `false` to check only functions written with `function`. |
+
+```js
+export function totalPrice(items) {
+  const withTax = price => price * 1.2;
+  return items.reduce((sum, item) => sum + withTax(item.price), 0);
+}
+```
+
+```js
+export function totalPrice(items) {
+  const withTax = price => price * 1.2;
+  return items.reduce((sum, item) => sum + withTax(item.price), 0);
+}
+```

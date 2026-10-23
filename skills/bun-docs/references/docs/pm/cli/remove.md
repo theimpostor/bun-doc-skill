@@ -115,6 +115,11 @@ Provide a Certificate Authority signing certificate
 Type: `string`
 Same as `--ca`, but as a file path to the certificate
 
+### `--use-system-ca`
+
+Type: `boolean`
+Use the system's trusted certificate authorities
+
 ### `--registry`
 
 Type: `string`
@@ -125,8 +130,8 @@ Use a specific registry by default, overriding `.npmrc`, `bunfig.toml` and envir
 ### `--dry-run`
 
 Type: `boolean`
-Resolve the change but don't remove packages, update `package.json`, or save a lockfile (the project's own
-lifecycle scripts still run)
+Resolve the change but don't remove packages, update `package.json`, save a lockfile, or run the project's
+lifecycle scripts
 
 ### `--force`
 
@@ -196,6 +201,16 @@ Install globally. Alias: `-g`
 Type: `string`
 Set a specific cwd
 
+### `--env-file`
+
+Type: `string`
+Load environment variables from the specified file(s)
+
+### `--no-env-file`
+
+Type: `boolean`
+Disable automatic loading of .env files
+
 ### Advanced & Performance
 
 ### `--backend`
@@ -206,5 +221,5 @@ macOS), `hardlink` (default on Linux and Windows), `symlink`, `copyfile`
 
 ### `--network-concurrency`
 
-Type: `number`; Default: `48`
-Maximum number of concurrent network requests (default 48)
+Type: `number`; Default: `64`
+Maximum number of concurrent network requests (default 64)

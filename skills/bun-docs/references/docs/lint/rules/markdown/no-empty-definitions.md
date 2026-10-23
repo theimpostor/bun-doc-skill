@@ -1,0 +1,78 @@
+# markdown/no-empty-definitions
+Source: https://bun.com/docs/lint/rules/markdown/no-empty-definitions
+
+Disallow empty definitions
+
+
+A definition whose URL is `<>` or `#` is a placeholder that nobody came back to. Every link that uses it leads nowhere. In `markdown/gfm`, a footnote definition with nothing in it, or with nothing but HTML comments, is reported too.
+
+
+## Configure
+
+Off by default. It needs an ESLint config that says which files are in the language:
+
+
+**File:** `eslint.config.js`
+```js
+import markdown from "@eslint/markdown";
+
+export default [
+  {
+    files: ["**/*.md"],
+    plugins: { markdown },
+    language: "markdown/commonmark",
+    rules: { "markdown/no-empty-definitions": "error" },
+  },
+];
+```
+
+It also works with `markdown/gfm`.
+
+
+## Examples
+
+Reported:
+
+
+```md
+Read the [guide] and the [reference].
+
+[guide]: <>
+[reference]: #
+```
+
+
+```md
+It is fast.[^1]
+
+[^1]:
+```
+
+Not reported:
+
+
+```md
+Read the [guide].
+
+[guide]: https://example.com/guide
+```
+
+## Options
+
+| Option                     | Default  | What it does                                 |
+| -------------------------- | -------- | -------------------------------------------- |
+| `allowDefinitions`         | `["//"]` | Labels whose definition may be empty.        |
+| `allowFootnoteDefinitions` | `[]`     | Footnote labels whose definition may be empty. |
+| `checkFootnoteDefinitions` | `true`   | Check footnote definitions too.              |
+
+`[//]: # (text)` is a common way to write a comment, which is why `//` is allowed:
+
+
+```md
+[//]: # (This is a comment)
+```
+
+
+```md
+[todo]: #
+```

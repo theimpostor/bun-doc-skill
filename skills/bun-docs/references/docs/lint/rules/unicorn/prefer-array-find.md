@@ -1,0 +1,56 @@
+# unicorn/prefer-array-find
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-array-find
+
+Require `.find()` or `.findLast()` instead of taking one element from `.filter()`
+
+
+`.filter()` tests every element and builds a new array. If you only take the first or the last match from it, the rest of that work is thrown away. `.find()` and `.findLast()` stop at the match and return it.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-array-find" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const admin = users.filter(user => user.isAdmin)[0];
+const first = users.filter(user => user.isActive).shift();
+const [owner] = users.filter(user => user.isOwner);
+const newest = users.filter(user => user.isActive).at(-1);
+const lastGuest = users.filter(user => user.isGuest).pop();
+```
+
+Not reported:
+
+```js
+const admin = users.find(user => user.isAdmin);
+const first = users.find(user => user.isActive);
+const owner = users.find(user => user.isOwner);
+const newest = users.findLast(user => user.isActive);
+const lastGuest = users.findLast(user => user.isGuest);
+```
+
+A variable that holds the result of `.filter()` is reported too, if you only read its first element:
+
+```js
+const admins = users.filter(user => user.isAdmin);
+notify(admins[0]);
+```
+
+If you use the variable in any other way, it's fine:
+
+```js
+const admins = users.filter(user => user.isAdmin);
+notify(admins[0]);
+console.log(admins.length);
+```

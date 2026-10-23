@@ -1,0 +1,84 @@
+# bun/no-env-at-module-scope
+Source: https://bun.com/docs/lint/rules/bun/no-env-at-module-scope
+
+Disallow reading environment variables as soon as the module is loaded
+
+
+A variable that's read at the top level of a file is read once, when the file is first imported. A test that sets `process.env.API_URL` after the import has no effect, and neither does code that loads the environment later. The module's behavior then depends on import order. Read the variable in the function that needs it.
+
+The rule knows `process.env`, `Bun.env`, `import.meta.env`, and `env` imported from `node:process`. Assigning to a variable or deleting one isn't reported.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun/no-env-at-module-scope" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun/no-env-at-module-scope" = ["error", {
+  allow = ["NODE_ENV"],
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const apiUrl = process.env.API_URL;
+
+export function fetchUser(id) {
+  return fetch(`${apiUrl}/users/${id}`);
+}
+```
+
+```js
+import { env } from "node:process";
+
+const { API_URL, API_KEY } = Bun.env;
+const settings = { ...import.meta.env };
+const port = Number(env.PORT);
+```
+
+Not reported:
+
+```js
+export function fetchUser(id) {
+  return fetch(`${process.env.API_URL}/users/${id}`);
+}
+```
+
+```js
+process.env.TZ = "UTC";
+
+const isProduction = process.env.NODE_ENV === "production";
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `allow` | `["NODE_ENV"]` | Names of variables that can be read at the top level. It replaces the default list. |
+
+```js
+const isCI = process.env.CI === "true";
+const { NODE_ENV, CI } = process.env;
+```
+
+```js
+const isProduction = process.env.NODE_ENV === "production";
+```
+
+## When not to use it
+
+A file like `env.ts` or `config.ts` that reads and checks the environment once at startup is doing this on purpose. Turn the rule off for that file.

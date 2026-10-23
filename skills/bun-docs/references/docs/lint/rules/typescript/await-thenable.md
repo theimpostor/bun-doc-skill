@@ -1,0 +1,79 @@
+# @typescript-eslint/await-thenable
+Source: https://bun.com/docs/lint/rules/typescript/await-thenable
+
+Disallow `await` on a value that is not a promise
+
+
+`await` on a value that has no `then` method gives back the same value one tick later. It's usually a mistake. Either the function was never async, or you forgot to call it.
+
+The same goes for `for await...of` over something that isn't async iterable, `await using` with something that isn't async disposable, and values that aren't promises in the array passed to `Promise.all`, `Promise.allSettled`, `Promise.any`, or `Promise.race`.
+
+`bun lint --type-aware` turns this rule on in TypeScript files.
+
+
+## Configure
+
+Off by default. This rule needs types, so turning it on makes `bun lint` type check your code first.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/await-thenable" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+function readConfig(): string {
+  return "{}";
+}
+
+const config = await readConfig();
+```
+
+```ts
+const ports = [3000, 3001];
+
+for await (const port of ports) {
+  console.log(port);
+}
+```
+
+```ts
+async function load(id: number): Promise<string> {
+  return String(id);
+}
+
+await Promise.all([load(1), 2]);
+```
+
+Not reported:
+
+```ts
+async function readConfig(): Promise<string> {
+  return "{}";
+}
+
+const config = await readConfig();
+```
+
+```ts
+const ports = [3000, 3001];
+
+for (const port of ports) {
+  console.log(port);
+}
+```
+
+You can await a value that may or may not be a promise, and you can await `any` and `unknown`:
+
+```ts
+async function resolve(value: string | Promise<string>, other: unknown) {
+  return [await value, await other];
+}
+```
+
+`await expect(promise).resolves.toBe(1)` and `await expect(promise).rejects.toThrow()` from `bun:test` aren't reported either, even though their declared return type is `void`.

@@ -1,0 +1,49 @@
+# unicorn/prefer-math-trunc
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-math-trunc
+
+Require `Math.trunc()` instead of bitwise tricks to drop the fraction of a number
+
+
+`x | 0` and `~~x` drop the fraction of a number as a side effect of converting it to a 32-bit integer. The result is wrong for large numbers. For example, `2147483648.5 | 0` is `-2147483648`. `Math.trunc()` says what it does and works for every number.
+
+The rule reports `~~x`, and `|`, `^`, `>>` and `<<` with `0` on the right, including the assignment forms such as `x |= 0`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-math-trunc" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const seconds = (elapsed / 1000) | 0;
+const page = ~~(index / pageSize);
+total >>= 0;
+```
+
+Not reported:
+
+```js
+const seconds = Math.trunc(elapsed / 1000);
+const page = Math.trunc(index / pageSize);
+total = Math.trunc(total);
+```
+
+`>>> 0` isn't reported, because it converts to an unsigned integer:
+
+```js
+const unsigned = hash >>> 0;
+```
+
+## When not to use it
+
+Hash functions and similar code use `| 0` on purpose to wrap a value to 32 bits. `Math.trunc()` doesn't wrap. It also keeps `NaN` and `Infinity`, which `| 0` turns into `0`.

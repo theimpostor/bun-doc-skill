@@ -1,0 +1,46 @@
+# unicorn/prefer-number-coercion
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-number-coercion
+
+Require `Number()` instead of `parseFloat()` and base-10 `parseInt()`
+
+
+`parseFloat` and `parseInt` read as many characters as they can and ignore the rest, so `parseFloat("12px")` is `12` and `parseInt("1e3", 10)` is `1`. `Number()` converts the whole string, so bad input gives `NaN`, which you can check for.
+
+The rule reports `parseFloat(value)` and `parseInt(value, 10)`, including when they're written as `Number.parseFloat` and `Number.parseInt`. `parseInt` with no radix or with another radix isn't reported.
+
+`--fix` doesn't change the code, because the result can differ. `--fix-suggestions` rewrites it to `Number(value)`, or to `Math.trunc(Number(value))` for `parseInt`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-number-coercion" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const price = parseFloat(input.value);
+const quantity = Number.parseInt(form.quantity, 10);
+```
+
+Not reported:
+
+```js
+const price = Number(input.value);
+const quantity = Math.trunc(Number(form.quantity));
+
+const color = parseInt(hex, 16);
+const page = parseInt(query.page);
+```
+
+## When not to use it
+
+The results differ. `Number("")` is `0` where `parseFloat("")` is `NaN`, and `Number("12px")` is `NaN`. If you parse strings with a unit or other text after the number, keep `parseFloat`.

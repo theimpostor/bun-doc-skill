@@ -1,0 +1,75 @@
+# react/button-has-type
+Source: https://bun.com/docs/lint/rules/react/button-has-type
+
+Require an explicit, valid `type` on every `button` element
+
+
+A `<button>` without a `type` is a submit button. Inside a `<form>`, clicking it submits the form and reloads the page, even if the button was only meant to open a menu.
+
+The rule needs to read the value from the code, so it must be a string or a ternary between two strings. `React.createElement("button", ...)` is checked too.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/button-has-type" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/button-has-type" = ["error", {
+  button = true,
+  submit = true,
+  reset = true,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+<form>
+  <button onClick={openMenu}>Options</button>
+</form>;
+```
+
+```jsx
+const close = <button type="close">Close</button>;
+const save = <button type={kind}>Save</button>;
+```
+
+```js
+React.createElement("button", { onClick: openMenu }, "Options");
+```
+
+Not reported:
+
+```jsx
+<form>
+  <button type="button" onClick={openMenu}>Options</button>
+  <button type={isLast ? "submit" : "button"}>Next</button>
+</form>;
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `button` | `true` | Allow `type="button"`. |
+| `submit` | `true` | Allow `type="submit"`. |
+| `reset` | `true` | Allow `type="reset"`. |
+
+Set one to `false` to forbid that type:
+
+```jsx
+<button type="reset">Clear</button>;
+```

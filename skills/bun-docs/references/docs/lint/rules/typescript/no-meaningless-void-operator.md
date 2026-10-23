@@ -1,0 +1,77 @@
+# @typescript-eslint/no-meaningless-void-operator
+Source: https://bun.com/docs/lint/rules/typescript/no-meaningless-void-operator
+
+Disallow `void` in front of an expression that has no value to discard
+
+
+`void` in front of a call says "this returns something, and I'm ignoring it on purpose". If the call returns nothing, or the thing after `void` isn't a call at all, there's nothing to ignore, and the reader looks for a return value that isn't there.
+
+`void 0`, `void` in front of a promise and `void` in front of an assignment are allowed.
+
+`--fix` removes the `void`. In front of something that isn't a call, it only does that when the `void` expression is a whole statement.
+
+
+## Configure
+
+Off by default. This rule needs types, so turning it on makes `bun lint` type check your code first.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/no-meaningless-void-operator" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/no-meaningless-void-operator" = ["error", {
+  checkNever = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+function log(message: string): void {
+  console.log(message);
+}
+
+void log("saved");
+
+const count = 3;
+void count;
+```
+
+Not reported:
+
+```ts
+function log(message: string): void {
+  console.log(message);
+}
+
+async function save(): Promise<void> {}
+
+log("saved");
+void save();
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `checkNever` | `false` | Also report `void` in front of a call that returns `never`. `--fix` leaves these alone. |
+
+Reported with `checkNever: true`:
+
+```ts
+function fail(message: string): never {
+  throw new Error(message);
+}
+
+void fail("no config");
+```

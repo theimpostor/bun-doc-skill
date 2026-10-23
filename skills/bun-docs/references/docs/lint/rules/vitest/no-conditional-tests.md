@@ -1,0 +1,73 @@
+# vitest/no-conditional-tests
+Source: https://bun.com/docs/lint/rules/vitest/no-conditional-tests
+
+Disallow `test` and `describe` inside an `if` statement
+
+
+A test declared inside an `if` only exists when the condition is true. When it's false, the test is missing from the output, so nobody sees that it didn't run.
+
+Use `test.runIf(condition)` or `test.skipIf(condition)`. The test is always declared, and it's shown as skipped when it doesn't run. `describe` has the same two methods.
+
+The rule is about the `if` around a test. For an `if` inside a test, see `vitest/no-conditional-in-test`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"vitest/no-conditional-tests" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { expect, test } from "vitest";
+import { readFile } from "node:fs/promises";
+
+if (process.platform === "linux") {
+  test("reads the kernel version", async () => {
+    expect(await readFile("/proc/version", "utf8")).toContain("Linux");
+  });
+}
+```
+
+```ts
+import { describe, expect, test } from "vitest";
+import { connect } from "./database";
+
+describe("database", () => {
+  if (process.env.DATABASE_URL) {
+    test("connects", async () => {
+      expect(await connect()).toBeDefined();
+    });
+  }
+});
+```
+
+Not reported:
+
+```ts
+import { expect, test } from "vitest";
+import { readFile } from "node:fs/promises";
+
+test.runIf(process.platform === "linux")("reads the kernel version", async () => {
+  expect(await readFile("/proc/version", "utf8")).toContain("Linux");
+});
+```
+
+```ts
+import { describe, expect, test } from "vitest";
+import { connect } from "./database";
+
+describe.skipIf(!process.env.DATABASE_URL)("database", () => {
+  test("connects", async () => {
+    expect(await connect()).toBeDefined();
+  });
+});
+```

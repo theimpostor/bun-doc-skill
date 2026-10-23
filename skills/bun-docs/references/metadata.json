@@ -1,18 +1,21 @@
 {
-  "requested_url": "https://github.com/oven-sh/bun/tree/bun-v1.4.3/docs",
-  "resolved_url": "https://github.com/oven-sh/bun/tree/bun-v1.4.3/docs",
-  "generated_at": "2026-10-11T19:12:51.307640+00:00",
-  "page_count": 323,
+  "requested_url": "https://github.com/oven-sh/bun/tree/bun-v1.4.4/docs",
+  "resolved_url": "https://github.com/oven-sh/bun/tree/bun-v1.4.4/docs",
+  "generated_at": "2026-10-23T20:18:24.717033+00:00",
+  "page_count": 1380,
   "sections": [
     "bundler",
+    "format",
     "getting-started",
     "guides-binary",
     "guides-deployment",
     "guides-ecosystem",
+    "guides-format",
     "guides-html-rewriter",
     "guides-http",
     "guides-index",
     "guides-install",
+    "guides-lint",
     "guides-process",
     "guides-read-file",
     "guides-runtime",
@@ -21,6 +24,7 @@
     "guides-util",
     "guides-websocket",
     "guides-write-file",
+    "lint",
     "package-manager",
     "package-manager-cli",
     "project",
@@ -30,5 +34,5 @@
     "runtime-templating",
     "test"
   ],
-  "source_ref": "bun-v1.4.3"
+  "source_ref": "bun-v1.4.4"
 }

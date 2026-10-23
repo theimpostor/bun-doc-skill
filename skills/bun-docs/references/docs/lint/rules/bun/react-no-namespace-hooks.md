@@ -1,0 +1,64 @@
+# bun/react-no-namespace-hooks
+Source: https://bun.com/docs/lint/rules/bun/react-no-namespace-hooks
+
+Require React hooks to be imported by name: `useState()`, not `React.useState()`
+
+
+`React.useState()` and `useState()` are the same function. With both spellings in one project, the same code looks different from file to file. This rule keeps the short one.
+
+It checks `React` from `import React from "react"` and from `import * as React from "react"`.
+
+`--fix` removes `React.` and imports the hook by name from `"react"`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun/react-no-namespace-hooks" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+import React from "react";
+
+function Counter() {
+  const [count, setCount] = React.useState(0);
+  React.useEffect(() => {
+    document.title = `${count} clicks`;
+  }, [count]);
+
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+Not reported:
+
+```jsx
+import { useEffect, useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    document.title = `${count} clicks`;
+  }, [count]);
+
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+Only hooks are reported. Other members of `React` are allowed:
+
+```jsx
+import * as React from "react";
+
+const Settings = React.lazy(() => import("./Settings"));
+const Row = React.memo(({ label }) => <li>{label}</li>);
+```

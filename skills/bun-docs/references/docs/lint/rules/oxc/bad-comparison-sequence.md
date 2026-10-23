@@ -1,0 +1,45 @@
+# oxc/bad-comparison-sequence
+Source: https://bun.com/docs/lint/rules/oxc/bad-comparison-sequence
+
+Disallow chained comparisons such as `a < b < c`
+
+
+`min < value < max` doesn't test whether `value` is between the two. JavaScript evaluates `min < value` first, gets `true` or `false`, and compares that with `max`. `1 < 5 < 3` is `true < 3`, which is `true`. In the same way, `a === b === c` compares `c` with a boolean.
+
+The rule reports two relational operators in a row (`<`, `<=`, `>`, `>=`) or two equality operators in a row (`==`, `!=`, `===`, `!==`). A mix of both kinds, such as `a < b === c < d`, isn't reported. Neither is a left side in parentheses, because that shows you mean to compare the boolean.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"oxc/bad-comparison-sequence" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+if (min < value < max) {
+  accept(value);
+}
+
+const allEqual = width === height === depth;
+```
+
+Not reported:
+
+```js
+if (min < value && value < max) {
+  accept(value);
+}
+
+const allEqual = width === height && height === depth;
+const sameAnswer = (left === expected) === (right === expected);
+const sameDirection = start < end === from < to;
+```

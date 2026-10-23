@@ -1,0 +1,82 @@
+# markdown/heading-increment
+Source: https://bun.com/docs/lint/rules/markdown/heading-increment
+
+Enforce heading levels increment by one
+
+
+A heading that jumps from level 1 to level 3 leaves a gap in the outline. Screen readers and generated tables of contents rely on the levels, so a reader can't tell whether a section is missing.
+
+Going back up by any number of levels is fine.
+
+
+## Configure
+
+Off by default. It needs an ESLint config that says which files are in the language:
+
+
+**File:** `eslint.config.js`
+```js
+import markdown from "@eslint/markdown";
+
+export default [
+  {
+    files: ["**/*.md"],
+    plugins: { markdown },
+    language: "markdown/commonmark",
+    rules: { "markdown/heading-increment": "error" },
+  },
+];
+```
+
+It also works with `markdown/gfm`.
+
+
+## Examples
+
+Reported:
+
+
+```md
+# Install
+
+### With Homebrew
+```
+
+Not reported:
+
+
+```md
+# Install
+
+## With Homebrew
+
+### On Apple silicon
+
+# Usage
+```
+
+## Options
+
+| Option             | Default                                           | What it does                                                                                                                              |
+| ------------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `frontmatterTitle` | a pattern that matches `title:`, `title =`, `"title":` | A regular expression. If a line of the front matter matches it, the front matter counts as the level 1 heading. `""` turns that off. |
+
+Front matter is only parsed if `languageOptions.frontmatter` is set to the format that the files use.
+
+
+```md
+---
+title: Install
+---
+
+### With Homebrew
+```
+
+
+```md
+---
+title: Install
+---
+
+### With Homebrew
+```

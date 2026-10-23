@@ -1,0 +1,112 @@
+# import/newline-after-import
+Source: https://bun.com/docs/lint/rules/import/newline-after-import
+
+Require an empty line between the last import and the code that follows
+
+
+An empty line after the imports shows where the dependency list ends and the file's code begins.
+
+The rule checks the last `import` in each run of imports, and does the same for top-level `require()` calls. A `require()` inside a function or a block isn't checked.
+
+`--fix` adds the missing empty lines.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/newline-after-import" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/newline-after-import" = ["error", {
+  count = 1,
+  exactCount = false,
+  considerComments = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+const root = join(import.meta.dirname, "..");
+```
+
+```js
+const { join } = require("node:path");
+const root = join(__dirname, "..");
+```
+
+Not reported:
+
+```js
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
+const root = join(import.meta.dirname, "..");
+```
+
+```js
+const { join } = require("node:path");
+
+const root = join(__dirname, "..");
+
+function loadPlugin(name) {
+  const plugin = require("./plugins.js");
+  return plugin[name];
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `count` | `1` | The minimum number of empty lines. |
+| `exactCount` | `false` | Also report more than `count` empty lines. `--fix` doesn't remove them. |
+| `considerComments` | `false` | Require the empty lines before a comment that follows the imports. By default a comment can come right after them, and only the distance to the next statement counts. |
+
+```js
+import { join } from "node:path";
+
+const root = join(import.meta.dirname, "..");
+```
+
+```js
+import { join } from "node:path";
+
+
+const root = join(import.meta.dirname, "..");
+```
+
+```js
+import { join } from "node:path";
+
+
+const root = join(import.meta.dirname, "..");
+```
+
+```js
+import { join } from "node:path";
+// The root of the repository.
+
+const root = join(import.meta.dirname, "..");
+```
+
+```js
+import { join } from "node:path";
+// The root of the repository.
+
+const root = join(import.meta.dirname, "..");
+```
