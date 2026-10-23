@@ -1,0 +1,66 @@
+# @next/next/inline-script-id
+Source: https://bun.com/docs/lint/rules/nextjs/inline-script-id
+
+Require an `id` on `next/script` components that have inline content
+
+
+Next.js uses the `id` of an inline `<Script>` to keep track of it, so the code runs once instead of again after each navigation. A script with a `src` is tracked by its URL. An inline script doesn't have one, so it needs an `id`.
+
+A script is inline if it has children or a `dangerouslySetInnerHTML` prop. The rule follows the name you give to the default import of `next/script`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@next/next/inline-script-id" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+import Script from "next/script";
+
+export default function Page() {
+  return <Script>{`window.startedAt = Date.now();`}</Script>;
+}
+```
+
+```jsx
+import Script from "next/script";
+
+export default function Page() {
+  return <Script dangerouslySetInnerHTML={{ __html: "window.startedAt = Date.now();" }} />;
+}
+```
+
+Not reported:
+
+```jsx
+import Script from "next/script";
+
+export default function Page() {
+  return (
+    <>
+      <Script id="started-at">{`window.startedAt = Date.now();`}</Script>
+      <Script src="https://example.com/widget.js" />
+    </>
+  );
+}
+```
+
+If you spread a variable into the props, the `id` might be in there, so the element isn't reported:
+
+```jsx
+import Script from "next/script";
+
+export default function Tracker(props) {
+  return <Script {...props}>{`window.startedAt = Date.now();`}</Script>;
+}
+```

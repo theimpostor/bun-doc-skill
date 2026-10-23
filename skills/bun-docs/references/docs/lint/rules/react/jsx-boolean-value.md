@@ -1,0 +1,95 @@
+# react/jsx-boolean-value
+Source: https://bun.com/docs/lint/rules/react/jsx-boolean-value
+
+Enforce one way to write boolean attributes in JSX: `disabled` or `disabled={true}`
+
+
+In JSX, `<input disabled />` and `<input disabled={true} />` mean the same thing. This rule makes your codebase stick to one of them. By default it wants the short form.
+
+`--fix` removes or adds the `={true}`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-boolean-value" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-boolean-value" = [
+  "error",
+  "never", # "always" or "never"
+  {
+    always = [], # list of strings
+    assumeUndefinedIsFalse = false,
+  },
+]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+const field = <input type="checkbox" checked={true} />;
+```
+
+Not reported:
+
+```jsx
+const field = <input type="checkbox" checked />;
+
+const other = <input type="checkbox" checked={false} disabled={isLocked} />;
+```
+
+## Options
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-boolean-value" = ["error", "always"]
+```
+
+| Option | What it does |
+| --- | --- |
+| `"never"` (default) | Report `checked={true}`. |
+| `"always"` | Report `checked` without a value. |
+
+```jsx
+const field = <input type="checkbox" checked />;
+```
+
+```jsx
+const field = <input type="checkbox" checked={true} />;
+```
+
+The second option is an object:
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `always` | `[]` | With `"never"`: attributes that must have `={true}`. |
+| `never` | `[]` | With `"always"`: attributes that must not have `={true}`. |
+| `assumeUndefinedIsFalse` | `false` | Also report `={false}` on an attribute that must not have a value. `--fix` removes the whole attribute. |
+
+```jsx
+const tab = <Tab selected closable={true} />;
+```
+
+```jsx
+const tab = <Tab selected={true} closable />;
+```
+
+```jsx
+const tab = <Tab closable={false} />;
+```
+
+Only turn on `assumeUndefinedIsFalse` if your components treat a missing prop like `false`. A prop that defaults to `true` changes meaning when the attribute is removed.

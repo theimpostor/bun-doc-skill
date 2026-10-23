@@ -1,0 +1,43 @@
+# unicorn/prefer-logical-operator-over-ternary
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-logical-operator-over-ternary
+
+Require `||` or `??` instead of a ternary that repeats its condition
+
+
+`user.name ? user.name : "Anonymous"` writes `user.name` twice and evaluates it twice. `user.name || "Anonymous"` gives the same result and evaluates it once.
+
+The rule reports `a ? a : b` and `!a ? b : a`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-logical-operator-over-ternary" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const name = user.name ? user.name : "Anonymous";
+const port = !config.port ? 3000 : config.port;
+```
+
+Not reported:
+
+```js
+const name = user.name || "Anonymous";
+const port = config.port || 3000;
+```
+
+If the fallback is only meant for `null` and `undefined`, so that `0` and `""` are kept, use `??`:
+
+```js
+const port = config.port ?? 3000;
+```

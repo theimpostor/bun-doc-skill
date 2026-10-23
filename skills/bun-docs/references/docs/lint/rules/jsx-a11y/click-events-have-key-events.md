@@ -1,0 +1,44 @@
+# jsx-a11y/click-events-have-key-events
+Source: https://bun.com/docs/lint/rules/jsx-a11y/click-events-have-key-events
+
+Require a keyboard handler next to `onClick` on elements that are not controls
+
+
+A `div` with an `onClick` only works with a mouse. People who use a keyboard, a switch or a screen reader can't trigger it, because Enter and Space do nothing on a `div`.
+
+The best fix is usually a `button`. It takes focus and turns Enter and Space into a click without any extra code. If you need another element, add `onKeyDown`, `onKeyUp` or `onKeyPress`.
+
+The rule skips components, controls such as `button`, `input`, `select` and `a` with an `href`, elements with `aria-hidden`, and elements with `role="presentation"` or `role="none"`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jsx-a11y/click-events-have-key-events" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+const row = <div onClick={openDetails}>{item.name}</div>;
+const more = <a onClick={loadMore}>Load more</a>;
+```
+
+Not reported:
+
+```jsx
+const row = <button onClick={openDetails}>{item.name}</button>;
+
+const card = (
+  <div role="button" tabIndex={0} onClick={openDetails} onKeyDown={openOnEnter}>
+    {item.name}
+  </div>
+);
+```

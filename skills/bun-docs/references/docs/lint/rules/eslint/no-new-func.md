@@ -1,0 +1,43 @@
+# no-new-func
+Source: https://bun.com/docs/lint/rules/eslint/no-new-func
+
+Disallow creating functions from strings with `Function`
+
+
+`Function` compiles a string into code at runtime, like `eval`. If any part of the string comes from a user, they can run whatever they like. The code in the string is also invisible to the linter, the type checker and the bundler, and a Content Security Policy without `unsafe-eval` blocks it.
+
+The rule reports `new Function(..)`, `Function(..)`, `Function.call(..)`, `Function.apply(..)` and `Function.bind(..)`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-new-func" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const add = new Function("a", "b", "return a + b");
+```
+
+```js
+const run = Function.apply(null, ["input", userCode]);
+```
+
+Not reported:
+
+```js
+const add = (a, b) => a + b;
+
+if (callback instanceof Function) {
+  callback();
+}
+```

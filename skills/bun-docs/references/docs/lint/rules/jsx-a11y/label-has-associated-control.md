@@ -1,0 +1,136 @@
+# jsx-a11y/label-has-associated-control
+Source: https://bun.com/docs/lint/rules/jsx-a11y/label-has-associated-control
+
+Require every `<label>` to have text and a form control it belongs to
+
+
+A screen reader announces a form field by reading its label. A `<label>` that isn't tied to a field is read as loose text, and clicking it doesn't focus anything. A `<label>` without text leaves the field without a name.
+
+Tie a label to its control with `htmlFor`, or wrap the control in the label. By default either one is enough.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jsx-a11y/label-has-associated-control" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jsx-a11y/label-has-associated-control" = ["error", {
+  assert = "either",
+  depth = 2,
+  labelComponents = [], # list of strings
+  labelAttributes = [], # list of strings
+  controlComponents = [], # list of strings
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+const form = (
+  <form>
+    <label>Email</label>
+    <input type="email" id="email" />
+
+    <label htmlFor="password" />
+    <input type="password" id="password" />
+  </form>
+);
+```
+
+Not reported:
+
+```jsx
+const form = (
+  <form>
+    <label htmlFor="email">Email</label>
+    <input type="email" id="email" />
+
+    <label>
+      Password
+      <input type="password" />
+    </label>
+  </form>
+);
+```
+
+An expression such as `{children}` could be text or a control, so it counts as both:
+
+```jsx
+const Field = ({ children }) => <label>{children}</label>;
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `assert` | `"either"` | How the label must be tied to its control: `"htmlFor"`, `"nesting"`, `"both"`, or `"either"`. |
+| `depth` | `2` | How many levels of children to search for the text and the control. At most 25. |
+| `labelComponents` | `[]` | Components to check as if they were `<label>`. |
+| `labelAttributes` | `[]` | Attributes that count as the label's text, in addition to `alt`, `aria-label` and `aria-labelledby`. |
+| `controlComponents` | `[]` | Components that count as a control, in addition to `input`, `meter`, `output`, `progress`, `select` and `textarea`. Globs such as `"*Field"` work. |
+
+With `"both"`, a label that only wraps its control is reported:
+
+```jsx
+const field = (
+  <label>
+    Password
+    <input type="password" />
+  </label>
+);
+```
+
+The rule doesn't find a control that's deeper than `depth`. This is reported by default and allowed with `depth: 3`:
+
+```jsx
+const field = (
+  <label>
+    Country
+    <div><span><select /></span></div>
+  </label>
+);
+```
+
+```jsx
+const field = (
+  <label>
+    Country
+    <div><span><select /></span></div>
+  </label>
+);
+```
+
+A component inside a label doesn't count as a control unless you list it:
+
+```jsx
+const field = <label>Email <TextField type="email" /></label>;
+```
+
+```jsx
+const field = <label>Email <TextField type="email" /></label>;
+```
+
+Your own label components are only checked if you list them:
+
+```jsx
+const field = <FieldLabel>Email</FieldLabel>;
+```
+
+An attribute you list in `labelAttributes` counts as the text:
+
+```jsx
+const field = <label htmlFor="email" text="Email" />;
+```

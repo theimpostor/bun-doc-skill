@@ -1,0 +1,41 @@
+# unicorn/prefer-math-min-max
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-math-min-max
+
+Require `Math.min()` and `Math.max()` instead of a ternary that picks the smaller or larger value
+
+
+To read `size > 100 ? 100 : size`, you have to work out which way the comparison goes and which branch wins. `Math.min(size, 100)` says it by name.
+
+The rule only reports a variable compared with a number, such as `100` or `-1`. Two variables could hold strings, dates or bigints, and `Math.min()` would turn those into numbers or throw.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-math-min-max" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const width = size > 100 ? 100 : size;
+const volume = level < 0 ? 0 : level;
+```
+
+Not reported:
+
+```js
+const width = Math.min(size, 100);
+const volume = Math.max(level, 0);
+```
+
+```js
+const latest = first > second ? first : second;
+```

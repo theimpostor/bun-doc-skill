@@ -1,0 +1,53 @@
+# no-self-compare
+Source: https://bun.com/docs/lint/rules/eslint/no-self-compare
+
+Disallow comparing a value with itself
+
+
+`user.id === user.id` gives the same answer every time, so the condition around it doesn't test anything. It's almost always a typo for a comparison with another value.
+
+The rule checks `==`, `===`, `!=`, `!==`, `<`, `>`, `<=` and `>=`, and reports when both sides are written the same way.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-self-compare" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+function isSameUser(user, other) {
+  return user.id === user.id;
+}
+```
+
+Not reported:
+
+```js
+function isSameUser(user, other) {
+  return user.id === other.id;
+}
+```
+
+`value !== value` is `true` only for `NaN`. It's reported too. Say what you mean instead:
+
+```js
+if (price !== price) {
+  price = 0;
+}
+```
+
+```js
+if (Number.isNaN(price)) {
+  price = 0;
+}
+```

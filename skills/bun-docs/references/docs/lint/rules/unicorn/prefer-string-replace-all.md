@@ -1,0 +1,41 @@
+# unicorn/prefer-string-replace-all
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-string-replace-all
+
+Require `replaceAll()` instead of `replace()` with a global regex
+
+
+`replace()` only replaces every match if the regex has the `g` flag, and one letter at the end of a pattern is easy to miss. `replaceAll()` says it in the name.
+
+The rule also reports a regex passed to `replaceAll()` when it only matches one fixed string, because a plain string does the same thing and doesn't need escaping.
+
+`--fix` renames the method, and turns the regex into a string when it matches one fixed string.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-string-replace-all" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const slug = title.replace(/\s+/g, "-");
+const path = name.replaceAll(/\./g, "/");
+```
+
+Not reported:
+
+```js
+const slug = title.replaceAll(/\s+/g, "-");
+const path = name.replaceAll(".", "/");
+
+const first = title.replace(/\s+/, "-");
+```

@@ -1,0 +1,82 @@
+# @typescript-eslint/consistent-indexed-object-style
+Source: https://bun.com/docs/lint/rules/typescript/consistent-indexed-object-style
+
+Require either `Record<K, V>` or an index signature, consistently
+
+
+`Record<string, number>` and `{ [key: string]: number }` describe the same object: any string key, with a number as its value. This rule picks one way to write it. By default it's `Record`.
+
+`--fix` rewrites the type to the other form where that's safe. A type alias can't be declared twice, so an interface whose name is declared again in the file is reported but not fixed. Other files add to an interface in a declaration file, a `namespace` or a `declare module` block, so only `--fix-dangerously` rewrites those.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"@typescript-eslint/consistent-indexed-object-style" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+# "record" or "index-signature"
+"@typescript-eslint/consistent-indexed-object-style" = ["error", "record"]
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+type Scores = { [player: string]: number };
+
+interface Prices {
+  [product: string]: number;
+}
+```
+
+A mapped type that doesn't use its key is also a `Record`:
+
+```ts
+type Flags = { [Name in "debug" | "verbose"]: boolean };
+```
+
+Not reported:
+
+```ts
+type Scores = Record<string, number>;
+type Prices = Record<string, number>;
+type Flags = Record<"debug" | "verbose", boolean>;
+```
+
+An index signature next to other members can't be a `Record`. Neither can a type that refers to itself, because a type alias for `Record` can't be circular:
+
+```ts
+interface Headers {
+  [name: string]: string;
+  host: string;
+}
+
+type Tree = { [name: string]: Tree };
+```
+
+## Options
+
+| Option | What it does |
+| --- | --- |
+| `"record"` (default) | Require `Record<K, V>`. |
+| `"index-signature"` | Require `{ [key: K]: V }`. |
+
+```ts
+type Scores = Record<string, number>;
+```
+
+```ts
+type Scores = { [player: string]: number };
+```

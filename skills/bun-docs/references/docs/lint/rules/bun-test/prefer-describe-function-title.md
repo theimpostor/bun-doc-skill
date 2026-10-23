@@ -1,0 +1,67 @@
+# bun:test/prefer-describe-function-title
+Source: https://bun.com/docs/lint/rules/bun-test/prefer-describe-function-title
+
+Require `describe(fn, ...)` instead of a string with the name of an imported function
+
+
+`describe` accepts a function or a class as its title and prints its name. A string that repeats the name isn't updated when you rename the function, so the test output keeps showing a name that no longer exists.
+
+The rule reports a `describe` title when it's a string equal to a name the file imports. A title like `slugify.name` is reported too. A name that's only imported as a type isn't reported, because there's no value to pass.
+
+`--fix-suggestions` replaces the title with the name. `--fix` doesn't, because the import might not be a function or a class.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun:test/prefer-describe-function-title" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { describe, expect, test } from "bun:test";
+import { slugify } from "./slugify";
+
+describe("slugify", () => {
+  test("replaces spaces", () => {
+    expect(slugify("a b")).toBe("a-b");
+  });
+});
+```
+
+```ts
+import { describe } from "bun:test";
+import { slugify } from "./slugify";
+
+describe(slugify.name, () => {});
+```
+
+Not reported:
+
+```ts
+import { describe, expect, test } from "bun:test";
+import { slugify } from "./slugify";
+
+describe(slugify, () => {
+  test("replaces spaces", () => {
+    expect(slugify("a b")).toBe("a-b");
+  });
+});
+
+describe("slugify with options", () => {});
+```
+
+```ts
+import { describe } from "bun:test";
+import type { Slug } from "./slugify";
+
+describe("Slug", () => {});
+```

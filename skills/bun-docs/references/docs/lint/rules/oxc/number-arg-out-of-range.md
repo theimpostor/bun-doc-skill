@@ -1,0 +1,62 @@
+# oxc/number-arg-out-of-range
+Source: https://bun.com/docs/lint/rules/oxc/number-arg-out-of-range
+
+Disallow out-of-range arguments to `toString`, `toFixed`, `toExponential`, and `toPrecision`
+
+
+These number methods throw a `RangeError` when the radix or the number of digits is out of range. `count.toString(1)` throws every time it runs.
+
+| Method | Allowed |
+| --- | --- |
+| `toString(radix)` | 2 to 36 |
+| `toFixed(digits)` | 0 to 20 |
+| `toExponential(digits)` | 0 to 20 |
+| `toPrecision(digits)` | 1 to 21 |
+
+Only a number written in the call is checked, not a variable and not a negative number such as `-1`. The rule doesn't use types, so it checks these method names on any object.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"oxc/number-arg-out-of-range" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const binary = count.toString(1);
+```
+
+```js
+const price = total.toFixed(101);
+const rounded = total.toPrecision(0);
+```
+
+Not reported:
+
+```js
+const binary = count.toString(2);
+const price = total.toFixed(2);
+const rounded = total.toPrecision(3);
+```
+
+```js
+const digits = 101;
+const price = total.toFixed(digits);
+```
+
+## When not to use it
+
+The limits on digits are stricter than current engines. Bun, Node.js, and browsers accept up to 100 digits, so this is reported even though it works:
+
+```js
+const exact = total.toFixed(30);
+```

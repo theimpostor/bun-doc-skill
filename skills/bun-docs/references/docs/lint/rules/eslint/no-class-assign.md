@@ -1,0 +1,47 @@
+# no-class-assign
+Source: https://bun.com/docs/lint/rules/eslint/no-class-assign
+
+Disallow assigning to the name of a class
+
+
+You can assign to a class declaration's name like a `let` variable. After that the class is gone, and every `new Logger()` and `instanceof Logger` in the file works with the new value. That's almost always a mistake.
+
+This rule is on by default in JavaScript files. It's off in TypeScript files, where TypeScript reports the same mistake.
+
+
+## Configure
+
+On by default as an error. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-class-assign" = "off" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+class Logger {}
+
+Logger = createLogger();
+```
+
+Not reported:
+
+```js
+class Logger {}
+
+const logger = createLogger();
+```
+
+A variable that holds a class expression is an ordinary variable:
+
+```js
+let Store = class {};
+
+Store = class extends Store {};
+```

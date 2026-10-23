@@ -1,0 +1,49 @@
+# vitest/prefer-todo
+Source: https://bun.com/docs/lint/rules/vitest/prefer-todo
+
+Require `test.todo` for tests that have no body yet
+
+
+A test with an empty body passes, so the summary counts a test you haven't written yet as one that works. Vitest counts a `test.todo` as todo, not as passed.
+
+A test with only a title is reported too, and so is an empty `test.skip`.
+
+`--fix` rewrites the call to `test.todo` and removes the empty function. It leaves a call with a comment in the function alone, because the comment would be lost.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"vitest/prefer-todo" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+import { test } from "vitest";
+
+test("rejects an expired token", () => {});
+
+test("refreshes the token");
+
+test.skip("logs out", function () {});
+```
+
+Not reported:
+
+```js
+import { expect, test } from "vitest";
+
+test.todo("rejects an expired token");
+
+test("accepts a valid token", () => {
+  expect(verify(token)).toBe(true);
+});
+```

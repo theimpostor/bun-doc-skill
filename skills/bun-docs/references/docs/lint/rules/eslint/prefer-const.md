@@ -1,0 +1,109 @@
+# prefer-const
+Source: https://bun.com/docs/lint/rules/eslint/prefer-const
+
+Require `const` for variables that are never reassigned
+
+
+`let` tells the reader that the variable changes later. If it never does, `const` says so, and an assignment added by mistake becomes an error.
+
+A variable that's declared without a value and assigned exactly once, in the same block, is reported too, because the declaration and the assignment can be one `const`.
+
+`--fix` changes `let` to `const` when every variable in the declaration has an initial value and can be `const`. It leaves an `export let` inside a `namespace` alone, because any file can assign to it as `Config.verbose = true`. `--fix-dangerously` changes that one too.
+
+This rule is on by default in TypeScript files.
+
+
+## Configure
+
+On by default as a warning. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"prefer-const" = "off" # or "error"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"prefer-const" = ["warn", {
+  destructuring = "any", # "any" or "all"
+  ignoreReadBeforeAssign = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+let total = items.length;
+console.log(total);
+
+for (let item of items) {
+  console.log(item);
+}
+
+let label;
+label = "Total";
+```
+
+Not reported:
+
+```js
+const total = items.length;
+const label = "Total";
+
+let count = 0;
+count += 1;
+
+// Assigned in another block, so it cannot be one `const`
+let timer;
+if (enabled) {
+  timer = start();
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `destructuring` | `"any"` | `"any"` reports each variable of a destructuring that can be `const`. `"all"` reports only if all of them can. |
+| `ignoreReadBeforeAssign` | `false` | Ignore a variable that's read in code written above its only assignment. |
+
+Here `id` never changes but `name` does. By default `id` is reported:
+
+```js
+let { id, name } = user;
+name = name.trim();
+```
+
+With `"all"` it isn't, because the whole declaration can't become `const`:
+
+```js
+let { id, name } = user;
+name = name.trim();
+```
+
+`timer` is assigned once, so it's reported by default:
+
+```js
+let timer;
+function stop() {
+  clearTimeout(timer);
+}
+timer = setTimeout(stop, 100);
+```
+
+But `stop` reads `timer` above the line that assigns it, so the declaration can't move down to the assignment. `ignoreReadBeforeAssign` allows this:
+
+```js
+let timer;
+function stop() {
+  clearTimeout(timer);
+}
+timer = setTimeout(stop, 100);
+```

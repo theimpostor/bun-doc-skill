@@ -1,0 +1,105 @@
+# react-perf/jsx-no-jsx-as-prop
+Source: https://bun.com/docs/lint/rules/react-perf/jsx-no-jsx-as-prop
+
+Disallow JSX elements created during render as the value of a JSX prop
+
+
+JSX written inside a component makes a new element object on every render. When you pass it as a prop, it's never equal to the value from the last render, so a child wrapped in `React.memo` renders again even though nothing changed.
+
+JSX at the top level of a module isn't reported, because it's created once.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react-perf/jsx-no-jsx-as-prop" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react-perf/jsx-no-jsx-as-prop" = ["error", {
+  nativeAllowList = [], # list of strings
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+function Toolbar() {
+  return <Button icon={<SaveIcon />} />;
+}
+```
+
+The rule looks into `||`, `&&`, `??` and `? :`:
+
+```jsx
+function Toolbar({ dirty }) {
+  return <Button icon={dirty ? <SaveIcon /> : null} />;
+}
+```
+
+A variable declared inside the component has the same problem as JSX written in the prop. The report is on the declaration:
+
+```jsx
+function Toolbar() {
+  const icon = <SaveIcon />;
+  return <Button icon={icon} />;
+}
+```
+
+Not reported:
+
+```jsx
+const saveIcon = <SaveIcon />;
+
+function Toolbar() {
+  return <Button icon={saveIcon} />;
+}
+```
+
+If the element depends on props or state, cache it with `useMemo`:
+
+```jsx
+import { useMemo } from "react";
+
+function Toolbar({ color }) {
+  const icon = useMemo(() => <SaveIcon color={color} />, [color]);
+  return <Button icon={icon} />;
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `nativeAllowList` | `[]` | Props to skip on elements with a lowercase name, such as `<div>`. A list of prop names (case doesn't matter), or `"all"` for every prop. |
+
+With `{ "nativeAllowList": ["header"] }`, this is allowed:
+
+```jsx
+function Page() {
+  return <my-card header={<Title />} />;
+}
+```
+
+Components are still checked:
+
+```jsx
+function Page() {
+  return <Card header={<Title />} />;
+}
+```
+
+## When not to use it
+
+A new prop value only matters to a child that compares its props, for example with `React.memo`. The React Compiler memoizes these values for you.

@@ -1,0 +1,47 @@
+# unicorn/prefer-query-selector
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-query-selector
+
+Require `querySelector()` and `querySelectorAll()` instead of the `getElement...` methods
+
+
+`getElementById`, `getElementsByClassName`, `getElementsByTagName` and `getElementsByName` each find elements in one way. `querySelector()` and `querySelectorAll()` take any CSS selector, so a lookup can grow from `.item` to `.item:not(.hidden)` without changing the method.
+
+`--fix` rewrites `document.getElementById("main")`, where the id is a plain name. An id like `user.name` or `1st` is another selector, or none.
+
+`--fix-dangerously` rewrites every call whose argument is a string or a template literal without `${}`. It also handles a plain variable, but only for `getElementById`, where `getElementById(id)` becomes `` querySelector(`#${id}`) ``. Check the result: `getElementsByClassName()` gives a list that follows the document, and `querySelectorAll()` gives one that doesn't. Other calls are reported and left as they are.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-query-selector" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const menu = document.getElementById("menu");
+const items = menu.getElementsByClassName("item active");
+const links = menu.getElementsByTagName("a");
+const emails = document.getElementsByName("email");
+```
+
+Not reported:
+
+```js
+const menu = document.querySelector("#menu");
+const items = menu.querySelectorAll(".item.active");
+const links = menu.querySelectorAll("a");
+const emails = document.querySelectorAll("[name='email']");
+```
+
+## When not to use it
+
+The results aren't quite the same. The `getElementsBy...` methods return a live collection that follows the document, and `querySelectorAll()` returns a list that doesn't change. An id also isn't always a valid selector. `getElementById("1.a")` works, but `querySelector("#1.a")` throws unless you pass the id through `CSS.escape()`.

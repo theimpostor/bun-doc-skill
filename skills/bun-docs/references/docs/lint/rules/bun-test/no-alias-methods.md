@@ -1,0 +1,63 @@
+# bun:test/no-alias-methods
+Source: https://bun.com/docs/lint/rules/bun-test/no-alias-methods
+
+Disallow matcher aliases such as `toBeCalled` in favor of `toHaveBeenCalled`
+
+
+Some matchers have two names. For example, `toBeCalled` is the same matcher as `toHaveBeenCalled`. If a project uses both, a search for one name misses the tests that use the other.
+
+`--fix` renames the matcher.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun:test/no-alias-methods" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { expect, mock, test } from "bun:test";
+
+test("saves the draft", () => {
+  const save = mock();
+  save("draft");
+  expect(save).toBeCalledWith("draft");
+});
+```
+
+Not reported:
+
+```ts
+import { expect, mock, test } from "bun:test";
+
+test("saves the draft", () => {
+  const save = mock();
+  save("draft");
+  expect(save).toHaveBeenCalledWith("draft");
+});
+```
+
+The full list:
+
+| Reported | Write instead |
+| --- | --- |
+| `toBeCalled` | `toHaveBeenCalled` |
+| `toBeCalledTimes` | `toHaveBeenCalledTimes` |
+| `toBeCalledWith` | `toHaveBeenCalledWith` |
+| `lastCalledWith` | `toHaveBeenLastCalledWith` |
+| `nthCalledWith` | `toHaveBeenNthCalledWith` |
+| `toReturn` | `toHaveReturned` |
+| `toReturnTimes` | `toHaveReturnedTimes` |
+| `toReturnWith` | `toHaveReturnedWith` |
+| `lastReturnedWith` | `toHaveLastReturnedWith` |
+| `nthReturnedWith` | `toHaveNthReturnedWith` |
+| `toThrowError` | `toThrow` |

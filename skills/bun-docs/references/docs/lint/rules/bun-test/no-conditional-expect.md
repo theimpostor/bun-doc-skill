@@ -1,0 +1,100 @@
+# bun:test/no-conditional-expect
+Source: https://bun.com/docs/lint/rules/bun-test/no-conditional-expect
+
+Disallow `expect` inside `if`, `catch` and other code that only runs sometimes
+
+
+An `expect` that only runs under a condition might not run at all. If the condition is false, or nothing throws, the test passes without checking anything.
+
+In a test, the rule reports an `expect` inside an `if`, a `switch`, a `catch` block, a `.catch()` callback, `a ? b : c`, or an operand of `&&`, `||` or `??`.
+
+It also checks helpers that a test uses, if they're written as `function check() {}` or `const check = () => {}`. Methods aren't checked.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun:test/no-conditional-expect" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported, because the test passes if `JSON.parse` stops throwing:
+
+```ts
+import { expect, test } from "bun:test";
+
+test("rejects bad JSON", () => {
+  try {
+    JSON.parse("{");
+  } catch (error) {
+    expect(error).toBeInstanceOf(SyntaxError);
+  }
+});
+```
+
+```ts
+import { expect, test } from "bun:test";
+import { readFile } from "node:fs/promises";
+
+test("rejects a missing file", async () => {
+  await readFile("missing.txt").catch(error => {
+    expect(error.code).toBe("ENOENT");
+  });
+});
+```
+
+```ts
+import { expect, test } from "bun:test";
+
+const users = [{ name: "Ada", admin: true }];
+
+test("finds the admin", () => {
+  const admin = users.find(user => user.admin);
+  if (admin) {
+    expect(admin.name).toBe("Ada");
+  }
+});
+```
+
+```ts
+import { expect, test } from "bun:test";
+
+const expectAdult = (user: { age?: number }) => {
+  if (user.age) {
+    expect(user.age).toBeGreaterThan(17);
+  }
+};
+
+test("signs up adults only", () => {
+  expectAdult({ age: 30 });
+});
+```
+
+Not reported:
+
+```ts
+import { expect, test } from "bun:test";
+import { readFile } from "node:fs/promises";
+
+const users = [{ name: "Ada", admin: true }];
+
+test("rejects bad JSON", () => {
+  expect(() => JSON.parse("{")).toThrow(SyntaxError);
+});
+
+test("rejects a missing file", async () => {
+  await expect(readFile("missing.txt")).rejects.toThrow("ENOENT");
+});
+
+test("finds the admin", () => {
+  const admin = users.find(user => user.admin);
+  expect(admin).toBeDefined();
+  expect(admin?.name).toBe("Ada");
+});
+```

@@ -1,0 +1,82 @@
+# unicorn/prefer-class-fields
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-class-fields
+
+Require class fields instead of `this` assignments of fixed values in the constructor
+
+
+A property that starts with the same value in every instance doesn't need the constructor. As a class field, it sits at the top of the class, where you look to see what an instance has. If the constructor did nothing else, you can delete it.
+
+The rule only checks the constructor's first statement. It's reported if it assigns a string, number, `BigInt`, boolean, `null` or regular expression literal to a property of `this`.
+
+`--fix` moves the value to a field.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-class-fields" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+class Counter {
+  constructor() {
+    this.count = 0;
+  }
+}
+```
+
+Not reported:
+
+```js
+class Counter {
+  count = 0;
+}
+```
+
+A value that depends on the arguments, or that's built when the constructor runs, stays where it is:
+
+```js
+class Counter {
+  constructor(start) {
+    this.count = start;
+  }
+}
+
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+}
+```
+
+An assignment that comes after another statement, such as `super()`, isn't reported:
+
+```js
+class Timer extends Emitter {
+  constructor() {
+    super();
+    this.ticks = 0;
+  }
+}
+```
+
+If the field already has a value, the constructor overwrites it right away, and that's reported too. `--fix` leaves this alone. `--fix-suggestions` keeps the value from the constructor.
+
+```js
+class Counter {
+  count = 1;
+
+  constructor() {
+    this.count = 0;
+  }
+}
+```

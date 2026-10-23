@@ -1,0 +1,46 @@
+# no-object-constructor
+Source: https://bun.com/docs/lint/rules/eslint/no-object-constructor
+
+Disallow `Object()` and `new Object()` without an argument
+
+
+`new Object()` and `Object()` without an argument make an empty object. `{}` does the same thing and is shorter.
+
+A call with an argument isn't reported. It converts the argument to an object, which `{}` can't do.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-object-constructor" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const cache = new Object();
+const totals = Object();
+```
+
+Not reported:
+
+```js
+const cache = {};
+const totals = {};
+const wrapped = Object(value);
+```
+
+A call to your own `Object` isn't reported either:
+
+```js
+function build(Object) {
+  return new Object();
+}
+```

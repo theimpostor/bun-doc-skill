@@ -1,0 +1,50 @@
+# global-require
+Source: https://bun.com/docs/lint/rules/eslint/global-require
+
+Require `require()` calls to be at the top level of the module
+
+
+`require()` loads a module synchronously. Inside a function, that work happens in the middle of the first call instead of at startup, and a missing module only throws when that call is made. The file's dependencies also aren't listed in one place anymore.
+
+ESLint has deprecated this rule. Use `n/global-require` instead.
+
+## Examples
+
+Reported:
+
+```js
+function readConfig(path) {
+  const fs = require("fs");
+  return fs.readFileSync(path, "utf8");
+}
+```
+
+```js
+if (process.env.TRACE) {
+  require("./trace");
+}
+```
+
+Not reported:
+
+```js
+const fs = require("fs");
+const { join } = require("path");
+const logger = process.env.TRACE ? require("./trace") : require("./quiet");
+
+function readConfig(path) {
+  return fs.readFileSync(join(path, "config.json"), "utf8");
+}
+```
+
+Your own function named `require` isn't reported:
+
+```js
+function load(require) {
+  return require("settings");
+}
+```
+
+## When not to use it
+
+Loading a heavy module only when it's needed makes startup faster, and an optional dependency must be required inside `try`. If you do either often, leave this rule off.

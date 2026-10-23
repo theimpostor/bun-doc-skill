@@ -1,0 +1,70 @@
+# no-duplicate-case
+Source: https://bun.com/docs/lint/rules/eslint/no-duplicate-case
+
+Disallow two `case` labels with the same test in a `switch`
+
+
+A `switch` runs the first `case` that matches. A second `case` with the same test is never chosen, so its code only runs if the case above it falls through. It's usually a copied `case` where someone forgot to change the label.
+
+Two labels are the same if their source text is the same, ignoring whitespace and comments.
+
+This rule is on by default.
+
+
+## Configure
+
+On by default as an error. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-duplicate-case" = "off" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+switch (event.key) {
+  case "ArrowUp":
+    moveUp();
+    break;
+  case "ArrowDown":
+    moveDown();
+    break;
+  case "ArrowUp":
+    selectPrevious();
+    break;
+}
+```
+
+Not reported:
+
+```js
+switch (event.key) {
+  case "ArrowUp":
+    moveUp();
+    break;
+  case "ArrowDown":
+    moveDown();
+    break;
+  case "PageUp":
+    selectPrevious();
+    break;
+}
+```
+
+Labels don't have to be literals:
+
+```js
+switch (true) {
+  case size > limit:
+    reject();
+    break;
+  case size > limit:
+    warn();
+    break;
+}
+```

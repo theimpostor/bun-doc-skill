@@ -1,0 +1,104 @@
+# getter-return
+Source: https://bun.com/docs/lint/rules/eslint/getter-return
+
+Require getters to return a value
+
+
+A getter that doesn't return gives `undefined` to any code that reads the property. Usually someone forgot the `return`, or one branch of the getter doesn't have one.
+
+The rule checks `get` in classes and object literals, and the `get` function of a property descriptor passed to `Object.defineProperty`, `Reflect.defineProperty`, `Object.defineProperties` or `Object.create`.
+
+This rule is on by default in JavaScript files. It's off in TypeScript files, where TypeScript reports the same mistake.
+
+
+## Configure
+
+On by default as an error. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"getter-return" = "off" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"getter-return" = ["error", {
+  allowImplicit = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const user = {
+  get fullName() {
+    `${this.first} ${this.last}`;
+  },
+};
+```
+
+```js
+class Cart {
+  get total() {
+    if (this.items.length > 0) {
+      return sum(this.items);
+    }
+  }
+}
+```
+
+```js
+Object.defineProperty(user, "age", {
+  get: function () {
+    now() - this.born;
+  },
+});
+```
+
+Not reported:
+
+```js
+const user = {
+  get fullName() {
+    return `${this.first} ${this.last}`;
+  },
+};
+
+class Cart {
+  get total() {
+    if (this.items.length > 0) {
+      return sum(this.items);
+    }
+    return 0;
+  }
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `allowImplicit` | `false` | Allow `return;` without a value. The getter still needs to end with a `return` on every path. |
+
+```js
+class Session {
+  get token() {
+    return;
+  }
+}
+```
+
+```js
+class Session {
+  get token() {
+    return;
+  }
+}
+```

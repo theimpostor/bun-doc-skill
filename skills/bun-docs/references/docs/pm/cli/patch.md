@@ -12,7 +12,7 @@ Features:
 
 - Generates `.patch` files that Bun applies to dependencies in `node_modules` on install
 - You can commit `.patch` files to your repository and reuse them across installs, projects, and machines
-- `"patchedDependencies"` in `package.json` keeps track of patched packages
+- `"patchedDependencies"` in `package.json` keeps track of patched packages. Bun only reads it from the root `package.json`; `bun install` warns when a workspace package declares it.
 - Patches packages in `node_modules/` while preserving the integrity of Bun's [Global Cache](/pm/global-cache)
 - Test your changes locally before committing them with `bun patch --commit <pkg>`
 - To preserve disk space and keep `bun install` fast, Bun commits patched packages to the Global Cache and shares them across projects where possible
@@ -61,6 +61,28 @@ bun patch --commit react --patches-dir=mypatches
 # `patch-commit` is available for compatibility with pnpm
 bun patch-commit react
 ```
+
+If `bun install` could not apply the resulting patch, or the install is refused (for example by a [security scanner](/pm/security-scanner-api)), the commit fails and changes nothing: your edits, `package.json`, the lockfile, and any earlier patch file stay as they were.
+
+To run the same checks without writing anything, pass `--dry-run`. It prints the path of the patch file that the commit would write.
+
+#### Removing a patch
+
+Undo your changes and commit again:
+
+```bash
+bun patch react
+# restore the files you changed in node_modules/react
+bun patch --commit react
+```
+
+When the package has no changes left, Bun removes it from `"patchedDependencies"` in `package.json` and the lockfile, deletes its patch file unless another entry uses it, and reinstalls the original package.
+
+You can also delete the entry from `"patchedDependencies"` and the patch file yourself, then run `bun install`.
+
+#### A missing patch file
+
+`bun install` and `bun patch <pkg>` fail when a file in `"patchedDependencies"` does not exist, and leave `node_modules` alone. While the patched package is still in `node_modules`, `bun patch --commit <pkg>` writes the file again. To start over, delete the entry from `"patchedDependencies"` and run `bun install`.
 
 ---
 
@@ -159,11 +181,15 @@ Linker strategy (one of `isolated` or `hoisted`)
 Type: `number`
 Only install packages published at least N seconds ago (security feature)
 
+### `--minimum-release-age-excludes`
+
+Type: `string`
+Packages exempt from `--minimum-release-age` (comma-separated or repeated; replaces the bunfig.toml list)
+
 ### `--dry-run`
 
 Type: `boolean`
-Don't install packages, update `package.json`, or save a lockfile. The package is still copied into{" "}
-`node_modules` for patching, and `--commit` still writes the patch file
+Print what the command would do, with or without `--commit`, and leave the project as it is
 
 ### `--force`
 
@@ -187,6 +213,11 @@ Provide a Certificate Authority signing certificate
 Type: `string`
 Same as `--ca`, but as a file path to the certificate
 
+### `--use-system-ca`
+
+Type: `boolean`
+Use the system's trusted certificate authorities
+
 ### `--registry`
 
 Type: `string`
@@ -195,8 +226,8 @@ variables
 
 ### `--network-concurrency`
 
-Type: `number`; Default: `48`
-Maximum number of concurrent network requests (default 48)
+Type: `number`; Default: `64`
+Maximum number of concurrent network requests (default 64)
 
 ### Performance & Resource
 
@@ -258,6 +289,11 @@ Type: `string`
 Override operating system for optional dependencies (e.g., `linux`, `darwin`, `*` for
 all)
 
+### `--libc`
+
+Type: `string`
+Override libc for optional dependencies (e.g., `glibc`, `musl`, `*` for all)
+
 ### Global Configuration & Context
 
 ### `--config`
@@ -269,6 +305,16 @@ Specify path to config file (`bunfig.toml`). Alias: `-c`
 
 Type: `string`
 Set a specific current working directory
+
+### `--env-file`
+
+Type: `string`
+Load environment variables from the specified file(s)
+
+### `--no-env-file`
+
+Type: `boolean`
+Disable automatic loading of .env files
 
 ### Help
 

@@ -1,0 +1,71 @@
+# react-hooks/void-use-memo
+Source: https://bun.com/docs/lint/rules/react/void-use-memo
+
+Require `useMemo()` callbacks to return a value, and the value to be used
+
+
+`useMemo()` caches what its callback returns. A callback that returns nothing caches `undefined`, which usually means a forgotten `return`, or a side effect that belongs in `useEffect()`. React can skip or repeat the callback, so a side effect in it won't run when you expect.
+
+The rule also reports a `useMemo()` call if its result is never used.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react-hooks/void-use-memo" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+import { useMemo } from "react";
+
+function Report({ rows }) {
+  const visible = useMemo(() => {
+    rows.filter(row => !row.hidden);
+  }, [rows]);
+  return <Table rows={visible} />;
+}
+```
+
+```jsx
+import { useMemo } from "react";
+
+function Report({ rows }) {
+  useMemo(() => rows.filter(row => !row.hidden), [rows]);
+  return <Table rows={rows} />;
+}
+```
+
+Not reported:
+
+```jsx
+import { useMemo } from "react";
+
+function Report({ rows }) {
+  const visible = useMemo(() => {
+    return rows.filter(row => !row.hidden);
+  }, [rows]);
+  return <Table rows={visible} />;
+}
+```
+
+Side effects go in an effect:
+
+```jsx
+import { useEffect } from "react";
+
+function Report({ rows }) {
+  useEffect(() => {
+    track("report", rows.length);
+  }, [rows]);
+  return <Table rows={rows} />;
+}
+```

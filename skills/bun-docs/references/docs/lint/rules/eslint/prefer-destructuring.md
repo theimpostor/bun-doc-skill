@@ -1,0 +1,106 @@
+# prefer-destructuring
+Source: https://bun.com/docs/lint/rules/eslint/prefer-destructuring
+
+Require destructuring to read a property or an element into a variable
+
+
+`const name = user.name` writes `name` twice. `const { name } = user` writes it once, and the next property you need goes into the same statement.
+
+A property is only reported if the variable has the same name. An element is only reported if the index is a whole number written out, such as `items[0]`.
+
+`--fix` rewrites `const name = user.name`. Elements, plain assignments and a declaration with a type, like `const name: string = user.name`, are reported but not fixed.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"prefer-destructuring" = "error" # or "warn"
+```
+
+Every option, set to its default. The ones that are commented out are unset by default.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"prefer-destructuring" = [
+  "error",
+  {
+    object = true,
+    array = true,
+    # VariableDeclarator = <object>,
+    # AssignmentExpression = <object>,
+  },
+  {
+    enforceForRenamedProperties = false,
+  },
+]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const name = user.name;
+const first = items[0];
+email = user.email;
+```
+
+Not reported:
+
+```js
+const { name } = user;
+const [first] = items;
+({ email } = user);
+
+const label = user.name;
+const current = items[index];
+const city = user?.city;
+```
+
+## Options
+
+The rule takes two objects. The first says what to check, and the second holds `enforceForRenamedProperties`.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+prefer-destructuring = [
+  "error",
+  { object = true, array = false },
+  { enforceForRenamedProperties = true },
+]
+```
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `object` | `true` | Report properties: `const name = user.name`. |
+| `array` | `true` | Report elements: `const first = items[0]`. |
+| `enforceForRenamedProperties` | `false` | Also report a property that goes into a variable with a different name, and a computed key. |
+
+If you pass the first object, a key you leave out is `false`.
+
+```js
+const first = items[0];
+```
+
+```js
+const label = user.name;
+const value = settings[key];
+```
+
+To treat declarations and assignments differently, give the first object the keys `VariableDeclarator` and `AssignmentExpression`, each with its own `object` and `array`:
+
+```js
+email = user.email;
+first = items[0];
+```
+
+```js
+const email = user.email;
+```

@@ -26,6 +26,22 @@ INLINE_FENCE_RE = re.compile(r"```(.*?)```")
 THEME_LITERAL = 'theme={"theme":{"light":"github-light","dark":"dracula"}}'
 
 SECTION_INFO = {
+    "format": {
+        "title": "Formatter",
+        "summary": "Use for `bun fmt`, formatting checks, configuration, and Prettier or oxfmt compatibility.",
+    },
+    "guides-format": {
+        "title": "Guides: Formatting",
+        "summary": "Use for migrating from Prettier or oxfmt to `bun fmt`.",
+    },
+    "guides-lint": {
+        "title": "Guides: Linting",
+        "summary": "Use for migrating from ESLint or oxlint to `bun lint`; preserve the documented canary-only status.",
+    },
+    "lint": {
+        "title": "Linter",
+        "summary": "Use for `bun lint`, ESLint plugins, and individual lint rules. Search this overview for the rule name before opening its page; the linter is documented as canary-only.",
+    },
     "bundler": {
         "title": "Bundler",
         "summary": "Use for `bun build`, executables, CSS bundling, HTML imports, hot reloading, minification, macros, and bundler plugins.",

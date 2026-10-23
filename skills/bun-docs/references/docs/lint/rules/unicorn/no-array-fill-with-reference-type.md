@@ -1,0 +1,49 @@
+# unicorn/no-array-fill-with-reference-type
+Source: https://bun.com/docs/lint/rules/unicorn/no-array-fill-with-reference-type
+
+Disallow filling an array with one object, array, or class instance
+
+
+`fill()` evaluates its argument once and puts that same value in every slot. With an object or an array, all the slots point to one object, and a change through one slot shows up in all of them.
+
+The rule reports an object literal, an array literal, a class, and any `new` expression except `new RegExp()`. It also reports a `const` variable that's declared with one of these. Functions and regular expression literals aren't reported.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/no-array-fill-with-reference-type" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const grid = new Array(3).fill([]);
+
+grid[0].push("x"); // [["x"], ["x"], ["x"]]
+```
+
+```js
+const empty = { visits: 0 };
+const week = new Array(7).fill(empty);
+```
+
+Not reported:
+
+```js
+const grid = Array.from({ length: 3 }, () => []);
+
+grid[0].push("x"); // [["x"], [], []]
+```
+
+```js
+const week = Array.from({ length: 7 }, () => ({ visits: 0 }));
+const totals = new Array(7).fill(0);
+```

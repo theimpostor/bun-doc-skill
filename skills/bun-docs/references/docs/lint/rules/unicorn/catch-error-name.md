@@ -1,0 +1,95 @@
+# unicorn/catch-error-name
+Source: https://bun.com/docs/lint/rules/unicorn/catch-error-name
+
+Enforce one name for the error in `catch` clauses and promise handlers
+
+
+When one file catches `e`, the next `err` and a third `ex`, you need to look up the name every time you read or move a `catch` block. With this rule the caught error is always called `error`.
+
+The rule checks `catch` clauses, the first parameter of a function passed to `.catch()`, and the first parameter of the second function passed to `.then()`.
+
+`--fix` renames the parameter and every use of it. It leaves the parameter alone if the code around it already uses the new name for another variable, because the rename would mix the two up.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/catch-error-name" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/catch-error-name" = ["error", {
+  name = "error",
+  ignore = [], # list of strings
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+try {
+  await save(user);
+} catch (e) {
+  console.log(e.message);
+}
+
+save(user).catch(err => console.log(err.message));
+
+save(user).then(done, ex => console.log(ex.message));
+```
+
+Not reported:
+
+```js
+try {
+  await save(user);
+} catch (error) {
+  console.log(error.message);
+}
+
+save(user).catch(error => console.log(error.message));
+
+save(user).then(done, error => console.log(error.message));
+```
+
+A name that ends in `error` is fine, such as `saveError`, or `error_` in a nested `catch`. So is a name that starts with `_`, as long as the error isn't used.
+
+```js
+try {
+  await save(user);
+} catch (saveError) {
+  try {
+    await rollback();
+  } catch (error_) {
+    report(saveError, error_);
+  }
+}
+
+save(user).catch(_ => retry());
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `name` | `"error"` | The name to require. A value that isn't a valid identifier is ignored. |
+| `ignore` | `[]` | Regular expressions, as strings. A name that matches one of them is allowed. |
+
+```js
+save(user).catch(err => console.log(err.message));
+```
+
+```js
+save(user).catch(reason => console.log(reason));
+```

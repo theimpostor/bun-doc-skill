@@ -18,7 +18,10 @@ bun add zod@^3.0.0
 bun add zod@latest
 ```
 
-Bun writes the package to `dependencies` unless you pass `--dev`, `--optional`, or `--peer`. If `package.json` already lists it in another group, Bun updates that entry in place.
+Bun writes the package to `dependencies` unless you pass `--dev`, `--optional`, or `--peer`. If `package.json` already lists it in another group:
+
+- Without a flag, Bun updates that entry in place. If two of `dependencies`, `devDependencies` and `optionalDependencies` list it, Bun updates both, unless the install leaves one of those groups out (with `--omit=dev`, for example).
+- With `--dev`, `--optional`, `--peer`, or `--save-prod`, Bun moves the entry to the group you name. An entry in `peerDependencies` stays, and `--peer` keeps an entry in `devDependencies`.
 
 ## `--dev`
 
@@ -48,6 +51,14 @@ bun add --peer @types/bun
 ```
 
 Bun installs peer dependencies by default, so no additional `devDependencies` entry is needed.
+
+## `--save-prod`
+
+To move a package from `devDependencies` or `optionalDependencies` back to `"dependencies"`:
+
+```bash
+bun add --save-prod zod
+```
 
 ## `--exact`
 
@@ -143,7 +154,7 @@ bun remove zod --filter '*' --filter '!api'
 
 > Note: **Alias** — `bun add --global`, `bun add -g`, `bun install --global` and `bun install -g`
 
-To install a package globally, use the `-g`/`--global` flag. This does not modify the `package.json` of your current project. Use it to install command-line tools.
+To install a package globally, use the `-g`/`--global` flag. This does not modify the `package.json` of your current project, or one in your home directory: Bun keeps its own in the global directory. Use it to install command-line tools.
 
 ```bash
 bun add --global cowsay # or `bun add -g cowsay`
@@ -163,7 +174,9 @@ cowsay "Bun!"
 
 ### Configuring global installation behavior
 
-**File:** `bunfig.toml`
+Set these keys in the global `.bunfig.toml` (`$HOME/.bunfig.toml` or `$XDG_CONFIG_HOME/.bunfig.toml`). Bun ignores them in a project's `bunfig.toml`.
+
+**File:** `~/.bunfig.toml`
 ```toml
 [install]
 # where `bun add --global` installs packages
@@ -216,6 +229,14 @@ Bun supports a variety of protocols, including [`github`](https://docs.npmjs.com
 }
 ```
 
+Bun runs `git` (2.24 or newer) with the environment that `bun` was started in. Variables from the project's `.env` files (`PATH`, `GIT_SSH_COMMAND`, `GIT_DIR`, ...) do not reach it.
+
+Bun tries an SSH URL over HTTPS first, then over SSH. It sets `GIT_SSH_COMMAND` to `ssh -oStrictHostKeyChecking=accept-new`, unless you have an SSH command of your own: `core.sshCommand` in your git config, `GIT_SSH` or `GIT_SSH_COMMAND`. A `core.sshCommand` from an `includeIf` section that depends on the repository does not count; use `GIT_SSH_COMMAND` for that.
+
+Bun deletes a `node_modules` directory that the repository commits, unless its `package.json` has `bundleDependencies`. A symbolic link to a file in the repository is installed as a copy of that file. Other symbolic links are not installed.
+
+The package's `prepare` script, which often builds `dist/`, runs only when the package is in [`trustedDependencies`](/pm/lifecycle#trusteddependencies). Bun does not install the package's `devDependencies` first, so a script that needs a build tool from there fails.
+
 ## Tarball dependencies
 
 A package name can correspond to a publicly hosted `.tgz` file. Bun downloads and installs the package from that tarball URL rather than from the package registry.
@@ -235,7 +256,16 @@ bun add zod@https://registry.npmjs.org/zod/-/zod-3.21.4.tgz
 }
 ```
 
-A tarball URL can carry credentials, such as `https://user:password@example.com/zod-3.21.4.tgz`. Bun sends them as an `Authorization: Basic` header and requests the URL without them, like npm. The URL, credentials included, is written to `package.json` and to the lockfile.
+A tarball URL can carry credentials, such as `https://user:password@example.com/zod-3.21.4.tgz`. Bun sends them as an `Authorization: Basic` header and requests the URL without them, like npm. The URL, credentials included, is written to `package.json` and to the lockfile. Percent-encode a character that cannot be written in a URL: the password `p@ss` is written `p%40ss`. Bun decodes the credentials before it sends them.
+
+## Local paths
+
+A folder or a local `.tgz` file is resolved from the current directory and written relative to the `package.json` it is added to. With `--global`, Bun writes the absolute path.
+
+```sh
+bun add ../shared/logger
+bun add -g .
+```
 
 ---
 
@@ -276,6 +306,11 @@ Add dependency to `optionalDependencies`
 
 Type: `boolean`
 Add dependency to `peerDependencies`
+
+### `--save-prod`
+
+Type: `boolean`
+Add dependency to `dependencies`, also when another group lists it
 
 ### `--exact`
 
@@ -340,8 +375,8 @@ Generate a lockfile without installing dependencies
 ### `--dry-run`
 
 Type: `boolean`
-Resolve the packages but don't install them, update `package.json`, or save a lockfile (the project's own
-lifecycle scripts still run)
+Resolve the packages but don't install them, update an existing `package.json`, save a lockfile, or run the
+project's lifecycle scripts
 
 ### `--force`
 
@@ -376,6 +411,11 @@ Provide a Certificate Authority signing certificate
 Type: `string`
 Same as `--ca`, but as a file path to the certificate
 
+### `--use-system-ca`
+
+Type: `boolean`
+Use the system's trusted certificate authorities
+
 ### `--registry`
 
 Type: `string`
@@ -384,7 +424,7 @@ variables
 
 ### `--network-concurrency`
 
-Type: `number`; Default: `48`
+Type: `number`; Default: `64`
 Maximum number of concurrent network requests
 
 ### Performance & Resource
@@ -445,6 +485,16 @@ Specify path to config file (`bunfig.toml`). Alias: `-c`
 
 Type: `string`
 Set a specific current working directory
+
+### `--env-file`
+
+Type: `string`
+Load environment variables from the specified file(s)
+
+### `--no-env-file`
+
+Type: `boolean`
+Disable automatic loading of .env files
 
 ### Help
 

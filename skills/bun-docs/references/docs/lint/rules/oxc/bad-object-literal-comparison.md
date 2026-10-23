@@ -1,0 +1,47 @@
+# oxc/bad-object-literal-comparison
+Source: https://bun.com/docs/lint/rules/oxc/bad-object-literal-comparison
+
+Disallow comparing a value with `{}` or `[]`
+
+
+`items === []` doesn't test whether `items` is empty. Each `[]` or `{}` creates a new object, and `===` compares objects by identity, so the comparison is always `false` and `!==` is always `true`.
+
+The rule reports `==`, `!=`, `===` and `!==` with an empty object or array literal on either side. To test whether something is empty, look at `length` or at the keys.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"oxc/bad-object-literal-comparison" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+if (items === []) {
+  showPlaceholder();
+}
+
+if (filters !== {}) {
+  applyFilters(filters);
+}
+```
+
+Not reported:
+
+```js
+if (items.length === 0) {
+  showPlaceholder();
+}
+
+if (Object.keys(filters).length > 0) {
+  applyFilters(filters);
+}
+```

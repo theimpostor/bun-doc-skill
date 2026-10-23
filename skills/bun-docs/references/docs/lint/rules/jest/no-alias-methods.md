@@ -1,0 +1,63 @@
+# jest/no-alias-methods
+Source: https://bun.com/docs/lint/rules/jest/no-alias-methods
+
+Disallow matcher aliases such as `toBeCalled` in favor of `toHaveBeenCalled`
+
+
+Some matchers have two names. For example, `toBeCalled` is the same matcher as `toHaveBeenCalled`. If a project uses both, searching for one name misses the tests that use the other. Jest 30 removed the aliases, so a test that uses one fails after the upgrade.
+
+`--fix` renames the matcher.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jest/no-alias-methods" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { expect, jest, test } from "@jest/globals";
+
+test("saves the draft", () => {
+  const save = jest.fn();
+  save("draft");
+  expect(save).toBeCalledWith("draft");
+});
+```
+
+Not reported:
+
+```ts
+import { expect, jest, test } from "@jest/globals";
+
+test("saves the draft", () => {
+  const save = jest.fn();
+  save("draft");
+  expect(save).toHaveBeenCalledWith("draft");
+});
+```
+
+The full list:
+
+| Reported | Write instead |
+| --- | --- |
+| `toBeCalled` | `toHaveBeenCalled` |
+| `toBeCalledTimes` | `toHaveBeenCalledTimes` |
+| `toBeCalledWith` | `toHaveBeenCalledWith` |
+| `lastCalledWith` | `toHaveBeenLastCalledWith` |
+| `nthCalledWith` | `toHaveBeenNthCalledWith` |
+| `toReturn` | `toHaveReturned` |
+| `toReturnTimes` | `toHaveReturnedTimes` |
+| `toReturnWith` | `toHaveReturnedWith` |
+| `lastReturnedWith` | `toHaveLastReturnedWith` |
+| `nthReturnedWith` | `toHaveNthReturnedWith` |
+| `toThrowError` | `toThrow` |

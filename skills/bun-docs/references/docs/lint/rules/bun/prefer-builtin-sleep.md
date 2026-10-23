@@ -1,0 +1,59 @@
+# bun/prefer-builtin-sleep
+Source: https://bun.com/docs/lint/rules/bun/prefer-builtin-sleep
+
+Prefer `Bun.sleep()` to a promise that only waits for `setTimeout`
+
+
+`new Promise(resolve => setTimeout(resolve, ms))` takes a moment to read, and all it does is wait. `Bun.sleep(ms)` does the same thing and says so. `setTimeout(ms)` from `node:timers/promises` does too.
+
+`--fix-suggestions` replaces the promise with `Bun.sleep(ms)`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"bun/prefer-builtin-sleep" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+await new Promise(resolve => setTimeout(resolve, 500));
+```
+
+```js
+function wait(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(), ms);
+  });
+}
+```
+
+Not reported:
+
+```js
+await Bun.sleep(500);
+```
+
+```js
+import { setTimeout } from "node:timers/promises";
+
+await setTimeout(500);
+```
+
+A promise that does more than wait isn't reported. This one resolves with a value:
+
+```js
+const answer = await new Promise(resolve => setTimeout(() => resolve("timed out"), 500));
+```
+
+## When not to use it
+
+`Bun.sleep()` only exists in Bun, and `node:timers/promises` doesn't exist in browsers. Turn the rule off for code that also runs in a browser.

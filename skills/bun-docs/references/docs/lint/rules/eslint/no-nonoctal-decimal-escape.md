@@ -1,0 +1,40 @@
+# no-nonoctal-decimal-escape
+Source: https://bun.com/docs/lint/rules/eslint/no-nonoctal-decimal-escape
+
+Disallow the `\8` and `\9` escapes in strings
+
+
+`"\8"` and `"\9"` are the same as `"8"` and `"9"`. The backslash does nothing, so it's either left over or the author meant a real backslash, `"\\8"`.
+
+In strict mode, which includes every ES module, these escapes are a syntax error. The rule matters for scripts and CommonJS files, where they still parse.
+
+The report comes with two suggestions: remove the backslash, which keeps the string's value, or double it. `--fix-suggestions` applies the first.
+
+This rule is on by default.
+
+
+## Configure
+
+On by default as a warning. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-nonoctal-decimal-escape" = "off" # or "error"
+```
+
+
+## Examples
+
+Reported, in a file named `release.cjs`:
+
+```js
+const version = "v\8.0";
+```
+
+Not reported:
+
+```js
+const version = "v8.0";
+const folder = "releases\\8.0";
+```

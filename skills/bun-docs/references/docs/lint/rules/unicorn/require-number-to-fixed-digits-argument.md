@@ -1,0 +1,38 @@
+# unicorn/require-number-to-fixed-digits-argument
+Source: https://bun.com/docs/lint/rules/unicorn/require-number-to-fixed-digits-argument
+
+Require the digits argument of `Number#toFixed()`
+
+
+Without an argument, `toFixed()` rounds to zero decimals, so `(1.5).toFixed()` is `"2"`. A reader might expect two decimals, or the number unchanged. Writing the number of digits out removes the guesswork.
+
+The rule only looks at the method name, so it reports `.toFixed()` without arguments on any object.
+
+`--fix` adds `0`, which keeps the result the same.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/require-number-to-fixed-digits-argument" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const total = price.toFixed();
+```
+
+Not reported:
+
+```js
+const total = price.toFixed(2);
+const rounded = price.toFixed(0);
+```

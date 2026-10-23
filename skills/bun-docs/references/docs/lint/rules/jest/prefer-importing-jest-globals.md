@@ -1,0 +1,91 @@
+# jest/prefer-importing-jest-globals
+Source: https://bun.com/docs/lint/rules/jest/prefer-importing-jest-globals
+
+Require `describe`, `test`, `expect` and `jest` to be imported from `@jest/globals`
+
+
+Jest puts `describe`, `test`, `expect`, `jest` and the hooks in the global scope of every test file, so nothing in the file says where they come from. An import from `@jest/globals` makes that explicit, and it brings the types with it.
+
+Each file gets one report, which lists every name to import.
+
+`--fix` adds the import, or adds the names to the `@jest/globals` import that's already there. A new import goes below what has to stay first: a `#!` line, comments about the file like `// @ts-nocheck`, `/// <reference>` or a license, directives like `"use strict"`, and a header comment with an empty line after it. It goes above the comments that touch the first statement, which are about that statement. In a `.cjs` or `.cts` file, and in a file that has no `import` or `export` yet, it writes `const { .. } = require("@jest/globals")` instead.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jest/prefer-importing-jest-globals" = "error" # or "warn"
+```
+
+Every option, set to its default. The ones that are commented out are unset by default.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jest/prefer-importing-jest-globals" = ["error", {
+  # types = <list of strings>,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+describe("cart", () => {
+  test("starts empty", () => {
+    expect(cart.items).toHaveLength(0);
+  });
+});
+```
+
+Not reported:
+
+```ts
+import { describe, expect, test } from "@jest/globals";
+
+describe("cart", () => {
+  test("starts empty", () => {
+    expect(cart.items).toHaveLength(0);
+  });
+});
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `types` | all of them | The kinds of globals to report: `"hook"` (`beforeEach` and the like), `"describe"`, `"test"` (`test` and `it`), `"expect"`, `"jest"`, `"unknown"` (`pending`). |
+
+With `{ "types": ["jest"] }`, you only need to import the `jest` object:
+
+```ts
+jest.useFakeTimers();
+
+test("expires", () => {
+  expect(session.expired).toBe(false);
+});
+```
+
+```ts
+import { jest } from "@jest/globals";
+
+jest.useFakeTimers();
+
+test("expires", () => {
+  expect(session.expired).toBe(false);
+});
+```
+
+With `{ "types": ["unknown"] }`, only `pending` is reported:
+
+```ts
+test("expires", () => {
+  pending();
+});
+```

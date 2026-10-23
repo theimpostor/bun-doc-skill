@@ -1,0 +1,103 @@
+# unicorn/no-useless-undefined
+Source: https://bun.com/docs/lint/rules/unicorn/no-useless-undefined
+
+Disallow `undefined` where leaving it out means the same
+
+
+A variable without a value, a `return` without a value and a missing argument are already `undefined`, and a parameter defaults to `undefined` anyway. Writing it out changes nothing.
+
+`--fix` removes the `undefined` after `yield` and from a destructuring default. In a JavaScript file it also removes it after `return`, from `let value = undefined`, and from `() => undefined`. In TypeScript those change a type: the function would return `void`.
+
+Only `--fix-dangerously` removes the rest, because the program can tell the difference:
+
+- An argument. `String(undefined)` is `"undefined"` and `String()` is `""`.
+- `var value = undefined`. In a loop, `var value;` keeps the value from the last round.
+- A parameter's default. The function's `length` changes.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/no-useless-undefined" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/no-useless-undefined" = ["error", {
+  checkArguments = true,
+  checkArrowFunctionBody = true,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+let selected = undefined;
+
+function find(id, fallback = undefined) {
+  if (!id) {
+    return undefined;
+  }
+  return load(id, undefined);
+}
+
+const noop = () => undefined;
+```
+
+Not reported:
+
+```js
+let selected;
+
+function find(id, fallback) {
+  if (!id) {
+    return;
+  }
+  return load(id);
+}
+
+const noop = () => {};
+```
+
+Sometimes you do need to write it. A `const` must have a value. A function with a return type keeps its `return undefined`, because TypeScript may require it. And you can only drop `undefined` at the end of the arguments.
+
+```ts
+const missing = undefined;
+
+function find(id: string): string | undefined {
+  return undefined;
+}
+
+render(undefined, container);
+```
+
+Calls where the argument is the point aren't reported either. That covers functions whose name starts with `set`, collection methods such as `push`, `add`, `has` and `includes`, assertions such as `toBe` and `toEqual`, `createContext`, and `ref`.
+
+```js
+setUser(undefined);
+items.push(undefined);
+expect(result).toBe(undefined);
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `checkArguments` | `true` | Report `undefined` at the end of a call's arguments. |
+| `checkArrowFunctionBody` | `true` | Report `() => undefined`. |
+
+```js
+load(id, undefined);
+
+const noop = () => undefined;
+```

@@ -1,0 +1,53 @@
+# n/no-exports-assign
+Source: https://bun.com/docs/lint/rules/node/no-exports-assign
+
+Disallow assigning to `exports`
+
+
+In a CommonJS file, `exports` is a local variable that starts out as `module.exports`. Assigning to it only changes the variable. The module still exports the old `module.exports`, so `require()` gets an empty object.
+
+An assignment that sets `module.exports` in the same statement is allowed, because both then hold the same value.
+
+`--fix` rewrites `exports = ..` to `module.exports = ..`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"n/no-exports-assign" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+exports = {
+  parse,
+  stringify,
+};
+```
+
+Not reported:
+
+```js
+module.exports = {
+  parse,
+  stringify,
+};
+```
+
+```js
+exports.parse = parse;
+exports.stringify = stringify;
+```
+
+```js
+module.exports = exports = { parse };
+exports.stringify = stringify;
+```

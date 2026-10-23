@@ -1,0 +1,104 @@
+# react/jsx-curly-brace-presence
+Source: https://bun.com/docs/lint/rules/react/jsx-curly-brace-presence
+
+Disallow curly braces around plain strings in JSX, or require them
+
+
+`<Button label={"Save"} />` and `<Button label="Save" />` mean the same thing, and so do `<p>{"Hello"}</p>` and `<p>Hello</p>`. The braces add noise. By default this rule reports them around a plain string, around a template literal without `${}`, and around a child element.
+
+`--fix` removes or adds the braces.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-curly-brace-presence" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-curly-brace-presence" = ["error", {
+  props = "never", # "always", "never" or "ignore"
+  children = "never", # "always", "never" or "ignore"
+  propElementValues = "ignore", # "always", "never" or "ignore"
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+const button = <Button label={"Save"} title={`Save`}>{"Save"}</Button>;
+
+const panel = <Panel>{<Spinner />}</Panel>;
+```
+
+Not reported:
+
+```jsx
+const button = <Button label="Save" title="Save">Save</Button>;
+
+const panel = <Panel><Spinner /></Panel>;
+```
+
+Braces that are needed stay. The rule leaves a string alone if it has a backslash or an entity such as `&`. It also leaves a child alone if it starts or ends with white space, has `<`, `>`, `{`, or `}`, or sits next to another `{}` expression.
+
+```jsx
+const kept = (
+  <ul title={`Hello ${name}`}>
+    <li>{" "}</li>
+    <li>{"Total: "}</li>
+    <li>{"a\tb"}</li>
+    <li>{"&amp;"}</li>
+    <li>{"{braces} and <tags>"}</li>
+    <li>{"Hello"}{name}</li>
+  </ul>
+);
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `props` | `"never"` | Braces around a string that's an attribute's value. |
+| `children` | `"never"` | Braces around a string or an element that's a child. |
+| `propElementValues` | `"ignore"` | Braces around an element that's an attribute's value. |
+
+Each takes `"never"` (report the braces), `"always"` (report a string without braces), or `"ignore"` (don't check). If you pass one of these words instead of the object, it sets both `props` and `children`.
+
+```jsx
+const button = <Button label="Save">Save</Button>;
+```
+
+```jsx
+const button = <Button label={"Save"}>{"Save"}</Button>;
+```
+
+```jsx
+const greeting = <p>{"Hello"}</p>;
+```
+
+```jsx
+const page = <Layout header=<Header /> />;
+```
+
+```jsx
+const page = <Layout header={<Header />} />;
+```
+
+Don't use `propElementValues: "never"`. It reports the element with braces and also the element without them, so nothing you write passes:
+
+```jsx
+const page = <Layout header={<Header />} />;
+
+const other = <Layout header=<Header /> />;
+```

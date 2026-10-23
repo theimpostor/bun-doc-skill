@@ -1,0 +1,60 @@
+# vitest/prefer-describe-function-title
+Source: https://bun.com/docs/lint/rules/vitest/prefer-describe-function-title
+
+Require `describe(fn, ...)` instead of a string with the name of an imported function
+
+
+`describe` accepts a function or a class as its title and prints its name. A string that repeats the name isn't updated when you rename the function, so the test output keeps showing a name that no longer exists.
+
+The rule reports a `describe` title that's a string equal to a name the file imports. A title like `slugify.name` is reported too. If your config sets `settings.vitest.typecheck` to `true`, strings aren't reported.
+
+`--fix` replaces the title with the name, unless the import is type-only.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"vitest/prefer-describe-function-title" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { describe, expect, test } from "vitest";
+import { slugify } from "./slugify";
+
+describe("slugify", () => {
+  test("replaces spaces", () => {
+    expect(slugify("a b")).toBe("a-b");
+  });
+});
+```
+
+```ts
+import { describe } from "vitest";
+import { slugify } from "./slugify";
+
+describe(slugify.name, () => {});
+```
+
+Not reported:
+
+```ts
+import { describe, expect, test } from "vitest";
+import { slugify } from "./slugify";
+
+describe(slugify, () => {
+  test("replaces spaces", () => {
+    expect(slugify("a b")).toBe("a-b");
+  });
+});
+
+describe("slugify with options", () => {});
+```

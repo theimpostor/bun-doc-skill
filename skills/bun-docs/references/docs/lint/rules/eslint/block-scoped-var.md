@@ -1,0 +1,57 @@
+# block-scoped-var
+Source: https://bun.com/docs/lint/rules/eslint/block-scoped-var
+
+Disallow using a `var` outside the block it is declared in
+
+
+A `var` declared inside an `if`, a loop or a `switch` is visible in the whole function. Code after the block can still read it, and gets `undefined` if the block didn't run. This rule treats every `var` like a `let` and reports any use outside the block that declares it.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"block-scoped-var" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+function label(user) {
+  if (user.admin) {
+    var prefix = "Admin: ";
+  }
+  return prefix + user.name; // "undefinedAda" for everyone else
+}
+```
+
+```js
+function indexOfFirstEmpty(items) {
+  for (var i = 0; i < items.length; i++) {
+    if (!items[i]) break;
+  }
+  return i;
+}
+```
+
+Not reported:
+
+```js
+function label(user) {
+  var prefix = "";
+  if (user.admin) {
+    prefix = "Admin: ";
+  }
+  return prefix + user.name;
+}
+```
+
+## When not to use it
+
+If `no-var` is on, there's no `var` left to check, and `let` and `const` already behave this way.

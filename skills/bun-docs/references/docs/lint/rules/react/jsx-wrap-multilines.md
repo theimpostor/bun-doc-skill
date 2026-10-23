@@ -1,0 +1,137 @@
+# react/jsx-wrap-multilines
+Source: https://bun.com/docs/lint/rules/react/jsx-wrap-multilines
+
+Require parentheses around JSX that spans several lines
+
+
+Without parentheses, JSX that spans several lines must start on the same line as the `return` or the `=`, so its opening tag doesn't line up with its closing tag. If you move it down a line, `return` followed by a line break returns `undefined`. With parentheses the JSX can start on its own line.
+
+JSX on one line never needs parentheses.
+
+`--fix` adds the parentheses, or removes them with `"never"`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-wrap-multilines" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"react/jsx-wrap-multilines" = ["error", {
+  # true, false, "ignore", "parens", "parens-new-line" or "never"
+  declaration = "parens",
+  assignment = "parens",
+  return = "parens",
+  arrow = "parens",
+  condition = "ignore",
+  logical = "ignore",
+  prop = "ignore",
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```jsx
+function Card({ title }) {
+  return <section>
+    <h2>{title}</h2>
+  </section>;
+}
+```
+
+Not reported:
+
+```jsx
+function Card({ title }) {
+  return (
+    <section>
+      <h2>{title}</h2>
+    </section>
+  );
+}
+
+const empty = <section />;
+```
+
+## Options
+
+Each option is a place where JSX can appear:
+
+| Option | Default | Where |
+| --- | --- | --- |
+| `declaration` | `"parens"` | `const card = <section>` |
+| `assignment` | `"parens"` | `card = <section>` |
+| `return` | `"parens"` | `return <section>` |
+| `arrow` | `"parens"` | `() => <section>` |
+| `condition` | `"ignore"` | The branches of `open ? <section> : null` |
+| `logical` | `"ignore"` | The right side of `&&`, `||` and `??` |
+| `prop` | `"ignore"` | `<Page header={<section>} />` |
+
+Each takes one of these values:
+
+| Value | What it does |
+| --- | --- |
+| `"parens"` or `true` | Require parentheses. |
+| `"parens-new-line"` | Require parentheses, with `(` and `)` on different lines from the JSX. |
+| `"never"` | Report parentheses around the JSX, even on one line. |
+| `"ignore"` or `false` | Don't check this place. |
+
+```jsx
+const card = (<section>
+  <h2>{title}</h2>
+</section>);
+```
+
+```jsx
+const card = (
+  <section>
+    <h2>{title}</h2>
+  </section>
+);
+```
+
+```jsx
+const panel = (
+  <main>
+    {open && <section>
+      <h2>{title}</h2>
+    </section>}
+  </main>
+);
+```
+
+```jsx
+function Card({ title }) {
+  return (
+    <section>
+      <h2>{title}</h2>
+    </section>
+  );
+}
+
+const empty = (<section />);
+```
+
+While `condition` is `"ignore"`, the branches of a conditional that's declared or assigned are checked under `declaration` or `assignment`:
+
+```jsx
+const card = open ? <section>
+  <h2>{title}</h2>
+</section> : null;
+```
+
+## When not to use it
+
+A formatter such as `bun fmt` or Prettier already adds these parentheses.

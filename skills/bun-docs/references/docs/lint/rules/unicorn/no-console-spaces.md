@@ -1,0 +1,48 @@
+# unicorn/no-console-spaces
+Source: https://bun.com/docs/lint/rules/unicorn/no-console-spaces
+
+Disallow spaces at the edges of strings where `console.log()` already adds one
+
+
+`console.log()` puts a space between its arguments. If a string ends with a space before the next argument, or starts with one after the previous argument, you get two spaces. For example, `console.log("Total: ", 5)` prints `Total:  5`.
+
+The rule checks `console.log()`, `console.debug()`, `console.info()`, `console.warn()`, and `console.error()`.
+
+`--fix` trims the reported string at both ends.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/no-console-spaces" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+console.log("Total: ", total);
+console.error(path, " was not found");
+console.info(`Saved ${count} files `, "in", elapsed);
+```
+
+Not reported:
+
+```js
+console.log("Total:", total);
+console.error(path, "was not found");
+console.info(`Saved ${count} files`, "in", elapsed);
+```
+
+Spaces at the start of the first argument and at the end of the last one are allowed, because nothing is printed next to them:
+
+```js
+console.log("  Total:", total);
+console.log("Done ");
+```

@@ -1,0 +1,88 @@
+# no-restricted-syntax
+Source: https://bun.com/docs/lint/rules/eslint/no-restricted-syntax
+
+Disallow the syntax you describe with selectors
+
+
+Sometimes you want to ban one piece of the language in your project and there's no rule for it, like `for..in` loops, TypeScript enums, or a call to one function with one kind of argument. This rule takes a list of selectors and reports every syntax tree node that matches one.
+
+A selector names an ESTree node type, such as `ForInStatement`, and can narrow it down the way a CSS selector does: by attribute (`[name="eval"]`), by parent (`A > B`), by ancestor (`A B`), or with `:not()`, `:is()` and `:has()`. TypeScript syntax uses typescript-eslint's node types, such as `TSEnumDeclaration`.
+
+The rule does nothing until you give it a selector.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-restricted-syntax" = "error" # or "warn"
+```
+
+
+## Examples
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-restricted-syntax" = ["error", "ForInStatement"]
+```
+
+Reported:
+
+```js
+for (const key in settings) {
+  apply(key, settings[key]);
+}
+```
+
+Not reported:
+
+```js
+for (const key of Object.keys(settings)) {
+  apply(key, settings[key]);
+}
+```
+
+## Options
+
+Each option is a selector, or an object with a selector and the message to show.
+
+| Option | What it does |
+| --- | --- |
+| `"<selector>"` | Report anything that matches, with the message `Using '<selector>' is not allowed.` |
+| `{ "selector": "..", "message": ".." }` | Report anything that matches, with your message. |
+
+This selector matches a literal, such as a string, that's the first argument of `setTimeout`:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-restricted-syntax" = ["error", {
+  selector = "CallExpression[callee.name='setTimeout'] > Literal:first-child",
+  message = "Pass a function to setTimeout.",
+}]
+```
+
+```js
+setTimeout("refresh()", 1000);
+```
+
+```js
+setTimeout(refresh, 1000);
+```
+
+In a TypeScript file:
+
+```ts
+enum Color {
+  Red,
+  Blue,
+}
+```
+
+```ts
+type Color = "red" | "blue";
+```

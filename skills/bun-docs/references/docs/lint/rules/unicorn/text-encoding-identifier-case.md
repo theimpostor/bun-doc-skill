@@ -1,0 +1,77 @@
+# unicorn/text-encoding-identifier-case
+Source: https://bun.com/docs/lint/rules/unicorn/text-encoding-identifier-case
+
+Enforce one spelling for the encoding names `utf8` and `ascii`
+
+
+`"UTF-8"`, `"utf-8"`, `"Utf8"` and `"utf8"` all name the same encoding in most APIs. With one spelling, a search finds every use. The rule wants `"utf8"` and `"ascii"`.
+
+In three places it wants `"utf-8"`, the name the web standards use: `new TextDecoder("utf-8")`, `<meta charset="utf-8" />` and `<form acceptCharset="utf-8">`.
+
+The rule reports any string that's exactly one of these names, wherever it appears, and JSX text such as `UTF-8`. Template literals aren't checked.
+
+`--fix` rewrites the string where both spellings do the same: the encoding passed to `readFile()` or `readFileSync()` from `node:fs`, and the label passed to `new TextDecoder()`. Anywhere else the exact text can matter. `decoder.encoding` is always `"utf-8"`, so `decoder.encoding === "utf8"` is never true. `--fix-dangerously` rewrites every reported string.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/text-encoding-identifier-case" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/text-encoding-identifier-case" = ["error", {
+  withDash = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const text = await fs.readFile(file, "UTF-8");
+const bytes = Buffer.from(name, "ASCII");
+const decoder = new TextDecoder("utf8");
+```
+
+```jsx
+const head = <meta charset="utf8" />;
+const label = <span>UTF-8</span>;
+```
+
+Not reported:
+
+```js
+const text = await fs.readFile(file, "utf8");
+const bytes = Buffer.from(name, "ascii");
+const decoder = new TextDecoder("utf-8");
+```
+
+```jsx
+const head = <meta charset="utf-8" />;
+const label = <span>{`UTF-8`}</span>;
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `withDash` | `false` | Require `"utf-8"` everywhere instead of `"utf8"`. |
+
+```js
+const text = await fs.readFile(file, "utf8");
+```
+
+```js
+const text = await fs.readFile(file, "utf-8");
+```

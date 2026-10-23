@@ -1,0 +1,46 @@
+# n/no-path-concat
+Source: https://bun.com/docs/lint/rules/node/no-path-concat
+
+Disallow joining `__dirname` and `__filename` to a path with `+` or a template
+
+
+When you glue a path together by hand, you hardcode the separator. On Windows, `__dirname + "/data.json"` gives `C:\app/data.json`, which isn't equal to the same path from `path.join()`. `path.join()` and `path.resolve()` use the platform's separator and clean up `..` and doubled separators.
+
+The rule reports `__dirname` or `__filename` followed by text that starts with `/` or ``, or by `path.sep`.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"n/no-path-concat" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const config = __dirname + "/config.json";
+const cache = `${__dirname}/cache/${name}`;
+const logs = __dirname + path.sep + "logs";
+```
+
+Not reported:
+
+```js
+const path = require("path");
+
+const config = path.join(__dirname, "config.json");
+const cache = path.resolve(__dirname, "cache", name);
+```
+
+Adding something that isn't a new path segment is fine:
+
+```js
+const sourceMap = __filename + ".map";
+```

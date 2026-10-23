@@ -1,0 +1,57 @@
+# markdown/no-bare-urls
+Source: https://bun.com/docs/lint/rules/markdown/no-bare-urls
+
+Disallow bare URLs
+
+
+GitHub Flavored Markdown turns a URL or an email address in plain text into a link. CommonMark doesn't, so the same document has a link on GitHub and plain text elsewhere. `<` and `>` around the URL make it a link everywhere.
+
+Only `markdown/gfm` finds links in plain text, so the rule reports nothing in `markdown/commonmark`.
+
+`--fix` puts `<` and `>` around the URL.
+
+
+## Configure
+
+Off by default. It needs an ESLint config that says which files are in the language:
+
+
+**File:** `eslint.config.js`
+```js
+import markdown from "@eslint/markdown";
+
+export default [
+  {
+    files: ["**/*.md"],
+    plugins: { markdown },
+    language: "markdown/gfm",
+    rules: { "markdown/no-bare-urls": "error" },
+  },
+];
+```
+
+It also works with `markdown/commonmark`.
+
+
+## Examples
+
+Reported:
+
+
+```md
+See https://bun.com/docs or write to hello@example.com.
+```
+
+Not reported:
+
+
+```md
+See <https://bun.com/docs>, the [docs](https://bun.com/docs), or `https://bun.com/docs`.
+```
+
+A URL between an opening and a closing HTML tag is left alone:
+
+
+```md
+See <a href="https://bun.com/docs">https://bun.com/docs</a>.
+```

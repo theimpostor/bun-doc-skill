@@ -1,0 +1,71 @@
+# prefer-promise-reject-errors
+Source: https://bun.com/docs/lint/rules/eslint/prefer-promise-reject-errors
+
+Require an `Error` object as the reason of a promise rejection
+
+
+A promise rejected with a string or a plain object has no stack trace, so you can't see where it failed. The code that catches it and reads `error.message` gets `undefined`.
+
+The rule checks `Promise.reject()` and the `reject` function of `new Promise((resolve, reject) => ...)`. It reports a reason that can't be an `Error`: a literal, an object literal, `undefined`, or nothing. A variable or a call's result isn't reported, because the rule can't tell what it holds.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"prefer-promise-reject-errors" = "error" # or "warn"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"prefer-promise-reject-errors" = ["error", {
+  allowEmptyReject = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+Promise.reject("User not found");
+
+new Promise((resolve, reject) => {
+  reject({ code: 404 });
+});
+```
+
+Not reported:
+
+```js
+Promise.reject(new Error("User not found"));
+
+new Promise((resolve, reject) => {
+  reject(new RangeError("Page out of range"));
+});
+
+Promise.reject(reason);
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `allowEmptyReject` | `false` | Allow a rejection with no argument. |
+
+```js
+Promise.reject();
+```
+
+Writing out `undefined` is still reported:
+
+```js
+Promise.reject(undefined);
+```

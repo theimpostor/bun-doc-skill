@@ -1,0 +1,53 @@
+# unicorn/prefer-native-coercion-functions
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-native-coercion-functions
+
+Require passing `String`, `Number`, `BigInt`, `Boolean` and `Symbol` directly instead of wrapping them
+
+
+A function that only passes its first parameter to `String`, `Number`, `BigInt`, `Boolean` or `Symbol` does what the built-in already does. Pass the built-in itself.
+
+The rule also reports `value => value` as the callback of `every`, `filter`, `find`, `findIndex`, `findLast`, `findLastIndex` and `some`. Those methods only check whether the result is truthy, so `Boolean` does the same thing.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-native-coercion-functions" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+const ids = rows.map(id => Number(id));
+
+const names = users.map(user => user.name).filter(name => name);
+
+function toText(value) {
+  return String(value);
+}
+```
+
+Not reported:
+
+```js
+const ids = rows.map(Number);
+
+const names = users.map(user => user.name).filter(Boolean);
+
+const toText = String;
+```
+
+A function that does anything more isn't reported. Neither is a TypeScript type guard, because `Boolean` doesn't narrow the type:
+
+```ts
+const prices = rows.map(row => Number(row.price));
+
+const found = items.filter((item): item is Item => Boolean(item));
+```

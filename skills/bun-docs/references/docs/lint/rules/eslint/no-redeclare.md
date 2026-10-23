@@ -1,0 +1,113 @@
+# no-redeclare
+Source: https://bun.com/docs/lint/rules/eslint/no-redeclare
+
+Disallow declaring the same variable twice in one scope
+
+
+A second `var` with the same name doesn't make a new variable. It writes to the first one, so two parts of a function that each think they own `total` overwrite each other. The same goes for a `var` with the same name as a parameter, and for two functions with the same name, where the second replaces the first.
+
+Declaring a `let`, `const` or `class` twice is already a syntax error.
+
+This rule is on by default in JavaScript files, and off by default in TypeScript files.
+
+
+## Configure
+
+On by default as a warning. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-redeclare" = "off" # or "error"
+```
+
+Every option, set to its default:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-redeclare" = ["warn", {
+  builtinGlobals = true,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+```js
+function summarize(items, label) {
+  var total = items.length;
+  var label = label || "items";
+
+  for (const item of items) {
+    var total = item.price;
+  }
+  return `${total} ${label}`;
+}
+```
+
+```js
+function setup() {
+  function log(message) {
+    console.log(message);
+  }
+  function log(message, level) {
+    console.log(level, message);
+  }
+}
+```
+
+Not reported:
+
+```js
+function summarize(items, label = "items") {
+  let total = items.length;
+
+  for (const item of items) {
+    total += item.price;
+  }
+  return `${total} ${label}`;
+}
+```
+
+If you turn the rule on in `bunfig.toml`, TypeScript files get `@typescript-eslint/no-redeclare` instead, which understands function overloads:
+
+```ts
+export function parse(input: string): number;
+export function parse(input: Buffer): number;
+export function parse(input: string | Buffer): number {
+  return input.length;
+}
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `builtinGlobals` | `true` | Also report declaring a global that already exists, such as `Object` or `process`. |
+
+A `/* global */` comment that names a built-in global counts as a second declaration:
+
+```js
+/* global process */
+
+console.log(process.platform);
+```
+
+With `{ builtinGlobals: false }`, the same file isn't reported:
+
+```js
+/* global process */
+
+console.log(process.platform);
+```
+
+A top-level `var` only clashes with a global in a classic script. In a module or a CommonJS file it's local to the file, so it isn't reported:
+
+```js
+var name = "Ada";
+
+export { name };
+```

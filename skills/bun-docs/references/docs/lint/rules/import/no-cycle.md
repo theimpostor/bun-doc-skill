@@ -1,0 +1,141 @@
+# import/no-cycle
+Source: https://bun.com/docs/lint/rules/import/no-cycle
+
+Disallow importing a module that imports this file back, directly or through other modules
+
+
+When two modules import each other, one of them runs before the other has finished. Its imports aren't initialized yet, so reading them throws a `ReferenceError` or gives `undefined`. Which module breaks depends on which one is loaded first.
+
+The rule follows the imported module's imports as far as they go, so it also finds a cycle through several files. `import type` is ignored, because it's gone at runtime.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/no-cycle" = "error" # or "warn"
+```
+
+Every option, set to its default. The ones that are commented out are unset by default.
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"import/no-cycle" = ["error", {
+  maxDepth = "∞", # number or "∞"
+  ignoreExternal = false,
+  allowUnsafeDynamicCyclicDependency = false,
+  commonjs = false,
+  amd = false,
+  esmodule = true,
+  # ignore = <list of strings>,
+  disableScc = false,
+}]
+```
+
+
+## Examples
+
+Reported:
+
+**File:** `session.js`
+```js
+import { findUser } from "./user";
+
+// ReferenceError if user.js is loaded first
+export const currentUser = findUser(1);
+```
+
+**File:** `user.js`
+```js
+import { currentUser } from "./session";
+
+export const findUser = id => ({ id });
+export const isCurrent = user => user.id === currentUser.id;
+```
+
+Not reported, because the code both files need is in a third one:
+
+**File:** `find-user.js`
+```js
+export const findUser = id => ({ id });
+```
+
+**File:** `session.js`
+```js
+import { findUser } from "./find-user";
+
+export const currentUser = findUser(1);
+```
+
+**File:** `user.js`
+```js
+import { currentUser } from "./session";
+
+export const isCurrent = user => user.id === currentUser.id;
+```
+
+## Options
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `maxDepth` | `"∞"` | How many imports to follow. With `1`, only a module that imports this file itself is reported. |
+| `ignoreExternal` | `false` | Don't follow package imports. |
+| `allowUnsafeDynamicCyclicDependency` | `false` | Allow a cycle that has an `import()` somewhere in it. |
+| `commonjs` | `false` | Also check the `require()` calls in this file. |
+| `amd` | `false` | Also check `define([...])` and `require([...])` in this file. |
+| `esmodule` | `true` | Check `import`, `export ... from` and `import()`. |
+| `ignore` | `[]` | Regular expressions. An import path that matches one isn't checked. |
+| `disableScc` | `false` | Skip the first pass that groups the modules that can reach each other. It only changes how fast the rule is. |
+
+Here the way back takes two steps. By default the import is reported with `Dependency cycle via ./log:1`, which means that `./session` gets back to this file through its import of `./log` on line 1. With `maxDepth: 1` it isn't reported:
+
+**File:** `session.js`
+```js
+import { log } from "./log";
+
+export const currentUser = log({ id: 1 });
+```
+
+**File:** `log.js`
+```js
+import { isCurrent } from "./user";
+
+export function log(user) {
+  console.log(user.id, isCurrent(user));
+  return user;
+}
+```
+
+**File:** `user.js`
+```js
+import { currentUser } from "./session";
+
+export const isCurrent = user => user.id === currentUser.id;
+```
+
+An `import()` inside a function only runs when the function is called, so it rarely causes the problem above. It's still reported by default. With `allowUnsafeDynamicCyclicDependency: true` it isn't:
+
+**File:** `session.js`
+```js
+import { findUser } from "./user";
+
+export const currentUser = findUser(1);
+```
+
+**File:** `user.js`
+```js
+export const findUser = id => ({ id });
+
+export async function isCurrent(user) {
+  const { currentUser } = await import("./session");
+  return user.id === currentUser.id;
+}
+```
+
+## When not to use it
+
+A cycle is harmless if the two modules only use each other inside functions that run later. If your project has many cycles like that, the reports are noise.

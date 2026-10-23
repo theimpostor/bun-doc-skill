@@ -1,0 +1,49 @@
+# unicorn/no-useless-fallback-in-spread
+Source: https://bun.com/docs/lint/rules/unicorn/no-useless-fallback-in-spread
+
+Disallow an empty object as the fallback when spreading into an object literal
+
+
+Spreading `undefined` or `null` into an object literal adds nothing and doesn't throw. So `{ ...(options || {}) }` and `{ ...(options ?? {}) }` give the same object as `{ ...options }`.
+
+This is only true for objects. Spreading `undefined` into an array or a call's arguments throws, so `[...(items || [])]` isn't reported.
+
+`--fix` removes the fallback.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/no-useless-fallback-in-spread" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+function request(url, options, extraHeaders) {
+  const headers = { accept: "application/json", ...(extraHeaders || {}) };
+  return fetch(url, { ...(options ?? {}), headers });
+}
+```
+
+Not reported:
+
+```js
+function request(url, options, extraHeaders) {
+  const headers = { accept: "application/json", ...extraHeaders };
+  return fetch(url, { ...options, headers });
+}
+
+// the fallback has something in it
+const settings = { ...(saved || { theme: "light" }) };
+
+// arrays need the fallback
+const all = [...(items || [])];
+```

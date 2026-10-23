@@ -1,0 +1,72 @@
+# oxc/const-comparisons
+Source: https://bun.com/docs/lint/rules/oxc/const-comparisons
+
+Disallow comparisons that are always true, always false, or repeated
+
+
+A condition such as `age > 65 && age < 18` can never be true, so the code behind it never runs. It's usually a swapped operator, a swapped number, or a copied line that nobody edited.
+
+The rule reports:
+
+- Two comparisons of the same value with numbers, joined by `&&`, that can't both be true: `age > 65 && age < 18`.
+- Two comparisons like that where one already implies the other: `age > 18 && age > 65`.
+- A value compared with itself using `<`, `<=`, `>` or `>=`: `count < count`.
+- The same expression on both sides of `&&` or `||`: `isOpen && isOpen`, `a === b || b === a`.
+- An expression and its opposite: `isOpen && !isOpen`, `a === b || a !== b`.
+
+Two calls never count as the same expression, because each call can return something else.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"oxc/const-comparisons" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+if (age > 65 && age < 18) {
+  addDiscount();
+}
+
+if (status >= 400 && status >= 500) {
+  retry();
+}
+
+while (index < index) {
+  index++;
+}
+```
+
+```js
+const ready = loaded && loaded;
+const known = role === "admin" || role !== "admin";
+```
+
+Not reported:
+
+```js
+if (age > 65 || age < 18) {
+  addDiscount();
+}
+
+if (status >= 500) {
+  retry();
+}
+
+while (index < length) {
+  index++;
+}
+
+const ready = loaded && visible;
+const known = role === "admin" || role === "editor";
+const twoLeft = queue.pop() && queue.pop();
+```

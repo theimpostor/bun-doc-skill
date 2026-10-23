@@ -1,0 +1,58 @@
+# unicorn/prefer-import-meta-properties
+Source: https://bun.com/docs/lint/rules/unicorn/prefer-import-meta-properties
+
+Require `import.meta.dirname` and `import.meta.filename` instead of building them from the URL
+
+
+ES modules don't have `__dirname` or `__filename`, so a lot of code rebuilds them from `import.meta.url` with `fileURLToPath()` and `path.dirname()`. `import.meta.filename` and `import.meta.dirname` hold the same strings, with no imports.
+
+`--fix` replaces the call with the property. It doesn't remove imports that are no longer used.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"unicorn/prefer-import-meta-properties" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```js
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+```
+
+```js
+import { fileURLToPath } from "node:url";
+
+const dirname = fileURLToPath(new URL(".", import.meta.url));
+```
+
+Not reported:
+
+```js
+const filename = import.meta.filename;
+const dirname = import.meta.dirname;
+```
+
+Other paths built from the URL are fine:
+
+```js
+import { fileURLToPath } from "node:url";
+
+const fixtures = fileURLToPath(new URL("./fixtures", import.meta.url));
+```
+
+## When not to use it
+
+Bun has both properties, and Node.js has had them since 20.11. Turn the rule off for code that needs to run on an older Node.js.

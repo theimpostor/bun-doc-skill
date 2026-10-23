@@ -1,0 +1,75 @@
+# no-unexpected-multiline
+Source: https://bun.com/docs/lint/rules/eslint/no-unexpected-multiline
+
+Disallow lines that look like a new statement but continue the previous one
+
+
+JavaScript only ends a statement at a line break if the next line can't continue it. A line that starts with `(`, `[`, a template literal, or `/` can. Then two lines that look like two statements run as one call, property access, tagged template, or division.
+
+This mostly happens in code without semicolons.
+
+This rule is on by default.
+
+
+## Configure
+
+On by default as an error. To turn it off:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"no-unexpected-multiline" = "off" # or "warn"
+```
+
+
+## Examples
+
+Reported. This reads an element of whatever `getName()` returns:
+
+```js
+const name = getName()
+[first, last].forEach(print)
+```
+
+This calls `now` with a function as its argument:
+
+```js
+const started = now
+(async () => {
+  await run()
+})()
+```
+
+This calls `prefix` as a template tag:
+
+```js
+const label = prefix
+`item-${id}`.trim()
+```
+
+This divides `input` by `id` and then by `g.test(text)`:
+
+```js
+const value = input
+/id/g.test(text)
+```
+
+Not reported:
+
+```js
+const name = getName();
+[first, last].forEach(print);
+
+const started = now;
+(async () => {
+  await run();
+})();
+```
+
+If you do mean one expression, keep the opening `(` or `[` on the first line:
+
+```js
+const name = getName(
+  user,
+);
+```

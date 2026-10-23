@@ -1,0 +1,67 @@
+# jest/no-export
+Source: https://bun.com/docs/lint/rules/jest/no-export
+
+Disallow exports from a file that has tests
+
+
+When another file imports from a test file, the whole test file runs, including its `test()` calls, so its tests run a second time as part of the importing file. Put shared helpers in a separate file.
+
+The rule only checks files named like tests. That means the name ends in `test` or `spec` before the extension, such as `cart.test.ts`, or the file is under a `__tests__` directory. A file with no `test` or `it` call can export anything.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"jest/no-export" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { expect, test } from "@jest/globals";
+
+export function makeCart() {
+  return { items: [] };
+}
+
+test("starts empty", () => {
+  expect(makeCart().items).toEqual([]);
+});
+```
+
+Not reported, with the helper in a separate file:
+
+```ts
+export function makeCart() {
+  return { items: [] };
+}
+```
+
+```ts
+import { expect, test } from "@jest/globals";
+import { makeCart } from "./helpers";
+
+test("starts empty", () => {
+  expect(makeCart().items).toEqual([]);
+});
+```
+
+Exported types are reported too:
+
+```ts
+import { expect, test } from "@jest/globals";
+import { makeCart } from "./helpers";
+
+export type Cart = ReturnType<typeof makeCart>;
+
+test("starts empty", () => {
+  expect(makeCart().items).toEqual([]);
+});
+```

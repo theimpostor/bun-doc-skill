@@ -1,0 +1,49 @@
+# vitest/prefer-mock-promise-shorthand
+Source: https://bun.com/docs/lint/rules/vitest/prefer-mock-promise-shorthand
+
+Require `mockResolvedValue()` and `mockRejectedValue()` for mocks that return a promise
+
+
+`mockReturnValue(Promise.resolve(user))` and `mockImplementation(() => Promise.resolve(user))` do the same thing as `mockResolvedValue(user)`, with more code. The same goes for `Promise.reject()` and `mockRejectedValue()`, and for the `Once` version of each method.
+
+`--fix` rewrites the call.
+
+
+## Configure
+
+Off by default. To turn it on:
+
+**File:** `bunfig.toml`
+```toml
+[lint.rules]
+"vitest/prefer-mock-promise-shorthand" = "error" # or "warn"
+```
+
+
+## Examples
+
+Reported:
+
+```ts
+import { vi } from "vitest";
+
+const fetchUser = vi.fn().mockReturnValue(Promise.resolve({ name: "Ada" }));
+const saveUser = vi.fn().mockImplementationOnce(() => Promise.reject(new Error("offline")));
+```
+
+Not reported:
+
+```ts
+import { vi } from "vitest";
+
+const fetchUser = vi.fn().mockResolvedValue({ name: "Ada" });
+const saveUser = vi.fn().mockRejectedValueOnce(new Error("offline"));
+```
+
+An implementation that takes parameters is allowed, because its result can depend on them:
+
+```ts
+import { vi } from "vitest";
+
+const fetchUser = vi.fn().mockImplementation((id: number) => Promise.resolve({ id }));
+```
